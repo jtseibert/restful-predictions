@@ -1,6 +1,7 @@
 //Authenticate.js
 //Private
-var oauth2 = require('simple-oauth2')
+var oauth2 = require('simple-oauth2'),
+    tokenConfig
 
 var credentials = {
         clientID: '3MVG9uudbyLbNPZMn2emQiwwmoqmcudnURvLui8uICaepT6Egs.LFsHRMAnD00FSog.OXsLKpODzE.jxi.Ffu',
@@ -20,7 +21,7 @@ module.exports = Authenticate
 function Authenticate(username, password) {
     this.token;
     this.hostURL;
-    this.tokenConfig = {
+    tokenConfig = {
         grant_type: 'password',
         username: username,
         password: password + 'NOOqUkbXD7QbkL17jsWG1RXu',
@@ -31,9 +32,9 @@ function Authenticate(username, password) {
 }
 
 Authenticate.prototype.getToken = function() {
-    console.log('tokenConfig: ', this.tokenConfig.username) 
-    console.log('tokenConfig: ', this.tokenConfig.password) 
-    oauth2.password.getToken(this.tokenConfig, function saveToken(error, result) {
+    console.log('tokenConfig: ', tokenConfig.username) 
+    console.log('tokenConfig: ', tokenConfig.password) 
+    oauth2.password.getToken(tokenConfig, function saveToken(error, result) {
     if (error) { 
         console.log('Access Token Error', error.message) 
     }
