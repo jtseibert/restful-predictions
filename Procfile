@@ -1,1 +1,1 @@
-web: node ./src/authenticate.js
+web: node ./models/authenticate.js
