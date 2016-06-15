@@ -32,7 +32,7 @@ function Authenticate(username, password) {
 Authenticate.prototype.getToken = function() {
     oauth2.password.getToken(this.tokenConfig, function saveToken(error, result) {
     if (error) { 
-        console.log('Access Token Error', error.message) 
+        console.log('Access Token Error' + error.message) 
     }
     else {
         this.token = oauth2.accessToken.create(result)
