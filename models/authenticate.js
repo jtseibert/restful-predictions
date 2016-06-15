@@ -30,8 +30,6 @@ function Authenticate(username, password) {
 }
 
 Authenticate.prototype.getToken = function() {
-    console.log('tokenConfig: ', this.tokenConfig.username) 
-    console.log('tokenConfig: ', this.tokenConfig.password) 
     oauth2.password.getToken(this.tokenConfig, function saveToken(error, result) {
     if (error) { 
         console.log('Access Token Error', JSON.stringify(error)) 
