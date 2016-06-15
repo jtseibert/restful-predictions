@@ -26,8 +26,7 @@ function Authenticate(username, password) {
         username: username,
         password: password + 'NOOqUkbXD7QbkL17jsWG1RXu',
         client_id: credentials.clientID,
-        client_secret: credentials.clientSecret,
-        scope: 'full'
+        client_secret: credentials.clientSecret
     }
 }
 
