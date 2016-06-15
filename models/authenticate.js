@@ -20,8 +20,10 @@ module.exports = Authenticate
 function Authenticate(username, password) {
     this.token = null
     this.hostURL = null
-    this.tokenconfig.username = username
-    this.tokenconfig.password = password
+    this.tokenConfig = {
+        username: username,
+        password: password
+    }
 }
 
 Authenticate.prototype.getToken = function() {
