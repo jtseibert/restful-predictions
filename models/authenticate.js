@@ -34,11 +34,11 @@ Authenticate.prototype.getToken = function() {
     if (error) { 
         console.log('Access Token Error', error.message) 
     }
-        
-    this.token = oauth2.accessToken.create(result)
-    this.hostURL = this.token.token.instance_url.replace('https://', '')
-    console.log(this.token.token)
-
+    else {
+        this.token = oauth2.accessToken.create(result)
+        this.hostURL = this.token.token.instance_url.replace('https://', '')
+        console.log(this.token.token)
+    }
 
         /*oauth2.api('GET', '/users', {
             access_token: token.token.access_token
