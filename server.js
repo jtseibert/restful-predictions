@@ -6,7 +6,8 @@
 // call the packages we need
 var express    = require('express'),
 	app        = express(),
-	bodyParser = require('body-parser')
+	bodyParser = require('body-parser'),
+	authenticate = require('./models/Authenticate')
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -25,7 +26,13 @@ router.get('/', function(req, res) {
 })
 
 // more routes for our API will happen here
-//route.route('/:id')
+route.route('/:username/:password/:id')
+	.get(function(req, res) {
+		var authenticate = new Authenticate(req.params.username, req.params.password)
+		authenticate.getToken(callback(req, res) {
+			res.json(authenticate.token)
+		})
+	})
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
