@@ -7,7 +7,7 @@
 var express    = require('express'),
 	app        = express(),
 	bodyParser = require('body-parser'),
-	authenticate = require('./models/authenticate')
+	Authenticate = require('./models/authenticate')
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -28,7 +28,7 @@ router.get('/', function(req, res) {
 // more routes for our API will happen here
 router.route('/:username/:password')
 	.get(function(req, res) {
-		var authenticate = new authenticate(req.params.username, req.params.password)
+		authenticate = new Authenticate(req.params.username, req.params.password)
 		authenticate.getToken()
 		res.json(authenticate.token.token)
 	})
