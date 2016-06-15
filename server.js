@@ -29,7 +29,7 @@ router.get('/', function(req, res) {
 route.route('/:username/:password')
 	.get(function(req, res) {
 		var authenticate = new Authenticate(req.params.username, req.params.password)
-		authenticate.getToken(callback(req, res) {
+		authenticate.getToken(null, callback(req, res) {
 			res.json(authenticate.token)
 		})
 	})
