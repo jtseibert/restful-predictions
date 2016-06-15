@@ -22,7 +22,10 @@ function Authenticate(username, password) {
     this.hostURL;
     this.tokenConfig = {
         username: username,
-        password: password
+        password: password,
+        client_id: credentials.clientID,
+        client_secret: credentials.clientSecret,
+        scope: 'full'
     }
 }
 
