@@ -25,6 +25,7 @@ router.get('/', function(req, res) {
 });
 
 // more routes for our API will happen here
+//route.route('/:id')
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
