@@ -9,7 +9,7 @@ var credentials = {
         authorizationPath: '/services/oauth2/authorize',
         tokenPath: '/services/oauth2/token',
         revokePath: '/services/oauth2/revoke'
-    },
+    }
 
 // Initialize the OAuth2 Library
 var oauth2 = oauth2(credentials)
