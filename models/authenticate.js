@@ -43,8 +43,3 @@ Authenticate.prototype.getToken = function() {
 
 
 
-
-
-
-
-
