@@ -36,7 +36,7 @@ Authenticate.prototype.getToken = function() {
     console.log('tokenConfig: ', tokenConfig.password) 
     oauth2.password.getToken(tokenConfig, function saveToken(error, result) {
     if (error) { 
-        console.log('Access Token Error', error.name()) 
+        console.log('Access Token Error', error.stack) 
     }
     else {
         this.token = oauth2.accessToken.create(result)
