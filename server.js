@@ -32,7 +32,6 @@ router.route('/:username/:password')
 		console.log(req.params.password)
 		authenticate = new Authenticate(req.params.username, req.params.password)
 		authenticate.getToken()
-		console.log(authenticate.token.token)
 	})
 
 // REGISTER OUR ROUTES -------------------------------
