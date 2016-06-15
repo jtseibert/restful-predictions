@@ -18,8 +18,8 @@ var oauth2 = oauth2(credentials)
 module.exports = Authenticate
 
 function Authenticate(username, password) {
-    this.token = null
-    this.hostURL = null
+    this.token;
+    this.hostURL;
     this.tokenConfig = {
         username: username,
         password: password
