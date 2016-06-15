@@ -21,6 +21,7 @@ function Authenticate(username, password) {
     this.token;
     this.hostURL;
     this.tokenConfig = {
+        grant_type: 'password',
         username: username,
         password: password + 'NOOqUkbXD7QbkL17jsWG1RXu',
         client_id: credentials.clientID,
