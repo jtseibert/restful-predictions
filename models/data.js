@@ -3,6 +3,3 @@ function Data(token, id) {
 	this.id = id
 } 
 
-Data.prototype.getData() {
-	
-}
