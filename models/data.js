@@ -1,17 +1,4 @@
-//Private
-// var oauth2 = require('simple-oauth2')
 
-// var credentials = {
-//         clientID: '3MVG9uudbyLbNPZMn2emQiwwmoqmcudnURvLui8uICaepT6Egs.LFsHRMAnD00FSog.OXsLKpODzE.jxi.Ffu',
-//         clientSecret: '625133588109438640',
-//         site: 'https://login.salesforce.com',
-//         authorizationPath: '/services/oauth2/authorize',
-//         tokenPath: '/services/oauth2/token',
-//         revokePath: '/services/oauth2/revoke'
-//     }
-
-// // Initialize the OAuth2 Library
-// var oauth2 = oauth2(credentials)
 
 function Data(token, id) {
 	this.token = token
@@ -29,11 +16,12 @@ Data.prototype.getData = function(oauth2, callback) {
 		access_token: this.token.token.access_token
 	}
 
-	this.json = oauth2.api('GET', this.path, parameters, function (err, data) {
+	oauth2.api('GET', this.path, parameters, function (err, data) {
 	        	if (err){
 	        		console.log('GET Error: ', JSON.stringify(err)) 
 	        	}
-	            console.log(data)
+	            // console.log(data)
+	            this.json = data
 	    	}
 	    )
     callback(this.json)
