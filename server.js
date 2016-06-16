@@ -28,7 +28,7 @@ router.get('/', function(req, res) {
 // more routes for our API will happen here
 router.route('/:username/:password/:id')
 	.get(function(req, res) {
-		authenticate = new Authenticate(req.params.username, req.params.password)
+		authenticate = new Authenticate(req.params.username, req.params.password, req.params.id)
 		authenticate.getToken();
 		authenticate.getData();
 	})
