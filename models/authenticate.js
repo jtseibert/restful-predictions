@@ -1,18 +1,18 @@
 //Authenticate.js
 //Private
-var oauth2 = require('simple-oauth2')
+// var oauth2 = require('simple-oauth2')
 
-var credentials = {
-        clientID: '3MVG9uudbyLbNPZMn2emQiwwmoqmcudnURvLui8uICaepT6Egs.LFsHRMAnD00FSog.OXsLKpODzE.jxi.Ffu',
-        clientSecret: '625133588109438640',
-        site: 'https://login.salesforce.com',
-        authorizationPath: '/services/oauth2/authorize',
-        tokenPath: '/services/oauth2/token',
-        revokePath: '/services/oauth2/revoke'
-    }
+// var credentials = {
+//         clientID: '3MVG9uudbyLbNPZMn2emQiwwmoqmcudnURvLui8uICaepT6Egs.LFsHRMAnD00FSog.OXsLKpODzE.jxi.Ffu',
+//         clientSecret: '625133588109438640',
+//         site: 'https://login.salesforce.com',
+//         authorizationPath: '/services/oauth2/authorize',
+//         tokenPath: '/services/oauth2/token',
+//         revokePath: '/services/oauth2/revoke'
+//     }
 
-// Initialize the OAuth2 Library
-var oauth2 = oauth2(credentials)
+// // Initialize the OAuth2 Library
+// var oauth2 = oauth2(credentials)
 
 //Public
 module.exports = Authenticate
@@ -30,7 +30,7 @@ function Authenticate(username, password) {
     }
 }
 
-Authenticate.prototype.getToken = function(callback) {
+Authenticate.prototype.getToken = function(oauth2, callback) {
     oauth2.password.getToken(this.tokenConfig, function saveToken(error, result) {
         if (error) { 
             console.log('Access Token Error', JSON.stringify(error)) 

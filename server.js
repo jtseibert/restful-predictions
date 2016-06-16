@@ -18,6 +18,19 @@ app.use(bodyParser.json())
 
 var port = process.env.PORT || 5000        // set our port
 
+// setup oauth2
+var oauth2 = require('simple-oauth2'),
+	credentials = {
+        clientID: '3MVG9uudbyLbNPZMn2emQiwwmoqmcudnURvLui8uICaepT6Egs.LFsHRMAnD00FSog.OXsLKpODzE.jxi.Ffu',
+        clientSecret: '625133588109438640',
+        site: 'https://login.salesforce.com',
+        authorizationPath: '/services/oauth2/authorize',
+        tokenPath: '/services/oauth2/token',
+        revokePath: '/services/oauth2/revoke'
+    }
+// Initialize the OAuth2 Library
+var oauth2 = oauth2(credentials)
+
 // ROUTES FOR OUR API
 // =============================================================================
 var router = express.Router()              // get an instance of the express Router
@@ -37,7 +50,7 @@ router.route('/:username/:password/:id')
 	        function(callback) {
 	        	console.log('entering first method')
 	        	authenticate = new Authenticate(req.params.username, req.params.password)
-				authenticate.getToken(function(result){
+				authenticate.getToken(oauth2, function(result){
 					token = result
 					callback()
 				})
@@ -45,7 +58,7 @@ router.route('/:username/:password/:id')
 	        function(callback) {
 	        	console.log('entering second method')
 	        	data = new Data(token, req.params.id)
-				data.getData(function(result){
+				data.getData(oauth2, function(result){
 					json = result
 					callback()
 				})
