@@ -29,7 +29,8 @@ router.get('/', function(req, res) {
 router.route('/:username/:password/:id')
 	.get(function(req, res) {
 		authenticate = new Authenticate(req.params.username, req.params.password)
-		authenticate.getToken()
+		authenticate.getToken();
+		authenticate.getData();
 	})
 
 // REGISTER OUR ROUTES -------------------------------
