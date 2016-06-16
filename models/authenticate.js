@@ -1,4 +1,10 @@
 //authenticate.js
+//input: 
+    //String: username
+    //String: password
+    //JSON: credentials
+//output:
+    //JSON: access_token
 
 //Export functions
 module.exports = Authenticate
