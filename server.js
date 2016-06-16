@@ -66,7 +66,7 @@ router.route('/:username/:password/:id')
 	    ], function(err) {
 	        if (err) return next(err);
 	        console.log('should be printing...')
-	        res.json('JSON obj: ' + json);
+	        res.json(json);
 	    });
 	})
 
