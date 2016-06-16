@@ -1,24 +1,19 @@
-// server.js
+//server.js
 
-// BASE SETUP
-// =============================================================================
+//Initialize dependencies
+var express			= require('express'),
+	app        		= express(),
+	bodyParser 		= require('body-parser'),
+	Authenticate 	= require('./models/authenticate')
+	Data 			= require('./models/data'),
+	async			= require('async')
 
-// call the packages we need
-var express    = require('express'),
-	app        = express(),
-	bodyParser = require('body-parser'),
-	Authenticate = require('./models/authenticate')
-	Data = require('./models/data'),
-	async = require('async')
-
-// configure app to use bodyParser()
-// this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-var port = process.env.PORT || 5000        // set our port
+var port = process.env.PORT || 5000
 
-// setup oauth2
+//Setup oauth2
 var oauth2 = require('simple-oauth2'),
 	credentials = {
         clientID: '3MVG9uudbyLbNPZMn2emQiwwmoqmcudnURvLui8uICaepT6Egs.LFsHRMAnD00FSog.OXsLKpODzE.jxi.Ffu',
@@ -28,22 +23,17 @@ var oauth2 = require('simple-oauth2'),
         tokenPath: '/services/oauth2/token',
         revokePath: '/services/oauth2/revoke'
     }
-// Initialize the OAuth2 Library
+
+//Initialize the OAuth2 Library
 var oauth2 = oauth2(credentials)
 
-// ROUTES FOR OUR API
-// =============================================================================
-var router = express.Router()              // get an instance of the express Router
+//Setup routes for API
+var router = express.Router()
 
-// test route to make sure everything is working (accessed at GET http://localhost:5000/api)
-router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' })
-})
-
+//Declare module level variables for authentication
 var token,
 	json
 
-// more routes for our API will happen here
 router.route('/:username/:password/:id')
 	.get(function(req, res) {
 		async.series([
@@ -70,11 +60,10 @@ router.route('/:username/:password/:id')
 	    });
 	})
 
-// REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
+//Register routes
+//All of our routes will be prefixed with /api
 app.use('/api', router)
 
-// START THE SERVER
-// =============================================================================
+//Start server
 app.listen(port);
 console.log('Magic happens on port ' + port)
