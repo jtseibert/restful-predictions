@@ -8,7 +8,7 @@ function Authenticate(username, password, credentials) {
     this.tokenConfig = {
         grant_type: 'password',
         username: username,
-        password: password + 'NOOqUkbXD7QbkL17jsWG1RXu',
+        password: password,
         client_id: credentials.clientID,
         client_secret: credentials.clientSecret
     }
