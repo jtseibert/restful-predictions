@@ -27,6 +27,9 @@ Data.prototype.getData = function(oauth2, callback) {
 	        'Authorization': 'Bearer ' + this.token.token.access_token,
 	        'Content-Type' : 'application/json'
 	        }, function (err, data) {
+	        	if (err){
+	        		console.log('GET Error: ', JSON.stringify(error)) 
+	        	}
 	            console.log(data)
 	    	}
 	    )
