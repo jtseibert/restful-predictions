@@ -5,12 +5,15 @@ function Data(token, id) {
 
 module.exports = Data
 
-Data.prototype.getData = function() {
+Data.prototype.getData = function(callback) {
 	console.log(this.token.token.access_token)
-    oauth2.api('GET', this.path, {
-        'Authorization': 'Bearer ' + this.token.token.access_token,
-        'Content-Type' : 'application/json'
-        }, function (err, data) {
-            console.log(data)
-    })
+    callback(
+	    oauth2.api('GET', this.path, {
+	        'Authorization': 'Bearer ' + this.token.token.access_token,
+	        'Content-Type' : 'application/json'
+	        }, function (err, data) {
+	            console.log(data)
+	    	}
+	    )
+    )
 }

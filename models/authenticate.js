@@ -30,16 +30,16 @@ function Authenticate(username, password) {
     }
 }
 
-Authenticate.prototype.getToken = function() {
+Authenticate.prototype.getToken = function(callback) {
     oauth2.password.getToken(this.tokenConfig, function saveToken(error, result) {
         if (error) { 
             console.log('Access Token Error', JSON.stringify(error)) 
         }
         else {
             this.token = oauth2.accessToken.create(result)
-            this.hostURL = this.token.token.instance_url.replace('https://', '')
+            this.hostURL = this.token.token.instance_url
             //console.log(this.token.token)
-            return this.token
+            callback(this.token)
         }   
     })
 }

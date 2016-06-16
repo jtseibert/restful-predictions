@@ -26,13 +26,34 @@ router.get('/', function(req, res) {
     res.json({ message: 'hooray! welcome to our api!' })
 })
 
+var token,
+	json
+
 // more routes for our API will happen here
 router.route('/:username/:password/:id')
 	.get(function(req, res) {
-		authenticate = new Authenticate(req.params.username, req.params.password)
-		var token = authenticate.getToken()
-		data = new Data(token, req.params.id)
-		res.json(data.getData())
+		async.series([
+	        function(callback) {
+	        	console.log('entering first method')
+	        	authenticate = new Authenticate(req.params.username, req.params.password)
+				authenticate.getToken(function(err, result){
+					token = result.token
+					callback()
+				})
+	        },
+	        function(callback) {
+	        	console.log('entering second method')
+	        	data = new Data(token, req.params.id)
+				data.getData(function(err, result){
+					json = result
+					callback()
+				})
+	        }
+	    ], function(err) {
+	        if (err) return next(err);
+	        console.log('should be printing...')
+	        res.json('JSON obj: ', json);
+	    });
 	})
 
 // REGISTER OUR ROUTES -------------------------------
