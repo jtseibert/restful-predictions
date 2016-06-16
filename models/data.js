@@ -15,7 +15,7 @@
 
 function Data(token, id) {
 	this.token = token
-	this.path = token.token.instance_url + 'services/data/v35.0/analytics/reports/' + id
+	this.path = token.token.instance_url + '/services/data/v35.0/analytics/reports/' + id
 	this.json
 } 
 
