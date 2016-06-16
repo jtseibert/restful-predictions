@@ -38,7 +38,7 @@ Authenticate.prototype.getToken = function() {
         else {
             this.token = oauth2.accessToken.create(result)
             this.hostURL = this.token.token.instance_url.replace('https://', '')
-            console.log(this.token.token)
+            //console.log(this.token.token)
             return this.token
         }   
     })
