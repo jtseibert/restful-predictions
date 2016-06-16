@@ -23,9 +23,11 @@ module.exports = Data
 
 Data.prototype.getData = function(oauth2, callback) {
 	console.log(this.token.token)
-	this.json = oauth2.api('GET', this.path, {
-	        'Authorization': 'Bearer ' + this.token.token.access_token,
-	        'Content-Type' : 'application/json'
+	console.log(this.path)
+	this.json = oauth2.api('GET', this.path,
+			headers: {
+				'Authorization': 'Bearer ' + this.token.token.access_token,
+	        	'Content-Type' : 'application/json'
 	        }, function (err, data) {
 	        	if (err){
 	        		console.log('GET Error: ', JSON.stringify(err)) 
