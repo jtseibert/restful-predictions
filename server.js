@@ -28,9 +28,10 @@ router.get('/', function(req, res) {
 // more routes for our API will happen here
 router.route('/:username/:password/:id')
 	.get(function(req, res) {
-		authenticate = new Authenticate(req.params.username, req.params.password, req.params.id)
-		authenticate.getToken()
-		authenticate.getData()
+		authenticate = new Authenticate(req.params.username, req.params.password)
+		var token = authenticate.getToken()
+		data = new Data(token, req.params.id)
+		res.json(data.getData())
 	})
 
 // REGISTER OUR ROUTES -------------------------------

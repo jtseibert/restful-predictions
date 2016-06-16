@@ -17,9 +17,8 @@ var oauth2 = oauth2(credentials)
 //Public
 module.exports = Authenticate
 
-function Authenticate(username, password, id) {
+function Authenticate(username, password) {
     this.token;
-    this.id = id;
     this.hostURL;
     this.path = '/services/data/v35.0/analytics/reports/';
     this.tokenConfig = {
@@ -44,18 +43,6 @@ Authenticate.prototype.getToken = function() {
         }   
     })
 }
-
-Authenticate.prototype.getData = function() {
-    console.log(this.token.token.access_token)
-    oauth2.api('GET', this.hostURL + this.path + this.id, {
-        'Authorization': 'Bearer ' + this.token.token.access_token,
-        'Content-Type' : 'application/json'
-        }, function (err, data) {
-            console.log(data)
-    })
-}
-
-
 
 
 
