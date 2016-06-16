@@ -17,7 +17,7 @@
 //Public
 module.exports = Authenticate
 
-function Authenticate(username, password) {
+function Authenticate(username, password, credentials) {
     this.token;
     this.hostURL;
     this.path = '/services/data/v35.0/analytics/reports/';

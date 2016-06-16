@@ -49,7 +49,7 @@ router.route('/:username/:password/:id')
 		async.series([
 	        function(callback) {
 	        	console.log('entering first method')
-	        	authenticate = new Authenticate(req.params.username, req.params.password)
+	        	authenticate = new Authenticate(req.params.username, req.params.password, credentials)
 				authenticate.getToken(oauth2, function(result){
 					token = result
 					callback()
