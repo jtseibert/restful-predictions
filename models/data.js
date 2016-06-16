@@ -28,7 +28,7 @@ Data.prototype.getData = function(oauth2, callback) {
 	        'Content-Type' : 'application/json'
 	        }, function (err, data) {
 	        	if (err){
-	        		console.log('GET Error: ', JSON.stringify(error)) 
+	        		console.log('GET Error: ', JSON.stringify(err)) 
 	        	}
 	            console.log(data)
 	    	}
