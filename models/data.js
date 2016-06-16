@@ -3,7 +3,7 @@ function Data(token, id) {
 	this.path = token.token.instance_url + 'services/data/v35.0/analytics/reports/' + id
 } 
 
-Data.prototype.getData() {
+Data.prototype.getData = function() {
 	console.log(this.token.token.access_token)
     oauth2.api('GET', this.path, {
         'Authorization': 'Bearer ' + this.token.token.access_token,
