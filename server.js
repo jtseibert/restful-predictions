@@ -9,7 +9,7 @@ var express    = require('express'),
 	bodyParser = require('body-parser'),
 	Authenticate = require('./models/authenticate')
 	Data = require('./models/data'),
-	async = require('aysnc')
+	async = require('async')
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
