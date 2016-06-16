@@ -8,7 +8,7 @@ var express    = require('express'),
 	app        = express(),
 	bodyParser = require('body-parser'),
 	Authenticate = require('./models/authenticate')
-	Data = requre('./models/data')
+	Data = require('./models/data')
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
