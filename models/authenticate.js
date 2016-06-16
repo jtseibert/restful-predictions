@@ -1,9 +1,9 @@
-// authenticate.js
+//authenticate.js
 
-// export functions
+//Export functions
 module.exports = Authenticate
 
-// Authenticate constructor
+//Authenticate constructor
 function Authenticate(username, password, credentials) {
     this.token;
     this.hostURL;
@@ -17,17 +17,17 @@ function Authenticate(username, password, credentials) {
     }
 }
 
-// Get token using Authenticate credentials
+//Get token using Authenticate credentials
 Authenticate.prototype.getToken = function(oauth2, callback) {
-    // Attempt to get token
+    //Attempt to get token
     oauth2.password.getToken(this.tokenConfig, function saveToken(error, result) {
-        if (error) { // On error
+        if (error) { //On error
             console.log('Access Token Error', JSON.stringify(error)) 
         }
-        else { // On success
+        else { // n success
             this.token = oauth2.accessToken.create(result)
             this.hostURL = this.token.token.instance_url
-            // return the newly created token
+            //Return the newly created token
             callback(this.token)
         }   
     })
