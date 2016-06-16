@@ -46,6 +46,7 @@ Authenticate.prototype.getToken = function() {
 }
 
 Authenticate.prototype.getData = function() {
+    console.log(this.token.token.access_token)
     oauth2.api('GET', this.hostURL + this.path + this.id, {
         'Authorization': 'Bearer ' + this.token.token.access_token,
         'Content-Type' : 'application/json'
