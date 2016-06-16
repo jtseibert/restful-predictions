@@ -20,9 +20,10 @@ Data.prototype.getData = function(oauth2, callback) {
 	        	if (err){
 	        		console.log('GET Error: ', JSON.stringify(err)) 
 	        	}
-	            // console.log(data)
+	            console.log(data)
 	            this.json = data
+	            callback(data)
 	    	}
 	    )
-    callback(this.json)
+    
 }
