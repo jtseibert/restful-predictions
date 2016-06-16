@@ -30,8 +30,7 @@ router.get('/', function(req, res) {
 router.route('/:username/:password/:id')
 	.get(function(req, res) {
 		authenticate = new Authenticate(req.params.username, req.params.password)
-		var token = authenticate.getToken()
-		data = new Data(token, req.params.id)
+		data = new Data(authenticate.getToken(), req.params.id)
 		res.json(data.getData())
 	})
 
