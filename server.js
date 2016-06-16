@@ -30,8 +30,8 @@ router.get('/', function(req, res) {
 router.route('/:username/:password/:id')
 	.get(function(req, res) {
 		authenticate = new Authenticate(req.params.username, req.params.password)
-		data = new Data(authenticate.getToken(), req.params.id)
-		res.json(data.getData())
+		//data = new Data(authenticate.getToken(), req.params.id)
+		res.json((new Data(authenticate.getToken(), req.params.id)).getData())
 	})
 
 // REGISTER OUR ROUTES -------------------------------
