@@ -22,7 +22,7 @@ function Data(token, id) {
 module.exports = Data
 
 Data.prototype.getData = function(oauth2, callback) {
-	console.log(this.token.token.access_token)
+	console.log(this.token.token)
 	this.json = oauth2.api('GET', this.path, {
 	        'Authorization': 'Bearer ' + this.token.token.access_token,
 	        'Content-Type' : 'application/json'
