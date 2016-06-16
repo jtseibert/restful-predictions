@@ -3,7 +3,6 @@
 function Data(token, id) {
 	this.token = token
 	this.path = token.token.instance_url + '/services/data/v35.0/analytics/reports/' + id
-	this.json
 } 
 
 module.exports = Data
@@ -20,8 +19,6 @@ Data.prototype.getData = function(oauth2, callback) {
 	        	if (err){
 	        		console.log('GET Error: ', JSON.stringify(err)) 
 	        	}
-	            console.log(data)
-	            this.json = data
 	            callback(data)
 	    	}
 	    )
