@@ -37,15 +37,15 @@ router.route('/:username/:password/:id')
 	        function(callback) {
 	        	console.log('entering first method')
 	        	authenticate = new Authenticate(req.params.username, req.params.password)
-				authenticate.getToken(function(err, result){
-					token = result.token
+				authenticate.getToken(function(result){
+					token = result
 					callback()
 				})
 	        },
 	        function(callback) {
 	        	console.log('entering second method')
 	        	data = new Data(token, req.params.id)
-				data.getData(function(err, result){
+				data.getData(function(result){
 					json = result
 					callback()
 				})
