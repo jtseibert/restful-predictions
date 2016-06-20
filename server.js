@@ -34,7 +34,7 @@ var router = express.Router()
 var token,
 	json
 
-router.route('/:username/:password/:id')
+router.route('/:accessKey/:id')
 	.get(function(req, res) {
 		async.series([
 	        function(callback) {
