@@ -24,7 +24,6 @@ Data.prototype.getData = function(oauth2, callback) {
 	    if (err) {
 	        console.log('GET Error: ', JSON.stringify(err)) 
 	    }
-	    	console.log(data)
 	        callback(data)
 	})  
 }
