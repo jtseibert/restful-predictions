@@ -15,10 +15,10 @@ Table.prototype.makeTable = function(callback) {
 		i = 0
 
 	while (this.data[i] != ','){
-		tablename += this.data[i]
+		tableName += this.data[i]
 	}
 
-	console.log(tablename);
+	console.log(tableName);
 
 	//database
 	// var pg = require('pg');
