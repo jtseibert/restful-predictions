@@ -11,14 +11,15 @@ function Table(csv) {
 
 Table.prototype.makeTable = function(callback) {
 	
-	var tableName = '',
-		i = 0
+	// var tableName = '',
+	// 	i = 0
 
-	while (this.data[i] != ','){
-		tableName += this.data[i]
-	}
+	// while (this.data[i] != ','){
+	// 	tableName += this.data[i]
+	// }
 
-	console.log(tableName);
+	console.log(this.data)
+	callback()
 
 	//database
 	// var pg = require('pg');
