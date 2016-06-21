@@ -34,7 +34,7 @@ var router = express.Router()
 // var token,
 // 	json
 
-router.route('/api/:instance/:accessToken/:id')
+router.route('/:instance/:accessToken/:id')
 	.get(function(req,res){
 		data = new Data(req.params.instance, req.params.accessToken, req.params.id)
 		data.getData(oauth2,function(result){
