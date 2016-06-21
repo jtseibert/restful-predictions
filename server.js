@@ -54,9 +54,9 @@ router.route('/:instance/:accessToken/:id')
 		})
 	})
 
-router.route('/table/:csv')
+router.route('/table')
 	.post(function(req,res){
-		table = new Table(req.params.csv);
+		table = new Table(req.params.payload);
 		table.makeTable()
 		// send table to pg
 	})
