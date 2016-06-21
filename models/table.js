@@ -22,6 +22,27 @@ Table.prototype.makeTable = function(callback) {
 	callback()
 
 	//database
+
+
+
+
+
+// do this tomorrow
+	// data = {
+	// 	data: [
+	// 		employees:{}
+	// 		Projects: {}
+	// 		WED: {}
+	// 		Hours: {}
+	// 	]
+	// }
+
+
+
+
+
+
+
 	// var pg = require('pg');
 
 	// pg.defaults.ssl = true;
