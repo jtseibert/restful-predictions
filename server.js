@@ -11,7 +11,7 @@ var express			= require('express'),
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use(bodyParser({limit: '50mb'}))
+app.use(bodyParser.urlencoded({limit: '50mb'}))
 
 var port = process.env.PORT || 5000
 
