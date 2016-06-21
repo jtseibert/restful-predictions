@@ -31,34 +31,41 @@ var oauth2 = oauth2(credentials)
 var router = express.Router()
 
 //Declare module level variables for authentication
-var token,
-	json
+// var token,
+// 	json
 
-router.route('/:accessKey/:id')
-	.get(function(req, res) {
-		async.series([
-	        function(callback) {
-	        	console.log('entering first method')
-	        	authenticate = new Authenticate(req.params.username, req.params.password, credentials)
-				authenticate.getToken(oauth2, function(result){
-					token = result
-					callback()
-				})
-	        },
-	        function(callback) {
-	        	console.log('entering second method')
-	        	data = new Data(token, req.params.id)
-				data.getData(oauth2, function(result){
-					json = result
-					callback()
-				})
-	        }
-	    ], function(err) {
-	        if (err) return next(err);
-	        console.log('should be printing...')
-	        res.json(json);
-	    });
+router.route('/:instance/:accessKey/:id')
+	.get(function(req,res){
+		data = new Data(req.params.instance, req.params.accessKey, req.params.id)
+		data.getData(oauth2,function(result){
+			res.json(result)
+		})
 	})
+
+	// .get(function(req, res) {
+	// 	async.series([
+	//         function(callback) {
+	//         	console.log('entering first method')
+	//         	authenticate = new Authenticate(req.params.username, req.params.password, credentials)
+	// 			authenticate.getToken(oauth2, function(result){
+	// 				token = result
+	// 				callback()
+	// 			})
+	//         },
+	//         function(callback) {
+	//         	console.log('entering second method')
+	//         	data = new Data(token, req.params.id)
+	// 			data.getData(oauth2, function(result){
+	// 				json = result
+	// 				callback()
+	// 			})
+	//         }
+	//     ], function(err) {
+	//         if (err) return next(err);
+	//         console.log('should be printing...')
+	//         res.json(json);
+	//     });
+	// })
 
 //Register routes
 //All of our routes will be prefixed with /api
