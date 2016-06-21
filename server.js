@@ -6,10 +6,12 @@ var express			= require('express'),
 	bodyParser 		= require('body-parser'),
 	Authenticate 	= require('./models/authenticate')
 	Data 			= require('./models/data'),
-	async			= require('async')
+	async			= require('async'),
+	Table 			= require('./models/table')
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use(bodyParser({limit: '50mb'}))
 
 var port = process.env.PORT || 5000
 
@@ -52,6 +54,13 @@ router.route('/:instance/:accessToken/:id')
 			console.log('should be returning json')
 			res.json(result)
 		})
+	})
+
+router.route('/table/:csv')
+	.get(function(req,res){
+		table = new Table(req.params.csv);
+		table.makeTable()
+		// send table to pg
 	})
 
 //Register routes
