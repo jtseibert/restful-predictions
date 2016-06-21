@@ -7,9 +7,9 @@
 	
 module.exports = Data
 
-function Data(token, id) {
+function Data(instance, token, id) {
 	this.token = token
-	this.path = 'https://org360.my.salesforce.com/services/data/v35.0/analytics/reports/' + id
+	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/' + id
 } 
 
 Data.prototype.getData = function(oauth2, callback) {
