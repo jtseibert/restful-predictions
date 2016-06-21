@@ -9,8 +9,8 @@ function Table(csv) {
 	this.table
 } 
 
-Table.prototype.makeTable = function() {
+Table.prototype.makeTable = function(callback) {
 	//do stuff with table
 	console.log(this.data)
-
+	callback()
 }
