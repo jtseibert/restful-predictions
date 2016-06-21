@@ -56,8 +56,9 @@ router.route('/:instance/:accessToken/:id')
 
 router.route('/table')
 	.post(function(req,res){
-		table = new Table(req.params.payload);
-		table.makeTable()
+		console.log(req.params.payload)
+		// table = new Table(req.params.payload);
+		// table.makeTable()
 		// send table to pg
 	})
 
