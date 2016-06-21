@@ -7,7 +7,7 @@ var express			= require('express'),
 	Data 			= require('./models/data'),
 	async			= require('async'),
 	Table 			= require('./models/table')
-	
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
 
@@ -55,7 +55,7 @@ router.route('/:instance/:accessToken/:id')
 	})
 
 router.route('/table/:csv')
-	.get(function(req,res){
+	.post(function(req,res){
 		table = new Table(req.params.csv);
 		table.makeTable()
 		// send table to pg
