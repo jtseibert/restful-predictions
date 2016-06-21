@@ -4,7 +4,6 @@
 var express			= require('express'),
 	app        		= express(),
 	bodyParser 		= require('body-parser'),
-	Authenticate 	= require('./models/authenticate')
 	Data 			= require('./models/data'),
 	async			= require('async'),
 	Table 			= require('./models/table')
