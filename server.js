@@ -38,6 +38,7 @@ router.route('/:instance/:accessToken/:id')
 	.get(function(req,res){
 		data = new Data(req.params.instance, req.params.accessToken, req.params.id)
 		data.getData(oauth2,function(result){
+			console.log('should be returning json')
 			res.json(result)
 		})
 	})
