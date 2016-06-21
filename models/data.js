@@ -7,17 +7,17 @@
 	
 module.exports = Data
 
-function Data(instance, token, id) {
-	this.token = token
+function Data(instance, accessToken, id) {
+	this.accessToken = accessToken
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/' + id
 } 
 
 Data.prototype.getData = function(oauth2, callback) {
-	console.log(this.token)
+	console.log(this.accessToken)
 	console.log(this.path)
 
 	parameters = {
-		access_token: this.token
+		access_token: this.accessToken
 	}
 
 	oauth2.api('GET', this.path, parameters, function (err, data) {
