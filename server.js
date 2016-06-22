@@ -42,7 +42,7 @@ router.route('/:instance/:accessToken/:id')
 router.route('/table')
 	.post(function(req,res){
 		//console.log(req.body)
-		table = new Table(req.body.data[0].column);
+		table = new Table(req.body);
 		table.makeTable(function(err){
 			if (err)
 				res.send(err)
