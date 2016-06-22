@@ -8,8 +8,8 @@ var express			= require('express'),
 	async			= require('async'),
 	Table 			= require('./models/table')
 
-app.use(express.bodyParser.urlencoded({ extended: true }))
-app.use(express.bodyParser.json())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 var port = process.env.PORT || 5000
 
