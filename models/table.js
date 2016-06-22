@@ -5,7 +5,7 @@
 module.exports = Table
 
 function Table(csv) {
-	this.data = JSON.parse(csv)
+	this.data = csv
 	this.table
 } 
 
