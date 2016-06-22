@@ -18,7 +18,7 @@ Table.prototype.makeTable = function(callback) {
 	// 	tableName += this.data[i]
 	// }
 
-	console.log(this.data)
+	console.log(JSON.stringify(this.data))
 	callback()
 
 	//database
@@ -28,14 +28,7 @@ Table.prototype.makeTable = function(callback) {
 
 
 // do this tomorrow
-	// data = {
-	// 	data: [
-	// 		employees:{}
-	// 		Projects: {}
-	// 		WED: {}
-	// 		Hours: {}
-	// 	]
-	// }
+
 
 
 
