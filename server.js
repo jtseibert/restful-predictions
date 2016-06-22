@@ -8,8 +8,8 @@ var express			= require('express'),
 	async			= require('async'),
 	Table 			= require('./models/table')
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
+app.use(express.bodyParser.urlencoded({ extended: true }))
+app.use(express.bodyParser.json())
 
 var port = process.env.PORT || 5000
 
@@ -42,7 +42,7 @@ router.route('/:instance/:accessToken/:id')
 router.route('/table')
 	.post(function(req,res){
 		//console.log(req.body)
-		table = new Table(req.body);
+		table = new Table(req.body.data);
 		table.makeTable(function(err){
 			if (err)
 				res.send(err)
