@@ -9,7 +9,7 @@ var express			= require('express'),
 	Table 			= require('./models/table')
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
 
 var port = process.env.PORT || 5000
 
