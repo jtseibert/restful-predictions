@@ -19,7 +19,7 @@ Table.prototype.makeTable = function(callback) {
 	// }
 
 	console.log(this.data)
-	
+
 	callback()
 
 	//database
