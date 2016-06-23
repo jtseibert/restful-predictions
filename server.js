@@ -56,15 +56,19 @@ router.route('/exportFromSheets')
 				res.json({message: 'Success!'})
 			})
 		})
-		// send table to pg
 	})
 
 
 router.route('/importToSheets')
 	.get(function(req, res){
 		importFile = new Import(req.body)
-		importFile.getJsonData(function(err, result){
-			res.json(result)
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err;
+			importFile.getJsonData(client, function(err, result){
+				if (err)
+					res.send(err)
+				res.json(result)
+			})
 		})		
 	})
 
