@@ -12,7 +12,7 @@ function Table(data) {
 Table.prototype.saveTable = function(callback) {
 
 	console.log(this.id)
-	console.log(this.json[2506].Employees)
+	console.log(this.json[2506])
 
 	callback()
 
