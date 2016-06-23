@@ -19,7 +19,7 @@ Table.prototype.makeTable = function(callback) {
 	// }
 
 	//console.log(JSON.parse(this.data))
-	console.log(this.table)
+	console.log(this.table[2506])
 
 	callback()
 
