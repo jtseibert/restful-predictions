@@ -43,7 +43,7 @@ router.route('/:instance/:accessToken/:id')
 		})
 	})
 
-router.route('/export')
+router.route('/exportFromSheets')
 	.post(function(req,res){
 		//console.log(req.body)
 		table = new Table(req.body)
@@ -59,9 +59,12 @@ router.route('/export')
 		// send table to pg
 	})
 
-router.route('/import')
+router.route('/importToSheets')
 	.get(function(req, res) {
-		var import = new Import(req.body);		
+		var import = new Import(req.body);
+		import.getJsonData(function(err, result) {
+			res.json(result);
+		})		
 	})
 
 //Register routes
