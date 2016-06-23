@@ -11,10 +11,6 @@ function Table(data, pg) {
 } 
 
 Table.prototype.saveTable = function(callback) {
-
-	//console.log(this.id)
-	//console.log(this.json[2506])
-
 	this.dataBase.connect(process.env.DATABASE_URL, function(err, client) {
 		if (err) throw err;
 		//console.log('Connected to postgres! Getting schemas...');
@@ -30,7 +26,12 @@ Table.prototype.saveTable = function(callback) {
 		// 	console.log(JSON.stringify(result.rows, null, "    "));
 		// 	client.end();
 		// });
-		client.query('INSERT INTO allocation_reports(id, json) values($1, $2)', [this.id, this.json]);
+
+		console.log(this.id)
+		console.log(this.json[2506])
+
+
+		client.query("INSERT INTO allocation_reports(id, json) values($1, $2)", [this.id, this.json]);
 	});
 
 	callback()
