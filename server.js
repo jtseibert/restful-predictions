@@ -6,7 +6,7 @@ var express			= require('express'),
 	bodyParser 		= require('body-parser'),
 	Data 			= require('./models/data'),
 	async			= require('async'),
-	Table 			= require('./models/table')
+	Table 			= require('./models/table'),
 	Import 			= require('./models/import')
 
 app.use(bodyParser.json({ limit: '50mb' }))
