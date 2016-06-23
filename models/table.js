@@ -5,7 +5,7 @@
 module.exports = Table
 
 function Table(data) {
-	this.json = data.json
+	this.json = JSON.parse(JSON.stringify(data.json))
 	this.id = data.id
 } 
 
