@@ -29,8 +29,8 @@ Table.prototype.saveTable = function(callback) {
 		// 	client.end();
 		// });
 
-		console.log(this.id)
-		console.log(this.json[2506])
+		console.log(id)
+		console.log(json[2506])
 
 
 		client.query("INSERT INTO allocation_reports(id, json) values($1, $2)", [this.id, this.json]);
