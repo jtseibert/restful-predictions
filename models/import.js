@@ -22,7 +22,6 @@ Import.prototype.getJsonData = function(client, callback) {
 
         // After all data is returned, close connection and return results
         query.on('end', function() {
-            done()
             callback(results)
         })
 }
