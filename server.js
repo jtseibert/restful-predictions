@@ -54,7 +54,7 @@ router.route('/exportFromSheets')
 				if (err)
 					res.send(err)
 				res.json({message: 'Success!'})
-				client.end();
+				//client.end();
 			})
 		})
 	})
