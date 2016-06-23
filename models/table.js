@@ -32,7 +32,7 @@ Table.prototype.saveTable = function(client, callback) {
 
 
 	//testing
-	var query = client.query("SELECT json -> '2506' -> Employees AS shouldbe1person FROM allocation_reports");
+	var query = client.query("SELECT json -> '2506' ->> 'Employees' AS shouldbe1person FROM allocation_reports");
 	query.on("row", function (row, result) {
 		result.addRow(row);
 	});
