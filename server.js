@@ -60,13 +60,13 @@ router.route('/exportFromSheets')
 	})
 
 
-// router.route('/importToSheets')
-// 	.get(function(req, res) {
-// 		import = new Import(req.body)
-// 		import.getJsonData(function(err, result) {
-// 			res.json(result)
-// 		})		
-// 	})
+router.route('/importToSheets')
+	.get(function(req, res){
+		import = new Import(req.body)
+		import.getJsonData(function(err, result){
+			res.json(result)
+		})		
+	})
 
 //Register routes
 //All of our routes will be prefixed with /api
