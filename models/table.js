@@ -5,7 +5,7 @@
 module.exports = Table
 
 function Table(csv) {
-	this.data = csv
+	this.data = csv.replace('=',':')
 	this.table
 } 
 
