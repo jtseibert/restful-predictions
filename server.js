@@ -62,9 +62,9 @@ router.route('/exportFromSheets')
 
 router.route('/importToSheets')
 	.get(function(req, res) {
-		import = new Import(req.body);
+		import = new Import(req.body)
 		import.getJsonData(function(err, result) {
-			res.json(result);
+			res.json(result)
 		})		
 	})
 
