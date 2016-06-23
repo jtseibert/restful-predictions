@@ -30,6 +30,10 @@ var oauth2 = oauth2(credentials)
 //Setup routes for API
 var router = express.Router()
 
+//database
+var pg = require('pg');
+pg.defaults.ssl = true;
+
 router.route('/:instance/:accessToken/:id')
 	.get(function(req,res){
 		data = new Data(req.params.instance, req.params.accessToken, req.params.id)
@@ -42,7 +46,7 @@ router.route('/:instance/:accessToken/:id')
 router.route('/table')
 	.post(function(req,res){
 		//console.log(req.body)
-		table = new Table(req.body);
+		table = new Table(req.body, pg);
 		table.saveTable(function(err){
 			if (err)
 				res.send(err)
