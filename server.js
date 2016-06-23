@@ -43,7 +43,7 @@ router.route('/:instance/:accessToken/:id')
 		})
 	})
 
-router.route('/table')
+router.route('/export')
 	.post(function(req,res){
 		//console.log(req.body)
 		table = new Table(req.body)
@@ -65,6 +65,12 @@ router.route('/table')
 		})
 		// send table to pg
 	})
+
+/*router.route('/import')
+	.post(function(req, res) {
+
+
+	})*/
 
 //Register routes
 //All of our routes will be prefixed with /api
