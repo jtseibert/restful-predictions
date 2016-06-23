@@ -20,14 +20,13 @@ Table.prototype.saveTable = function(client, callback) {
 
 
 	client.query({
-  		text: "SELECT upsert($1, $2)",
+  		text: "SELECT upsert($1, $2)"
   		values: [ this.id, 
             		this.json
             	]
 	}, function(err, result){
-  		if(err) // this is a real error, handle it
+  		if(err) 
   			console.log(err)
-  		// otherwise your data is updated or inserted properly
 		})
 
 
