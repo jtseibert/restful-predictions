@@ -47,15 +47,8 @@ router.route('/export')
 	.post(function(req,res){
 		//console.log(req.body)
 		table = new Table(req.body)
-
-
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
-			// console.log('Connected to postgres! Getting schemas...');
-			// client.query('SELECT table_schema,table_name FROM information_schema.tables;')
-			// client.query("CREATE TABLE IF NOT EXISTS emps(firstname varchar(64), lastname varchar(64))");
-			// // client.query("INSERT INTO emps(firstname, lastname) values($1, $2)", ['Ronald', 'McDonald']);
-			// // client.query("INSERT INTO emps(firstname, lastname) values($1, $2)", ['Mayor', 'McCheese']);
 			table.saveTable(client,function(err){
 				if (err)
 					res.send(err)
@@ -66,11 +59,10 @@ router.route('/export')
 		// send table to pg
 	})
 
-/*router.route('/import')
-	.post(function(req, res) {
-
-
-	})*/
+router.route('/import')
+	.get(function(req, res) {
+		var import = new Import(req.body);		
+	})
 
 //Register routes
 //All of our routes will be prefixed with /api
