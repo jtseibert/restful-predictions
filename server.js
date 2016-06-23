@@ -46,7 +46,7 @@ router.route('/:instance/:accessToken/:id')
 router.route('/table')
 	.post(function(req,res){
 		//console.log(req.body)
-		table = new Table(req.body);
+		table = new Table(req.body)
 
 
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
@@ -69,7 +69,7 @@ router.route('/table')
 					res.send(err)
 				res.json({message: 'Success!'})
 			})
-		}
+		})
 		// send table to pg
 	})
 
