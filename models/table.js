@@ -31,7 +31,7 @@ Table.prototype.saveTable = function(callback) {
 		// 	client.end();
 		// });
 		client.query('INSERT INTO allocation_reports (id, json) VALUES (this.id, this.json)');
-	}
+	});
 
 	callback()
 
