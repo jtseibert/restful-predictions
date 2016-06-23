@@ -5,14 +5,14 @@
 module.exports = Table
 
 function Table(data) {
-	this.json = JSON.parse(JSON.stringify(data.json))
+	this.json = data.json
 	this.id = data.id
 } 
 
 Table.prototype.saveTable = function(callback) {
 
 	console.log(this.id)
-	console.log(this.json[2506])
+	console.log(this.json)
 
 
 
