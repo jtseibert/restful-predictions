@@ -32,8 +32,8 @@ var oauth2 = oauth2(credentials)
 var router = express.Router()
 
 //database
-var pg = require('pg');
-pg.defaults.ssl = true;
+var pg = require('pg')
+pg.defaults.ssl = true
 
 router.route('/:instance/:accessToken/:id')
 	.get(function(req,res){
