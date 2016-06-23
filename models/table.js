@@ -28,7 +28,7 @@ Table.prototype.saveTable = function(client, callback) {
   		if(err) // this is a real error, handle it
   			console.log(err)
   		// otherwise your data is updated or inserted properly
-		}});
+		})
 
 
 	//testing
