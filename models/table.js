@@ -4,9 +4,9 @@
 	
 module.exports = Table
 
-function Table(csv) {
-	this.data = csv
-	this.table = JSON.parse(this.data)
+function Table(json) {
+	this.json = json
+	this.table = JSON.parse(this.json)
 } 
 
 Table.prototype.makeTable = function(callback) {
