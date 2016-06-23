@@ -19,16 +19,22 @@ Table.prototype.saveTable = function(client, callback) {
 	// 				[this.id, this.json])
 
 
-	client.query({
-  		text: "SELECT upsert($1, $2)",
-  		values: [ this.id, 
-            		this.json
-            	]
-	}, function(err, result){
-  		if(err) 
-  			console.log(err)
-		})
+	// client.query({
+ //  		text: "SELECT upsert($1, $2)",
+ //  		values: [ this.id, 
+ //            		this.json
+ //            	]
+	// }, function(err, result){
+ //  		if(err) 
+ //  			console.log(err)
+	// 	})
 
+	client.query(
+		"if exist(select * from allocation_reports where id=$1) {"
+	    + "update allocation_reports set (json = $2) where id=$1"
+		+ "} else{"
+	    + "insert into allocation_reports values ($1, $2)}", [this.id, this.json]
+	)
 
 	//testing
 	var query = client.query("SELECT json -> '2506' ->> 'Employees' AS shouldbe1person FROM allocation_reports");
