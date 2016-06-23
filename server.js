@@ -42,8 +42,8 @@ router.route('/:instance/:accessToken/:id')
 router.route('/table')
 	.post(function(req,res){
 		//console.log(req.body)
-		table = new Table(JSON.stringify(req.body));
-		table.makeTable(function(err){
+		table = new Table(req.body);
+		table.saveTable(function(err){
 			if (err)
 				res.send(err)
 			res.json({message: 'Success!'})

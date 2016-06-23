@@ -4,22 +4,17 @@
 	
 module.exports = Table
 
-function Table(json) {
-	this.json = json
-	this.table = JSON.parse(this.json)
+function Table(data) {
+	this.json = data.json
+	this.id = data.id
 } 
 
-Table.prototype.makeTable = function(callback) {
-	
-	// var tableName = '',
-	// 	i = 0
+Table.prototype.saveTable = function(callback) {
 
-	// while (this.data[i] != ','){
-	// 	tableName += this.data[i]
-	// }
+	console.log(this.id)
+	console.log(this.json[2506])
 
-	//console.log(JSON.parse(this.data))
-	console.log(this.table[2506])
+
 
 	callback()
 
