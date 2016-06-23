@@ -24,7 +24,7 @@ Table.prototype.saveTable = function(client, callback) {
   		values: [ this.id, 
             		this.json
             	]
-	}, function(u_err, u_result){
+	}, function(err, result){
   		if(err) // this is a real error, handle it
   			console.log(err)
   		// otherwise your data is updated or inserted properly
