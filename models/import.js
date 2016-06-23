@@ -9,7 +9,7 @@ function Import(sheetName) {
 	this.sheetName = sheetName
 } 
 
-Import.prototype.getJsonData = function(err, result, callback) {
+Import.prototype.getJsonData = function(callback) {
 
 	callback()
 }
