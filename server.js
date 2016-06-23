@@ -59,9 +59,9 @@ router.route('/exportFromSheets')
 	})
 
 
-router.route('/importToSheets')
+router.route('/importToSheets/:sheetName')
 	.get(function(req, res){
-		importFile = new Import(req.body)
+		importFile = new Import(req.params.sheetName)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
 			importFile.getJsonData(client, function(err, result){
