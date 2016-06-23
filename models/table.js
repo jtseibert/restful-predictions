@@ -30,7 +30,7 @@ Table.prototype.saveTable = function(callback) {
 		// 	console.log(JSON.stringify(result.rows, null, "    "));
 		// 	client.end();
 		// });
-		client.query('INSERT INTO allocation_reports(id, json) values($1, $1)', [this.id, this.json]);
+		client.query('INSERT INTO allocation_reports(id, json) values($1, $2)', [this.id, this.json]);
 	});
 
 	callback()
