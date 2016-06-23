@@ -20,7 +20,7 @@ Table.prototype.saveTable = function(client, callback) {
 
 
 	client.query({
-  		text: "SELECT upsert($1, $2)"
+  		text: "SELECT upsert($1, $2)",
   		values: [ this.id, 
             		this.json
             	]
