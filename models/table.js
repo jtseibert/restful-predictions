@@ -19,7 +19,7 @@ Table.prototype.makeTable = function(callback) {
 	// }
 
 	//console.log(JSON.parse(this.data))
-	console.log(this.table[2].Projects)
+	console.log(this.table)
 
 	callback()
 
