@@ -13,7 +13,7 @@ Import.prototype.getJsonData = function(client, callback) {
 
 	var results = []
 
-	var query = client.query('SELECT json FROM allocation_reports WHERE id = $1' [this.sheetName])
+	var query = client.query('SELECT json FROM allocation_reports WHERE id = $1', [this.sheetName])
 
         // Stream results back one row at a time
         query.on('row', function(row) {
