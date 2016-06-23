@@ -67,6 +67,7 @@ router.route('/table')
 			table.saveTable(client,function(err){
 				if (err)
 					res.send(err)
+				console.log(client.query('SELECT * FROM allocation_reports'))
 				res.json({message: 'Success!'})
 			})
 		})
