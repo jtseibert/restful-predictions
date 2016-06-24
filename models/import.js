@@ -23,3 +23,16 @@ Import.prototype.getJsonData = function(client, callback) {
             callback(results)
         })
 }
+
+Import.prototype.displayOptions = function(client, callback) {
+	var results = []
+
+	var query = client.query('SELECT id FROM allocation_reports')
+		query.on('row', function(row) {
+			results.push(row)
+		})
+
+		query.on('end', function() {
+			callback(results)
+		})
+}
