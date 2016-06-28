@@ -5,14 +5,14 @@
 //output:
 	//json object data
 	
-module.exports = Data
+module.exports = Allocation
 
-function Data(instance, accessToken) {
+function Allocation(instance, accessToken) {
 	this.accessToken = accessToken
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa0000008r7sg'
 } 
 
-Data.prototype.getData = function(oauth2, callback) {
+Allocation.prototype.getAllocation = function(oauth2, callback) {
 	console.log(this.accessToken)
 	console.log(this.path)
 

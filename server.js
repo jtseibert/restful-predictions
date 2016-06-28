@@ -4,7 +4,7 @@
 var express			= require('express'),
 	app        		= express(),
 	bodyParser 		= require('body-parser'),
-	Data 			= require('./models/data'),
+	Allocation 		= require('./models/allocation'),
 	async			= require('async'),
 	Table 			= require('./models/table'),
 	Import 			= require('./models/import')
@@ -37,14 +37,17 @@ pg.defaults.ssl = true
 
 router.route('/:instance/allocation/:accessToken')
 	.get(function(req,res){
-		data = new Data(req.params.instance, req.params.accessToken, req.params.id)
-		data.getData(oauth2,function(result){
+		allocation = new Allocation(req.params.instance, req.params.accessToken)
+		allocation.getAllocation(oauth2,function(result){
 			console.log('should be returning json')
 			res.json(result)
 		})
 	})
 
 router.route('/:instance/pipline/:accessToken/00Oa00000093sBK')
+	.get(function(req, res) {
+
+	})
 
 
 
