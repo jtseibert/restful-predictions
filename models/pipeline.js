@@ -79,7 +79,6 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 				}
 			}
 		}
-		console.log(returnData)
 	    callback(returnData)
 	})  
 }
