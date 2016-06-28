@@ -10,7 +10,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 	parameters = {
 		access_token: this.accessToken
 	}
-	dbData = {},
+	dbData = {}
 	var query = client.query("SELECT * from opportunity_pipeline");
 	query.on("row", function (row, result) {
 		result.addRow(row)
