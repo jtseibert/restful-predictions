@@ -73,8 +73,8 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 					if(dbData[rowData[opportunityIndex]]){
 						console.log('should set data')
 						rowData[stageIndex] = dbData[rowData[opportunityIndex]].STAGE
-						rowData[opportunityIndex] = dbData[rowData[opportunityIndex]]
 						rowData[probabilityIndex] = dbData[rowData[opportunityIndex]].PROBABILITY
+						rowData[opportunityIndex] = dbData[rowData[opportunityIndex]]
 					}
 					returnData.push(rowData)
 				}
