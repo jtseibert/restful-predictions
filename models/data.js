@@ -52,7 +52,10 @@ Data.prototype.getData = function(oauth2, callback) {
 			if (!(weekKey == "T" || employeeKey == "T" || projectKey == "T")){
 				console.log('weekKey: ' + weekKey + "\temployeeKey: " + employeeKey + "\tprojectKey: " + projectKey + "\n")
 
-				returnData.push([groupingsDown[employeeKey].label, groupingsDown[employeeKey].groupings[projectKey].label, groupingsAcross[weekKey].label, factMap[key].aggregates[0].value])
+				returnData.push([groupingsDown[employeeKey].label, 
+									groupingsDown[employeeKey].groupings[projectKey].label, 
+									groupingsAcross[weekKey].label, 
+									factMap[key].aggregates[0].value])
 
 				// returnData[key] = {
 				// 	"Resource: Resource Name": groupingsDown[employeeKey].label,
