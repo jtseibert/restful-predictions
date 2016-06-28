@@ -10,9 +10,16 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 	parameters = {
 		access_token: this.accessToken
 	}
-
-	dbData = client.query('SELECT * FROM opportunity_pipeline');
-	console.log(dbData)
+	var dbData,
+		query = client.query("SELECT * from opportunity_pipeline");
+	query.on("row", function (row, result) {
+		result.addRow(row)
+	});
+	query.on("end", function (result) {
+		dbData = result
+		console.log(dbData)
+		client.end()
+	});
 
 	// oauth2.api('GET', this.path, parameters, function (err, data) {
 	//     if (err)

@@ -52,7 +52,6 @@ router.route('/:instance/pipeline/:accessToken')
 			if (err) throw err;
 			pipeline.getPipeline(client, oauth2, function(result) {
 				res.json(result)
-				client.end()
 			})
 		})
 	})
