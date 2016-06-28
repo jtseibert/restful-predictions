@@ -35,7 +35,7 @@ var router = express.Router()
 var pg = require('pg')
 pg.defaults.ssl = true
 
-router.route('/:instance/:accessToken/:id')
+router.route('/:instance/allocation/:accessToken')
 	.get(function(req,res){
 		data = new Data(req.params.instance, req.params.accessToken, req.params.id)
 		data.getData(oauth2,function(result){
@@ -43,6 +43,12 @@ router.route('/:instance/:accessToken/:id')
 			res.json(result)
 		})
 	})
+
+router.route('/:instance/pipline/:accessToken/00Oa00000093sBK')
+
+
+
+
 
 router.route('/exportFromSheets')
 	.post(function(req,res){
