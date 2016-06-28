@@ -18,9 +18,9 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 	query.on("end", function (result) {
 		
 	for (var entry in result.rows){
-		dbData[result.rows[row].opportunity] = {
-			"STAGE": result.rows[row].stage,
-			"PROBABILITY": result.rows[row].probability
+		dbData[result.rows[entry].opportunity] = {
+			"STAGE": result.rows[entry].stage,
+			"PROBABILITY": result.rows[entry].probability
 		}
 	}
 		console.log(JSON.stringify(dbData))
