@@ -6,7 +6,7 @@ module.exports = UpdateDB
 
 function UpdateDB(data) {
 	this.stage = data.stage
-	this.opportunitiy = data.opportunitiy
+	this.opportunity = data.opportunity
 	this.probability = data.probability
 } 
 
