@@ -53,19 +53,22 @@ router.route('/:instance/pipeline/:accessToken')
 		})
 	})
 
-router.route('/exportFromSheets')
+router.route('/updateDB')
 	.post(function(req,res){
-		//console.log(req.body)
-		table = new Table(req.body)
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err;
-			table.saveTable(client,function(err){
-				if (err)
-					res.send(err)
-				res.json({message: 'Success!'})
-				//client.end();
-			})
-		})
+		console.log(req.body)
+		res.json({message: 'Success!'})
+
+
+		// table = new Table(req.body)
+		// pg.connect(process.env.DATABASE_URL, function(err, client) {
+		// 	if (err) throw err;
+		// 	table.saveTable(client,function(err){
+		// 		if (err)
+		// 			res.send(err)
+		// 		res.json({message: 'Success!'})
+		// 		//client.end();
+		// 	})
+		// })
 	})
 
 
