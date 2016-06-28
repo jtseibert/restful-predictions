@@ -58,7 +58,7 @@ Data.prototype.getData = function(oauth2, callback) {
 				}
 			}
 		}
-	    callback(data)
+	    callback(returnData)
 	})  
 
 
