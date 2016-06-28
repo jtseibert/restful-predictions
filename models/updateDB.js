@@ -7,7 +7,7 @@ module.exports = UpdateDB
 function UpdateDB(data) {
 	this.stage = data.stage
 	this.opportunitiy = data.opportunitiy
-	this.probability = parseInt(data.probability, 10)
+	this.probability = data.probability
 } 
 
 UpdateDB.prototype.updateDB = function(client, callback) {
