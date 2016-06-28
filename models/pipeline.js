@@ -70,7 +70,8 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 					for (var cell in factMap[stage].rows[row].dataCells){
 						rowData.push(factMap[stage].rows[row].dataCells[cell].label)
 					}
-					if(dbData[factMap[stage].rows[row].dataCells[opportunityIndex].label]){
+					if(dbData[rowData[opportunityIndex]]){
+						console.log('should set data')
 						rowData[stageIndex] = dbData[factMap[stage].rows[row].dataCells[opportunityIndex].label].STAGE
 						rowData[opportunityIndex] = dbData[factMap[stage].rows[row].dataCells[opportunityIndex].label]
 						rowData[probabilityIndex] = dbData[factMap[stage].rows[row].dataCells[opportunityIndex].label].PROBABILITY
