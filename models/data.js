@@ -24,9 +24,10 @@ Data.prototype.getData = function(oauth2, callback) {
 	    if (err)
 	        console.log('GET Error: ', JSON.stringify(err)) 
 	    
-	    var factMap 				= responseData.factMap,
-	    	groupingsDown 			= responseData.groupingsDown.groupings,
-	    	groupingsAcross 		= responseData.groupingsAcross.groupings,
+	    var factMap 				= data.factMap,
+	    	groupingsDown 			= data.groupingsDown.groupings,
+	    	groupingsAcross 		= data.groupingsAcross.groupings,
+	    	returnData				= {},
 	    	employeeKey,
 	        projectKey,
 	        weekKey,
@@ -49,7 +50,7 @@ Data.prototype.getData = function(oauth2, callback) {
 			if (!(weekKey == "T" || employeeKey == "T" || projectKey == "T")){
 				console.log('weekKey: ' + weekKey + "\temployeeKey: " + employeeKey + "\tprojectKey: " + projectKey + "\n")
 
-				data[key] = {
+				returnData[key] = {
 					"Resource: Resource Name": groupingsDown[employeeKey].label,
 					"Project": groupingsDown[employeeKey].groupings[projectKey].label,
 				 	"Start Date": groupingsAcross[weekKey].label,
