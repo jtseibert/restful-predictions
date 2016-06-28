@@ -68,6 +68,14 @@ router.route('/updateDB')
 		})
 	})
 
+router.route('/clearDB')
+	.get(function(req,res){
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			client.query('delete from opportunity_pipeline *')
+		})
+		res.json({message: 'Success!'})
+	})
+
 
 router.route('/importToSheets/:sheetName')
 	.get(function(req, res){
