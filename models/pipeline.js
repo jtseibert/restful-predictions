@@ -23,7 +23,8 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 			"PROBABILITY": result.rows[entry].probability
 		}
 	}
-		console.log(JSON.stringify(dbData))
+		if (dbData['Black Hills / SourceGas-CRM Implementation'])
+			console.log(JSON.stringify(dbData))
 		client.end()
 	});
 
