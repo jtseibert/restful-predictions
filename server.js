@@ -7,7 +7,6 @@ var express			= require('express'),
 	Allocation 		= require('./models/allocation'),
 	async			= require('async'),
 	UpdateDB 		= require('./models/updateDB'),
-	Import 			= require('./models/import'),
 	Pipeline 		= require('./models/pipeline')
 
 app.use(bodyParser.json({ limit: '50mb' }))
@@ -77,21 +76,7 @@ router.route('/clearDB')
 		res.json({message: 'Success!'})
 	})
 
-
-router.route('/importToSheets/:sheetName')
-	.get(function(req, res){
-		importFile = new Import(req.params.sheetName)
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err;
-			importFile.getJsonData(client, function(err, result){
-				if (err)
-					res.send(err)
-				res.json(result)
-				client.end()
-			})
-		})		
-	})
-
+/*
 router.route('/displayOptions')
 	.get(function(req, res) {
 		//input irrelevant to query
@@ -105,7 +90,7 @@ router.route('/displayOptions')
 				client.end()
 			})
 		})		
-	})
+	})*/
 
 //Register routes
 //All of our routes will be prefixed with /api
