@@ -19,36 +19,43 @@ Pipeline.prototype.getPipeline = function(oauth2, callback) {
 	    
 	    var factMap 				= data.factMap,
 	    	groupingsDown 			= data.groupingsDown.groupings,
-	    	groupingsAcross 		= data.groupingsAcross.groupings,
 	    	returnData				= [],
-	    	employeeKey,
-	        projectKey,
-	        weekKey,
-	        valueKey
+	    	rowData,
+	    	stageKey
 
-	    returnData.push(["Resource: Resource Name", "Project", "Start Date", "Estimated Hours"])
+	    returnData.push(["STAGE",
+	    					"OPPORTUNITY_NAME",
+      						"TYPE",
+							"LEAD_SOURCE",
+							"AMOUNT",
+							"EXP_AMOUNT",
+							"CLOSE_DATE",
+							"NEXT_STEP",
+							"PROBABILITY",
+							"FISCAL_QUARTER",
+							"AGE",
+							"CREATED_DATE",
+							"FULL_NAME",
+							"ROLLUP_DESCRIPTION",
+							"ACCOUNT_NAME"
+						])
 
-	    for (var key in factMap) {
+	    for (var stage in factMap) {
 
-		    valueKey = key
-			splitKey = key.split('!')
-			weekKey = splitKey[1]
-			splitKey = splitKey[0].split('_')
-			employeeKey = splitKey[0]
-			if (splitKey.length > 1){
-				projectKey = splitKey[1]
-			} else {
-				projectKey = "T"
-			}
+		    stageKey = stage.split('!')[0];
+			
 
-			if (!(weekKey == "T" || employeeKey == "T" || projectKey == "T")){
-				//console.log('weekKey: ' + weekKey + "\temployeeKey: " + employeeKey + "\tprojectKey: " + projectKey + "\n")
-
-				returnData.push([groupingsDown[employeeKey].label, 
-									groupingsDown[employeeKey].groupings[projectKey].label, 
-									groupingsAcross[weekKey].label, 
-									factMap[key].aggregates[0].value])
+			if (stageKey != "T"){
+				rowData.push(groupingsDown[stageKey].label)
+				for (var row in factMap[stage].rows){
+					rowData = [],
+					for (var cell in factMap[stage].rows[row].dataCells){
+						rowData.push(factMap[stage].rows[row].dataCells[cell].label)
+					}
+					returnData.push(rowData)
+				}
 			}
 		}
+		console.log(returnData)
 	    callback(returnData)
 	})  
