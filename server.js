@@ -6,7 +6,7 @@ var express			= require('express'),
 	bodyParser 		= require('body-parser'),
 	Allocation 		= require('./models/allocation'),
 	async			= require('async'),
-	Table 			= require('./models/table'),
+	UpdateDB 		= require('./models/updateDB'),
 	Import 			= require('./models/import'),
 	Pipeline 		= require('./models/pipeline')
 
@@ -56,19 +56,16 @@ router.route('/:instance/pipeline/:accessToken')
 router.route('/updateDB')
 	.post(function(req,res){
 		console.log(req.body)
-		res.json({message: 'Success!'})
 
-
-		// table = new Table(req.body)
-		// pg.connect(process.env.DATABASE_URL, function(err, client) {
-		// 	if (err) throw err;
-		// 	table.saveTable(client,function(err){
-		// 		if (err)
-		// 			res.send(err)
-		// 		res.json({message: 'Success!'})
-		// 		//client.end();
-		// 	})
-		// })
+		update = new UpdateDB(req.body)
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err;
+			update.updateDB(client,function(err){
+				if (err)
+					res.send(err)
+				res.json({message: 'Success!'})
+			})
+		})
 	})
 
 
