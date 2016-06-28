@@ -52,7 +52,7 @@ Data.prototype.getData = function(oauth2, callback) {
 				data[key] = {
 					"Resource: Resource Name": groupingsDown[employeeKey].label,
 					"Project": groupingsDown[employeeKey].groupings[projectKey].label,
-				 	"Start Date": groupingsAcross[weekKey].label
+				 	"Start Date": groupingsAcross[weekKey].label,
 				 	"Estimated Hours": factMap[key].aggregates[0].value
 				}
 			}
