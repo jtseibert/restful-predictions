@@ -33,7 +33,6 @@ Data.prototype.getData = function(oauth2, callback) {
 	        weekKey,
 	        valueKey
 
-
 	    returnData.push(["Resource: Resource Name", "Project", "Start Date", "Estimated Hours"])
 
 	    for (var key in factMap) {
@@ -50,19 +49,12 @@ Data.prototype.getData = function(oauth2, callback) {
 			}
 
 			if (!(weekKey == "T" || employeeKey == "T" || projectKey == "T")){
-				console.log('weekKey: ' + weekKey + "\temployeeKey: " + employeeKey + "\tprojectKey: " + projectKey + "\n")
+				//console.log('weekKey: ' + weekKey + "\temployeeKey: " + employeeKey + "\tprojectKey: " + projectKey + "\n")
 
 				returnData.push([groupingsDown[employeeKey].label, 
 									groupingsDown[employeeKey].groupings[projectKey].label, 
 									groupingsAcross[weekKey].label, 
 									factMap[key].aggregates[0].value])
-
-				// returnData[key] = {
-				// 	"Resource: Resource Name": groupingsDown[employeeKey].label,
-				// 	"Project": groupingsDown[employeeKey].groupings[projectKey].label,
-				//  	"Start Date": groupingsAcross[weekKey].label,
-				//  	"Estimated Hours": factMap[key].aggregates[0].value
-				// }
 			}
 		}
 	    callback(returnData)
