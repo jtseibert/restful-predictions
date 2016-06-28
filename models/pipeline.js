@@ -28,7 +28,6 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 
 
 	oauth2.api('GET', this.path, parameters, function (err, data) {
-	    console.log(JSON.stringify(dbData))
 	    if (err)
 	        console.log('GET Error: ', JSON.stringify(err)) 
 	    
@@ -71,7 +70,6 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 						rowData.push(factMap[stage].rows[row].dataCells[cell].label)
 					}
 					if(dbData[rowData[opportunityIndex]]){
-						console.log('should set data')
 						rowData[stageIndex] = dbData[rowData[opportunityIndex]].STAGE
 						rowData[probabilityIndex] = dbData[rowData[opportunityIndex]].PROBABILITY
 					}
