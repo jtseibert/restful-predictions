@@ -17,7 +17,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 	});
 	query.on("end", function (result) {
 		dbData = result
-		console.log(dbData)
+		console.log(JSON.stringify(dbData.rows, null, "    "));
 		client.end()
 	});
 
