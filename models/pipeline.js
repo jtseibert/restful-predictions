@@ -2,7 +2,7 @@ module.exports = Pipeline
 
 function Pipeline(instance, accessToken) {
 	this.accessToken = accessToken
-	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093sBK'
+	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093sCD'
 } 
 
 Pipeline.prototype.getPipeline = function(oauth2, callback) {
