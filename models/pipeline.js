@@ -48,7 +48,7 @@ Pipeline.prototype.getPipeline = function(oauth2, callback) {
 			if (stageKey != "T"){
 				rowData.push(groupingsDown[stageKey].label)
 				for (var row in factMap[stage].rows){
-					rowData = [],
+					rowData = []
 					for (var cell in factMap[stage].rows[row].dataCells){
 						rowData.push(factMap[stage].rows[row].dataCells[cell].label)
 					}
