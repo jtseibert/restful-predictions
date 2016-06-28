@@ -44,7 +44,7 @@ router.route('/:instance/allocation/:accessToken')
 		})
 	})
 
-router.route('/:instance/pipline/:accessToken/00Oa00000093sBK')
+router.route('/:instance/pipline/:accessToken')
 	.get(function(req, res) {
 		pipeline = new Pipeline(oauth2, function(result) {
 			res.json(result)
