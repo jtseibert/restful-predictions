@@ -59,3 +59,4 @@ Pipeline.prototype.getPipeline = function(oauth2, callback) {
 		console.log(returnData)
 	    callback(returnData)
 	})  
+}
