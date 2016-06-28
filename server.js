@@ -7,7 +7,8 @@ var express			= require('express'),
 	Allocation 		= require('./models/allocation'),
 	async			= require('async'),
 	Table 			= require('./models/table'),
-	Import 			= require('./models/import')
+	Import 			= require('./models/import'),
+	Pipeline 		= require('./models/pipeline')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
@@ -44,9 +45,10 @@ router.route('/:instance/allocation/:accessToken')
 		})
 	})
 
-router.route('/:instance/pipline/:accessToken')
+router.route('/:instance/pipeline/:accessToken')
 	.get(function(req, res) {
-		pipeline = new Pipeline(oauth2, function(result) {
+		pipeline = new Pipeline(req.params.instance, req.params.accessToken)
+		pipeline.getPipeline(oauth2, function(result) {
 			res.json(result)
 		})
 	})
