@@ -71,7 +71,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 					}
 					if(dbData[rowData[opportunityIndex]]){
 						rowData[stageIndex] = dbData[rowData[opportunityIndex]].STAGE
-						rowData[probabilityIndex] = dbData[rowData[opportunityIndex]].PROBABILITY
+						rowData[probabilityIndex] = (dbData[rowData[opportunityIndex]].PROBABILITY * 100) + "%"
 					}
 					returnData.push(rowData)
 				}
