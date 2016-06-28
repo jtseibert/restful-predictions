@@ -58,8 +58,6 @@ router.route('/:instance/pipeline/:accessToken')
 
 router.route('/updateDB')
 	.post(function(req,res){
-		console.log(req.body)
-
 		update = new UpdateDB(req.body)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
