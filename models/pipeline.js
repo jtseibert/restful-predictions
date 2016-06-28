@@ -20,7 +20,7 @@ Pipeline.prototype.getPipeline = function(oauth2, callback) {
 	    var factMap 				= data.factMap,
 	    	groupingsDown 			= data.groupingsDown.groupings,
 	    	returnData				= [],
-	    	rowData					= [],
+	    	rowData,
 	    	stageKey
 
 	    returnData.push(["STAGE",
@@ -46,13 +46,13 @@ Pipeline.prototype.getPipeline = function(oauth2, callback) {
 			
 
 			if (stageKey != "T"){
-				rowData.push(groupingsDown[stageKey].label)
 				for (var row in factMap[stage].rows){
+					rowData = []
+					rowData.push(groupingsDown[stageKey].label)
 					for (var cell in factMap[stage].rows[row].dataCells){
 						rowData.push(factMap[stage].rows[row].dataCells[cell].label)
 					}
 					returnData.push(rowData)
-					rowData = []
 				}
 			}
 		}
