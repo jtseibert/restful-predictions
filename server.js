@@ -48,15 +48,16 @@ router.route('/:instance/allocation/:accessToken')
 router.route('/:instance/pipeline/:accessToken')
 	.get(function(req, res) {
 		pipeline = new Pipeline(req.params.instance, req.params.accessToken)
-		pipeline.getPipeline(oauth2, function(result) {
-			res.json(result)
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err;
+			pipeline.getPipeline(client, oauth2, function(result) {
+				res.json(result)
+			})
 		})
 	})
 
 router.route('/updateDB')
 	.post(function(req,res){
-		console.log(req.body)
-
 		update = new UpdateDB(req.body)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
