@@ -13,7 +13,7 @@ function UpdateDB(data) {
 UpdateDB.prototype.updateDB = function(client, callback) {
 
 	client.query('INSERT INTO opportunity_pipeline(opportunity, stage, probability) values($1, $2, $3) ON CONFLICT (opportunity) DO UPDATE SET probability = $2, stage = $3', 
-					[this.opportunitiy, this.stage, this.probability])
+					[this.opportunity, this.stage, this.probability])
 
 	//testing
 	var query = client.query("SELECT * from opportunity_pipeline");
