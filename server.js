@@ -44,7 +44,7 @@ router.route('/:instance/Allocation/:accessToken')
 		})
 	})
 
-router.route('/:instance/Sales\sPipeline/:accessToken')
+router.route('/:instance/Sales%20Pipeline/:accessToken')
 	.get(function(req, res) {
 		pipeline = new Pipeline(req.params.instance, req.params.accessToken)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
