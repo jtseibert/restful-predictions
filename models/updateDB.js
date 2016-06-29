@@ -24,8 +24,8 @@ UpdateDB.prototype.updateDB = function(client, callback) {
 		})
 		query.on("end", function (result) {
 			console.log(JSON.stringify(result.rows, null, "    "))
-			client.end()
 		})
 	}
+	client.end()
 	callback()
 }
