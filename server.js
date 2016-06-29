@@ -35,7 +35,7 @@ var router = express.Router()
 var pg = require('pg')
 pg.defaults.ssl = true
 
-router.route('/:instance/allocation/:accessToken')
+router.route('/:instance/Allocation/:accessToken')
 	.get(function(req,res){
 		allocation = new Allocation(req.params.instance, req.params.accessToken)
 		allocation.getAllocation(oauth2,function(result){
@@ -44,7 +44,7 @@ router.route('/:instance/allocation/:accessToken')
 		})
 	})
 
-router.route('/:instance/pipeline/:accessToken')
+router.route('/:instance/Salesforce\ Pipeline/:accessToken')
 	.get(function(req, res) {
 		pipeline = new Pipeline(req.params.instance, req.params.accessToken)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
