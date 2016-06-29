@@ -11,7 +11,7 @@ function UpdateDB(data) {
 UpdateDB.prototype.updateDB = function(client, callback) {
 
 	console.log(this.data)
-	console.log(this.data[entry].opportunity)
+	console.log(this.data[0].opportunity)
 
 	for (var entry in this.data){
 		client.query('INSERT INTO opportunity_pipeline(opportunity, stage, probability) values($1, $2, $3) ON CONFLICT (opportunity) DO UPDATE SET stage = $2, probability = $3', 
