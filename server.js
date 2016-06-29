@@ -7,7 +7,8 @@ var express			= require('express'),
 	Allocation 		= require('./models/allocation'),
 	async			= require('async'),
 	UpdateDB 		= require('./models/updateDB'),
-	Pipeline 		= require('./models/pipeline')
+	Pipeline 		= require('./models/pipeline'),
+	Omit 			= require('./models/omit')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
@@ -61,6 +62,32 @@ router.route('/updateDB')
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
 			update.updateDB(client,function(err){
+				if (err)
+					res.send(err)
+				res.json({message: 'Success!'})
+			})
+		})
+	})
+
+router.route('/omit')
+	.post(function(req,res){
+		omit = new Omit(req.body)
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err;
+			omit.updateOmit(client,function(err){
+				if (err)
+					res.send(err)
+				res.json({message: 'Success!'})
+			})
+		})
+	})
+
+router.route('/undoOmit')
+	.post(function(req,res){
+		omit = new Omit(req.body)
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err;
+			omit.undoOmit(client,function(err){
 				if (err)
 					res.send(err)
 				res.json({message: 'Success!'})
