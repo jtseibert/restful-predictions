@@ -37,7 +37,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 		}
 		console.log(omitData)
 	})
-	
+
 	oauth2.api('GET', this.path, parameters, function (err, data) {
 	    if (err)
 	        console.log('GET Error: ', JSON.stringify(err)) 
@@ -75,17 +75,20 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 
 			if (stageKey != "T"){
 				for (var row in factMap[stage].rows){
-					rowData = []
-					rowData.push(groupingsDown[stageKey].label)
-					for (var cell in factMap[stage].rows[row].dataCells){
-						rowData.push(factMap[stage].rows[row].dataCells[cell].label)
+					if (omitData[factMap[stage].rows[row].dataCells[0].label]){ console.log('omitData found!') }
+					else {
+						rowData = []
+						rowData.push(groupingsDown[stageKey].label)
+						for (var cell in factMap[stage].rows[row].dataCells){
+							rowData.push(factMap[stage].rows[row].dataCells[cell].label)
+						}
+						if(dbData[rowData[opportunityIndex]]){
+							rowData[stageIndex] = dbData[rowData[opportunityIndex]].STAGE
+							rowData[probabilityIndex] = (dbData[rowData[opportunityIndex]].PROBABILITY * 100) + "%"
+							delete dbData[rowData[opportunityIndex]]
+						}
+						returnData.push(rowData)
 					}
-					if(dbData[rowData[opportunityIndex]]){
-						rowData[stageIndex] = dbData[rowData[opportunityIndex]].STAGE
-						rowData[probabilityIndex] = (dbData[rowData[opportunityIndex]].PROBABILITY * 100) + "%"
-						delete dbData[rowData[opportunityIndex]]
-					}
-					returnData.push(rowData)
 				}
 			}
 		}
