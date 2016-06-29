@@ -5,7 +5,7 @@
 module.exports = UpdateDB
 
 function UpdateDB(data) {
-	this.data
+	this.data = data
 } 
 
 UpdateDB.prototype.updateDB = function(client, callback) {
