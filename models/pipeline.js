@@ -10,22 +10,32 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 	parameters = {
 		access_token: this.accessToken
 	}
+
 	dbData = {}
-	var query = client.query("SELECT * from opportunity_pipeline");
+	omitData = {}
+
+	var query = client.query("SELECT * from opportunity_pipeline")
 	query.on("row", function (row, result) {
 		result.addRow(row)
-	});
+	})
 	query.on("end", function (result) {
-		
-	for (var entry in result.rows){
-		dbData[result.rows[entry].opportunity] = {
-			"STAGE": result.rows[entry].stage,
-			"PROBABILITY": result.rows[entry].probability
+		for (var entry in result.rows){
+			dbData[result.rows[entry].opportunity] = {
+				"STAGE": result.rows[entry].stage,
+				"PROBABILITY": result.rows[entry].probability
+			}
 		}
-	}
-		client.end()
-	});
+	})
 
+	var omitQuery = client.query("SELECT * from omit")
+	omitQuery.on("row", function (row, result) {
+		result.addRow(row)
+	})
+	omitQuery.on("end", function (result) {
+		for (var entry in result.rows){
+			omitData[result.rows[entry].opportunity] = {}
+		}
+	})
 
 	oauth2.api('GET', this.path, parameters, function (err, data) {
 	    if (err)
