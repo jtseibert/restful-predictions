@@ -36,7 +36,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 			omitData[result.rows[entry].opportunity] = {}
 		}
 	})
-	Logger.log(omitQuery)
+	console.log(omitQuery)
 	oauth2.api('GET', this.path, parameters, function (err, data) {
 	    if (err)
 	        console.log('GET Error: ', JSON.stringify(err)) 
