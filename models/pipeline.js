@@ -75,8 +75,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 
 			if (stageKey != "T"){
 				for (var row in factMap[stage].rows){
-					if (omitData[factMap[stage].rows[row].dataCells[0].label]){ console.log('omitData found!') }
-					else {
+					if (!(omitData[factMap[stage].rows[row].dataCells[0].label])){
 						rowData = []
 						rowData.push(groupingsDown[stageKey].label)
 						for (var cell in factMap[stage].rows[row].dataCells){
