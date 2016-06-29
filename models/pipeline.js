@@ -92,7 +92,9 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 			}
 		}
 		for (var key in dbData){
-			returnData.push([dbData[key].STAGE, key, "", "", "", "", "", "", dbData[key].PROBABILITY, "", "", "", "", "", ""])
+			if (!(omitData[key])){
+				returnData.push([dbData[key].STAGE, key, "", "", "", "", "", "", dbData[key].PROBABILITY, "", "", "", "", "", ""])
+			}
 		}
 	    callback(returnData)
 	})  
