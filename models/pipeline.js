@@ -86,10 +86,10 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 					}
 					returnData.push(rowData)
 				}
-				for (var key in dbData){
-					returnData.push([dbData[key].STAGE, key, "", "", "", "", "", "", dbData[key].PROBABILITY, "", "", "", "", "", ""])
-				}
 			}
+		}
+		for (var key in dbData){
+			returnData.push([dbData[key].STAGE, key, "", "", "", "", "", "", dbData[key].PROBABILITY, "", "", "", "", "", ""])
 		}
 	    callback(returnData)
 	})  
