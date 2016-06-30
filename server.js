@@ -85,6 +85,19 @@ router.route('/removeOpportunity')
 		})
 	})
 
+router.route('/getOpportunity')
+	.get(function(req, res) {
+		opportunities = new Opportunity("")
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err
+			opportunities.getOpportunity(client, function(err, response){
+				if (err)
+					res.send(err)
+				res.json(response)
+			})
+		})
+	})
+
 //Create omit DB routes
 router.route('/addOmit')
 	.post(function(req,res){
@@ -114,10 +127,10 @@ router.route('/removeOmit')
 
 router.route('/getOmit')
 	.get(function(req, res) {
-		omit = new Omit("")
+		omits = new Omit("")
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err
-			omit.getOmit(client, function(err, response){
+			omits.getOmit(client, function(err, response){
 				if (err)
 					res.send(err)
 				res.json(response)
