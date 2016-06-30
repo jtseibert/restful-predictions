@@ -50,7 +50,7 @@ router.route('/:instance/Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
 		pipeline = new Pipeline(req.params.instance, req.params.accessToken)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err;
+			if (err) throw err
 			pipeline.getPipeline(client, oauth2, function(result) {
 				res.json(result)
 				client.end()
@@ -63,7 +63,7 @@ router.route('/addOpportunity')
 	.post(function(req,res){
 		opportunity = new Opportunity(req.body)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err;
+			if (err) throw err
 			opportunity.add(client,function(err){
 				if (err)
 					res.send(err)
@@ -76,7 +76,7 @@ router.route('/removeOpportunity')
 	.post(function(req,res){
 		opportunity = new Opportunity(req.body)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err;
+			if (err) throw err
 			opportunity.remove(client,function(err){
 				if (err)
 					res.send(err)
@@ -90,7 +90,7 @@ router.route('/addOmit')
 	.post(function(req,res){
 		omit = new Omit(req.body)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err;
+			if (err) throw err
 			omit.add(client,function(err){
 				if (err)
 					res.send(err)
@@ -103,7 +103,7 @@ router.route('/removeOmit')
 	.post(function(req,res){
 		omit = new Omit(req.body)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err;
+			if (err) throw err
 			omit.remove(client,function(err){
 				if (err)
 					res.send(err)
@@ -116,7 +116,7 @@ router.route('/getOmit')
 	.get(function(req, res) {
 		omit = new Omit("")
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err;
+			if (err) throw err
 			omit.getOmit(client, function(err, response){
 				if (err)
 					res.send(err)
@@ -133,7 +133,7 @@ router.route('/clearDB')
 			client.query('delete from omit *')
 		})
 		res.json({message: 'Success!'})
-		client.end();
+		client.end()
 	})
 
 //Register routes
@@ -141,5 +141,5 @@ router.route('/clearDB')
 app.use('/api', router)
 
 //Start server
-app.listen(port);
+app.listen(port)
 console.log('Magic happens on port ' + port)
