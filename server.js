@@ -96,6 +96,19 @@ router.route('/undoOmit')
 		})
 	})
 
+router.route('/getFromOmit')
+	.get(function(req, res) {
+		omit = new Omit("foo")
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err;
+			omit.getOpportunities(client,function(err, response){
+				if (err)
+					res.send(err)
+				res.send(response)
+			})
+		})
+	})
+
 router.route('/clearDB')
 	.get(function(req,res){
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
