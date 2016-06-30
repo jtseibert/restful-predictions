@@ -144,9 +144,9 @@ router.route('/clearDB')
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			client.query('delete from sales_pipeline *')
 			client.query('delete from omit *')
-			client.end()
 		})
 		res.json({message: 'Success!'})
+		client.end()
 	})
 
 //Register routes
