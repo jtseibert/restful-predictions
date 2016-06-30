@@ -8,7 +8,8 @@ var express			= require('express'),
 	async			= require('async'),
 	Opportunity 	= require('./models/opportunity'),
 	Pipeline 		= require('./models/pipeline'),
-	Omit 			= require('./models/omit')
+	Omit 			= require('./models/omit'),
+	pg 				= require('pg')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
@@ -33,7 +34,6 @@ var oauth2 = oauth2(credentials)
 var router = express.Router()
 
 //Database
-var pg = require('pg')
 pg.defaults.ssl = true
 
 //Create SF routes
