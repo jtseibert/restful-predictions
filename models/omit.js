@@ -1,6 +1,6 @@
 //omit.js
 //input: 
-	//array of opportunities to add to omit or remove from omit
+	//JSON of opportunities to add to omit or remove from omit
 	
 module.exports = Omit
 

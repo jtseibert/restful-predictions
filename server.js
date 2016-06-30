@@ -32,10 +32,11 @@ var oauth2 = oauth2(credentials)
 //Setup routes for API
 var router = express.Router()
 
-//database
+//Database
 var pg = require('pg')
 pg.defaults.ssl = true
 
+//Create SF routes
 router.route('/:instance/Allocation/:accessToken')
 	.get(function(req,res){
 		allocation = new Allocation(req.params.instance, req.params.accessToken)
@@ -57,6 +58,7 @@ router.route('/:instance/Sales_Pipeline/:accessToken')
 		})
 	})
 
+//Create sales_pipeline DB routes
 router.route('/addOpportunity')
 	.post(function(req,res){
 		opportunity = new Opportunity(req.body)
@@ -83,6 +85,7 @@ router.route('/removeOpportunity')
 		})
 	})
 
+//Create omit DB routes
 router.route('/addOmit')
 	.post(function(req,res){
 		omit = new Omit(req.body)
@@ -122,6 +125,7 @@ router.route('/getOmit')
 		})
 	})
 
+//Create general DB routes
 router.route('/clearDB')
 	.get(function(req,res){
 		pg.connect(process.env.DATABASE_URL, function(err, client) {

@@ -1,6 +1,6 @@
-//table.js
+//opportunity.js
 //input: 
-	//csv obj
+	//JSON object, data, of opportunites and appropriate attributes for saving opportunities
 	
 module.exports = Opportunity
 

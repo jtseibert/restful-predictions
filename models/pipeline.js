@@ -1,3 +1,7 @@
+//pipeline.js
+//input: 
+	//SF instance and SF accessToken
+
 module.exports = Pipeline
 
 function Pipeline(instance, accessToken) {
