@@ -11,7 +11,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 		access_token: this.accessToken
 	}
 
-	dbData = {}
+	addedOpportunities = {}
 	omitData = {}
 
 	var query = client.query("SELECT * from sales_pipeline")
@@ -20,7 +20,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 	})
 	query.on("end", function (result) {
 		for (var entry in result.rows){
-			dbData[result.rows[entry].opportunity] = {
+			addedOpportunities[result.rows[entry].opportunity] = {
 				"STAGE": result.rows[entry].stage,
 				"PROBABILITY": result.rows[entry].probability
 			}
@@ -81,19 +81,19 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 						for (var cell in factMap[stage].rows[row].dataCells){
 							rowData.push(factMap[stage].rows[row].dataCells[cell].label)
 						}
-						if(dbData[rowData[opportunityIndex]]){
-							rowData[stageIndex] = dbData[rowData[opportunityIndex]].STAGE
-							rowData[probabilityIndex] = (dbData[rowData[opportunityIndex]].PROBABILITY * 100) + "%"
-							delete dbData[rowData[opportunityIndex]]
+						if(addedOpportunities[rowData[opportunityIndex]]){
+							rowData[stageIndex] = addedOpportunities[rowData[opportunityIndex]].STAGE
+							rowData[probabilityIndex] = (addedOpportunities[rowData[opportunityIndex]].PROBABILITY * 100) + "%"
+							delete addedOpportunities[rowData[opportunityIndex]]
 						}
 						returnData.push(rowData)
 					}
 				}
 			}
 		}
-		for (var key in dbData){
+		for (var key in addedOpportunities){
 			if (!(omitData[key])){
-				returnData.push([dbData[key].STAGE, key, "", "", "", "", "", "", dbData[key].PROBABILITY, "", "", "", "", "", ""])
+				returnData.push([addedOpportunities[key].STAGE, key, "", "", "", "", "", "", addedOpportunities[key].PROBABILITY, "", "", "", "", "", ""])
 			}
 		}
 	    callback(returnData)
