@@ -8,7 +8,7 @@ function Omit(data) {
 	this.data = data
 } 
 
-Omit.prototype.updateOmit = function(client, callback) {
+Omit.prototype.add = function(client, callback) {
 
 	for (var entry in this.data){
 		client.query('INSERT INTO omit(opportunity) values($1)', [this.data[entry]])
@@ -26,7 +26,7 @@ Omit.prototype.updateOmit = function(client, callback) {
 	callback()
 }
 
-Omit.prototype.undoOmit = function(client, callback) {
+Omit.prototype.remove = function(client, callback) {
 
 	for (var entry in this.data){
 		console.log('should be deleting: ' + entry)
@@ -45,7 +45,7 @@ Omit.prototype.undoOmit = function(client, callback) {
 	callback()
 }
 
-Omit.prototype.getOpportunities = function(client, callback) {
+Omit.prototype.getOmit = function(client, callback) {
 	var query = client.query('SELECT * FROM omit')
 	query.on("row", function (row, result) {
 		result.addRow(row)

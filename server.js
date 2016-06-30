@@ -6,7 +6,7 @@ var express			= require('express'),
 	bodyParser 		= require('body-parser'),
 	Allocation 		= require('./models/allocation'),
 	async			= require('async'),
-	UpdateDB 		= require('./models/updateDB'),
+	Opportunity 	= require('./models/opportunity'),
 	Pipeline 		= require('./models/pipeline'),
 	Omit 			= require('./models/omit')
 
@@ -57,12 +57,12 @@ router.route('/:instance/Sales_Pipeline/:accessToken')
 		})
 	})
 
-router.route('/updateDB')
+router.route('/addOpportunity')
 	.post(function(req,res){
-		update = new UpdateDB(req.body)
+		opportunity = new Opportunity(req.body)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
-			update.updateDB(client,function(err){
+			opportunity.add(client,function(err){
 				if (err)
 					res.send(err)
 				res.json({message: 'Success!'})
@@ -70,12 +70,25 @@ router.route('/updateDB')
 		})
 	})
 
-router.route('/omit')
+router.route('/removeOpportunity')
+	.post(function(req,res){
+		opportunity = new Opportunity(req.body)
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err;
+			opportunity.remove(client,function(err){
+				if (err)
+					res.send(err)
+				res.json({message: 'Success!'})
+			})
+		})
+	})
+
+router.route('/addOmit')
 	.post(function(req,res){
 		omit = new Omit(req.body)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
-			omit.updateOmit(client,function(err){
+			omit.add(client,function(err){
 				if (err)
 					res.send(err)
 				res.json({message: 'Success!'})
@@ -83,12 +96,12 @@ router.route('/omit')
 		})
 	})
 
-router.route('/undoOmit')
+router.route('/removeOmit')
 	.post(function(req,res){
 		omit = new Omit(req.body)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
-			omit.undoOmit(client,function(err){
+			omit.remove(client,function(err){
 				if (err)
 					res.send(err)
 				res.json({message: 'Success!'})
@@ -96,12 +109,12 @@ router.route('/undoOmit')
 		})
 	})
 
-router.route('/getFromOmit')
+router.route('/getOmit')
 	.get(function(req, res) {
-		omit = new Omit("foo")
+		omit = new Omit("")
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
-			omit.getOpportunities(client, function(err, response){
+			omit.getOmit(client, function(err, response){
 				if (err)
 					res.send(err)
 				res.json(response)
