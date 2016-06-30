@@ -45,7 +45,7 @@ Omit.prototype.undoOmit = function(client, callback) {
 }
 
 Omit.prototype.getOpportunities = function(client, callback) {
-	client.query('SELECT * FROM omit')
+	var query = client.query('SELECT * FROM omit')
 	query.on("row", function (row, result) {
 		result.addRow(row)
 	})
