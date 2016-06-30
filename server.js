@@ -146,7 +146,7 @@ router.route('/clearDB')
 			client.query('delete from omit *')
 			client.end()
 		})
-		res.json({message: 'Success!'})
+		res.send(err)
 	})
 
 //Register routes
