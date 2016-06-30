@@ -78,7 +78,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 
 	    for (var stage in factMap) {
 
-		    stageKey = stage.split('!')[0]
+		    stageKey = stage.split('!')[stageIndex]
 		    curStage = factMap[stage]
 			
 
