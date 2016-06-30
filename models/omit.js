@@ -11,7 +11,7 @@ function Omit(data) {
 Omit.prototype.add = function(client, callback) {
 
 	for (var entry in this.data){
-		client.query('INSERT INTO omit(opportunity) values($1)', [this.data[entry]])
+		client.query('INSERT INTO omit(opportunity) values($1)', [entry])
 	}
 
 	//testing
