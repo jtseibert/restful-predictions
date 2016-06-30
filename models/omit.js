@@ -52,8 +52,8 @@ Omit.prototype.getOpportunities = function(client, callback) {
 	query.on("end", function (result) {
 		console.log(JSON.stringify(result.rows, null, "    "))
 		client.end()
+		callback(result)
 	})
-	callback()
 }
 
 

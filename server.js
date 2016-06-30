@@ -101,10 +101,10 @@ router.route('/getFromOmit')
 		omit = new Omit("foo")
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
-			omit.getOpportunities(client,function(err, response){
+			omit.getOpportunities(client, function(err, response){
 				if (err)
 					res.send(err)
-				res.send(response)
+				res.json(response)
 			})
 		})
 	})
