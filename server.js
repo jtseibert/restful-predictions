@@ -132,22 +132,6 @@ router.route('/clearDB')
 		client.end();
 	})
 
-/*
-router.route('/displayOptions')
-	.get(function(req, res) {
-		//input irrelevant to query
-		importFile = new Import('foo')
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err;
-			importFile.displayOptions(client, function(err, result){
-				if (err)
-					res.send(err)
-				res.json(result)
-				client.end()
-			})
-		})		
-	})*/
-
 //Register routes
 //All of our routes will be prefixed with /api
 app.use('/api', router)
