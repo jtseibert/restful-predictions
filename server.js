@@ -145,8 +145,8 @@ router.route('/clearDB')
 			client.query('delete from sales_pipeline *')
 			client.query('delete from omit *')
 			client.end()
+			res.json({message: err})
 		})
-		res.json({message: 'Success!'})
 	})
 
 //Register routes
