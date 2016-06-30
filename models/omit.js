@@ -28,9 +28,8 @@ Omit.prototype.updateOmit = function(client, callback) {
 
 Omit.prototype.undoOmit = function(client, callback) {
 
-	console.log(this.data)
-
 	for (var entry in this.data){
+		console.log('should be deleting: ' + this.data[entry])
 		client.query('DELETE FROM omit WHERE opportunity = $1', [this.data[entry]])
 	}
 
