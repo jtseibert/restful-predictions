@@ -140,7 +140,7 @@ router.route('/getOmit')
 
 //Create general DB routes
 router.route('/clearDB')
-	.get(function(req,res){
+	.post(function(req,res){
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			client.query('delete from sales_pipeline *')
 			client.query('delete from omit *')
