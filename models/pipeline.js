@@ -14,7 +14,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 	dbData = {}
 	omitData = {}
 
-	var query = client.query("SELECT * from opportunity_pipeline")
+	var query = client.query("SELECT * from sales_pipeline")
 	query.on("row", function (row, result) {
 		result.addRow(row)
 	})

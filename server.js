@@ -112,9 +112,11 @@ router.route('/getFromOmit')
 router.route('/clearDB')
 	.get(function(req,res){
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			client.query('delete from opportunity_pipeline *')
+			client.query('delete from sales_pipeline *')
+			client.query('delete from omit *')
 		})
 		res.json({message: 'Success!'})
+		client.end();
 	})
 
 /*
