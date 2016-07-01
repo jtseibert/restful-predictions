@@ -112,8 +112,9 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 							rowData[startDateIndex] = calculateStartDate(addedOpportunities[curOpportunity].START_DATE,0)
 							delete addedOpportunities[curOpportunity]
 						}
-						forEveryRole(rowData,curProjectSize,returnData)
-						console.log(returnData)
+						rowData = forEveryRole(rowData,curProjectSize)
+						for (var each in rowData)
+							returnData.push(rowData[each])
 					}
 				}
 			}
@@ -164,15 +165,16 @@ function assignRoles(expectedAmount){
 		return largeProject
 }
 
-function forEveryRole(row,projectSize,returnData){
+function forEveryRole(row,projectSize){
 	var tempRow 	= [],
+		returnData	= [],
 		roleIndex	= 16
 	for (var each in projectSize){
 		tempRow = row
 		tempRow[roleIndex] = projectSize[each]
-		// console.log(tempRow)
 		returnData.push(tempRow)
 	}
+	return returnData
 }
 
 
