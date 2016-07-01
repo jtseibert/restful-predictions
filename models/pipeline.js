@@ -158,14 +158,13 @@ function assignRoles(expectedAmount){
 		mediumProject = ['PL','ETA','PC','BC'],
 		largeProject = ['PL','ETA','PC','BC','QA Lead','OS QA','OS DEV','Hello']
 
-	if (parseInt(expectedAmount, 10) <= 150000)
+	console.log(expectedAmount + '\t' + typeOf(expectedAmount) + '\n')
+	if (expectedAmount <= 150000)
 		return smallProject
-	else if(parseInt(expectedAmount, 10) <=500000)
+	else if(expectedAmount<=500000)
 		return mediumProject
-	else{
-		console.log('hello')
+	else
 		return largeProject
-	}
 }
 
 function forEveryRole(row,projectSize){
