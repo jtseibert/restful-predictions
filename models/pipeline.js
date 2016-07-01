@@ -55,13 +55,15 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 	    	closeDateIndex			= 5,
 	    	startDateIndex			= 7,
 	    	probabilityIndex		= 9,
+	    	exp_amountIndex			= 4,
 	    	week					= 7,
 	    	rowData,
 	    	stageKey,
 	    	curStage,
 	    	curRow,
 	    	curCell,
-	    	curOpportunity
+	    	curOpportunity,
+	    	curProjectSize
 
 	    returnData.push(["STAGE",
 	    					"OPPORTUNITY_NAME",
@@ -99,6 +101,8 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 							rowData.push(curCell.label)
 							if (cell == closeDateIndex)
 								rowData.push(calculateStartDate(curCell.label, week))
+							else if (cell == exp_amountIndex)
+								curProjectSize = assignRoles(curCell.label)
 						}
 						if(addedOpportunities[curOpportunity]){
 							rowData[stageIndex] = addedOpportunities[curOpportunity].STAGE
@@ -107,7 +111,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 							rowData[startDateIndex] = calculateStartDate(addedOpportunities[curOpportunity].START_DATE,0)
 							delete addedOpportunities[curOpportunity]
 						}
-						returnData.push(rowData)
+						forEveryRole(rowData,curProjectSize,returnData)
 					}
 				}
 			}
@@ -129,7 +133,8 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 									"",
 									"",
 									"",
-									""
+									"",
+									"DEV, best role"
 								])
 			}
 		}
@@ -143,3 +148,29 @@ function calculateStartDate(closeDate, dateIncrement){
 	returnDate = JSON.stringify(returnDate).split('T')[0].split('-')
 	return returnDate[1]+'/'+returnDate[2]+'/'+returnDate[0].replace('"','')
 }
+
+function assignRoles(expectedAmount){
+	var smallProject = ['BC','QA','PC'],
+		mediumProject = ['PL','ETA','PC','BC'],
+		largeProject = ['PL','ETA','PC','BC','QA Lead','OS QA','OS DEV','DEV']
+
+	if (expectedAmount <= 150000)
+		return smallProject
+	else if(expectedAmount <=500000)
+		return mediumProject
+	else
+		return largeProject
+}
+
+function forEveryRole(row,projectSize,returnData){
+	var tempRow
+	for (var each in projectSize){
+		tempRow = row
+		returnData.push(tempRow.push(projectSize[each]))
+	}
+}
+
+
+
+
+
