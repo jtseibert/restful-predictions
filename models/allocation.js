@@ -33,7 +33,7 @@ Allocation.prototype.getAllocation = function(oauth2, callback) {
 	        weekKey,
 	        valueKey
 
-	    returnData.push(["Resource: Resource Role", "Project", "Start Date", "Estimated Hours"])
+	    returnData.push(["Project", "Resource: Resource Role", "Start Date", "Estimated Hours"])
 
 	    for (var key in factMap) {
 
