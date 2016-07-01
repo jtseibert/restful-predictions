@@ -103,6 +103,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 								rowData.push(calculateStartDate(curCell.label, week))
 							else if (cell == exp_amountIndex)
 								curProjectSize = assignRoles(curCell.label)
+							// console.log(rowData)
 						}
 						if(addedOpportunities[curOpportunity]){
 							rowData[stageIndex] = addedOpportunities[curOpportunity].STAGE
