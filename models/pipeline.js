@@ -165,10 +165,12 @@ function assignRoles(expectedAmount){
 }
 
 function forEveryRole(row,projectSize,returnData){
-	var roleIndex	= 16
+	var tempRow 	= [],
+		roleIndex	= 16
 	for (var each in projectSize){
-		row[roleIndex] = projectSize[each]
-		returnData.push(row)
+		tempRow = row
+		tempRow[roleIndex] = projectSize[each]
+		returnData.push(tempRow)
 	}
 }
 
