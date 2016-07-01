@@ -80,7 +80,8 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 							"CREATED_DATE",
 							"FULL_NAME",
 							"ROLLUP_DESCRIPTION",
-							"ACCOUNT_NAME"
+							"ACCOUNT_NAME",
+							"ROLE"
 						])
 
 	    for (var stage in factMap) {
