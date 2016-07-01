@@ -113,7 +113,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 							delete addedOpportunities[curOpportunity]
 						}
 						rowData = forEveryRole(rowData,curProjectSize)
-						console.log(rowData)
+						// console.log(rowData)
 						for (var each in rowData)
 							returnData.push(rowData[each])
 					}
@@ -162,8 +162,10 @@ function assignRoles(expectedAmount){
 		return smallProject
 	else if(expectedAmount <=500000)
 		return mediumProject
-	else
+	else{
+		console.log('hello')
 		return largeProject
+	}
 }
 
 function forEveryRole(row,projectSize){
