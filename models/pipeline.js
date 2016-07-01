@@ -53,6 +53,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 	    	opportunityIndex		= 1,
 	    	typeIndex				= 2,
 	    	closeDateIndex			= 5,
+	    	startDateIndex			= 6,
 	    	probabilityIndex		= 9,
 	    	rowData,
 	    	stageKey,
@@ -102,6 +103,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 							rowData[stageIndex] = addedOpportunities[curOpportunity].STAGE
 							rowData[probabilityIndex] = (addedOpportunities[curOpportunity].PROBABILITY * 100) + "%"
 							rowData[typeIndex] = addedOpportunities[curOpportunity].TYPE
+							rowData[startDateIndex] = calculateStartDate(addedOpportunities[key].START_DATE)
 							delete addedOpportunities[curOpportunity]
 						}
 						returnData.push(rowData)
