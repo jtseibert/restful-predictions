@@ -160,11 +160,11 @@ function assignRoles(expectedAmount){
 
 	expectedAmount = expectedAmount.replace('USD ', '')
 
-	console.log(parseInt(expectedAmount))
+	console.log(parseInt(expectedAmount.replace(',','')))
 
-	if (parseInt(expectedAmount) <= 150000)
+	if (parseInt(expectedAmount.replace(',','')) <= 150000)
 		return smallProject
-	else if(parseInt(expectedAmount)<=500000)
+	else if(parseInt(expectedAmount.replace(',',''))<=500000)
 		return mediumProject
 	else
 		return largeProject
