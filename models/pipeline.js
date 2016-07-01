@@ -168,7 +168,7 @@ function forEveryRole(row,projectSize,returnData){
 	for (var each in projectSize){
 		tempRow = row
 		tempRow = tempRow.push(projectSize[each])
-		console.log(tempRow)
+		console.log(projectSize[each])
 		returnData.push(tempRow)
 	}
 }
