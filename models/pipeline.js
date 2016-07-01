@@ -155,7 +155,7 @@ function calculateStartDate(closeDate, dateIncrement){
 function assignRoles(expectedAmount){
 	var smallProject = ['BC','QA','PC'],
 		mediumProject = ['PL','ETA','PC','BC'],
-		largeProject = ['PL','ETA','PC','BC','QA Lead','OS QA','OS DEV','DEV']
+		largeProject = ['PL','ETA','PC','BC','QA Lead','OS QA','OS DEV','Hello']
 
 	if (expectedAmount <= 150000)
 		return smallProject
