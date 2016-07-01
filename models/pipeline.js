@@ -55,6 +55,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 	    	closeDateIndex			= 5,
 	    	startDateIndex			= 7,
 	    	probabilityIndex		= 9,
+	    	week					= 7,
 	    	rowData,
 	    	stageKey,
 	    	curStage,
@@ -97,13 +98,13 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 							curCell = curRow.dataCells[cell]
 							rowData.push(curCell.label)
 							if (cell == closeDateIndex)
-								rowData.push(calculateStartDate(curCell.label))
+								rowData.push(calculateStartDate(curCell.label, week))
 						}
 						if(addedOpportunities[curOpportunity]){
 							rowData[stageIndex] = addedOpportunities[curOpportunity].STAGE
 							rowData[probabilityIndex] = (addedOpportunities[curOpportunity].PROBABILITY * 100) + "%"
 							rowData[typeIndex] = addedOpportunities[curOpportunity].TYPE
-							rowData[startDateIndex] = calculateStartDate(addedOpportunities[curOpportunity].START_DATE)
+							rowData[startDateIndex] = calculateStartDate(addedOpportunities[curOpportunity].START_DATE,0)
 							delete addedOpportunities[curOpportunity]
 						}
 						returnData.push(rowData)
@@ -120,7 +121,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 									"",
 									"",
 									"",
-									calculateStartDate(addedOpportunities[key].START_DATE),
+									calculateStartDate(addedOpportunities[key].START_DATE,0),
 									"",
 									addedOpportunities[key].PROBABILITY,
 									"",
@@ -136,9 +137,9 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 	})  
 }
 
-function calculateStartDate(closeDate){
+function calculateStartDate(closeDate, dateIncrement){
 	var date = new Date(closeDate)
-	var returnDate = new Date(date.setDate(date.getDate() + 7))
+	var returnDate = new Date(date.setDate(date.getDate() + dateIncrement))
 	returnDate = JSON.stringify(returnDate).split('T')[0].split('-')
 	return returnDate[1]+'/'+returnDate[2]+'/'+returnDate[0].replace('"','')
 }
