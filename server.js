@@ -9,15 +9,7 @@ var express			= require('express'),
 	Opportunity 	= require('./models/opportunity'),
 	Pipeline 		= require('./models/pipeline'),
 	Omit 			= require('./models/omit'),
-	pg 				= require('pg'),
-	cluster			= require('cluster'),
-	numCPUs			= require('os').cpus().length
-
-if(cluster.isMaster) {
-	for(var i = 0; i < numCPUs; i++) {
-		cluster.fork();
-	}
-} else {
+	pg 				= require('pg')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
@@ -163,5 +155,3 @@ app.use('/api', router)
 //Start server
 app.listen(port)
 console.log('Magic happens on port ' + port)
-
-}
