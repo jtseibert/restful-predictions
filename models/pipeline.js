@@ -52,7 +52,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 	    	stageIndex				= 0,
 	    	opportunityIndex		= 1,
 	    	typeIndex				= 2,
-	    	closeDateIndex			= 6,
+	    	closeDateIndex			= 5,
 	    	probabilityIndex		= 8,
 	    	rowData,
 	    	stageKey,
