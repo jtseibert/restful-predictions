@@ -113,6 +113,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 							delete addedOpportunities[curOpportunity]
 						}
 						forEveryRole(rowData,curProjectSize,returnData)
+						console.log(returnData)
 					}
 				}
 			}
