@@ -25,7 +25,8 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 			addedOpportunities[result.rows[entry].opportunity] = {
 				"STAGE": result.rows[entry].stage,
 				"PROBABILITY": result.rows[entry].probability,
-				"TYPE": result.rows[entry].type
+				"TYPE": result.rows[entry].type,
+				"START_DATE": result.rows[entry].start_date
 			}
 		}
 	})
@@ -51,6 +52,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 	    	stageIndex				= 0,
 	    	opportunityIndex		= 1,
 	    	typeIndex				= 2,
+	    	closeDateIndex			= 6,
 	    	probabilityIndex		= 8,
 	    	rowData,
 	    	stageKey,
@@ -66,6 +68,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 							"AMOUNT",
 							"EXP_AMOUNT",
 							"CLOSE_DATE",
+							"START_DATE",
 							"NEXT_STEP",
 							"PROBABILITY",
 							"FISCAL_QUARTER",
@@ -92,6 +95,8 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 						for (var cell in curRow.dataCells){
 							curCell = curRow.dataCells[cell]
 							rowData.push(curCell.label)
+							if (cell == closeDateIndex)
+								rowData.push(calculateStartDate(curCell.label))
 						}
 						if(addedOpportunities[curOpportunity]){
 							rowData[stageIndex] = addedOpportunities[curOpportunity].STAGE
@@ -113,6 +118,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 									"",
 									"",
 									"",
+									addedOpportunities[key].CLOSE_DATE,
 									"",
 									addedOpportunities[key].PROBABILITY,
 									"",
@@ -126,4 +132,9 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 		}
 	    callback(returnData)
 	})  
+}
+
+function calculateStartDate(closeDate){
+	var date = new Date(closeDate)
+	return (new Date(date.setDate(date.getDate() + 7)))
 }
