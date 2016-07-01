@@ -160,9 +160,9 @@ function assignRoles(expectedAmount){
 
 	expectedAmount = expectedAmount.replace('USD ', '')
 
-	if (expectedAmount <= 150000)
+	if (parseInt(expectedAmount) <= 150000)
 		return smallProject
-	else if(expectedAmount<=500000)
+	else if(parseInt(expectedAmount)<=500000)
 		return mediumProject
 	else
 		return largeProject
