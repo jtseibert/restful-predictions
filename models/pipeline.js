@@ -104,7 +104,6 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 								rowData.push(calculateStartDate(curCell.label, week))
 							else if (cell == exp_amountIndex)
 								curProjectSize = assignRoles(curCell.label)
-							// console.log(rowData)
 						}
 						if(addedOpportunities[curOpportunity]){
 							rowData[stageIndex] = addedOpportunities[curOpportunity].STAGE
@@ -170,7 +169,7 @@ function forEveryRole(row,projectSize,returnData){
 	for (var each in projectSize){
 		tempRow = row
 		tempRow[roleIndex] = projectSize[each]
-		console.log(tempRow)
+		// console.log(tempRow)
 		returnData.push(tempRow)
 	}
 }
