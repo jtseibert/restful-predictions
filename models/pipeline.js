@@ -137,6 +137,6 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 function calculateStartDate(closeDate){
 	var date = new Date(closeDate)
 	var returnDate = new Date(date.setDate(date.getDate() + 7))
-	console.log(returnDate.toString())
+	console.log(JSON.stringify(returnDate))
 	return returnDate
 }
