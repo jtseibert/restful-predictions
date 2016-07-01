@@ -9,7 +9,7 @@ module.exports = Allocation
 
 function Allocation(instance, accessToken) {
 	this.accessToken = accessToken
-	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa0000008r7sg'
+	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093smp'
 } 
 
 Allocation.prototype.getAllocation = function(oauth2, callback) {
@@ -33,7 +33,7 @@ Allocation.prototype.getAllocation = function(oauth2, callback) {
 	        weekKey,
 	        valueKey
 
-	    returnData.push(["Resource: Resource Name", "Project", "Start Date", "Estimated Hours"])
+	    returnData.push(["Resource: Resource Role", "Project", "Start Date", "Estimated Hours"])
 
 	    for (var key in factMap) {
 
