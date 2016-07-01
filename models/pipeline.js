@@ -158,13 +158,10 @@ function assignRoles(expectedAmount){
 		mediumProject = ['PL','ETA','PC','BC'],
 		largeProject = ['PL','ETA','PC','BC','QA Lead','OS QA','OS DEV','DEV']
 
-	expectedAmount = expectedAmount.replace('USD ', '')
-
-	console.log(parseInt(expectedAmount.replace(',','')))
-
-	if (parseInt(expectedAmount.replace(',','')) <= 150000)
+	expectedAmount = expectedAmount.replace('USD ', '').replace(',','')
+	if (parseInt(expectedAmount) <= 150000)
 		return smallProject
-	else if(parseInt(expectedAmount.replace(',',''))<=500000)
+	else if(parseInt(expectedAmount)<=500000)
 		return mediumProject
 	else
 		return largeProject
@@ -174,11 +171,17 @@ function forEveryRole(row,projectSize){
 	var tempRow 	= [],
 		returnData	= [],
 		roleIndex	= 16
+	
 	for (var each in projectSize){
-		tempRow = row
-		tempRow[roleIndex] = projectSize[each]
+		tempRow = []
+		for (var col in row){
+			tempRow.push(row[col])
+		}
+		tempRow.push(projectSize[each])
 		returnData.push(tempRow)
 	}
+
+
 	return returnData
 }
 
