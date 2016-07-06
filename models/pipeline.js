@@ -69,7 +69,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 	    	curRow,
 	    	curCell,
 	    	curOpportunity,
-	    	curProjectSize,
+	    	curProjectSize
 
 	    returnData.push(["STAGE",
 	    					"OPPORTUNITY_NAME",
