@@ -130,6 +130,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 		}
 		for (var key in addedOpportunities){
 			if (!(omitData[key])){
+				newRow = []
 				console.log('newKey: ' + key)
 				newRow.push(addedOpportunities[key].STAGE,
 									key,
