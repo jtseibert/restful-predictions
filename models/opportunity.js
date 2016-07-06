@@ -13,15 +13,15 @@ Opportunity.prototype.add = function(client, callback) {
 	console.log(this.data)
 
 	for (var entry in this.data){
-		client.query('INSERT INTO sales_pipeline(opportunity, stage, probability, type, start_date, role)'
+		client.query('INSERT INTO sales_pipeline(opportunity, stage, probability, type, start_date, project_size)'
 						+ ' values($1, $2, $3, $4, $5, $6) ON CONFLICT (opportunity)'
-						+ 'DO UPDATE SET stage=$2,probability=$3,type=$4,start_date=$5,role=$6', 
+						+ 'DO UPDATE SET stage=$2,probability=$3,type=$4,start_date=$5,project_size=$6', 
 						[this.data[entry].opportunity,
 							this.data[entry].stage,
 							this.data[entry].probability,
 							this.data[entry].type,
 							this.data[entry].start_date,
-							this.data[entry].role
+							this.data[entry].project_size
 						]
 					)
 	}

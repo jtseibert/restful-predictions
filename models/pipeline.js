@@ -11,6 +11,10 @@ function Pipeline(instance, accessToken) {
 
 Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 
+	smallProject = 'smallProject'
+	mediumProject = 'mediumProject'
+	largeProject = 'largeProject'
+
 	parameters = {
 		access_token: this.accessToken
 	}
@@ -26,7 +30,8 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 				"STAGE": result.rows[entry].stage,
 				"PROBABILITY": result.rows[entry].probability,
 				"TYPE": result.rows[entry].type,
-				"START_DATE": result.rows[entry].start_date
+				"START_DATE": result.rows[entry].start_date,
+				"PROJECT_SIZE": result.rows[entry].project_size
 			}
 		}
 	})
@@ -49,6 +54,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 	    var factMap 				= data.factMap,
 	    	groupingsDown 			= data.groupingsDown.groupings,
 	    	returnData				= [],
+	    	newRow					= [],
 	    	stageIndex				= 0,
 	    	opportunityIndex		= 1,
 	    	typeIndex				= 2,
@@ -63,7 +69,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 	    	curRow,
 	    	curCell,
 	    	curOpportunity,
-	    	curProjectSize
+	    	curProjectSize,
 
 	    returnData.push(["STAGE",
 	    					"OPPORTUNITY_NAME",
@@ -81,7 +87,8 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 							"FULL_NAME",
 							"ROLLUP_DESCRIPTION",
 							"ACCOUNT_NAME",
-							"ROLE"
+							"ROLE",
+							"PROJECT_SIZE"
 						])
 
 	    for (var stage in factMap) {
@@ -103,16 +110,17 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 							if (cell == closeDateIndex)
 								rowData.push(calculateStartDate(curCell.label, week))
 							else if (cell == exp_amountIndex)
-								curProjectSize = assignRoles(curCell.label)
+								curProjectSize = getProjectSize(curCell.label)
 						}
 						if(addedOpportunities[curOpportunity]){
 							rowData[stageIndex] = addedOpportunities[curOpportunity].STAGE
 							rowData[probabilityIndex] = (addedOpportunities[curOpportunity].PROBABILITY * 100) + "%"
 							rowData[typeIndex] = addedOpportunities[curOpportunity].TYPE
 							rowData[startDateIndex] = calculateStartDate(addedOpportunities[curOpportunity].START_DATE,0)
+							curProjectSize = addedOpportunities[curOpportunity].PROJECT_SIZE
 							delete addedOpportunities[curOpportunity]
 						}
-						rowData = forEveryRole(rowData,curProjectSize)
+						rowData = assignRoles(rowData,curProjectSize)
 						// console.log(rowData)
 						for (var each in rowData)
 							returnData.push(rowData[each])
@@ -122,7 +130,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 		}
 		for (var key in addedOpportunities){
 			if (!(omitData[key])){
-				returnData.push([addedOpportunities[key].STAGE,
+				newRow.push([addedOpportunities[key].STAGE,
 									key,
 									addedOpportunities[key].TYPE,
 									"",
@@ -138,8 +146,8 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 									"",
 									"",
 									"",
-									"DEV, best role"
 								])
+				returnData.push(assignRoles(newRow,addedOpportunities[key].PROJECT_SIZE))
 			}
 		}
 	    callback(returnData)
@@ -153,10 +161,7 @@ function calculateStartDate(closeDate, dateIncrement){
 	return returnDate[1]+'/'+returnDate[2]+'/'+returnDate[0].replace('"','')
 }
 
-function assignRoles(expectedAmount){
-	var smallProject = ['BC','QA','PC'],
-		mediumProject = ['PL','ETA','PC','BC'],
-		largeProject = ['PL','ETA','PC','BC','QA Lead','OS QA','OS DEV','DEV']
+function getProjectSize(expectedAmount){
 
 	expectedAmount = expectedAmount.replace('USD ', '').replace(/,/g,'')
 	//console.log(expectedAmount)
@@ -168,17 +173,28 @@ function assignRoles(expectedAmount){
 		return largeProject
 }
 
-function forEveryRole(row,projectSize){
+function assignRoles(row,projectSize){
 	var tempRow 	= [],
 		returnData	= [],
-		roleIndex	= 16
+		roleIndex	= 16,
+		roles
+
+	if (projectSize == smallProject)
+		roles = ['BC','QA','PC']
+	else if (projectSize == mediumProject)
+		roles = ['PL','ETA','PC','BC'],
+	else if (projectSize == largeProject)
+		roles = ['PL','ETA','PC','BC','QA Lead','OS QA','OS DEV','DEV']
+	else
+		roles = ['NONE']
 	
-	for (var each in projectSize){
+	for (var each in roles){
 		tempRow = []
 		for (var col in row){
 			tempRow.push(row[col])
 		}
-		tempRow.push(projectSize[each])
+		tempRow.push(roles[each])
+		tempRow.push(projectSize)
 		returnData.push(tempRow)
 	}
 
