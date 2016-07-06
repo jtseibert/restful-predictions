@@ -182,7 +182,7 @@ function assignRoles(row,projectSize){
 	if (projectSize == smallProject)
 		roles = ['BC','QA','PC']
 	else if (projectSize == mediumProject)
-		roles = ['PL','ETA','PC','BC'],
+		roles = ['PL','ETA','PC','BC']
 	else if (projectSize == largeProject)
 		roles = ['PL','ETA','PC','BC','QA Lead','OS QA','OS DEV','DEV']
 	else
