@@ -151,7 +151,8 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 								)
 				newRow = assignRoles(newRow,addedOpportunities[key].PROJECT_SIZE)
 				console.log(newRow)
-				returnData.push(newRow)
+				for (var each in newRow)
+					returnData.push(newRow[each])
 			}
 		}
 	    callback(returnData)
