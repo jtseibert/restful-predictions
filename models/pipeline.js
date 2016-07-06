@@ -148,10 +148,11 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 									"",
 									"",
 								])
-				returnData.push(assignRoles(newRow,addedOpportunities[key].PROJECT_SIZE))
+				newRow = assignRoles(newRow,addedOpportunities[key].PROJECT_SIZE)
+				console.log(newRow)
+				returnData.push(newRow)
 			}
 		}
-		console.log(returnData)
 	    callback(returnData)
 	})  
 }
