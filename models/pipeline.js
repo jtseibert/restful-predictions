@@ -131,7 +131,6 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 		for (var key in addedOpportunities){
 			if (!(omitData[key])){
 				newRow = []
-				console.log('newKey: ' + key)
 				newRow.push(addedOpportunities[key].STAGE,
 									key,
 									addedOpportunities[key].TYPE,
@@ -150,7 +149,6 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 									""
 								)
 				newRow = assignRoles(newRow,addedOpportunities[key].PROJECT_SIZE)
-				console.log(newRow)
 				for (var each in newRow)
 					returnData.push(newRow[each])
 			}
