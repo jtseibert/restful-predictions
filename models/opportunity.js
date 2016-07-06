@@ -21,7 +21,7 @@ Opportunity.prototype.add = function(client, callback) {
 							this.data[entry].probability,
 							this.data[entry].type,
 							this.data[entry].start_date,
-							this.date[entry].role
+							this.data[entry].role
 						]
 					)
 	}
