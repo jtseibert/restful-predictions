@@ -74,6 +74,7 @@ router.route('/addOpportunity')
 
 router.route('/removeOpportunity')
 	.post(function(req,res){
+		console.log('hello')
 		opportunity = new Opportunity(req.body)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err
