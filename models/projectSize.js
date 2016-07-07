@@ -49,7 +49,7 @@ ProjectSize.prototype.update = function(client, callback) {
 }
 
 ProjectSize.prototype.get = function(client, callback) {
-	var query = client.query('SELECT * FROM project_size')
+	var query = client.query('SELECT sizeId FROM project_size')
 	query.on("row", function (row, result) {
 		console.log(row)
 		result.addRow(row)
