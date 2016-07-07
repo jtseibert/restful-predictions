@@ -222,10 +222,10 @@ function assignRoles(row,projectSize){
 
 
 function testFunction(expectedAmount){
-	console.log('Entered testFunction\n')
 	for (var each in projectSizes){
+		console.log(each)
 		if (expectedAmount <= projectSizes[each].priceHigh){
-			console.log(projectSizes[each])
+			console.log('saved: 'each)
 			break
 		}
 	}
