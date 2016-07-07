@@ -210,7 +210,7 @@ function assignRoles(row,projectSize){
 
 function testFunction(client){
 	projectSizes = {}
-	var projectSizesQuery = client.query("SELECT sizeId,priceHigh FROM project_size")
+	var projectSizesQuery = client.query("SELECT sizeid,pricehigh FROM project_size")
 	projectSizesQuery.on("row", function (row, result) {
 		result.addRow(row)
 	})
