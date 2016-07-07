@@ -11,7 +11,7 @@ function Pipeline(instance, accessToken) {
 
 Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 
-	testFunction()
+	testFunction(client)
 
 	smallProject = 'smallProject'
 	mediumProject = 'mediumProject'
@@ -208,7 +208,7 @@ function assignRoles(row,projectSize){
 }
 
 
-function testFunction(){
+function testFunction(client){
 	projectSizes = {}
 	var projectSizesQuery = client.query("SELECT sizeId,priceHigh FROM project_size")
 	projectSizesQuery.on("row", function (row, result) {
