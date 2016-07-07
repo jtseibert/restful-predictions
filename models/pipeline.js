@@ -196,8 +196,6 @@ function assignRoles(row,projectSize){
 		tempRow.push(projectSize)
 		returnData.push(tempRow)
 	}
-
-	console.log('returning' + returnData)
 	return returnData
 }
 
