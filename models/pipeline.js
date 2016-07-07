@@ -220,8 +220,8 @@ function testFunction(client){
 				"priceHigh": result.rows[entry].priceHigh
 			}
 		}
+		console.log(projectSizes)
 	})
-	console.log(projectSizes)
 }
 
 
