@@ -11,7 +11,7 @@ function ProjectSize(data) {
 ProjectSize.prototype.add = function(client, callback) {
 	for (var entry in this.data){
 		client.query('INSERT INTO project_size(sizeId,pricehigh,roles_allocations,numweeks) values($1,$2,$3,$4)',
-			[entry,this.data[entry].pricehigh,this.data[entry].roles_allocations,this.data[entry].numweeks])
+			[this.data[entry].sizeid,this.data[entry].pricehigh,this.data[entry].roles_allocations,this.data[entry].numweeks])
 	}
 
 	//testing
