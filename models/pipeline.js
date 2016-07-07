@@ -122,8 +122,10 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 							rowData.push(curCell.label)
 							if (cell == closeDateIndex)
 								rowData.push(calculateStartDate(curCell.label, week))
-							else if (cell == exp_amountIndex)
+							else if (cell == exp_amountIndex){
 								curProjectSize = getProjectSize(curCell.label)
+								testFunction(curCell.label)
+							}
 						}
 						if(addedOpportunities[curOpportunity]){
 							rowData[stageIndex] = addedOpportunities[curOpportunity].STAGE
@@ -219,8 +221,14 @@ function assignRoles(row,projectSize){
 }
 
 
-function testFunction(client){
-	
+function testFunction(expectedAmount){
+	for (var each in projectSizes){
+		if (expectedAmount <= projectSizes[each].priceHigh){
+			console.log(projectSizes[each])
+			break
+		}
+	}
 }
+
 
 
