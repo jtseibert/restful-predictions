@@ -225,7 +225,7 @@ function testFunction(expectedAmount){
 	for (var each in projectSizes){
 		console.log(each)
 		if (expectedAmount <= projectSizes[each].priceHigh){
-			console.log('saved: 'each)
+			console.log('saved: ' + each)
 			break
 		}
 	}
