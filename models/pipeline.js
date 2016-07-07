@@ -11,7 +11,18 @@ function Pipeline(instance, accessToken) {
 
 Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 
-	testFunction(client)
+	projectSizes = {}
+	var projectSizesQuery = client.query("SELECT sizeid,pricehigh FROM project_size")
+	projectSizesQuery.on("row", function (row, result) {
+		result.addRow(row)
+	})
+	projectSizesQuery.on("end", function (result) {
+		for (var entry in result.rows){
+			projectSizes[result.rows[entry].sizeid] = {
+				"priceHigh": result.rows[entry].pricehigh
+			}
+		}
+	})
 
 	smallProject = 'smallProject'
 	mediumProject = 'mediumProject'
@@ -209,19 +220,7 @@ function assignRoles(row,projectSize){
 
 
 function testFunction(client){
-	projectSizes = {}
-	var projectSizesQuery = client.query("SELECT sizeid,pricehigh FROM project_size")
-	projectSizesQuery.on("row", function (row, result) {
-		result.addRow(row)
-	})
-	projectSizesQuery.on("end", function (result) {
-		for (var entry in result.rows){
-			projectSizes[result.rows[entry].sizeid] = {
-				"priceHigh": result.rows[entry].pricehigh
-			}
-		}
-		console.log(projectSizes)
-	})
+	
 }
 
 
