@@ -124,7 +124,6 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 								rowData.push(calculateStartDate(curCell.label, week))
 							else if (cell == exp_amountIndex){
 								curProjectSize = getProjectSize(curCell.label)
-								testFunction(curCell.label)
 							}
 						}
 						if(addedOpportunities[curOpportunity]){
@@ -179,18 +178,6 @@ function calculateStartDate(closeDate, dateIncrement){
 	return returnDate[1]+'/'+returnDate[2]+'/'+returnDate[0].replace('"','')
 }
 
-function getProjectSize(expectedAmount){
-
-	expectedAmount = expectedAmount.replace('USD ', '').replace(/,/g,'')
-	//console.log(expectedAmount)
-	if (parseInt(expectedAmount) <= 150000)
-		return smallProject
-	else if(parseInt(expectedAmount)<=500000)
-		return mediumProject
-	else
-		return largeProject
-}
-
 function assignRoles(row,projectSize){
 	var tempRow 	= [],
 		returnData	= [],
@@ -220,13 +207,11 @@ function assignRoles(row,projectSize){
 	return returnData
 }
 
-
-function testFunction(expectedAmount){
+function getProjectSize(expectedAmount){
 	expectedAmount = expectedAmount.replace('USD ', '').replace(/,/g,'')
 	for (var each in projectSizes){
 		if (parseInt(expectedAmount) <= projectSizes[each].priceHigh){
-			console.log('saved: ' + each)
-			break
+			return each
 		}
 	}
 }
