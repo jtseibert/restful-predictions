@@ -143,6 +143,7 @@ router.route('/getOmit')
 //Create project_sizes routes
 router.route('/addProjectSize')
 	.post(function(req,res){
+		console.log('hello')
 		projectSize = new ProjectSize(req.body)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err
