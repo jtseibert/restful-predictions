@@ -224,7 +224,6 @@ function assignRoles(row,projectSize){
 function testFunction(expectedAmount){
 	expectedAmount = expectedAmount.replace('USD ', '').replace(/,/g,'')
 	for (var each in projectSizes){
-		console.log('expectedAmount: '+parseInt(expectedAmount)+'\tpriceHigh: '+projectSizes[each].priceHigh)
 		if (parseInt(expectedAmount) <= projectSizes[each].priceHigh){
 			console.log('saved: ' + each)
 			break
