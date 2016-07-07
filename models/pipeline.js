@@ -20,7 +20,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 		for (var entry in result.rows){
 			projectSizes[result.rows[entry].sizeid] = {
 				"priceHigh": result.rows[entry].pricehigh,
-				"roles_allocations": results.rows[entry].roles_allocations
+				"roles_allocations": result.rows[entry].roles_allocations
 			}
 		}
 	})
