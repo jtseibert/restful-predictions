@@ -192,7 +192,7 @@ function assignRoles(row,projectSize){
 		for (var col in row){
 			tempRow.push(row[col])
 		}
-		tempRow.push(roles[each])
+		tempRow.push(each)
 		tempRow.push(projectSize)
 		returnData.push(tempRow)
 	}
