@@ -216,8 +216,8 @@ function testFunction(client){
 	})
 	projectSizesQuery.on("end", function (result) {
 		for (var entry in result.rows){
-			projectSizes[result.rows[entry].sizeId] = {
-				"priceHigh": result.rows[entry].priceHigh
+			projectSizes[result.rows[entry].sizeid] = {
+				"priceHigh": result.rows[entry].pricehigh
 			}
 		}
 		console.log(projectSizes)
