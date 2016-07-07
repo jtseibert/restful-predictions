@@ -19,7 +19,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 	projectSizesQuery.on("end", function (result) {
 		for (var entry in result.rows){
 			projectSizes[result.rows[entry].sizeid] = {
-				"priceHigh": result.rows[entry].pricehigh
+				"priceHigh": result.rows[entry].pricehigh,
 				"roles_allocations": results.rows[entry].roles_allocations
 			}
 		}
