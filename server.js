@@ -9,7 +9,8 @@ var express			= require('express'),
 	Opportunity 	= require('./models/opportunity'),
 	Pipeline 		= require('./models/pipeline'),
 	Omit 			= require('./models/omit'),
-	pg 				= require('pg')
+	pg 				= require('pg'),
+	ProjectSize 	= require('./models/projectSize')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
@@ -139,6 +140,20 @@ router.route('/getOmit')
 		})
 	})
 
+//Create project_sizes routes
+router.route('/addProjectSize')
+	.post(function(req,res){
+		projectSize = new ProjectSize(req.body)
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err
+			projectSize.add(client,function(err){
+				if (err)
+					res.send(err)
+				res.json({message: 'Success!'})
+			})
+		})
+	})
+
 //Create general DB routes
 router.route('/clearDB')
 	.post(function(req,res){
@@ -148,6 +163,7 @@ router.route('/clearDB')
 		})
 		res.json({message: 'Success!'})
 	})
+
 
 //Register routes
 //All of our routes will be prefixed with /api
