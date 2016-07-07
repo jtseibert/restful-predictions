@@ -12,7 +12,7 @@ function Pipeline(instance, accessToken) {
 Pipeline.prototype.get = function(client, oauth2, callback) {
 
 	projectSizes = {}
-	var projectSizesQuery = client.query("SELECT sizeid,pricehigh, roles_allocations FROM project_size")
+	var projectSizesQuery = client.query("SELECT sizeid,pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
 	projectSizesQuery.on("row", function (row, result) {
 		result.addRow(row)
 	})
@@ -206,6 +206,7 @@ function getProjectSize(expectedAmount){
 			return each
 		}
 	}
+
 }
 
 
