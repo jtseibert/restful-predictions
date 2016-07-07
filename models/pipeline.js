@@ -223,7 +223,7 @@ function assignRoles(row,projectSize){
 
 function testFunction(expectedAmount){
 	for (var each in projectSizes){
-		console.log(each)
+		console.log('expectedAmount: '+expectedAmount+'\tpriceHigh: '+projectSizes[each].priceHigh)
 		if (expectedAmount <= projectSizes[each].priceHigh){
 			console.log('saved: 'each)
 			break
