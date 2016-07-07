@@ -12,7 +12,7 @@ function Pipeline(instance, accessToken) {
 Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 
 	projectSizes = {}
-	var projectSizesQuery = client.query("SELECT sizeid,pricehigh FROM project_size")
+	var projectSizesQuery = client.query("SELECT sizeid,pricehigh, roles_allocations FROM project_size")
 	projectSizesQuery.on("row", function (row, result) {
 		result.addRow(row)
 	})
@@ -20,6 +20,7 @@ Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
 		for (var entry in result.rows){
 			projectSizes[result.rows[entry].sizeid] = {
 				"priceHigh": result.rows[entry].pricehigh
+				"roles_allocations": results.rows[entry].roles_allocations
 			}
 		}
 	})
@@ -184,14 +185,7 @@ function assignRoles(row,projectSize){
 		roleIndex	= 16,
 		roles
 
-	if (projectSize == smallProject)
-		roles = ['BC','QA','PC']
-	else if (projectSize == mediumProject)
-		roles = ['PL','ETA','PC','BC']
-	else if (projectSize == largeProject)
-		roles = ['PL','ETA','PC','BC','QA Lead','OS QA','OS DEV','DEV']
-	else
-		roles = ['NONE']
+	roles = projectSizes[projectSize].roles_allocations
 	
 	for (var each in roles){
 		tempRow = []
@@ -203,7 +197,7 @@ function assignRoles(row,projectSize){
 		returnData.push(tempRow)
 	}
 
-
+	console.log('returning' + returnData)
 	return returnData
 }
 
