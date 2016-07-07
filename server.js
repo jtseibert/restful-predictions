@@ -154,6 +154,19 @@ router.route('/addProjectSize')
 		})
 	})
 
+router.route('/removeProjectSize')
+	.post(function(req,res){
+		projectSize = new ProjectSize(req.body)
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err
+			projectSize.remove(client,function(err){
+				if (err)
+					res.send(err)
+				res.json({message: 'Success!'})
+			})
+		})
+	})
+
 //Create general DB routes
 router.route('/clearDB')
 	.post(function(req,res){
