@@ -41,7 +41,7 @@ ProjectSize.prototype.getProjectSize = function(client, callback) {
 ProjectSize.prototype.remove = function(client, callback) {
 	for (var entry in this.data){
 		console.log('should be deleting: ' + entry)
-		client.query('DELETE FROM project_size WHERE opportunity = $1', [entry])
+		client.query('DELETE FROM project_size WHERE sizeId = $1', [entry])
 	}
 
 	//testing
