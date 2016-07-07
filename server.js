@@ -41,7 +41,7 @@ pg.defaults.ssl = true
 router.route('/:instance/Allocation/:accessToken')
 	.get(function(req,res){
 		allocation = new Allocation(req.params.instance, req.params.accessToken)
-		allocation.getAllocation(oauth2,function(result){
+		allocation.get(oauth2,function(result){
 			console.log('should be returning json')
 			res.json(result)
 		})
@@ -52,7 +52,7 @@ router.route('/:instance/Sales_Pipeline/:accessToken')
 		pipeline = new Pipeline(req.params.instance, req.params.accessToken)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err
-			pipeline.getPipeline(client, oauth2, function(result) {
+			pipeline.get(client, oauth2, function(result) {
 				res.json(result)
 				client.end()
 			})
@@ -92,7 +92,7 @@ router.route('/getOpportunity')
 		opportunities = new Opportunity("")
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err
-			opportunities.getOpportunity(client, function(err, response){
+			opportunities.get(client, function(err, response){
 				if (err)
 					res.send(err)
 				res.json(response)
@@ -132,7 +132,7 @@ router.route('/getOmit')
 		omits = new Omit("")
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err
-			omits.getOmit(client, function(err, response){
+			omits.get(client, function(err, response){
 				if (err)
 					res.send(err)
 				res.json(response)
@@ -160,6 +160,32 @@ router.route('/removeProjectSize')
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err
 			projectSize.remove(client,function(err){
+				if (err)
+					res.send(err)
+				res.json({message: 'Success!'})
+			})
+		})
+	})
+
+router.route('/updateProjectSize')
+	.post(function(req,res){
+		projectSize = new ProjectSize(req.body)
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err
+			projectSize.update(client,function(err){
+				if (err)
+					res.send(err)
+				res.json({message: 'Success!'})
+			})
+		})
+	})
+
+router.route('/getProjectSize')
+	.post(function(req,res){
+		projectSize = new ProjectSize(req.body)
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err
+			projectSize.get(client,function(err){
 				if (err)
 					res.send(err)
 				res.json({message: 'Success!'})

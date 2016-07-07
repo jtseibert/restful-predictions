@@ -9,7 +9,7 @@ function Pipeline(instance, accessToken) {
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093sCD'
 } 
 
-Pipeline.prototype.getPipeline = function(client, oauth2, callback) {
+Pipeline.prototype.get = function(client, oauth2, callback) {
 
 	projectSizes = {}
 	var projectSizesQuery = client.query("SELECT sizeid,pricehigh, roles_allocations FROM project_size")

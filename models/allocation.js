@@ -12,7 +12,7 @@ function Allocation(instance, accessToken) {
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093smp'
 } 
 
-Allocation.prototype.getAllocation = function(oauth2, callback) {
+Allocation.prototype.get = function(oauth2, callback) {
 	console.log(this.accessToken)
 	console.log(this.path)
 

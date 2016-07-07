@@ -58,7 +58,7 @@ Opportunity.prototype.remove = function(client, callback) {
 	callback()
 }
 
-Opportunity.prototype.getOpportunity = function(client, callback) {
+Opportunity.prototype.get = function(client, callback) {
 	var query = client.query('SELECT * FROM sales_pipeline')
 	query.on("row", function (row, result) {
 		result.addRow(row)

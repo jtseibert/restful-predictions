@@ -47,7 +47,7 @@ Omit.prototype.remove = function(client, callback) {
 	callback()
 }
 
-Omit.prototype.getOmit = function(client, callback) {
+Omit.prototype.get = function(client, callback) {
 	var query = client.query('SELECT * FROM omit')
 	query.on("row", function (row, result) {
 		result.addRow(row)

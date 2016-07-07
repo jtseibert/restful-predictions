@@ -9,8 +9,6 @@ function ProjectSize(data) {
 } 
 
 ProjectSize.prototype.add = function(client, callback) {
-	console.log(this.data)
-
 	for (var entry in this.data){
 		client.query('INSERT INTO project_size(sizeId,pricehigh,roles_allocations,numweeks) values($1,$2,$3,$4)',
 			[entry,this.data[entry].pricehigh,this.data[entry].roles_allocations,this.data[entry].numweeks])
@@ -29,13 +27,37 @@ ProjectSize.prototype.add = function(client, callback) {
 }
 
 ProjectSize.prototype.update = function(client, callback) {
+	for (var entry in this.data){
+		client.query('UPDATE project_size SET' 									+
+  						'pricehigh = COALESCE($2, pricehigh),'					+
+  						'roles_allocations = COALESCE($3, roles_allocations),' 	+
+  						'numweeks = COALESCE($4, numweeks)' 					+
+						'WHERE id = $1;',
+			[entry,this.data[entry].pricehigh,this.data[entry].roles_allocations,this.data[entry].numweeks])
+	}
 
-
+	//testing
+	var query = client.query("SELECT * from project_size")
+	query.on("row", function (row, result) {
+		result.addRow(row)
+	})
+	query.on("end", function (result) {
+		console.log(JSON.stringify(result.rows, null, "    "))
+		client.end()
+	})
+	callback()
 }
 
-ProjectSize.prototype.getProjectSize = function(client, callback) {
-
-
+ProjectSize.prototype.get = function(client, callback) {
+	var query = client.query('SELECT * FROM project_size')
+	query.on("row", function (row, result) {
+		result.addRow(row)
+	})
+	query.on("end", function (result) {
+		console.log(JSON.stringify(result.rows, null, "    "))
+		client.end()
+		callback(result.rows)
+	})
 }
 
 ProjectSize.prototype.remove = function(client, callback) {
