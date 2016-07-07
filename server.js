@@ -182,7 +182,7 @@ router.route('/updateProjectSize')
 	})
 
 router.route('/getProjectSize')
-	.post(function(req,res){
+	.get(function(req,res){
 		projectSize = new ProjectSize(req.body)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err
