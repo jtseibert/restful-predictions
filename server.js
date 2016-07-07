@@ -129,10 +129,10 @@ router.route('/removeOmit')
 
 router.route('/getOmit')
 	.get(function(req, res) {
-		omits = new Omit("")
+		omit = new Omit("")
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err
-			omits.get(client, function(err, response){
+			omit.get(client, function(err, response){
 				if (err)
 					res.send(err)
 				res.json(response)
@@ -189,7 +189,7 @@ router.route('/getProjectSize')
 			projectSize.get(client,function(err){
 				if (err)
 					res.send(err)
-				res.json({message: 'Success!'})
+				res.json(response)
 			})
 		})
 	})
