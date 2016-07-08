@@ -10,7 +10,8 @@ var express			= require('express'),
 	Pipeline 		= require('./models/pipeline'),
 	Omit 			= require('./models/omit'),
 	pg 				= require('pg'),
-	ProjectSize 	= require('./models/projectSize')
+	ProjectSize 	= require('./models/projectSize'),
+	Roles 			= require('./models/roles')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
@@ -204,6 +205,19 @@ router.route('/clearDB')
 		res.json({message: 'Success!'})
 	})
 
+//Create roles routes
+router.route('/getRoles')
+	.get(function(req,res){
+		roles = new Roles("")
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err
+			roles.get(client,function(err,response){
+				if (err)
+					res.send(err)
+				res.json(response)
+			})
+		})
+	})
 
 //Register routes
 //All of our routes will be prefixed with /api
