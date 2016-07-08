@@ -60,6 +60,18 @@ ProjectSize.prototype.get = function(client, callback) {
 	})
 }
 
+ProjectSize.prototype.edit = function(client, callback) {
+	var query = client.query('SELECT * FROM project_size WHERE sizeId = $1', [this.data.project])
+	query.on("row", function (row, result) {
+		result.addRow(row)
+	})
+	query.on("end", function (result) {
+		console.log(JSON.stringify(result.rows, null, "    "))
+		client.end()
+		callback(result.rows)
+	})
+}
+
 ProjectSize.prototype.remove = function(client, callback) {
 	for (var entry in this.data){
 		console.log('should be deleting: ' + entry)
