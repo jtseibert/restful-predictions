@@ -27,7 +27,7 @@ Opportunity.prototype.add = function(client, callback) {
 						+ 'sizeid=(SELECT CASE WHEN EXISTS (SELECT sizeid FROM project_size WHERE sizeid=$6)'
 						+ 'THEN (SELECT sizeid FROM project_size WHERE sizeid=$6)'
 						+ 'ELSE (SELECT sizeid FROM (SELECT * FROM project_size ORDER BY pricehigh ASC) AS foo WHERE pricehigh>$7 limit 1)'
-						+ 'END), expected_amount=$7'
+						+ 'END), expected_amount=$7',
 						[this.data[entry].opportunity,
 							this.data[entry].stage,
 							this.data[entry].probability,
