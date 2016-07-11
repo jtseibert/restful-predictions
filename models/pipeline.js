@@ -83,7 +83,8 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 	    	curRow,
 	    	curCell,
 	    	curOpportunity,
-	    	curProjectSize
+	    	curProjectSize,
+	    	stripAmount
 
 	    returnData.push(["STAGE",
 	    					"OPPORTUNITY_NAME",
@@ -124,8 +125,8 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 								rowData.push(calculateStartDate(curCell.label, week))
 							else if (cell == exp_amountIndex){
 								curProjectSize = getProjectSize(curCell.label)
-								var temp = curCell.label.replace('USD ', '').replace(/,/g,'')
-								rowData.push(temp)
+								stripAmount = curCell.label.replace('USD ', '').replace(/,/g,'')
+								rowData.push(stripAmount)
 							} else {
 								rowData.push(curCell.label)
 							}
