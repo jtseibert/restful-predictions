@@ -126,8 +126,9 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 								curProjectSize = getProjectSize(curCell.label)
 								var temp = curCell.label.replace('USD ', '').replace(/,/g,'')
 								rowData.push(temp)
-							} else 
+							} else {
 								rowData.push(curCell.label)
+							}
 						}
 						if(addedOpportunities[curOpportunity]){
 							rowData[stageIndex] = addedOpportunities[curOpportunity].STAGE
