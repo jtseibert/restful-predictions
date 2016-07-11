@@ -15,7 +15,7 @@ Opportunity.prototype.add = function(client, callback) {
 	for (var entry in this.data){
 		// if(this.data[entry].sizeid == '')
 		// 	this.data[entry].sizeid = 'Small Project'
-		client.query('INSERT INTO sales_pipeline(opportunity, stage, probability, type, start_date, sizeid)'
+		client.query('INSERT INTO sales_pipeline(opportunity, stage, probability, type, start_date, sizeid, expected_amount)'
 						+ ' values($1, $2, $3, $4, $5,'
 						+ 'SELECT CASE WHEN EXISTS (SELECT sizeid FROM project_size WHERE sizeid=$6)'
 						+ 'THEN (SELECT sizeid FROM project_size WHERE sizeid=$6)'
@@ -23,10 +23,10 @@ Opportunity.prototype.add = function(client, callback) {
 						+ 'END, $7)'
 						+ 'ON CONFLICT (opportunity)'
 						+ 'DO UPDATE SET stage=$2,probability=$3,type=$4,start_date=$5,'
-						+ 'SELECT CASE WHEN EXISTS (SELECT sizeid FROM project_size WHERE sizeid=$6)'
+						+ 'sizeid=(SELECT CASE WHEN EXISTS (SELECT sizeid FROM project_size WHERE sizeid=$6)'
 						+ 'THEN (SELECT sizeid FROM project_size WHERE sizeid=$6)'
 						+ 'ELSE (SELECT sizeid FROM (SELECT * FROM project_size ORDER BY pricehigh ASC) WHERE pricehigh>$7)'
-						+ 'END, $7)',
+						+ 'END), expected_amount=$7)',
 						[this.data[entry].opportunity,
 							this.data[entry].stage,
 							this.data[entry].probability,
@@ -37,6 +37,13 @@ Opportunity.prototype.add = function(client, callback) {
 						]
 					)
 	}
+
+	/*
+	'INSERT INTO sales_pipeline(opportunity, stage, probability, type, start_date, sizeid, expected_amount)'
+						+ 'values($1, $2, $3, $4, $5, $6, $7'
+						+ 'ON CONFLICT (opportunity)'
+						+ 'DO UPDATE SET stage=$2,probability=$3,type=$4,start_date=$5,sizeid=$6,expected_amount=$7'
+	*/
 
 	//testing
 	var query = client.query("SELECT * from sales_pipeline")
