@@ -45,7 +45,8 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 				"PROBABILITY": result.rows[entry].probability,
 				"TYPE": result.rows[entry].type,
 				"START_DATE": result.rows[entry].start_date,
-				"SIZEID": result.rows[entry].sizeid
+				"SIZEID": result.rows[entry].sizeid,
+				"EXPECTED_AMOUNT": result.rows[entry].expected_amount
 			}
 		}
 	})
@@ -131,7 +132,8 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 							rowData[stageIndex] = addedOpportunities[curOpportunity].STAGE
 							rowData[probabilityIndex] = (addedOpportunities[curOpportunity].PROBABILITY * 100) + "%"
 							rowData[typeIndex] = addedOpportunities[curOpportunity].TYPE
-							rowData[startDateIndex] = calculateStartDate(addedOpportunities[curOpportunity].START_DATE,0)
+							rowData[startDateIndex] = calculateStartDate(addedOpportunities[curOpportunity].START_DATE,0),
+							rowData[exp_amountIndex+1] = addedOpportunities[curOpportunity].EXPECTED_AMOUNT,
 							curProjectSize = addedOpportunities[curOpportunity].SIZEID
 							delete addedOpportunities[curOpportunity]
 						}
@@ -151,7 +153,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 									addedOpportunities[key].TYPE,
 									"",
 									"",
-									"",
+									addedOpportunities[key].EXPECTED_AMOUNT,
 									"",
 									calculateStartDate(addedOpportunities[key].START_DATE,0),
 									"",
@@ -163,7 +165,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 									"",
 									""
 								)
-				newRow = assignRoles(newRow,addedOpportunities[key].PROJECT_SIZE)
+				newRow = assignRoles(newRow,addedOpportunities[key].SIZEID)
 				for (var each in newRow)
 					returnData.push(newRow[each])
 			}
