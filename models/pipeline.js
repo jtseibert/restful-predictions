@@ -133,7 +133,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 							rowData[probabilityIndex] = (addedOpportunities[curOpportunity].PROBABILITY * 100) + "%"
 							rowData[typeIndex] = addedOpportunities[curOpportunity].TYPE
 							rowData[startDateIndex] = calculateStartDate(addedOpportunities[curOpportunity].START_DATE,0),
-							rowData[exp_amountIndex+1] = addedOpportunities[curOpportunity].EXPECTED_AMOUNT,
+							rowData[exp_amountIndex+1] = addedOpportunities[curOpportunity].EXPECTED_AMOUNT.replace('USD ', '').replace(/,/g,'')
 							curProjectSize = addedOpportunities[curOpportunity].SIZEID
 							delete addedOpportunities[curOpportunity]
 						}
