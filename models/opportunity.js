@@ -13,8 +13,8 @@ Opportunity.prototype.add = function(client, callback) {
 	console.log(this.data)
 
 	for (var entry in this.data){
-		if(this.data[entry].sizeId == '')
-			this.data[entry].sizeId = 'Small Project'
+		if(this.data[entry].sizeid == '')
+			this.data[entry].sizeid = 'Small Project'
 		client.query('INSERT INTO sales_pipeline(opportunity, stage, probability, type, start_date, sizeId)'
 						+ ' values($1, $2, $3, $4, $5, $6) ON CONFLICT (opportunity)'
 						+ 'DO UPDATE SET stage=$2,probability=$3,type=$4,start_date=$5,sizeId=$6', 
@@ -23,7 +23,7 @@ Opportunity.prototype.add = function(client, callback) {
 							this.data[entry].probability,
 							this.data[entry].type,
 							this.data[entry].start_date,
-							this.data[entry].sizeId
+							this.data[entry].sizeid
 						]
 					)
 	}
