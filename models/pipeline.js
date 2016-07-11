@@ -122,7 +122,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 						for (var cell in curRow.dataCells){
 							curCell = curRow.dataCells[cell]
 							if (cell == closeDateIndex)
-								rowData.push(calculateStartDate(curCell.label, week))
+								rowData.push(curCell.label, calculateStartDate(curCell.label, week))
 							else if (cell == exp_amountIndex){
 								curProjectSize = getProjectSize(curCell.label)
 								stripAmount = curCell.label.replace('USD ', '').replace(/,/g,'')
