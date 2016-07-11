@@ -33,7 +33,7 @@ ProjectSize.prototype.update = function(client, callback) {
   						'roles_allocations = COALESCE($3, roles_allocations),' 	+
   						'numweeks = COALESCE($4, numweeks)' 					+
 						'WHERE id = $1;',
-			[entry,this.data[entry].pricehigh,this.data[entry].roles_allocations,this.data[entry].numweeks])
+			[this.data[entry].sizeid,this.data[entry].pricehigh,this.data[entry].roles_allocations,this.data[entry].numweeks])
 	}
 
 	//testing
