@@ -126,7 +126,6 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 							else if (cell == exp_amountIndex){
 								curProjectSize = getProjectSize(curCell.label)
 								stripAmount = curCell.label.replace('USD ', '').replace(/,/g,'')
-								console.log(stripAmount)
 								rowData.push(stripAmount)
 							} else {
 								rowData.push(curCell.label)
