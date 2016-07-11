@@ -189,6 +189,7 @@ function assignRoles(row,projectSize){
 		roleIndex	= 16,
 		roles
 
+	console.log(projectSize)
 	roles = projectSizes[projectSize].roles_allocations
 	
 	for (var each in roles){
