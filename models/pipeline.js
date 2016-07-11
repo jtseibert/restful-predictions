@@ -161,7 +161,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 									"",
 									calculateStartDate(addedOpportunities[key].START_DATE,0),
 									"",
-									(addedOpportunities[curOpportunity].PROBABILITY * 100) + "%",
+									(addedOpportunities[key].PROBABILITY * 100) + "%",
 									"",
 									"",
 									"",
