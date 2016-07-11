@@ -12,7 +12,7 @@ Opportunity.prototype.add = function(client, callback) {
 
 	for (var entry in this.data){
 
-		this.data[entry].expected_amount = this.data[entry].expected_amount.replace('USD ', '').replace(/,/g,'')
+		//this.data[entry].expected_amount = this.data[entry].expected_amount.replace('USD ', '').replace(/,/g,'')
 
 		console.log(this.data)
 
