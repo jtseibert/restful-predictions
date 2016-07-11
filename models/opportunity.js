@@ -10,11 +10,11 @@ function Opportunity(data) {
 
 Opportunity.prototype.add = function(client, callback) {
 
-	console.log(this.data)
-
 	for (var entry in this.data){
 
 		this.data[entry].expected_amount = this.data[entry].expected_amount.replace('USD ', '').replace(/,/g,'')
+
+		console.log(this.data)
 
 		client.query('INSERT INTO sales_pipeline(opportunity, stage, probability, type, start_date, sizeid, expected_amount)'
 						+ 'values($1, $2, $3, $4, $5',
