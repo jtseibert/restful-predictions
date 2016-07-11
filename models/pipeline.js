@@ -124,7 +124,8 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 								rowData.push(calculateStartDate(curCell.label, week))
 							else if (cell == exp_amountIndex){
 								curProjectSize = getProjectSize(curCell.label)
-								rowData.push(curCell.label.replace('USD ', '').replace(/,/g,''))
+								var temp = curCell.label.replace('USD ', '').replace(/,/g,'')
+								rowData.push(temp)
 							} else 
 								rowData.push(curCell.label)
 						}
