@@ -28,11 +28,11 @@ ProjectSize.prototype.add = function(client, callback) {
 
 ProjectSize.prototype.update = function(client, callback) {
 	for (var entry in this.data){
-		client.query('UPDATE project_size SET' 									+
+		client.query('UPDATE project_size SET ' 									+
   						'pricehigh = COALESCE($2, pricehigh),'					+
   						'roles_allocations = COALESCE($3, roles_allocations),' 	+
   						'numweeks = COALESCE($4, numweeks)' 					+
-						'WHERE sizeId = $1;',
+						'WHERE sizeId = $1',
 			[this.data[entry].sizeid,this.data[entry].pricehigh,this.data[entry].roles_allocations,this.data[entry].numweeks])
 	}
 
