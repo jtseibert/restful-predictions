@@ -46,7 +46,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 				"TYPE": result.rows[entry].type,
 				"START_DATE": result.rows[entry].start_date,
 				"SIZEID": result.rows[entry].sizeid,
-				"EXPECTED_AMOUNT": result.rows[entry].expect_amount
+				"EXPECTED_AMOUNT": result.rows[entry].expected_amount
 			}
 		}
 	})
