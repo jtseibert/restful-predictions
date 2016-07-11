@@ -45,7 +45,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 				"PROBABILITY": result.rows[entry].probability,
 				"TYPE": result.rows[entry].type,
 				"START_DATE": result.rows[entry].start_date,
-				"PROJECT_SIZE": result.rows[entry].project_size
+				"SIZEID": result.rows[entry].sizeid
 			}
 		}
 	})
@@ -132,7 +132,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 							rowData[probabilityIndex] = (addedOpportunities[curOpportunity].PROBABILITY * 100) + "%"
 							rowData[typeIndex] = addedOpportunities[curOpportunity].TYPE
 							rowData[startDateIndex] = calculateStartDate(addedOpportunities[curOpportunity].START_DATE,0)
-							curProjectSize = addedOpportunities[curOpportunity].PROJECT_SIZE
+							curProjectSize = addedOpportunities[curOpportunity].SIZEID
 							delete addedOpportunities[curOpportunity]
 						}
 						rowData = assignRoles(rowData,curProjectSize)
