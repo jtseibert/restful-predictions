@@ -6,6 +6,8 @@ module.exports = Opportunity
 
 function Opportunity(data) {
 	this.data = data
+	if(data.sizeId == '')
+		this.data.sizeId = 'Small Project'
 } 
 
 Opportunity.prototype.add = function(client, callback) {
@@ -14,8 +16,8 @@ Opportunity.prototype.add = function(client, callback) {
 
 	for (var entry in this.data){
 		client.query('INSERT INTO sales_pipeline(opportunity, stage, probability, type, start_date, sizeId)'
-						+ ' values($1, $2, $3, $4, $5, COALESCE($6,"Small Project")) ON CONFLICT (opportunity)'
-						+ 'DO UPDATE SET stage=$2,probability=$3,type=$4,start_date=$5,sizeId=COALESCE($6,sizeId)', 
+						+ ' values($1, $2, $3, $4, $5, $6) ON CONFLICT (opportunity)'
+						+ 'DO UPDATE SET stage=$2,probability=$3,type=$4,start_date=$5,sizeId=$6,sizeId', 
 						[this.data[entry].opportunity,
 							this.data[entry].stage,
 							this.data[entry].probability,
