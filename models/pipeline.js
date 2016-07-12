@@ -134,6 +134,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 						rowData.push(groupingsDown[stageKey].label)
 						for (var cell in currentRow.dataCells){
 							console.log('cell: '+cell+'\n')
+							console.log('indexes: '+indexes+'\n')
 							if (indexes.indexOf(cell) > -1) {
 								console.log('Validated Cell: '+cell+'\n')
 								currentCell = currentRow.dataCells[cell]
