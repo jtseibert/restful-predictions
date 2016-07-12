@@ -12,29 +12,31 @@ Opportunity.prototype.add = function(client, callback) {
 
 	for (var entry in this.data){
 
-		//this.data[entry].expected_amount = this.data[entry].expected_amount.replace('USD ', '').replace(/,/g,'')
-
 		console.log(this.data)
 
-		client.query('INSERT INTO sales_pipeline(opportunity, stage, probability, type, start_date, sizeid, expected_amount)'
-						+ 'values($1, $2, $3, $4, $5,'
-						+ '(SELECT CASE WHEN EXISTS (SELECT sizeid FROM project_size WHERE sizeid=$6)'
-						+ 'THEN (SELECT sizeid FROM project_size WHERE sizeid=$6)'
-						+ 'ELSE (SELECT sizeid FROM (SELECT * FROM project_size ORDER BY pricehigh ASC) AS foo WHERE pricehigh>$7 limit 1)'
-						+ 'END), $7)'
+		client.query('INSERT INTO sales_pipeline(opportunity, stage, amount, expected_amount, close_date, start_date, probability, age, created_date, account_name, project_size)'
+						+ 'values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,'
+						+ '(SELECT CASE WHEN EXISTS (SELECT sizeid FROM project_size WHERE sizeid=$11)'
+						+ 'THEN (SELECT sizeid FROM project_size WHERE sizeid=$11)'
+						+ 'ELSE (SELECT sizeid FROM (SELECT * FROM project_size ORDER BY pricehigh ASC) AS foo WHERE pricehigh>$4 limit 1)'
+						+ 'END))'
 						+ 'ON CONFLICT (opportunity)'
-						+ 'DO UPDATE SET stage=$2,probability=$3,type=$4,start_date=$5,'
-						+ 'sizeid=(SELECT CASE WHEN EXISTS (SELECT sizeid FROM project_size WHERE sizeid=$6)'
-						+ 'THEN (SELECT sizeid FROM project_size WHERE sizeid=$6)'
-						+ 'ELSE (SELECT sizeid FROM (SELECT * FROM project_size ORDER BY pricehigh ASC) AS foo WHERE pricehigh>$7 limit 1)'
-						+ 'END), expected_amount=$7',
+						+ 'DO UPDATE SET stage=$2, amount=$3, expected_amount=$4, close_date=$5, start_date=$6, probability=$7, age=$8, created_date=$9, account_name=$10,'
+						+ 'project_size=(SELECT CASE WHEN EXISTS (SELECT sizeid FROM project_size WHERE sizeid=$11)'
+						+ 'THEN (SELECT sizeid FROM project_size WHERE sizeid=$11)'
+						+ 'ELSE (SELECT sizeid FROM (SELECT * FROM project_size ORDER BY pricehigh ASC) AS foo WHERE pricehigh>$4 limit 1)'
+						+ 'END)',
 						[this.data[entry].opportunity,
 							this.data[entry].stage,
-							this.data[entry].probability,
-							this.data[entry].type,
+							this.data[entry].amount,
+							this.data[entry].expected_amount,
+							this.data[entry].close_date,
 							this.data[entry].start_date,
-							this.data[entry].sizeid,
-							this.data[entry].expected_amount
+							this.data[entry].probability,
+							this.data[entry].age,
+							this.data[entry].created_date,
+							this.data[entry].account_name,
+							this.data[entry].project_size
 						]
 					)
 	}
