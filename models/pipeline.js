@@ -133,7 +133,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 						rowData.push(groupingsDown[stageKey].label)
 						for (var cell in currentRow.dataCells){
 							if (~indexes.indexOf(cell)) {
-								console.log('Validated Cell\n')
+								//console.log('Validated Cell\n')
 								currentCell = currentRow.dataCells[cell]
 								if (cell == closeDateIndex)
 									rowData.push(currentCell.label, calculateStartDate(currentCell.label, week))
@@ -159,7 +159,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 							currentProjectSize = addedOpportunities[currentOpportunity].PROJECT_SIZE
 							delete addedOpportunities[currentOpportunity]
 						}
-						rowData = assignRoles(rowData,currentProjectSize)
+						rowData = assignRoles(rowData,currentProjectSize, projectSizes)
 						// console.log(rowData)
 						for (var each in rowData)
 							returnData.push(rowData[each])
@@ -181,7 +181,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 								(addedOpportunities[key].CREATED_DATE || ""),
 								(addedOpportunities[key].ACCOUNT_NAME || "")
 							)
-				newRow = assignRoles(newRow,addedOpportunities[key].PROJECT_SIZE)
+				newRow = assignRoles(newRow,addedOpportunities[key].PROJECT_SIZE, projectSizes)
 				for (var each in newRow)
 					returnData.push(newRow[each])
 			}
@@ -197,11 +197,13 @@ function calculateStartDate(closeDate, dateIncrement){
 	return returnDate[1]+'/'+returnDate[2]+'/'+returnDate[0].replace('"','')
 }
 
-function assignRoles(row,projectSize){
+function assignRoles(row,projectSize,projectSizes){
 	var tempRow 	= [],
 		returnData	= [],
 		roleIndex	= 16,
 		roles
+
+	console.log(projectSizes)
 
 	roles = projectSizes[projectSize].roles_allocations
 	
