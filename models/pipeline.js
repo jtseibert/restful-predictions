@@ -23,7 +23,6 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 				"roles_allocations": result.rows[entry].roles_allocations
 			}
 		}
-		console.log(projectSizes)
 	})
 
 	parameters = {
@@ -134,6 +133,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 						rowData.push(groupingsDown[stageKey].label)
 						for (var cell in currentRow.dataCells){
 							if (~indexes.indexOf(cell)) {
+								console.log('Validated Cell\n')
 								currentCell = currentRow.dataCells[cell]
 								if (cell == closeDateIndex)
 									rowData.push(currentCell.label, calculateStartDate(currentCell.label, week))
