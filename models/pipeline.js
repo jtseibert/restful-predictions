@@ -93,7 +93,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 	    								accountNameIndex,
 	    								roleIndex,
 	    								projectSizeIndex],
-	    	stageOffset 			= 1, //used to account for the fact that stage is not stored with the rest of the information
+	    	stageOffset 			= 1,
 	    	week					= 7,
 	    	rowData,
 	    	stageKey,
@@ -133,7 +133,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 						rowData.push(groupingsDown[stageKey].label)
 						for (var cell in currentRow.dataCells){
 							if (~indexes.indexOf(cell)) {
-								//console.log('Validated Cell\n')
+								console.log('Validated Cell: '+cell+'\n')
 								currentCell = currentRow.dataCells[cell]
 								if (cell == closeDateIndex)
 									rowData.push(currentCell.label, calculateStartDate(currentCell.label, week))
@@ -144,7 +144,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 								} else {
 									rowData.push(currentCell.label)
 								}
-							}
+							} else { console.log('Not Validated Cell: ' + cell+'\n') }
 						}
 						if(addedOpportunities[currentOpportunity]){
 							rowData[stageIndex] = (addedOpportunities[currentOpportunity].STAGE || rowData[stageIndex])
@@ -159,7 +159,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 							currentProjectSize = addedOpportunities[currentOpportunity].PROJECT_SIZE
 							delete addedOpportunities[currentOpportunity]
 						}
-						rowData = assignRoles(rowData,currentProjectSize, projectSizes)
+						rowData = assignRoles(rowData,currentProjectSize)
 						// console.log(rowData)
 						for (var each in rowData)
 							returnData.push(rowData[each])
@@ -181,7 +181,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 								(addedOpportunities[key].CREATED_DATE || ""),
 								(addedOpportunities[key].ACCOUNT_NAME || "")
 							)
-				newRow = assignRoles(newRow,addedOpportunities[key].PROJECT_SIZE, projectSizes)
+				newRow = assignRoles(newRow,addedOpportunities[key].PROJECT_SIZE)
 				for (var each in newRow)
 					returnData.push(newRow[each])
 			}
@@ -197,7 +197,7 @@ function calculateStartDate(closeDate, dateIncrement){
 	return returnDate[1]+'/'+returnDate[2]+'/'+returnDate[0].replace('"','')
 }
 
-function assignRoles(row,projectSize,projectSizes){
+function assignRoles(row,projectSize){
 	var tempRow 	= [],
 		returnData	= [],
 		roleIndex	= 16,
@@ -220,9 +220,11 @@ function assignRoles(row,projectSize,projectSizes){
 }
 
 function getProjectSize(expectedAmount){
+	console.log('expected Amount: '+expectedAmount+'\n')
 	expectedAmount = expectedAmount.replace('USD ', '').replace(/,/g,'')
 	for (var each in projectSizes){
 		if (parseInt(expectedAmount) <= projectSizes[each].priceHigh){
+			console.log(each)
 			return each
 		}
 	}
