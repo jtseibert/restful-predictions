@@ -25,6 +25,8 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 		}
 	})
 
+	console.log(projectSizes)
+
 	parameters = {
 		access_token: this.accessToken
 	}
