@@ -133,11 +133,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 						rowData = []
 						rowData.push(groupingsDown[stageKey].label)
 						for (var cell in currentRow.dataCells){
-							// console.log('cell: '+cell+'\n')
-							// console.log('indexes: '+indexes+'\n')
-							// console.log('indexOf = '+indexes.indexOf(parseInt(cell, 10)))
 							if (indexes.indexOf(parseInt(cell, 10)) > -1) {
-								console.log('Validated Cell: '+cell+'\n')
 								currentCell = currentRow.dataCells[cell]
 								if (cell == closeDateIndex)
 									rowData.push(currentCell.label, calculateStartDate(currentCell.label, week))
@@ -148,7 +144,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 								} else {
 									rowData.push(currentCell.label)
 								}
-							} else { console.log('Not Validated Cell: ' + cell+'\n') }
+							}
 						}
 						if(addedOpportunities[currentOpportunity]){
 							rowData[stageIndex] = (addedOpportunities[currentOpportunity].STAGE || rowData[stageIndex])
@@ -164,7 +160,6 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 							delete addedOpportunities[currentOpportunity]
 						}
 						rowData = assignRoles(rowData,currentProjectSize)
-						// console.log(rowData)
 						for (var each in rowData)
 							returnData.push(rowData[each])
 					}
