@@ -135,8 +135,8 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 						for (var cell in currentRow.dataCells){
 							console.log('cell: '+cell+'\n')
 							console.log('indexes: '+indexes+'\n')
-							console.log('indexOf = '+indexes.indexOf(cell))
-							if (indexes.indexOf(cell) > -1) {
+							console.log('indexOf = '+indexes.indexOf(parseInt(cell, 10)))
+							if (indexes.indexOf(parseInt(cell, 10)) > -1) {
 								console.log('Validated Cell: '+cell+'\n')
 								currentCell = currentRow.dataCells[cell]
 								if (cell == closeDateIndex)
