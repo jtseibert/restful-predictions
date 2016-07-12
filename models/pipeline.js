@@ -12,7 +12,7 @@ function Pipeline(instance, accessToken) {
 Pipeline.prototype.get = function(client, oauth2, callback) {
 
 	projectSizes = {}
-	var projectSizesQuery = client.query("SELECT sizeid,pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
+	var projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
 	projectSizesQuery.on("row", function (row, result) {
 		result.addRow(row)
 	})
@@ -24,10 +24,6 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 			}
 		}
 	})
-
-	smallProject = 'smallProject'
-	mediumProject = 'mediumProject'
-	largeProject = 'largeProject'
 
 	parameters = {
 		access_token: this.accessToken
@@ -42,11 +38,15 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 		for (var entry in result.rows){
 			addedOpportunities[result.rows[entry].opportunity] = {
 				"STAGE": result.rows[entry].stage,
-				"PROBABILITY": result.rows[entry].probability,
-				"TYPE": result.rows[entry].type,
+				"AMOUNT": result.rows[entry].amount,
+				"EXPECTED_AMOUNT": result.rows[entry].expected_amount,
+				"CLOSE_DATE": result.rows[entry].close_date,
 				"START_DATE": result.rows[entry].start_date,
-				"SIZEID": result.rows[entry].sizeid,
-				"EXPECTED_AMOUNT": result.rows[entry].expected_amount
+				"PROBABILITY": result.rows[entry].probability,
+				"AGE": result.rows[entry].age,
+				"CREATED_DATE": result.rows[entry].create_date,
+				"ACCOUNT_NAME": result.rows[entry].account_name,
+				"PROJECT_SIZE": result.rows[entry].project_size
 			}
 		}
 	})
@@ -71,37 +71,48 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 	    	returnData				= [],
 	    	newRow					= [],
 	    	stageIndex				= 0,
-	    	opportunityIndex		= 1,
-	    	typeIndex				= 2,
+	    	opportunityIndex		= 0,
+	    	amountIndex 			= 3,
+	    	expectedAmountIndex		= 4,
 	    	closeDateIndex			= 5,
-	    	startDateIndex			= 7,
-	    	probabilityIndex		= 9,
-	    	exp_amountIndex			= 4,
+	    	startDateIndex			= 6,
+	    	probabilityIndex		= 8,
+	    	ageIndex 				= 10,
+	    	createdDateIndex 		= 11,
+	    	accountNameIndex 		= 14,
+	    	roleIndex 				= 15,
+	    	projectSizeIndex 		= 16,
+	    	indexes					= [opportunityIndex,
+	    								amountIndex,
+	    								expectedAmountIndex,
+	    								closeDateIndex,
+	    								startDateIndex,
+	    								probabilityIndex,
+	    								ageIndex,
+	    								createdDateIndex,
+	    								accountNameIndex,
+	    								roleIndex,
+	    								projectSizeIndex],
+	    	stageOffset 			= 1, //used to account for the fact that stage is not stored with the rest of the information
 	    	week					= 7,
 	    	rowData,
 	    	stageKey,
-	    	curStage,
-	    	curRow,
-	    	curCell,
-	    	curOpportunity,
-	    	curProjectSize,
+	    	currentStage,
+	    	currentRow,
+	    	currentCell,
+	    	currentOpportunity,
+	    	currentProjectSize,
 	    	stripAmount
 
 	    returnData.push(["STAGE",
 	    					"OPPORTUNITY_NAME",
-      						"TYPE",
-							"LEAD_SOURCE",
 							"AMOUNT",
 							"EXP_AMOUNT",
 							"CLOSE_DATE",
 							"START_DATE",
-							"NEXT_STEP",
 							"PROBABILITY",
-							"FISCAL_QUARTER",
 							"AGE",
 							"CREATED_DATE",
-							"FULL_NAME",
-							"ROLLUP_DESCRIPTION",
 							"ACCOUNT_NAME",
 							"ROLE",
 							"PROJECT_SIZE"
@@ -110,38 +121,44 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 	    for (var stage in factMap) {
 
 		    stageKey = stage.split('!')[stageIndex]
-		    curStage = factMap[stage]
+		    currentStage = factMap[stage]
 			
 
 			if (stageKey != "T"){
-				for (var row in curStage.rows){
-					curRow = curStage.rows[row]
-					curOpportunity = curRow.dataCells[opportunityIndex-1].label
-					if (!(omitData[curOpportunity])){
+				for (var row in currentStage.rows){
+					currentRow = currentStage.rows[row]
+					currentOpportunity = currentRow.dataCells[opportunityIndex].label
+					if (!(omitData[currentOpportunity])){
 						rowData = []
 						rowData.push(groupingsDown[stageKey].label)
-						for (var cell in curRow.dataCells){
-							curCell = curRow.dataCells[cell]
-							if (cell == closeDateIndex)
-								rowData.push(curCell.label, calculateStartDate(curCell.label, week))
-							else if (cell == exp_amountIndex){
-								curProjectSize = getProjectSize(curCell.label)
-								stripAmount = curCell.label.replace('USD ', '').replace(/,/g,'')
-								rowData.push(stripAmount)
-							} else {
-								rowData.push(curCell.label)
+						for (var cell in currentRow.dataCells){
+							if (~indexes.indexOf(cell)) {
+								currentCell = currentRow.dataCells[cell]
+								if (cell == closeDateIndex)
+									rowData.push(currentCell.label, calculateStartDate(currentCell.label, week))
+								else if (cell == expAmountIndex){
+									currentProjectSize = getProjectSize(currentCell.label)
+									stripAmount = currentCell.label.replace('USD ', '').replace(/,/g,'')
+									rowData.push(stripAmount)
+								} else {
+									rowData.push(currentCell.label)
+								}
 							}
 						}
-						if(addedOpportunities[curOpportunity]){
-							rowData[stageIndex] = addedOpportunities[curOpportunity].STAGE
-							rowData[probabilityIndex] = (addedOpportunities[curOpportunity].PROBABILITY * 100) + "%"
-							rowData[typeIndex] = addedOpportunities[curOpportunity].TYPE
-							rowData[startDateIndex] = calculateStartDate(addedOpportunities[curOpportunity].START_DATE,0)
-							rowData[exp_amountIndex+1] = addedOpportunities[curOpportunity].EXPECTED_AMOUNT
-							curProjectSize = addedOpportunities[curOpportunity].SIZEID
-							delete addedOpportunities[curOpportunity]
+						if(addedOpportunities[currentOpportunity]){
+							rowData[stageIndex] = (addedOpportunities[currentOpportunity].STAGE || rowData[stageIndex])
+							rowData[amountIndex+stageOffset] = (addedOpportunities[currentOpportunity].AMOUNT || rowData[amountIndex+stageOffset])
+							rowData[expectedAmountIndex+stageOffset] = (addedOpportunities[currentOpportunity].EXPECTED_AMOUNT || rowData[expectedAmountIndex+stageOffset])
+							rowData[closeDateIndex+stageOffset] = (addedOpportunities[currentOpportunity].CLOSE_DATE || rowData[closeDateIndex+stageOffset])
+							rowData[startDateIndex+stageOffset] = (addedOpportunities[currentOpportunity].START_DATE || rowData[startDateIndex+stageOffset])
+							rowData[probabilityIndex+stageOffset] = ((addedOpportunities[currentOpportunity].PROBABILITY*100)+"%" || rowData[probabilityIndex+stageOffset])
+							rowData[ageIndex+stageOffset] = (addedOpportunities[currentOpportunity].AGE || rowData[ageIndex+stageOffset])
+							rowData[createdDateIndex+stageOffset] = (addedOpportunities[currentOpportunity].CREATED_DATE || rowData[createdDateIndex+stageOffset])
+							rowData[accountNameIndex+stageOffset] = (addedOpportunities[currentOpportunity].ACCOUNT_NAME || rowData[accountNameIndex+stageOffset])
+							currentProjectSize = addedOpportunities[currentOpportunity].PROJECT_SIZE
+							delete addedOpportunities[currentOpportunity]
 						}
-						rowData = assignRoles(rowData,curProjectSize)
+						rowData = assignRoles(rowData,currentProjectSize)
 						// console.log(rowData)
 						for (var each in rowData)
 							returnData.push(rowData[each])
@@ -152,24 +169,18 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 		for (var key in addedOpportunities){
 			if (!(omitData[key])){
 				newRow = []
-				newRow.push(addedOpportunities[key].STAGE,
-									key,
-									addedOpportunities[key].TYPE,
-									"",
-									"",
-									addedOpportunities[key].EXPECTED_AMOUNT,
-									"",
-									calculateStartDate(addedOpportunities[key].START_DATE,0),
-									"",
-									(addedOpportunities[key].PROBABILITY * 100) + "%",
-									"",
-									"",
-									"",
-									"",
-									"",
-									""
-								)
-				newRow = assignRoles(newRow,addedOpportunities[key].SIZEID)
+				newRow.push((addedOpportunities[key].STAGE || ""),
+								key,
+								(addedOpportunities[key].AMOUNT || ""),
+								(addedOpportunities[key].EXPECTED_AMOUNT || ""),
+								(addedOpportunities[key].CLOSE_DATE || ""),
+								(addedOpportunities[key].START_DATE || ""),
+								((addedOpportunities[key].PROBABILITY*100)+"%" || ""),
+								(addedOpportunities[key].AGE || ""),
+								(addedOpportunities[key].CREATED_DATE || ""),
+								(addedOpportunities[key].ACCOUNT_NAME || "")
+							)
+				newRow = assignRoles(newRow,addedOpportunities[key].PROJECT_SIZE)
 				for (var each in newRow)
 					returnData.push(newRow[each])
 			}
