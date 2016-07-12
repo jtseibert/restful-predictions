@@ -133,15 +133,15 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 						rowData = []
 						rowData.push(groupingsDown[stageKey].label)
 						for (var cell in currentRow.dataCells){
-							console.log('cell: '+cell+'\n')
-							console.log('indexes: '+indexes+'\n')
-							console.log('indexOf = '+indexes.indexOf(parseInt(cell, 10)))
+							// console.log('cell: '+cell+'\n')
+							// console.log('indexes: '+indexes+'\n')
+							// console.log('indexOf = '+indexes.indexOf(parseInt(cell, 10)))
 							if (indexes.indexOf(parseInt(cell, 10)) > -1) {
 								console.log('Validated Cell: '+cell+'\n')
 								currentCell = currentRow.dataCells[cell]
 								if (cell == closeDateIndex)
 									rowData.push(currentCell.label, calculateStartDate(currentCell.label, week))
-								else if (cell == expAmountIndex){
+								else if (cell == expectedAmountIndex){
 									currentProjectSize = getProjectSize(currentCell.label)
 									stripAmount = currentCell.label.replace('USD ', '').replace(/,/g,'')
 									rowData.push(stripAmount)
@@ -207,8 +207,6 @@ function assignRoles(row,projectSize){
 		roleIndex	= 16,
 		roles
 
-	console.log(projectSize)
-
 	roles = projectSizes[projectSize].roles_allocations
 	
 	for (var each in roles){
@@ -224,7 +222,6 @@ function assignRoles(row,projectSize){
 }
 
 function getProjectSize(expectedAmount){
-	console.log('expected Amount: '+expectedAmount+'\n')
 	expectedAmount = expectedAmount.replace('USD ', '').replace(/,/g,'')
 	for (var each in projectSizes){
 		if (parseInt(expectedAmount) <= projectSizes[each].priceHigh){
