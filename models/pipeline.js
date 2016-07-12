@@ -23,9 +23,8 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 				"roles_allocations": result.rows[entry].roles_allocations
 			}
 		}
+		console.log(projectSizes)
 	})
-
-	console.log(projectSizes)
 
 	parameters = {
 		access_token: this.accessToken
