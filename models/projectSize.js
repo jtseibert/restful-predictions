@@ -54,7 +54,6 @@ ProjectSize.prototype.get = function(client, callback) {
 		result.addRow(row)
 	})
 	query.on("end", function (result) {
-		console.log(JSON.stringify(result.rows, null, "    "))
 		client.end()
 		callback(result.rows)
 	})
