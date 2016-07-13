@@ -132,6 +132,8 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 								currentCell = currentRow.dataCells[cell]
 								if (cell == closeDateIndex)
 									rowData.push(cleanUpDate(currentCell.label), calculateStartDate(currentCell.label, week))
+								else if (cell == createdDateIndex)
+									rowData.push(cleanUpDate(currentCell.label))
 								else if (cell == expectedAmountIndex){
 									currentProjectSize = getProjectSize(currentCell.label)
 									stripAmount = currentCell.label.replace('USD ', '').replace(/,/g,'')
@@ -197,8 +199,9 @@ function calculateStartDate(closeDate, dateIncrement){
 function cleanUpDate(date){
 	if (date != null) {
 		var date = new Date(date)
-		date = JSON.stringify(date).split('T')[0].split('-')
-		return date[1]+'/'+date[2]+'/'+date[0].replace('"','')
+		var returnDate = new Date(date.setDate(date.getDate()))
+		returnDate = JSON.stringify(returnDate).split('T')[0].split('-')
+		return returnDate[1]+'/'+returnDate[2]+'/'+returnDate[0].replace('"','')
 	} else { return null }
 }
 
