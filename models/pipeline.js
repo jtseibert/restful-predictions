@@ -133,7 +133,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 							if (indexes.indexOf(parseInt(cell, 10)) > -1) {
 								currentCell = currentRow.dataCells[cell]
 								if (cell == closeDateIndex)
-									rowData.push(currentCell.label, calculateStartDate(currentCell.label, week))
+									rowData.push(cleanUpDate(currentCell.label), calculateStartDate(currentCell.label, week))
 								else if (cell == expectedAmountIndex){
 									currentProjectSize = getProjectSize(currentCell.label)
 									stripAmount = currentCell.label.replace('USD ', '').replace(/,/g,'')
