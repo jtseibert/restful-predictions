@@ -221,11 +221,10 @@ function assignRoles(row,projectSize){
 			for (var col in row){
 				tempRow.push(row[col])
 			}
-			console.log(parseInt(roles[role].offset)+daysInWeek*i)
 			tempRow.push(role)
 			tempRow.push(projectSize)
 			tempRow.push(roles[role].allocation)
-			tempRow.push(calculateStartDate(row[5],(roles[role].offset+daysInWeek*i)))
+			tempRow.push(calculateStartDate(row[5],(parseInt(roles[role].offset)+daysInWeek*i)))
 			returnData.push(tempRow)
 		}
 	}
