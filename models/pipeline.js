@@ -181,6 +181,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 					returnData.push(newRow[each])
 			}
 		}
+		console.log(returnData)
 	    callback(returnData)
 	})  
 }
