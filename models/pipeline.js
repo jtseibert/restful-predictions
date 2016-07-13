@@ -150,6 +150,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 							}
 						}
 						if(addedOpportunities[currentOpportunity]){
+							console.log('AddedOpportunity: ' addedOpportunities[currentOpportunity])
 							rowData[stageIndex] = (addedOpportunities[currentOpportunity].STAGE || rowData[stageIndex])
 							rowData[amountIndex+stageOffset] = (addedOpportunities[currentOpportunity].AMOUNT || rowData[amountIndex+stageOffset])
 							rowData[expectedAmountIndex+stageOffset] = (addedOpportunities[currentOpportunity].EXPECTED_AMOUNT || rowData[expectedAmountIndex+stageOffset])
@@ -161,11 +162,10 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 							rowData[accountNameIndex+stageOffset] = (addedOpportunities[currentOpportunity].ACCOUNT_NAME || rowData[accountNameIndex+stageOffset])
 							currentProjectSize = addedOpportunities[currentOpportunity].PROJECT_SIZE
 							delete addedOpportunities[currentOpportunity]
+							console.log('completed AddedOpportunity')
 						}
 						rowData = assignRoles(rowData,currentProjectSize)
 						for (var each in rowData)
-							if (rowData.length > 12)
-								console.log(rowData)
 							returnData.push(rowData[each])
 					}
 				}
