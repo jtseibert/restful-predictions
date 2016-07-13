@@ -164,6 +164,8 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 						}
 						rowData = assignRoles(rowData,currentProjectSize)
 						for (var each in rowData)
+							if (rowData.length > 12)
+								console.log(rowData)
 							returnData.push(rowData[each])
 					}
 				}
@@ -188,7 +190,6 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 					returnData.push(newRow[each])
 			}
 		}
-		console.log(returnData)
 	    callback(returnData)
 	})  
 }
