@@ -195,9 +195,11 @@ function calculateStartDate(closeDate, dateIncrement){
 }
 
 function cleanUpDate(date){
-	var date = new Date(date)
-	returnDate = JSON.stringify(returnDate).split('T')[0].split('-')
-	return returnDate[1]+'/'+returnDate[2]+'/'+returnDate[0].replace('"','')
+	if (date != null) {
+		var date = new Date(date)
+		returnDate = JSON.stringify(returnDate).split('T')[0].split('-')
+		return returnDate[1]+'/'+returnDate[2]+'/'+returnDate[0].replace('"','')
+	} else { return null }
 }
 
 function assignRoles(row,projectSize){
