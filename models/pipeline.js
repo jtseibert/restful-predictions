@@ -221,7 +221,7 @@ function assignRoles(row,projectSize){
 			for (var col in row){
 				tempRow.push(row[col])
 			}
-			console.log(parseInt(roles[role].offset+daysInWeek*i))
+			console.log(parseInt(roles[role].offset)+daysInWeek*i)
 			tempRow.push(role)
 			tempRow.push(projectSize)
 			tempRow.push(roles[role].allocation)
