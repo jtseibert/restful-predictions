@@ -169,16 +169,16 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 		for (var key in addedOpportunities){
 			if (!(omitData[key])){
 				newRow = []
-				newRow.push((addedOpportunities[key].STAGE || ""),
+				newRow.push((addedOpportunities[key].STAGE || "New Opportunity"),
 								key,
-								(addedOpportunities[key].AMOUNT || ""),
-								(addedOpportunities[key].EXPECTED_AMOUNT || ""),
-								(addedOpportunities[key].CLOSE_DATE || ""),
-								(addedOpportunities[key].START_DATE || ""),
-								((addedOpportunities[key].PROBABILITY*100)+"%" || ""),
-								(addedOpportunities[key].AGE || ""),
-								(addedOpportunities[key].CREATED_DATE || ""),
-								(addedOpportunities[key].ACCOUNT_NAME || "")
+								(addedOpportunities[key].AMOUNT || "0"),
+								(addedOpportunities[key].EXPECTED_AMOUNT || "0"),
+								(addedOpportunities[key].CLOSE_DATE || "mm/dd/yyyy"),
+								(addedOpportunities[key].START_DATE || "mm/dd/yyyy"),
+								((addedOpportunities[key].PROBABILITY*100)+"%" || "50%"),
+								(addedOpportunities[key].AGE || "0"),
+								(addedOpportunities[key].CREATED_DATE || "mm/dd/yyyy"),
+								(addedOpportunities[key].ACCOUNT_NAME || "-")
 							)
 				newRow = assignRoles(newRow,addedOpportunities[key].PROJECT_SIZE)
 				for (var each in newRow)
