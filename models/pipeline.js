@@ -11,6 +11,8 @@ function Pipeline(instance, accessToken) {
 
 Pipeline.prototype.get = function(client, oauth2, callback) {
 
+	console.log(this.accessToken)
+
 	projectSizes = {}
 	var projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
 	projectSizesQuery.on("row", function (row, result) {
@@ -60,6 +62,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 		for (var entry in result.rows){
 			omitData[result.rows[entry].opportunity] = {}
 		}
+		console.log(omitData)
 	})
 
 	oauth2.api('GET', this.path, parameters, function (err, data) {
