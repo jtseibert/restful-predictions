@@ -95,7 +95,6 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 						amountIndex,
 						expectedAmountIndex,
 						closeDateIndex,
-						startDateIndex,
 						probabilityIndex,
 						ageIndex,
 						createdDateIndex,
