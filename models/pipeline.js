@@ -151,15 +151,15 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 						}
 						if(addedOpportunities[currentOpportunity]){
 							console.log('rowData prior: ' + rowData)
-							rowData[stageIndex] = (addedOpportunities[currentOpportunity].STAGE || rowData[stageIndex])
-							rowData[amountIndex+stageOffset] = (addedOpportunities[currentOpportunity].AMOUNT || rowData[amountIndex+stageOffset])
-							rowData[expectedAmountIndex+stageOffset] = (addedOpportunities[currentOpportunity].EXPECTED_AMOUNT || rowData[expectedAmountIndex+stageOffset])
-							rowData[closeDateIndex+stageOffset] = (cleanUpDate(addedOpportunities[currentOpportunity].CLOSE_DATE) || rowData[closeDateIndex+stageOffset])
-							rowData[startDateIndex+stageOffset] = (cleanUpDate(addedOpportunities[currentOpportunity].START_DATE) || rowData[startDateIndex+stageOffset])
-							rowData[probabilityIndex+stageOffset] = ((addedOpportunities[currentOpportunity].PROBABILITY*100)+"%" || rowData[probabilityIndex+stageOffset])
-							rowData[ageIndex+stageOffset] = (addedOpportunities[currentOpportunity].AGE || rowData[ageIndex+stageOffset])
-							rowData[createdDateIndex+stageOffset] = (cleanUpDate(addedOpportunities[currentOpportunity].CREATED_DATE) || rowData[createdDateIndex+stageOffset])
-							rowData[accountNameIndex+stageOffset] = (addedOpportunities[currentOpportunity].ACCOUNT_NAME || rowData[accountNameIndex+stageOffset])
+							rowData[0] = (addedOpportunities[currentOpportunity].STAGE || rowData[stageIndex])
+							rowData[2] = (addedOpportunities[currentOpportunity].AMOUNT || rowData[amountIndex+stageOffset])
+							rowData[3] = (addedOpportunities[currentOpportunity].EXPECTED_AMOUNT || rowData[expectedAmountIndex+stageOffset])
+							rowData[4] = (cleanUpDate(addedOpportunities[currentOpportunity].CLOSE_DATE) || rowData[closeDateIndex+stageOffset])
+							rowData[5] = (cleanUpDate(addedOpportunities[currentOpportunity].START_DATE) || rowData[startDateIndex+stageOffset])
+							rowData[6] = ((addedOpportunities[currentOpportunity].PROBABILITY*100)+"%" || rowData[probabilityIndex+stageOffset])
+							rowData[7] = (addedOpportunities[currentOpportunity].AGE || rowData[ageIndex+stageOffset])
+							rowData[8] = (cleanUpDate(addedOpportunities[currentOpportunity].CREATED_DATE) || rowData[createdDateIndex+stageOffset])
+							rowData[9] = (addedOpportunities[currentOpportunity].ACCOUNT_NAME || rowData[accountNameIndex+stageOffset])
 							currentProjectSize = addedOpportunities[currentOpportunity].PROJECT_SIZE
 							delete addedOpportunities[currentOpportunity]
 							console.log('rowData after: '+rowData)
