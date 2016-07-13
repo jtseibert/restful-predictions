@@ -114,7 +114,9 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 							"CREATED_DATE",
 							"ACCOUNT_NAME",
 							"ROLE",
-							"PROJECT_SIZE"
+							"PROJECT_SIZE",
+							"ESTIMATED_HOURS",
+							"WEEK_DATE"
 						])
 
 	    for (var stage in factMap) {
@@ -150,7 +152,6 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 							}
 						}
 						if(addedOpportunities[currentOpportunity]){
-							console.log('rowData prior: ' + rowData)
 							rowData[0] = (addedOpportunities[currentOpportunity].STAGE || rowData[0])
 							rowData[2] = (addedOpportunities[currentOpportunity].AMOUNT || rowData[2])
 							rowData[3] = (addedOpportunities[currentOpportunity].EXPECTED_AMOUNT || rowData[3])
@@ -162,7 +163,6 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 							rowData[9] = (addedOpportunities[currentOpportunity].ACCOUNT_NAME || rowData[9])
 							currentProjectSize = addedOpportunities[currentOpportunity].PROJECT_SIZE
 							delete addedOpportunities[currentOpportunity]
-							console.log('rowData after: '+rowData)
 						}
 						rowData = assignRoles(rowData,currentProjectSize)
 						for (var each in rowData)
@@ -212,18 +212,21 @@ function cleanUpDate(date){
 function assignRoles(row,projectSize){
 	var tempRow 	= [],
 		returnData	= [],
-		roles
+		roles 		= projectSizes[projectSize].roles_allocations,
+		daysInWeek 		= 7
 
-	roles = projectSizes[projectSize].roles_allocations
-	
-	for (var each in roles){
-		tempRow = []
-		for (var col in row){
-			tempRow.push(row[col])
+	for (var role in roles){
+		for(var week in roles[role].duration) {
+			tempRow = []
+			for (var col in row){
+				tempRow.push(row[col])
+			}
+			tempRow.push(role)
+			tempRow.push(projectSize)
+			tempRow.push(roles[role].allocation)
+			tempRow.push(calculateStartDate(row[5],(roles[role].offset+daysInWeek*week)))
+			returnData.push(tempRow)
 		}
-		tempRow.push(each)
-		tempRow.push(projectSize)
-		returnData.push(tempRow)
 	}
 	return returnData
 }
