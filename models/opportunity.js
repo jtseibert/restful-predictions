@@ -21,11 +21,13 @@ Opportunity.prototype.add = function(client, callback) {
 						+ 'ELSE (SELECT sizeid FROM (SELECT * FROM project_size ORDER BY pricehigh ASC) AS foo WHERE pricehigh>$4 limit 1)'
 						+ 'END))'
 						+ 'ON CONFLICT (opportunity)'
-						+ 'DO UPDATE SET stage=$2, amount=$3, expected_amount=$4, close_date=$5, start_date=$6, probability=$7, age=$8, created_date=$9, account_name=$10,'
-						+ 'project_size=(SELECT CASE WHEN EXISTS (SELECT sizeid FROM project_size WHERE sizeid=$11)'
+						+ 'DO UPDATE SET stage=COALESCE($2,stage), amount=COALESCE($3,amount), expected_amount=COALESCE($4,expected_amount),'
+						+ 'close_date=COALESCE($5,close_date), start_date=COALESCE($6,start_date), probability=COALESCE($7,probability), age=COALESCE($8,age),'
+						+ 'created_date=COALESCE($9,created_date), account_name=COALESCE($10,account_name),'
+						+ 'project_size=COALESCE((SELECT CASE WHEN EXISTS (SELECT sizeid FROM project_size WHERE sizeid=$11)'
 						+ 'THEN (SELECT sizeid FROM project_size WHERE sizeid=$11)'
 						+ 'ELSE (SELECT sizeid FROM (SELECT * FROM project_size ORDER BY pricehigh ASC) AS foo WHERE pricehigh>$4 limit 1)'
-						+ 'END)',
+						+ 'END),project_size)',
 						[this.data[entry].opportunity,
 							this.data[entry].stage,
 							this.data[entry].amount,
