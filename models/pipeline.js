@@ -217,8 +217,8 @@ function assignRoles(row,projectSize){
 
 	for (var role in roles){
 		console.log('newRole')
-		for(var week in roles[role].duration) {
-			console.log(week)
+		for(var i=0; i<roles[role].duration; i++) {
+			console.log(i)
 			tempRow = []
 			for (var col in row){
 				tempRow.push(row[col])
@@ -226,7 +226,7 @@ function assignRoles(row,projectSize){
 			tempRow.push(role)
 			tempRow.push(projectSize)
 			tempRow.push(roles[role].allocation)
-			tempRow.push(calculateStartDate(row[5],(roles[role].offset+daysInWeek*week)))
+			tempRow.push(calculateStartDate(row[5],(roles[role].offset+daysInWeek*i)))
 			returnData.push(tempRow)
 		}
 	}
