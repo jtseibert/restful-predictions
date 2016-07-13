@@ -216,7 +216,9 @@ function assignRoles(row,projectSize){
 		daysInWeek 		= 7
 
 	for (var role in roles){
+		console.log('newRole')
 		for(var week in roles[role].duration) {
+			console.log(week)
 			tempRow = []
 			for (var col in row){
 				tempRow.push(row[col])
