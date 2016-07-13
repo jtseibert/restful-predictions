@@ -50,7 +50,6 @@ router.route('/:instance/Allocation/:accessToken')
 
 router.route('/:instance/Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
-		console.log('Entered Pipeline')
 		pipeline = new Pipeline(req.params.instance, req.params.accessToken)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err
