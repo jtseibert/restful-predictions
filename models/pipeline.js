@@ -136,6 +136,9 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 									currentProjectSize = getProjectSize(currentCell.label)
 									stripAmount = currentCell.label.replace('USD ', '').replace(/,/g,'')
 									rowData.push(stripAmount)
+								} else if (cell == amountIndex){
+									stripAmount = currentCell.label.replace('USD ', '').replace(/,/g,'')
+									rowData.push(stripAmount)
 								} else {
 									rowData.push(currentCell.label)
 								}
