@@ -76,7 +76,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 	    	expectedAmountIndex		= 4,
 	    	closeDateIndex			= 5,
 	    	startDateIndex			= 6,
-	    	probabilityIndex		= 8,
+	    	probabilityIndex		= 9,
 	    	ageIndex 				= 10,
 	    	createdDateIndex 		= 11,
 	    	accountNameIndex 		= 14,
@@ -175,7 +175,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 								(addedOpportunities[key].EXPECTED_AMOUNT || "0"),
 								(addedOpportunities[key].CLOSE_DATE || "mm/dd/yyyy"),
 								(addedOpportunities[key].START_DATE || "mm/dd/yyyy"),
-								((addedOpportunities[key].PROBABILITY*100)+"%" || "50%"),
+								(((addedOpportunities[key].PROBABILITY*100)+"%") || "50%"),
 								(addedOpportunities[key].AGE || "0"),
 								(addedOpportunities[key].CREATED_DATE || "mm/dd/yyyy"),
 								(addedOpportunities[key].ACCOUNT_NAME || "-")
