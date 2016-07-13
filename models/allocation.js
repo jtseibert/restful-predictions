@@ -13,8 +13,6 @@ function Allocation(instance, accessToken) {
 } 
 
 Allocation.prototype.get = function(oauth2, callback) {
-	console.log(this.accessToken)
-	console.log(this.path)
 
 	parameters = {
 		access_token: this.accessToken
