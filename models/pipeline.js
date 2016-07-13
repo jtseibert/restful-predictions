@@ -173,11 +173,11 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 								key,
 								(addedOpportunities[key].AMOUNT || "0"),
 								(addedOpportunities[key].EXPECTED_AMOUNT || "0"),
-								(cleanUpDate(addedOpportunities[key].CLOSE_DATE) || "mm/dd/yyyy"),
-								(cleanUpDate(addedOpportunities[key].START_DATE) || "mm/dd/yyyy"),
+								(cleanUpDate(addedOpportunities[key].CLOSE_DATE) || cleanUpDate(new Date())),
+								(cleanUpDate(addedOpportunities[key].START_DATE) || cleanUpDate(new Date())),
 								(((addedOpportunities[key].PROBABILITY*100)+"%") || "50%"),
 								(addedOpportunities[key].AGE || "0"),
-								(cleanUpDate(addedOpportunities[key].CREATED_DATE) || "mm/dd/yyyy"),
+								(cleanUpDate(addedOpportunities[key].CREATED_DATE) || cleanUpDate(new Date())),
 								(addedOpportunities[key].ACCOUNT_NAME || "-")
 							)
 				newRow = assignRoles(newRow,addedOpportunities[key].PROJECT_SIZE)
