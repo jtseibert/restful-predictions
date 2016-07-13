@@ -177,7 +177,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 								(cleanUpDate(addedOpportunities[key].START_DATE) || "mm/dd/yyyy"),
 								(((addedOpportunities[key].PROBABILITY*100)+"%") || "50%"),
 								(addedOpportunities[key].AGE || "0"),
-								(clearnUpDate(addedOpportunities[key].CREATED_DATE) || "mm/dd/yyyy"),
+								(cleanUpDate(addedOpportunities[key].CREATED_DATE) || "mm/dd/yyyy"),
 								(addedOpportunities[key].ACCOUNT_NAME || "-")
 							)
 				newRow = assignRoles(newRow,addedOpportunities[key].PROJECT_SIZE)
