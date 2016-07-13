@@ -148,11 +148,11 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 							rowData[stageIndex] = (addedOpportunities[currentOpportunity].STAGE || rowData[stageIndex])
 							rowData[amountIndex+stageOffset] = (addedOpportunities[currentOpportunity].AMOUNT || rowData[amountIndex+stageOffset])
 							rowData[expectedAmountIndex+stageOffset] = (addedOpportunities[currentOpportunity].EXPECTED_AMOUNT || rowData[expectedAmountIndex+stageOffset])
-							rowData[closeDateIndex+stageOffset] = (addedOpportunities[currentOpportunity].CLOSE_DATE || rowData[closeDateIndex+stageOffset])
-							rowData[startDateIndex+stageOffset] = (addedOpportunities[currentOpportunity].START_DATE || rowData[startDateIndex+stageOffset])
+							rowData[closeDateIndex+stageOffset] = (cleanUpDate(addedOpportunities[currentOpportunity].CLOSE_DATE) || rowData[closeDateIndex+stageOffset])
+							rowData[startDateIndex+stageOffset] = (clearnUpDate(addedOpportunities[currentOpportunity].START_DATE) || rowData[startDateIndex+stageOffset])
 							rowData[probabilityIndex+stageOffset] = ((addedOpportunities[currentOpportunity].PROBABILITY*100)+"%" || rowData[probabilityIndex+stageOffset])
 							rowData[ageIndex+stageOffset] = (addedOpportunities[currentOpportunity].AGE || rowData[ageIndex+stageOffset])
-							rowData[createdDateIndex+stageOffset] = (addedOpportunities[currentOpportunity].CREATED_DATE || rowData[createdDateIndex+stageOffset])
+							rowData[createdDateIndex+stageOffset] = (cleanUpDate(addedOpportunities[currentOpportunity].CREATED_DATE) || rowData[createdDateIndex+stageOffset])
 							rowData[accountNameIndex+stageOffset] = (addedOpportunities[currentOpportunity].ACCOUNT_NAME || rowData[accountNameIndex+stageOffset])
 							currentProjectSize = addedOpportunities[currentOpportunity].PROJECT_SIZE
 							delete addedOpportunities[currentOpportunity]
@@ -171,11 +171,11 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 								key,
 								(addedOpportunities[key].AMOUNT || "0"),
 								(addedOpportunities[key].EXPECTED_AMOUNT || "0"),
-								(addedOpportunities[key].CLOSE_DATE || "mm/dd/yyyy"),
-								(addedOpportunities[key].START_DATE || "mm/dd/yyyy"),
+								(cleanUpDate(addedOpportunities[key].CLOSE_DATE) || "mm/dd/yyyy"),
+								(cleanUpDate(addedOpportunities[key].START_DATE) || "mm/dd/yyyy"),
 								(((addedOpportunities[key].PROBABILITY*100)+"%") || "50%"),
 								(addedOpportunities[key].AGE || "0"),
-								(addedOpportunities[key].CREATED_DATE || "mm/dd/yyyy"),
+								(clearnUpDate(addedOpportunities[key].CREATED_DATE) || "mm/dd/yyyy"),
 								(addedOpportunities[key].ACCOUNT_NAME || "-")
 							)
 				newRow = assignRoles(newRow,addedOpportunities[key].PROJECT_SIZE)
@@ -190,6 +190,12 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 function calculateStartDate(closeDate, dateIncrement){
 	var date = new Date(closeDate)
 	var returnDate = new Date(date.setDate(date.getDate() + dateIncrement))
+	returnDate = JSON.stringify(returnDate).split('T')[0].split('-')
+	return returnDate[1]+'/'+returnDate[2]+'/'+returnDate[0].replace('"','')
+}
+
+function cleanUpDate(date){
+	var date = new Date(date)
 	returnDate = JSON.stringify(returnDate).split('T')[0].split('-')
 	return returnDate[1]+'/'+returnDate[2]+'/'+returnDate[0].replace('"','')
 }
