@@ -199,7 +199,7 @@ function calculateStartDate(closeDate, dateIncrement){
 function cleanUpDate(date){
 	if (date != null) {
 		var date = new Date(date)
-		var returnDate = new Date(date.setDate(date.getDate()))
+		var returnDate = new Date(date.setDate(date.getDate()+0))
 		returnDate = JSON.stringify(returnDate).split('T')[0].split('-')
 		return returnDate[1]+'/'+returnDate[2]+'/'+returnDate[0].replace('"','')
 	} else { return null }
