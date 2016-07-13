@@ -14,7 +14,7 @@ Opportunity.prototype.add = function(client, callback) {
 
 		console.log(this.data)
 
-		client.query('INSERT INTO sales_pipeline(opportunity, sp.stage, amount, expected_amount, close_date, start_date, probability, age, created_date, account_name, project_size) sp'
+		client.query('INSERT INTO sales_pipeline(opportunity, sp.stage, amount, expected_amount, close_date, start_date, probability, age, created_date, account_name, project_size) sp '
 						+ 'values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,'
 						+ '(SELECT CASE WHEN EXISTS (SELECT sizeid FROM project_size WHERE sizeid=$11)'
 						+ 'THEN (SELECT sizeid FROM project_size WHERE sizeid=$11)'
