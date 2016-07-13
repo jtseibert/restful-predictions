@@ -76,12 +76,10 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 	    	expectedAmountIndex		= 4,
 	    	closeDateIndex			= 5,
 	    	startDateIndex			= 6,
-	    	probabilityIndex		= 9,
-	    	ageIndex 				= 10,
-	    	createdDateIndex 		= 11,
-	    	accountNameIndex 		= 14,
-	    	roleIndex 				= 15,
-	    	projectSizeIndex 		= 16,
+	    	probabilityIndex		= 7,
+	    	ageIndex 				= 9,
+	    	createdDateIndex 		= 10,
+	    	accountNameIndex 		= 13,
 	    	stageOffset 			= 1,
 	    	week					= 7,
 	    	rowData,
@@ -101,9 +99,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 						probabilityIndex,
 						ageIndex,
 						createdDateIndex,
-						accountNameIndex,
-						roleIndex,
-						projectSizeIndex]
+						accountNameIndex]
 
 	    returnData.push(["STAGE",
 	    					"OPPORTUNITY_NAME",
@@ -199,7 +195,6 @@ function calculateStartDate(closeDate, dateIncrement){
 function assignRoles(row,projectSize){
 	var tempRow 	= [],
 		returnData	= [],
-		roleIndex	= 16,
 		roles
 
 	roles = projectSizes[projectSize].roles_allocations
