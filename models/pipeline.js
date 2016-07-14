@@ -196,7 +196,7 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 
 function calculateStartDate(closeDate, dateIncrement){
 	var date = new Date(closeDate)
-	var returnDate = new Date(date.setDate(date.getDate() + dateIncrement))
+	var returnDate = getMonday(new Date(date.setDate(date.getDate() + dateIncrement)))
 	returnDate = JSON.stringify(returnDate).split('T')[0].split('-')
 	return returnDate[1]+'/'+returnDate[2]+'/'+returnDate[0].replace('"','')
 }
@@ -241,5 +241,10 @@ function getProjectSize(expectedAmount){
 
 }
 
-
+function getMonday(d) {
+	d = new Date(d)
+	var day = d.getDay(),
+		diff = d.getDate() - day + (day == 0 ? -6:1)
+	return new Date(d.setDate(diff))
+}
 
