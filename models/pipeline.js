@@ -224,7 +224,8 @@ function assignRoles(row,projectSize){
 			tempRow.push(role)
 			tempRow.push(projectSize)
 			tempRow.push(roles[role].allocation)
-			tempRow.push(calculateStartDate(row[5],(parseInt(roles[role].offset)+daysInWeek*i)))
+			console.log('row[5]: '+row[5]+'\tadding: '+((parseInt(roles[role].offset)+daysInWeek*i)))
+			tempRow.push(calculateStartDate(row[5],((parseInt(roles[role].offset)+daysInWeek*i))))
 			returnData.push(tempRow)
 		}
 	}
