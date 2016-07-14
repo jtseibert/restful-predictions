@@ -39,7 +39,7 @@ var router = express.Router()
 pg.defaults.ssl = true
 
 //Create SF routes
-router.route('/:instance/Allocation/:accessToken')
+router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req,res){
 		allocation = new Allocation(req.params.instance, req.params.accessToken)
 		allocation.get(oauth2,function(result){
@@ -48,7 +48,7 @@ router.route('/:instance/Allocation/:accessToken')
 		})
 	})
 
-router.route('/:instance/Sales_Pipeline/:accessToken')
+router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
 		pipeline = new Pipeline(req.params.instance, req.params.accessToken)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
