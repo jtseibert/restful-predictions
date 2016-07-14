@@ -46,7 +46,7 @@ Allocation.prototype.get = function(oauth2, callback) {
 				projectKey = "T"
 			}
 
-			if (!(weekKey == "T" || employeeKey == "T" || projectKey == "T")){
+			if (!(weekKey == "T" || employeeKey == "T" || projectKey == "T") && factMap[key].aggregates[0].value != 0){
 				returnData.push([groupingsDown[employeeKey].label, 
 									groupingsDown[employeeKey].groupings[projectKey].label, 
 									groupingsAcross[weekKey].label, 
