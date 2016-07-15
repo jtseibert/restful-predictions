@@ -9,11 +9,10 @@ function Pipeline(instance, accessToken) {
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093sCD'
 } 
 
-Pipeline.prototype.get = function(client, oauth2, cache, callback) {
+Pipeline.prototype.get = function(client, oauth2, pipelineCache, callback) {
 
 	console.log(this.accessToken)
-	var pipelineCache = new cache(),
-		cachedPipeline
+	var cachedPipeline
     pipelineCache.get("sales_pipeline", function(err, value) {
     	if(err)
     		throw err
