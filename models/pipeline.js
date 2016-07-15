@@ -191,7 +191,7 @@ Pipeline.prototype.get = function(client, oauth2, pipelineCache, callback) {
 					returnData.push(newRow[each])
 			}
 		}
-		pipelineCache.set("sales_pipeline", returnData, function(err, value) { 
+		cache.set("sales_pipeline", returnData, function(err, value) { 
 			console.log('caching sales_pipeline')
 			callback(returnData)
 		})

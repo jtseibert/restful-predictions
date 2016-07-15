@@ -13,7 +13,7 @@ function Allocation(instance, accessToken) {
 } 
 
 Allocation.prototype.get = function(oauth2, callback) {
-
+	console.log('not Cached')
 	parameters = {
 		access_token: this.accessToken
 	}
@@ -53,6 +53,9 @@ Allocation.prototype.get = function(oauth2, callback) {
 									factMap[key].aggregates[0].value])
 			}
 		}
-	    callback(returnData)
+	    cache.set("allocation", returnData, function(err, value) { 
+			console.log('caching allocation')
+			callback(returnData)
+		})
 	})  
 }

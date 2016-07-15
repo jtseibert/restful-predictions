@@ -13,13 +13,13 @@ var newRelic		= require('newrelic'),
 	pg 				= require('pg'),
 	ProjectSize 	= require('./models/projectSize'),
 	Roles 			= require('./models/roles'),
-	cache           = require('node-cache')
+	Cache           = require('node-cache')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
 
 var port = process.env.PORT || 5000,
-	pipelineCache = new cache()
+	cache = new Cache()
 
 //Setup oauth2
 var oauth2 = require('simple-oauth2'),
@@ -44,17 +44,29 @@ pg.defaults.ssl = true
 //Create SF routes
 router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req,res){
-		allocation = new Allocation(req.params.instance, req.params.accessToken)
-		allocation.get(oauth2,function(result){
-			res.json(result)
-			delete allocation
-		})
+		var cachedAllocation
+	    cache.get("allocation", function(err, value) {
+	    	if(err)
+	    		throw err
+	    	else
+	    		cachedAllocation = value
+	    })
+	    if(!cachedAllocation) {
+			allocation = new Allocation(req.params.instance, req.params.accessToken)
+			allocation.get(oauth2,function(result){
+				res.json(result)
+				delete allocation
+			})
+		} else {
+			console.log('Cached')
+			res.json(cachedAllocation)
+		}
 	})
 
 router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
 		var cachedPipeline
-	    pipelineCache.get("sales_pipeline", function(err, value) {
+	    cache.get("sales_pipeline", function(err, value) {
 	    	if(err)
 	    		throw err
 	    	else
@@ -65,7 +77,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 			pipeline = new Pipeline(req.params.instance, req.params.accessToken)
 			pg.connect(process.env.DATABASE_URL, function(err, client) {
 				if (err) throw err
-				pipeline.get(client, oauth2, pipelineCache, function(result) {
+				pipeline.get(client, oauth2, cache, function(result) {
 					res.json(result)
 					client.end()
 					delete pipeline
