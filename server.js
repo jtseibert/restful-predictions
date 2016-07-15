@@ -56,7 +56,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 		pipeline = new Pipeline(req.params.instance, req.params.accessToken)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err
-			pipeline.get(client, oauth2, function(result) {
+			pipeline.get(client, oauth2, cache, function(result) {
 				res.json(result)
 				client.end()
 				delete pipeline

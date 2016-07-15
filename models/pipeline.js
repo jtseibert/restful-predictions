@@ -9,23 +9,26 @@ function Pipeline(instance, accessToken) {
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093sCD'
 } 
 
-Pipeline.prototype.get = function(client, oauth2, callback) {
+Pipeline.prototype.get = function(client, oauth2, cache, callback) {
 
 	console.log(this.accessToken)
-
-	projectSizes = {}
-	var projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
-	projectSizesQuery.on("row", function (row, result) {
-		result.addRow(row)
-	})
-	projectSizesQuery.on("end", function (result) {
-		for (var entry in result.rows){
-			projectSizes[result.rows[entry].sizeid] = {
-				"priceHigh": result.rows[entry].pricehigh,
-				"roles_allocations": result.rows[entry].roles_allocations
+	var pipelineCache = new Nodecache();
+    pipelineCache.get("sales_pipeline", function(err, value) {
+    	if(value == undefined) {
+    		//Do what we had originaly and store in cache
+    		projectSizes = {}
+	       	var projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
+			projectSizesQuery.on("row", function (row, result) {
+				result.addRow(row)
+			})
+			projectSizesQuery.on("end", function (result) {
+			for (var entry in result.rows){
+				projectSizes[result.rows[entry].sizeid] = {
+					"priceHigh": result.rows[entry].pricehigh,
+					"roles_allocations": result.rows[entry].roles_allocations
+				}
 			}
-		}
-	})
+			})
 
 	parameters = {
 		access_token: this.accessToken
@@ -191,7 +194,12 @@ Pipeline.prototype.get = function(client, oauth2, callback) {
 			}
 		}
 	    callback(returnData)
-	})  
+	})  //******
+    		pipelineCache.set("sales_pipeline", whatever_we_returned, function() {})
+    	} else {
+    		callback(value)
+    	}
+    })
 }
 
 function calculateStartDate(closeDate, dateIncrement){
