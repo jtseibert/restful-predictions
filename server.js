@@ -1,7 +1,7 @@
 //server.js
 
 //Initialize dependencies
-var newRelic		= require('newrelic'),
+var newRelic		= require('./newrelic'),
 	express			= require('express'),
 	app        		= express(),
 	bodyParser 		= require('body-parser'),
