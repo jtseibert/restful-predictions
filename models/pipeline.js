@@ -210,27 +210,32 @@ function cleanUpDate(date){
 }
 
 function assignRoles(row,projectSize){
-	var tempRow 	= [],
-		returnData	= [],
-		roles 		= projectSizes[projectSize].roles_allocations,
-		daysInWeek 		= 7
+	if(projectSize) {
+		var tempRow 	= [],
+			returnData	= [],
+			roles 		= projectSizes[projectSize].roles_allocations,
+			daysInWeek 		= 7
 
-	for (var role in roles){
-		for(var i=0; i<roles[role].duration; i++) {
-			tempRow = []
-			for (var col in row){
-				tempRow.push(row[col])
+		for (var role in roles) {
+			for(var i=0; i<roles[role].duration; i++) {
+				tempRow = []
+				for (var col in row) {
+					tempRow.push(row[col])
+				}
+				tempRow.push(role,projectSize,roles[role].allocation,calculateStartDate(row[5],(parseInt(roles[role].offset)+i)*daysInWeek))
+				returnData.push(tempRow)
 			}
-			tempRow.push(role)
-			tempRow.push(projectSize)
-			tempRow.push(roles[role].allocation)
-			if (row[1] == 'Palace Ent - Sales Force Support & Services Consulting #10')
-				console.log('row[5]: '+row[5]+'\tadding: '+(parseInt(roles[role].offset)+i)*daysInWeek)
-			tempRow.push(calculateStartDate(row[5],(parseInt(roles[role].offset)+i)*daysInWeek))
-			returnData.push(tempRow)
 		}
+		return returnData
+	} else {
+		var tempRow 	= []
+
+		for (var col in row) {
+			tempRow.push(row[col])
+		}
+		tempRow.push('-','-','0',(CalculateStartDate(new Date(),0)))
+		return tempRow
 	}
-	return returnData
 }
 
 function getProjectSize(expectedAmount){
