@@ -200,8 +200,8 @@ Pipeline.prototype.get = function(client, oauth2, cache, callback) {
 						returnData.push(newRow[each])
 				}
 			}
+			pipelineCache.set("sales_pipeline", returnData, function(err, value) { callback(returnData)})
 		})
-		pipelineCache.set("sales_pipeline", returnData, function(err, value) { callback(returnData)})
 	} else {
 		callback(cachedPipeline)
 	}
