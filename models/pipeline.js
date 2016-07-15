@@ -13,7 +13,7 @@ Pipeline.prototype.get = function(client, oauth2, cache, callback) {
 
 	console.log(this.accessToken)
 	var pipelineCache = new cache()
-    pipelineCache.get("sales_pipeline", function(err, oauth2, value) {
+    pipelineCache.get("sales_pipeline", function(err, value) {
     	if(value == undefined) {
     		//Do what we had originaly and store in cache
     		projectSizes = {}
