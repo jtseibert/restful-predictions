@@ -44,6 +44,7 @@ pg.defaults.ssl = true
 //Create SF routes
 router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req,res){
+		console.log('hello')
 		allocation = new Allocation(req.params.instance, req.params.accessToken)
 		allocation.get(oauth2,function(result){
 			console.log('should be returning json')
