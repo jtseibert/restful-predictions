@@ -12,7 +12,8 @@ var newRelic		= require('newrelic'),
 	Omit 			= require('./models/omit'),
 	pg 				= require('pg'),
 	ProjectSize 	= require('./models/projectSize'),
-	Roles 			= require('./models/roles')
+	Roles 			= require('./models/roles'),
+	cache           = require('node-cache')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
