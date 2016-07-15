@@ -1,4 +1,5 @@
 //server.js
+require('./newrelic')
 
 //Initialize dependencies
 var express			= require('express'),
@@ -12,8 +13,6 @@ var express			= require('express'),
 	pg 				= require('pg'),
 	ProjectSize 	= require('./models/projectSize'),
 	Roles 			= require('./models/roles')
-
-require('./newrelic')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
