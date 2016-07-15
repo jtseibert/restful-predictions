@@ -208,7 +208,7 @@ Pipeline.prototype.get = function(client, oauth2, pipelineCache, callback) {
 			})
 		})
 	} else {
-		console.log('cachedPipeline')
+		console.log('cachedPipeline\n'+cachedPipeline)
 		callback(cachedPipeline)
 	}
 }
