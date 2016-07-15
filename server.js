@@ -13,6 +13,8 @@ var express			= require('express'),
 	ProjectSize 	= require('./models/projectSize'),
 	Roles 			= require('./models/roles')
 
+require('newrelic')
+
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
 
