@@ -78,6 +78,8 @@ Pipeline.prototype.get = function(client, oauth2, pipelineCache, callback) {
 		oauth2.api('GET', this.path, parameters, function (err, data) {
 	    	if (err)
 	        	console.log('GET Error: ', JSON.stringify(err)) 
+
+	        console.log('Made REST call')
 	    
 	    	var factMap 				= data.factMap,
 	    		groupingsDown 			= data.groupingsDown.groupings,
