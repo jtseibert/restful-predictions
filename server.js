@@ -1,8 +1,8 @@
 //server.js
-require('./newrelic')
 
 //Initialize dependencies
-var express			= require('express'),
+var newRelic		= require('./newrelic'),
+	express			= require('express'),
 	app        		= express(),
 	bodyParser 		= require('body-parser'),
 	Allocation 		= require('./models/allocation'),
