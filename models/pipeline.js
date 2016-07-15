@@ -12,34 +12,41 @@ function Pipeline(instance, accessToken) {
 Pipeline.prototype.get = function(client, oauth2, cache, callback) {
 
 	console.log(this.accessToken)
-	var pipelineCache = new cache()
+	var pipelineCache = new cache(),
+		cachedPipeline
     pipelineCache.get("sales_pipeline", function(err, value) {
-    	if(value == undefined) {
-    		//Do what we had originaly and store in cache
-    		projectSizes = {}
-	       	var projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
-			projectSizesQuery.on("row", function (row, result) {
-				result.addRow(row)
-			})
-			projectSizesQuery.on("end", function (result) {
+    	if(err)
+    		throw err
+    	else
+    		cachedPipeline = value
+    })
+
+    if(!cachedPipeline) {
+		//Do what we had originaly and store in cache
+		projectSizes = {}
+       	var projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
+		projectSizesQuery.on("row", function (row, result) {
+			result.addRow(row)
+		})
+		projectSizesQuery.on("end", function (result) {
 			for (var entry in result.rows){
 				projectSizes[result.rows[entry].sizeid] = {
 					"priceHigh": result.rows[entry].pricehigh,
 					"roles_allocations": result.rows[entry].roles_allocations
 				}
 			}
-			})
+		})
 
-			parameters = {
-				access_token: this.accessToken
-			}
+		parameters = {
+			access_token: this.accessToken
+		}
 
-			addedOpportunities = {}
-			var opportunitiesQuery = client.query("SELECT * from sales_pipeline")
-			opportunitiesQuery.on("row", function (row, result) {
-				result.addRow(row)
-			})
-			opportunitiesQuery.on("end", function (result) {
+		addedOpportunities = {}
+		var opportunitiesQuery = client.query("SELECT * from sales_pipeline")
+		opportunitiesQuery.on("row", function (row, result) {
+			result.addRow(row)
+		})
+		opportunitiesQuery.on("end", function (result) {
 			for (var entry in result.rows){
 				addedOpportunities[result.rows[entry].opportunity] = {
 					"STAGE": result.rows[entry].stage,
@@ -54,21 +61,21 @@ Pipeline.prototype.get = function(client, oauth2, cache, callback) {
 					"PROJECT_SIZE": result.rows[entry].project_size
 				}
 			}
-			})
+		})
 
-			omitData = {}
-			var omitQuery = client.query("SELECT * from omit")
-			omitQuery.on("row", function (row, result) {
-				result.addRow(row)
-			})
-			omitQuery.on("end", function (result) {
+		omitData = {}
+		var omitQuery = client.query("SELECT * from omit")
+		omitQuery.on("row", function (row, result) {
+			result.addRow(row)
+		})
+		omitQuery.on("end", function (result) {
 			for (var entry in result.rows){
 				omitData[result.rows[entry].opportunity] = {}
 			}
 			console.log(omitData)
-			})
+		})
 
-			oauth2.api('GET', this.path, parameters, function (err, data) {
+		oauth2.api('GET', this.path, parameters, function (err, data) {
 	    	if (err)
 	        	console.log('GET Error: ', JSON.stringify(err)) 
 	    
@@ -193,13 +200,11 @@ Pipeline.prototype.get = function(client, oauth2, cache, callback) {
 						returnData.push(newRow[each])
 				}
 			}
-
-			pipelineCache.set("sales_pipeline", returnData, function(err, value) { callback(returnData)})
-			})
-    	} else {
-    		callback(value)
-    	}
-    })
+		})
+		pipelineCache.set("sales_pipeline", returnData, function(err, value) { callback(returnData)})
+	} else {
+		callback(cachedPipeline)
+	}
 }
 
 function calculateStartDate(closeDate, dateIncrement){
