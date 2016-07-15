@@ -18,7 +18,8 @@ var newRelic		= require('newrelic'),
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
 
-var port = process.env.PORT || 5000
+var port = process.env.PORT || 5000,
+	pipelineCache = new cache()
 
 //Setup oauth2
 var oauth2 = require('simple-oauth2'),
@@ -53,7 +54,6 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 
 router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
-		pipelineCache = new cache()
 		pipeline = new Pipeline(req.params.instance, req.params.accessToken)
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err
