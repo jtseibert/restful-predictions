@@ -53,7 +53,7 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 	    })
 	    if(!cachedAllocation) {
 			allocation = new Allocation(req.params.instance, req.params.accessToken)
-			allocation.get(oauth2,function(result){
+			allocation.get(oauth2, cache, function(result){
 				res.json(result)
 				delete allocation
 			})

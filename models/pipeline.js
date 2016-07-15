@@ -9,7 +9,7 @@ function Pipeline(instance, accessToken) {
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093sCD'
 } 
 
-Pipeline.prototype.get = function(client, oauth2, pipelineCache, callback) {
+Pipeline.prototype.get = function(client, oauth2, cache, callback) {
 	console.log('not Cached')
 	//Do what we had originaly and store in cache
 	projectSizes = {}
