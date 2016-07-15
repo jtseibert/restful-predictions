@@ -22,6 +22,7 @@ Pipeline.prototype.get = function(client, oauth2, cache, callback) {
     })
 
     if(!cachedPipeline) {
+    	console.log('not Cached')
 		//Do what we had originaly and store in cache
 		projectSizes = {}
        	var projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
@@ -203,6 +204,7 @@ Pipeline.prototype.get = function(client, oauth2, cache, callback) {
 			pipelineCache.set("sales_pipeline", returnData, function(err, value) { callback(returnData)})
 		})
 	} else {
+		console.log('cachedPipeline')
 		callback(cachedPipeline)
 	}
 }
