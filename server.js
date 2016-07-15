@@ -44,10 +44,8 @@ pg.defaults.ssl = true
 //Create SF routes
 router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req,res){
-		console.log('hello')
 		allocation = new Allocation(req.params.instance, req.params.accessToken)
 		allocation.get(oauth2,function(result){
-			console.log('should be returning json')
 			res.json(result)
 			delete allocation
 		})
@@ -63,6 +61,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	    		cachedPipeline = value
 	    })
 	    if (!cachedPipeline) {
+	    	console.log('!cachedPipeline')
 			pipeline = new Pipeline(req.params.instance, req.params.accessToken)
 			pg.connect(process.env.DATABASE_URL, function(err, client) {
 				if (err) throw err
