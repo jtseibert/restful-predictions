@@ -54,15 +54,27 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 
 router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
-		pipeline = new Pipeline(req.params.instance, req.params.accessToken)
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err
-			pipeline.get(client, oauth2, pipelineCache, function(result) {
-				res.json(result)
-				client.end()
-				delete pipeline
+		var cachedPipeline
+	    pipelineCache.get("sales_pipeline", function(err, value) {
+	    	if(err)
+	    		throw err
+	    	else
+	    		cachedPipeline = value
+	    })
+	    if (!cachedPipeline) {
+			pipeline = new Pipeline(req.params.instance, req.params.accessToken)
+			pg.connect(process.env.DATABASE_URL, function(err, client) {
+				if (err) throw err
+				pipeline.get(client, oauth2, pipelineCache, function(result) {
+					res.json(result)
+					client.end()
+					delete pipeline
+				})
 			})
-		})
+		} else { 
+			console.log('Cached')
+			res.json(cachedPipeline)
+		}
 	})
 
 //Create sales_pipeline DB routes
