@@ -112,7 +112,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 					cacheData.push(rowData)
 				})
 			    console.log('finished async, end of inline fn')
-		}, function(err){
+		}, function(err) {
 			console.log('second callback')
 			if (err)
 				callback(err)
@@ -132,7 +132,9 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 				})
 			}
 		})
+		console.log('end of outer async')
 	})
+	// End of api.GET
 }
 
 Pipeline.prototype.applyDB = function(client, async, cachedArray, callback) {
