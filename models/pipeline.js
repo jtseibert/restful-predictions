@@ -178,8 +178,6 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 
 Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 
-	console.log(cacheData)
-
 	var currentOpportunity,
 		tempRow,
 		opportunityIndex = 1,
@@ -194,7 +192,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 		- call assignRoles
 	*/
 	async.each(cacheData, function(row, callback){
-		//console.log(objInstance.omitData)
+		console.log(objInstance.omitData)
 		currentOpportunity = row[opportunityIndex]
 		if (!(objInstance.omitData[currentOpportunity])){
 			if(addedOpportunities[currentOpportunity]){
