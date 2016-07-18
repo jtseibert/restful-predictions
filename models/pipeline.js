@@ -205,7 +205,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 				row[10] = (addedOpportunities[currentOpportunity].PROJECT_SIZE || row[10])
 				delete addedOpportunities[currentOpportunity]
 			}
-			var rowsToAdd = assignRoles(row, projectSizes)
+			var rowsToAdd = assignRoles(row, row[10])
 			async.each(rowsToAdd,function(row){
 				objInstance.returnData.push(row)
 			})
