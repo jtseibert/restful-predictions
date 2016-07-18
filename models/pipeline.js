@@ -233,7 +233,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 			}
 		})
 	}, function(){
-		callback()
+		callback(callback())
 	})
 }
 
