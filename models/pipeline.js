@@ -27,8 +27,6 @@ function Pipeline(instance, accessToken, client) {
 	this.projectSizes
 	this.addedOpportunities
 
-	console.log('hello')
-
    	var projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
 	projectSizesQuery.on("row", function (row, result) {
 		result.addRow(row)
@@ -207,6 +205,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 		callback(returnData)
 	}, function(err, result){
 		returnData = result
+		console.log(returnData)
 		async.eachOf(addedOpportunities, function(opportunity, key){
 			if (!omitData[key]){
 				newRow = []
@@ -226,7 +225,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 			}
 		})
 	})
-	callback(returnData)
+	callback(this.returnData)
 }
 
 function calculateStartDate(closeDate, dateIncrement){
