@@ -78,8 +78,8 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 				})
 			} else { 
 				console.log('sales pipeline cached, ret')
-				pipeline.cachedGet(client, async, value, function(result) {
-					res.json(result)
+				pipeline.applyDB(client, async, value, function(){
+					res.json(pipeline.returnData)
 					client.end()
 					delete pipeline
 				})
