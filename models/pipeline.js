@@ -191,7 +191,6 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 	*/
 	async.each(cacheData, function(row, callback){
 		currentOpportunity = row[opportunityIndex]
-		console.log(row)
 		if (!(omitData[currentOpportunity])){
 			if(addedOpportunities[currentOpportunity]){
 				row[0] = (addedOpportunities[currentOpportunity].STAGE || row[0])
@@ -283,6 +282,7 @@ function getProjectSize(expectedAmount, projectSizes){
 	expectedAmount = expectedAmount.replace('USD ', '').replace(/,/g,'')
 	for (var each in projectSizes){
 		if (parseInt(expectedAmount) <= projectSizes[each].priceHigh){
+			console.log(each)
 			return each
 		}
 	}
