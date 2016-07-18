@@ -187,7 +187,6 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 		projectSizes = this.projectSizes,
 		objInstance = this
 
-		console.log(this.projectSizes)
 	/*
 		- make sure not in omit
 		- update if in addedOpportunities
@@ -256,8 +255,6 @@ function cleanUpDate(date){
 }
 
 function assignRoles(row, projectSizes){
-
-	//console.log(row)
 
 	var projectSizeIndex 		= 10,
 		returnArray				= [],
