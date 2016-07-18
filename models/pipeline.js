@@ -82,7 +82,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 							"PROJECT_SIZE"
 						])
 
-		async.eachOf(factMap, function(stage, stageKey){
+		async.eachOf(factMap, function(stage, stageKey, callback){
 			stageKey = stageKey.split('!')[stageIndex]
 			if (stageKey != "T")
 				async.each(stage.rows, function(row){
@@ -111,6 +111,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 					rowData.push(currentProjectSize)
 					cacheData.push(rowData)
 				}) // End async.each
+			callback()
 		}, function(err) {
 			console.log('second callback')
 			if (err)
