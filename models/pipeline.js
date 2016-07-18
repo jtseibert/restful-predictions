@@ -89,9 +89,9 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 					currentOpportunity = row.dataCells[opportunityIndex].label
 					rowData = []
 					rowData.push(groupingsDown[stageKey].label)
-					for (var cell in currentRow.dataCells){
+					for (var cell in row.dataCells){
 						if (indexes.indexOf(parseInt(cell, 10)) > -1) {
-							currentCell = currentRow.dataCells[cell]
+							currentCell = row.dataCells[cell]
 							if (cell == closeDateIndex)
 								rowData.push(cleanUpDate(currentCell.label), calculateStartDate(currentCell.label, week))
 							else if (cell == createdDateIndex)
