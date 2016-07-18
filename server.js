@@ -71,7 +71,6 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 		    	console.log('sales pipeline cache undefined')
 				pipeline.get(client, oauth2, async, cache, function(result) {
 					pipeline.applyDB(client, async, result, function(){
-						console.log(pipeline.returnData)
 						res.json(pipeline.returnData)
 						client.end()
 						delete pipeline
