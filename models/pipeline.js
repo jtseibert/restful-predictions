@@ -124,7 +124,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 					} 
 				})
 				cacheData[0].push('ROLE','ESTIMATE_HOURS','WEEK_DATE')
-				async.each(cacheData, assignRoles)
+				async.eachOf(cacheData, assignRoles)
 			}
 		}) //End of eachOf
 		callback(returnData)
@@ -202,32 +202,34 @@ function cleanUpDate(date){
 	} else { return null }
 }
 
-function assignRoles(row){
+function assignRoles(row, rowKey){
 	var projectSizeIndex 		= 10,
 	    projectSize 			= row[projectSizeIndex]
-	if(projectSize) {
-		var tempRow 			= [],
-			roles 				= projectSizes[projectSize].roles_allocations,
-			daysInWeek 			= 7
+	if (rowKey != 0){
+		if(projectSize) {
+			var tempRow 			= [],
+				roles 				= projectSizes[projectSize].roles_allocations,
+				daysInWeek 			= 7
 
-		for (var role in roles) {
-			for(var i=0; i<roles[role].duration; i++) {
-				tempRow = []
-				for (var col in row) {
-					tempRow.push(row[col])
+			for (var role in roles) {
+				for(var i=0; i<roles[role].duration; i++) {
+					tempRow = []
+					for (var col in row) {
+						tempRow.push(row[col])
+					}
+					tempRow.push(role,roles[role].allocation,calculateStartDate(row[5],(parseInt(roles[role].offset)+i)*daysInWeek))
+					returnData.push(tempRow)
 				}
-				tempRow.push(role,roles[role].allocation,calculateStartDate(row[5],(parseInt(roles[role].offset)+i)*daysInWeek))
-				returnData.push(tempRow)
 			}
-		}
-	} else {
-		var tempRow 	= []
+		} else {
+			var tempRow 	= []
 
-		for (var col in row) {
-			tempRow.push(row[col])
+			for (var col in row) {
+				tempRow.push(row[col])
+			}
+			tempRow.push('-','0',(CalculateStartDate(new Date(),0)))
+			returnData.push(tempRow)
 		}
-		tempRow.push('-','0',(CalculateStartDate(new Date(),0)))
-		returnData.push(tempRow)
 	}
 }
 
