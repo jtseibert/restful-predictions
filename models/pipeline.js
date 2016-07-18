@@ -5,23 +5,72 @@
 module.exports = Pipeline
 
 function Pipeline(instance, accessToken) {
-	this.accessToken = accessToken
-	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093sCD'
-	this.returnData = [["STAGE",
-	    					"OPPORTUNITY_NAME",
-							"AMOUNT",
-							"EXP_AMOUNT",
-							"CLOSE_DATE",
-							"START_DATE",
-							"PROBABILITY",
-							"AGE",
-							"CREATED_DATE",
-							"ACCOUNT_NAME",
-							"PROJECT_SIZE",
-							"ROLE",
-							"ESTIMATED_HOURS",
-							"WEEK_DATE"
-						]]
+	this.accessToken 		= accessToken
+	this.path 				= 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093sCD'
+	this.returnData			= [["STAGE",
+	    						"OPPORTUNITY_NAME",
+								"AMOUNT",
+								"EXP_AMOUNT",
+								"CLOSE_DATE",
+								"START_DATE",
+								"PROBABILITY",
+								"AGE",
+								"CREATED_DATE",
+								"ACCOUNT_NAME",
+								"PROJECT_SIZE",
+								"ROLE",
+								"ESTIMATED_HOURS",
+								"WEEK_DATE"
+								]]
+	this.projectSizes 		= {}
+	this.omitData 			= {}
+	this.addedOpportunities = {}
+
+
+   	var projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
+	projectSizesQuery.on("row", function (row, result) {
+		result.addRow(row)
+	})
+	projectSizesQuery.on("end", function (result) {
+		for (var entry in result.rows){
+			this.projectSizes[result.rows[entry].sizeid] = {
+				"priceHigh": result.rows[entry].pricehigh,
+				"roles_allocations": result.rows[entry].roles_allocations
+			}
+		}
+	})
+
+	var omitQuery = client.query("SELECT * from omit")
+	omitQuery.on("row", function (row, result) {
+		result.addRow(row)
+	})
+	omitQuery.on("end", function (result) {
+		for (var entry in result.rows){
+			this.omitData[result.rows[entry].opportunity] = {}
+		}
+	})
+
+		var opportunitiesQuery = client.query("SELECT * from sales_pipeline")
+	opportunitiesQuery.on("row", function (row, result) {
+		result.addRow(row)
+	})
+	opportunitiesQuery.on("end", function (result) {
+		for (var entry in result.rows){
+			this.addedOpportunities[result.rows[entry].opportunity] = {
+				"STAGE": result.rows[entry].stage,
+				"AMOUNT": result.rows[entry].amount,
+				"EXPECTED_AMOUNT": result.rows[entry].expected_amount,
+				"CLOSE_DATE": result.rows[entry].close_date,
+				"START_DATE": result.rows[entry].start_date,
+				"PROBABILITY": result.rows[entry].probability,
+				"AGE": result.rows[entry].age,
+				"CREATED_DATE": result.rows[entry].create_date,
+				"ACCOUNT_NAME": result.rows[entry].account_name,
+				"PROJECT_SIZE": result.rows[entry].project_size
+			}
+		}
+	})
+
 } 
 
 Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
@@ -123,53 +172,6 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 		tempRow,
 		opportunityIndex = 1
 
-	projectSizes = {}
-   	var projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
-	projectSizesQuery.on("row", function (row, result) {
-		result.addRow(row)
-	})
-	projectSizesQuery.on("end", function (result) {
-		for (var entry in result.rows){
-			projectSizes[result.rows[entry].sizeid] = {
-				"priceHigh": result.rows[entry].pricehigh,
-				"roles_allocations": result.rows[entry].roles_allocations
-			}
-		}
-	})
-
-	addedOpportunities = {}
-	var opportunitiesQuery = client.query("SELECT * from sales_pipeline")
-	opportunitiesQuery.on("row", function (row, result) {
-		result.addRow(row)
-	})
-	opportunitiesQuery.on("end", function (result) {
-		for (var entry in result.rows){
-			addedOpportunities[result.rows[entry].opportunity] = {
-				"STAGE": result.rows[entry].stage,
-				"AMOUNT": result.rows[entry].amount,
-				"EXPECTED_AMOUNT": result.rows[entry].expected_amount,
-				"CLOSE_DATE": result.rows[entry].close_date,
-				"START_DATE": result.rows[entry].start_date,
-				"PROBABILITY": result.rows[entry].probability,
-				"AGE": result.rows[entry].age,
-				"CREATED_DATE": result.rows[entry].create_date,
-				"ACCOUNT_NAME": result.rows[entry].account_name,
-				"PROJECT_SIZE": result.rows[entry].project_size
-			}
-		}
-	})
-
-	omitData = {}
-	var omitQuery = client.query("SELECT * from omit")
-	omitQuery.on("row", function (row, result) {
-		result.addRow(row)
-	})
-	omitQuery.on("end", function (result) {
-		for (var entry in result.rows){
-			omitData[result.rows[entry].opportunity] = {}
-		}
-	})
-
 	/*
 		- make sure not in omit
 		- update if in addedOpportunities
@@ -177,26 +179,26 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 	*/
 	async.each(cacheData, function(row, callback){
 		currentOpportunity = row[opportunityIndex]
-		if (!omitData[currentOpportunity]){
-			if(addedOpportunities[currentOpportunity]){
-				row[0] = (addedOpportunities[currentOpportunity].STAGE || row[0])
-				row[2] = (addedOpportunities[currentOpportunity].AMOUNT || row[2])
-				row[3] = (addedOpportunities[currentOpportunity].EXPECTED_AMOUNT || row[3])
-				row[4] = (cleanUpDate(addedOpportunities[currentOpportunity].CLOSE_DATE) || row[4])
-				row[5] = (cleanUpDate(addedOpportunities[currentOpportunity].START_DATE) || row[5])
-				row[6] = ((addedOpportunities[currentOpportunity].PROBABILITY*100)+"%" || row[6])
-				row[7] = (addedOpportunities[currentOpportunity].AGE || rowData[7])
-				row[8] = (cleanUpDate(addedOpportunities[currentOpportunity].CREATED_DATE) || row[8])
-				row[9] = (addedOpportunities[currentOpportunity].ACCOUNT_NAME || row[9])
-				currentProjectSize = addedOpportunities[currentOpportunity].PROJECT_SIZE
-				delete addedOpportunities[currentOpportunity]
+		if (!this.omitData[currentOpportunity]){
+			if(this.addedOpportunities[currentOpportunity]){
+				row[0] = (this.addedOpportunities[currentOpportunity].STAGE || row[0])
+				row[2] = (this.addedOpportunities[currentOpportunity].AMOUNT || row[2])
+				row[3] = (this.addedOpportunities[currentOpportunity].EXPECTED_AMOUNT || row[3])
+				row[4] = (cleanUpDate(this.addedOpportunities[currentOpportunity].CLOSE_DATE) || row[4])
+				row[5] = (cleanUpDate(this.addedOpportunities[currentOpportunity].START_DATE) || row[5])
+				row[6] = ((this.addedOpportunities[currentOpportunity].PROBABILITY*100)+"%" || row[6])
+				row[7] = (this.addedOpportunities[currentOpportunity].AGE || rowData[7])
+				row[8] = (cleanUpDate(this.addedOpportunities[currentOpportunity].CREATED_DATE) || row[8])
+				row[9] = (this.addedOpportunities[currentOpportunity].ACCOUNT_NAME || row[9])
+				currentProjectSize = this.addedOpportunities[currentOpportunity].PROJECT_SIZE
+				delete this.addedOpportunities[currentOpportunity]
 			}
-			assignRoles(row, projectSizes)
+			assignRoles(row)
 		}
 		callback()
 	}, function(err){
-		async.eachOf(addedOpportunities, function(opportunity, key){
-			if (!(omitData[key])){
+		async.eachOf(this.addedOpportunities, function(opportunity, key){
+			if (!this.omitData[key]){
 				newRow = []
 				newRow.push((opportunity.STAGE || "New Opportunity"),
 								key,
@@ -210,7 +212,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 								(opportunity.ACCOUNT_NAME || "-"),
 								(opportunity.PROJECT_SIZE)
 							)
-				assignRoles(newRow, projectSizes)
+				assignRoles(newRow)
 			}
 		})
 	})
@@ -232,12 +234,12 @@ function cleanUpDate(date){
 	} else { return null }
 }
 
-function assignRoles(row, projectSizes){
+function assignRoles(row){
 	var projectSizeIndex 		= 10,
 	    projectSize 			= row[projectSizeIndex]
 	if(projectSize) {
 		var tempRow 			= [],
-			roles 				= projectSizes[projectSize].roles_allocations,
+			roles 				= this.projectSizes[projectSize].roles_allocations,
 			daysInWeek 			= 7
 
 		for (var role in roles) {
@@ -255,8 +257,8 @@ function assignRoles(row, projectSizes){
 
 function getProjectSize(expectedAmount){
 	expectedAmount = expectedAmount.replace('USD ', '').replace(/,/g,'')
-	for (var each in projectSizes){
-		if (parseInt(expectedAmount) <= projectSizes[each].priceHigh){
+	for (var each in this.projectSizes){
+		if (parseInt(expectedAmount) <= this.projectSizes[each].priceHigh){
 			return each
 		}
 	}
