@@ -115,7 +115,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 					if(err) 
 						callback(err)
 				   }
-				})
+			)
 		}, function(err) {
 			console.log('second callback')
 			if (err)
