@@ -111,7 +111,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 					rowData.push(currentProjectSize)
 					cacheData.push(rowData)
 				}) // End async.each
-			callback(null)
+			callback()
 		}, function(err) {
 			console.log('second callback')
 			if (err)
@@ -232,7 +232,7 @@ function assignRoles(row){
 		tempRow.push('-','0',(CalculateStartDate(new Date(),0)))
 		returnData.push(tempRow)
 	}
-	callback(null)
+	callback()
 }
 
 function getProjectSize(expectedAmount){
