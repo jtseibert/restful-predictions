@@ -187,6 +187,8 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 		addedOpportunities = this.addedOpportunities,
 		projectSizes = this.projectSizes,
 		objInstance = this
+
+		console.log(this.projectSizes)
 	/*
 		- make sure not in omit
 		- update if in addedOpportunities
