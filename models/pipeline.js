@@ -126,7 +126,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 				})
 			}
 		}) //End of eachOf
-		applyDB(client, async, cacheData, function(err, result) {
+		this.applyDB(client, async, cacheData, function(err, result) {
 			if (err)
 				console.log(err)
 			callback(result)
