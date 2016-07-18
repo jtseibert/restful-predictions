@@ -60,11 +60,13 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 	   
 router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
-		var pipeline
+		var pipeline,
+			instance = req.params.instance,
+			accessToken = req.params.accessToken
 		value = cache.get("sales_pipeline")
-		pg.connect(process.env.DATABASE_URL, function(err, req, client) {
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err
-			pipeline = new Pipeline(req.params.instance, req.params.accessToken, client)
+			pipeline = new Pipeline(instance, accessToken, client)
 			if(value == undefined) {
 		    	console.log('sales pipeline cache undefined')
 				pipeline.get(client, oauth2, async, cache, function(result) {
