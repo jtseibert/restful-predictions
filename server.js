@@ -68,7 +68,8 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 				if (err) throw err
 				pipeline.get(client, oauth2, async, cache, function(result) {
 					for (var each in result){
-						console.log(each)
+						if (result[each].length > 13)
+							console.log(result[each])
 					}
 					res.json(result)
 					client.end()
