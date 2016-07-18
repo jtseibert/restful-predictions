@@ -116,7 +116,8 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 			omitData = this.omitData,
 			addedOpportunities = this.addedOpportunities,
 			projectSizes = this.projectSizes,
-			returnData = this.returnData
+			returnData = this.returnData,
+			objInstance = this
 
 	    var indexes	= [opportunityIndex,
 						amountIndex,
@@ -128,6 +129,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 						accountNameIndex]
 
 		async.eachOf(factMap, function(stage, stageKey, callback){
+			console.log(objInstance.projectSizes)
 			stageKey = stageKey.split('!')[stageIndex]
 			if (stageKey != "T")
 				async.each(stage.rows, function(row){
@@ -142,7 +144,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 							else if (cell == createdDateIndex)
 								rowData.push(cleanUpDate(currentCell.label))
 							else if (cell == expectedAmountIndex){
-								currentProjectSize = getProjectSize(currentCell.label, projectSizes)
+								currentProjectSize = getProjectSize(currentCell.label, objInstance.projectSizes)
 								stripAmount = currentCell.label.replace('USD ', '').replace(/,/g,'')
 								rowData.push(stripAmount)
 							} else if (cell == amountIndex){
@@ -279,7 +281,6 @@ function assignRoles(row, projectSizes){
 }
 
 function getProjectSize(expectedAmount, projectSizes){
-	console.log(projectSizes + "\t" + expectedAmount)
 	expectedAmount = expectedAmount.replace('USD ', '').replace(/,/g,'')
 	for (var each in projectSizes){
 		if (parseInt(expectedAmount) <= projectSizes[each].priceHigh){
