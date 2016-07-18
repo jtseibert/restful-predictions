@@ -174,38 +174,41 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 
 Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 
-	var objInstance = this,
-		currentOpportunity,
+	var currentOpportunity,
 		tempRow,
-		opportunityIndex = 1
+		opportunityIndex = 1,
+		returnData = this.returnData,
+		omitData = this.omitData,
+		addedOpportunities = this.addedOpportunities,
+		projectSizes = this.projectSizes
 	/*
 		- make sure not in omit
 		- update if in addedOpportunities
 		- call assignRoles
 	*/
-	async.each(cacheData, function(row, objInstance.omitData, callback){
+	async.each(cacheData, function(row, returnData, omitData, addedOpportunities, projectSizes, callback){
 		currentOpportunity = row[opportunityIndex]
-		console.log(objInstance.omitData)
-		if (!(objInstance.omitData[currentOpportunity])){
-			if(objInstance.addedOpportunities[currentOpportunity]){
-				row[0] = (objInstance.addedOpportunities[currentOpportunity].STAGE || row[0])
-				row[2] = (objInstance.addedOpportunities[currentOpportunity].AMOUNT || row[2])
-				row[3] = (objInstance.addedOpportunities[currentOpportunity].EXPECTED_AMOUNT || row[3])
-				row[4] = (cleanUpDate(objInstance.addedOpportunities[currentOpportunity].CLOSE_DATE) || row[4])
-				row[5] = (cleanUpDate(objInstance.addedOpportunities[currentOpportunity].START_DATE) || row[5])
-				row[6] = ((objInstance.addedOpportunities[currentOpportunity].PROBABILITY*100)+"%" || row[6])
-				row[7] = (objInstance.addedOpportunities[currentOpportunity].AGE || rowData[7])
-				row[8] = (cleanUpDate(objInstance.addedOpportunities[currentOpportunity].CREATED_DATE) || row[8])
-				row[9] = (objInstance.addedOpportunities[currentOpportunity].ACCOUNT_NAME || row[9])
-				currentProjectSize = objInstance.addedOpportunities[currentOpportunity].PROJECT_SIZE
-				delete objInstance.addedOpportunities[currentOpportunity]
+		console.log(omitData)
+		if (!(omitData[currentOpportunity])){
+			if(addedOpportunities[currentOpportunity]){
+				row[0] = (addedOpportunities[currentOpportunity].STAGE || row[0])
+				row[2] = (addedOpportunities[currentOpportunity].AMOUNT || row[2])
+				row[3] = (addedOpportunities[currentOpportunity].EXPECTED_AMOUNT || row[3])
+				row[4] = (cleanUpDate(addedOpportunities[currentOpportunity].CLOSE_DATE) || row[4])
+				row[5] = (cleanUpDate(addedOpportunities[currentOpportunity].START_DATE) || row[5])
+				row[6] = ((addedOpportunities[currentOpportunity].PROBABILITY*100)+"%" || row[6])
+				row[7] = (addedOpportunities[currentOpportunity].AGE || rowData[7])
+				row[8] = (cleanUpDate(addedOpportunities[currentOpportunity].CREATED_DATE) || row[8])
+				row[9] = (addedOpportunities[currentOpportunity].ACCOUNT_NAME || row[9])
+				currentProjectSize = addedOpportunities[currentOpportunity].PROJECT_SIZE
+				delete addedOpportunities[currentOpportunity]
 			}
 			assignRoles(row)
 		}
 		callback()
 	}, function(err){
-		async.eachOf(objInstance.addedOpportunities, objInstance, function(opportunity, key){
-			if (!objInstance.omitData[key]){
+		async.eachOf(addedOpportunities, function(opportunity, key){
+			if (!omitData[key]){
 				newRow = []
 				newRow.push((opportunity.STAGE || "New Opportunity"),
 								key,
