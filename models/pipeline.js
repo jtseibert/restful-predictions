@@ -188,6 +188,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 	*/
 	async.each(cacheData, function(row, callback){
 		currentOpportunity = row[opportunityIndex]
+		console.log(currentOpportunity)
 		if (!(omitData[currentOpportunity])){
 			if(addedOpportunities[currentOpportunity]){
 				row[0] = (addedOpportunities[currentOpportunity].STAGE || row[0])
