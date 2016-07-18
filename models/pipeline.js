@@ -245,10 +245,11 @@ function cleanUpDate(date){
 
 function assignRoles(row){
 	var projectSizeIndex 		= 10,
-	    projectSize 			= row[projectSizeIndex]
+	    projectSize 			= row[projectSizeIndex],
+	    projectSizes 			= this.projectSizes
 	if(projectSize) {
 		var tempRow 			= [],
-			roles 				= this.projectSizes[projectSize].roles_allocations,
+			roles 				= projectSizes[projectSize].roles_allocations,
 			daysInWeek 			= 7
 
 		for (var role in roles) {
