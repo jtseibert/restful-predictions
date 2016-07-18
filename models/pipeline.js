@@ -110,12 +110,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 					}
 					rowData.push(currentProjectSize)
 					cacheData.push(rowData)
-					callback(null)
-				}, function(err) {
-					if(err) 
-						callback(err)
-				   }
-			)
+				})
 		}, function(err) {
 			console.log('second callback')
 			if (err)
@@ -135,7 +130,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 						callback(returnData)
 				})
 			}
-		})
+		}) //End of eachOf
 	})	// End of api.GET
 } // End prototype.get
 
