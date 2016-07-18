@@ -134,7 +134,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 	})	// End of api.GET
 } // End prototype.get
 
-Pipeline.prototype.applyDB = function(client, async, cachedData, callback) {
+Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 
 	var currentOpportunity,
 		tempRow,
