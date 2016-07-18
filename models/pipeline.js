@@ -250,7 +250,6 @@ function assignRoles(row, projectSizes, returnData){
 	var projectSizeIndex 		= 10,
 	    projectSize 			= row[projectSizeIndex]
 
-	console.log(projectSizes)
 	if(projectSize) {
 		var tempRow 			= [],
 			roles 				= projectSizes[projectSize].roles_allocations,
