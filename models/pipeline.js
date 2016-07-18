@@ -10,8 +10,6 @@ function Pipeline(instance, accessToken) {
 } 
 
 Pipeline.prototype.get = function(client, oauth2, cache, callback) {
-	console.log('not Cached')
-	//Do what we had originaly and store in cache
 	projectSizes = {}
    	var projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
 	projectSizesQuery.on("row", function (row, result) {
@@ -63,7 +61,6 @@ Pipeline.prototype.get = function(client, oauth2, cache, callback) {
 		}
 	})
 
-	console.log('hello')
 	oauth2.api('GET', this.path, parameters, function (err, data) {
     	if (err)
         	console.log('GET Error: ', JSON.stringify(err)) 
@@ -191,9 +188,11 @@ Pipeline.prototype.get = function(client, oauth2, cache, callback) {
 					returnData.push(newRow[each])
 			}
 		}
-		cache.set("sales_pipeline", returnData, function(err, value) { 
-			console.log('caching sales_pipeline')
-			callback(returnData)
+		cache.set("sales_pipeline", returnData, function(err, success) {
+			if(!err && success) {
+				console.log('caching sales_pipeline')
+				callback(returnData)
+			} 
 		})
 	})
 }

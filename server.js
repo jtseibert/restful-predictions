@@ -65,15 +65,9 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 
 router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
-		var cachedPipeline
-	    cache.get("sales_pipeline", function(err, value) {
-	    	if(err)
-	    		throw err
-	    	else
-	    		cachedPipeline = value
-	    })
-	    if (!cachedPipeline) {
-	    	console.log('!cachedPipeline')
+		value = cache.get("sales_pipeline")
+		if(value == undefined) {
+	    	console.log('sales pipeline cache undefined')
 			pipeline = new Pipeline(req.params.instance, req.params.accessToken)
 			pg.connect(process.env.DATABASE_URL, function(err, client) {
 				if (err) throw err
@@ -84,8 +78,8 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 				})
 			})
 		} else { 
-			console.log('Cached')
-			res.json(cachedPipeline)
+			console.log('sales pipeline cached, ret')
+			res.json(value)
 		}
 	})
 
