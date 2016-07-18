@@ -65,7 +65,7 @@ Pipeline.prototype.get = function(client, oauth2, cache, callback) {
     	if (err)
         	console.log('GET Error: ', JSON.stringify(err)) 
 
-        console.log('Made REST call')
+        console.log('Made REST call within pipline.js')
     
     	var factMap 				= data.factMap,
     		groupingsDown 			= data.groupingsDown.groupings,
@@ -188,9 +188,10 @@ Pipeline.prototype.get = function(client, oauth2, cache, callback) {
 					returnData.push(newRow[each])
 			}
 		}
+
 		cache.set("sales_pipeline", returnData, function(err, success) {
 			if(!err && success) {
-				console.log('caching sales_pipeline')
+				console.log('caching sales_pipeline within pipeline.js')
 				callback(returnData)
 			} 
 		})

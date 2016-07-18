@@ -44,25 +44,20 @@ pg.defaults.ssl = true
 //Create SF routes
 router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req,res){
-		var cachedAllocation
-	    cache.get("allocation", function(err, value) {
-	    	if(err)
-	    		throw err
-	    	else
-	    		cachedAllocation = value
-	    })
-	    if(!cachedAllocation) {
+		value = cache.get("allocation")
+		if(value == undefined) {
+			console.log('allocation cache undefined')
 			allocation = new Allocation(req.params.instance, req.params.accessToken)
 			allocation.get(oauth2, cache, function(result){
 				res.json(result)
 				delete allocation
-			})
+			})	
 		} else {
-			console.log('Cached')
-			res.json(cachedAllocation)
+			console.log('allocation cached, ret')
+			res.json(value)
 		}
-	})
-
+    })
+	   
 router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
 		value = cache.get("sales_pipeline")

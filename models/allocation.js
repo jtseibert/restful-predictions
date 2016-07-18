@@ -13,7 +13,6 @@ function Allocation(instance, accessToken) {
 } 
 
 Allocation.prototype.get = function(oauth2, cache, callback) {
-	console.log('not Cached')
 	parameters = {
 		access_token: this.accessToken
 	}
@@ -22,6 +21,7 @@ Allocation.prototype.get = function(oauth2, cache, callback) {
 	    if (err)
 	        console.log('GET Error: ', JSON.stringify(err)) 
 	    
+	    console.log("REST call within allocation.js")
 	    var factMap 				= data.factMap,
 	    	groupingsDown 			= data.groupingsDown.groupings,
 	    	groupingsAcross 		= data.groupingsAcross.groupings,
@@ -53,9 +53,12 @@ Allocation.prototype.get = function(oauth2, cache, callback) {
 									factMap[key].aggregates[0].value])
 			}
 		}
-	    cache.set("allocation", returnData, function(err, value) { 
-			console.log('caching allocation')
-			callback(returnData)
+
+	    cache.set("allocation", returnData, function(err, success) {
+			if(!err && success) {
+				console.log('caching allocation within allocation.js')
+				callback(returnData)
+			} 
 		})
 	})  
 }
