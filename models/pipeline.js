@@ -47,6 +47,7 @@ function Pipeline(instance, accessToken, client) {
 	omitQuery.on("end", function (result) {
 		for (var entry in result.rows){
 			this.omitData[result.rows[entry].opportunity] = {}
+			console.log(omitData)
 		}
 	})
 
@@ -179,7 +180,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 	*/
 	async.each(cacheData, function(row, callback){
 		currentOpportunity = row[opportunityIndex]
-		if (!this.omitData[currentOpportunity]){
+		if (!(this.omitData[currentOpportunity])){
 			if(this.addedOpportunities[currentOpportunity]){
 				row[0] = (this.addedOpportunities[currentOpportunity].STAGE || row[0])
 				row[2] = (this.addedOpportunities[currentOpportunity].AMOUNT || row[2])
