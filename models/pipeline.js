@@ -119,6 +119,8 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 			returnData = this.returnData,
 			objInstance = this
 
+			console.log(projectSizes)
+
 	    var indexes	= [opportunityIndex,
 						amountIndex,
 						expectedAmountIndex,
