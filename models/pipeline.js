@@ -5,6 +5,7 @@
 module.exports = Pipeline
 
 function Pipeline(instance, accessToken, client) {
+	console.log('hello')
 	var objInstance = this
 	this.accessToken 		= accessToken
 	this.path 				= 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093sCD'
