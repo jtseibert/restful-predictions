@@ -110,12 +110,12 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 					} // End for loop
 					rowData.push(currentProjectSize)
 					cacheData.push(rowData)
-					callback(null)
 				}) // End async.each
+			callback(null)
 		}, function(err) {
 			console.log('second callback')
 			if (err)
-				callback(err)
+				console.log(err)
 			else {
 				console.log('going to cache cacheData')
 				cache.set("sales_pipeline", cacheData, function(err, success) {
@@ -126,12 +126,11 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 				cacheData[0].push('ROLE','ESTIMATE_HOURS','WEEK_DATE')
 				async.each(cacheData, assignRoles, function(err){
 					if (err)
-						callback(err)
-					else
-						callback(returnData)
+						console.log(err)
 				})
 			}
 		}) //End of eachOf
+		callback(returnData)
 	})	// End of api.GET
 } // End prototype.get
 
@@ -233,6 +232,7 @@ function assignRoles(row){
 		tempRow.push('-','0',(CalculateStartDate(new Date(),0)))
 		returnData.push(tempRow)
 	}
+	callback(null)
 }
 
 function getProjectSize(expectedAmount){
