@@ -201,7 +201,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 				currentProjectSize = addedOpportunities[currentOpportunity].PROJECT_SIZE
 				delete addedOpportunities[currentOpportunity]
 			}
-			assignRoles(row)
+			assignRoles(row, projectSizes)
 		}
 		callback()
 	}, function(err){
@@ -220,7 +220,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 								(opportunity.ACCOUNT_NAME || "-"),
 								(opportunity.PROJECT_SIZE)
 							)
-				assignRoles(newRow)
+				assignRoles(newRow, projectSizes)
 			}
 		})
 	})
@@ -242,10 +242,9 @@ function cleanUpDate(date){
 	} else { return null }
 }
 
-function assignRoles(row){
+function assignRoles(row, projectSizes){
 	var projectSizeIndex 		= 10,
-	    projectSize 			= row[projectSizeIndex],
-	    projectSizes 			= this.projectSizes
+	    projectSize 			= row[projectSizeIndex]
 
 	console.log(projectSizes)
 	if(projectSize) {
