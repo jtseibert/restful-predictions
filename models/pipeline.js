@@ -192,9 +192,9 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 		- call assignRoles
 	*/
 	async.each(cacheData, function(row, callback){
-		console.log(objInstance.omitData)
+		console.log(omitData)
 		currentOpportunity = row[opportunityIndex]
-		if (!(objInstance.omitData[currentOpportunity])){
+		if (!(omitData[currentOpportunity])){
 			if(addedOpportunities[currentOpportunity]){
 				row[0] = (addedOpportunities[currentOpportunity].STAGE || row[0])
 				row[2] = (addedOpportunities[currentOpportunity].AMOUNT || row[2])
