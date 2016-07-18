@@ -64,7 +64,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 		value = cache.get("sales_pipeline")
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err
-			pipeline = new Pipeline(req.params.instance, req.params.accessToken)
+			pipeline = new Pipeline(req.params.instance, req.params.accessToken, client)
 			client.end()
 		})
 		if(value == undefined) {
