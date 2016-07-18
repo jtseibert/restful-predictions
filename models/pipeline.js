@@ -131,7 +131,6 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 						accountNameIndex]
 
 		async.eachOf(factMap, function(stage, stageKey, callback){
-			console.log(projectSizes)
 			stageKey = stageKey.split('!')[stageIndex]
 			if (stageKey != "T")
 				async.each(stage.rows, function(row){
