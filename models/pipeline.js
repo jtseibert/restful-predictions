@@ -82,9 +82,9 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 							"PROJECT_SIZE"
 						])
 
-		async.each(factMap, function(stage){
-			console.log(Object.keys(stage))
-			stageKey = stage.split('!')[stageIndex]
+		async.eachOf(factMap, function(stage, stageKey){
+			console.log(stageKey)
+			stageKey = stageKey.split('!')[stageIndex]
 			if (stageKey != "T")
 				async.each(stage.rows, function(row){
 					currentOpportunity = row[opportunityIndex].label
