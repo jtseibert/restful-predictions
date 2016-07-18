@@ -83,7 +83,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 						])
 
 		async.each(factMap, function(stage){
-			console.log(factMap[stage])
+			console.log(Object.keys(stage))
 			stageKey = stage.split('!')[stageIndex]
 			if (stageKey != "T")
 				async.each(stage.rows, function(row){
