@@ -279,10 +279,10 @@ function assignRoles(row, projectSizes){
 }
 
 function getProjectSize(expectedAmount, projectSizes){
+	console.log('hello')
 	expectedAmount = expectedAmount.replace('USD ', '').replace(/,/g,'')
 	for (var each in projectSizes){
 		if (parseInt(expectedAmount) <= projectSizes[each].priceHigh){
-			console.log(each)
 			return each
 		}
 	}
