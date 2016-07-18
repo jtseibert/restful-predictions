@@ -126,15 +126,14 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 				cacheData[0].push('ROLE','ESTIMATE_HOURS','WEEK_DATE')
 				async.each(cacheData, assignRoles, function(err){
 					if (err)
-						console.log(err)
+						callback(err)
 					else
 						callback(returnData)
 				})
 			}
 		})
 		console.log('end of outer async')
-	})
-	// End of api.GET
+	})	// End of api.GET
 }
 
 Pipeline.prototype.applyDB = function(client, async, cachedArray, callback) {
