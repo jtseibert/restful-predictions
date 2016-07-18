@@ -22,7 +22,9 @@ function Pipeline(instance, accessToken, client) {
 								"ESTIMATED_HOURS",
 								"WEEK_DATE"
 								]]
-
+	this.omitData
+	this.projectSizes
+	this.addedOpportunities
 
 	console.log('hello')
 
@@ -177,6 +179,8 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 
 	console.log(this.returnData)
 	console.log(this.omitData)
+	console.log(this.addedOpportunities)
+	console.log(this.projectSizes)
 	/*
 		- make sure not in omit
 		- update if in addedOpportunities
