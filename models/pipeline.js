@@ -179,7 +179,8 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 		returnData = this.returnData,
 		omitData = this.omitData,
 		addedOpportunities = this.addedOpportunities,
-		projectSizes = this.projectSizes
+		projectSizes = this.projectSizes,
+		returnData = this.returnData
 	/*
 		- make sure not in omit
 		- update if in addedOpportunities
@@ -201,7 +202,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 				currentProjectSize = addedOpportunities[currentOpportunity].PROJECT_SIZE
 				delete addedOpportunities[currentOpportunity]
 			}
-			assignRoles(row, projectSizes)
+			assignRoles(row, projectSizes, returnData)
 		}
 		callback()
 	}, function(err){
@@ -220,11 +221,11 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 								(opportunity.ACCOUNT_NAME || "-"),
 								(opportunity.PROJECT_SIZE)
 							)
-				assignRoles(newRow, projectSizes)
+				assignRoles(newRow, projectSizes, returnData)
 			}
 		})
 	})
-	callback(this.returnData)
+	callback(returnData)
 }
 
 function calculateStartDate(closeDate, dateIncrement){
@@ -242,7 +243,7 @@ function cleanUpDate(date){
 	} else { return null }
 }
 
-function assignRoles(row, projectSizes){
+function assignRoles(row, projectSizes, returnData){
 	var projectSizeIndex 		= 10,
 	    projectSize 			= row[projectSizeIndex]
 
@@ -259,7 +260,7 @@ function assignRoles(row, projectSizes){
 					tempRow.push(row[col])
 				}
 				tempRow.push(role,roles[role].allocation,calculateStartDate(row[5],(parseInt(roles[role].offset)+i)*daysInWeek))
-				this.returnData.push(tempRow)
+				returnData.push(tempRow)
 			}
 		}
 	}
