@@ -205,7 +205,7 @@ function cleanUpDate(date){
 	} else { return null }
 }
 
-function assignRoles(row){
+function assignRoles(row,callback){
 	var projectSizeIndex 		= 10,
 	    projectSize 			= row[projectSizeIndex]
 	if(projectSize) {
