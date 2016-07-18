@@ -9,8 +9,9 @@ function Pipeline(instance, accessToken) {
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093sCD'
 } 
 
-Pipeline.prototype.get = function(client, oauth2, cache, callback) {
-	projectSizes = {}
+Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
+	projectSizes 	= {}
+	returnData 		= []
    	var projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
 	projectSizesQuery.on("row", function (row, result) {
 		result.addRow(row)
@@ -28,39 +29,6 @@ Pipeline.prototype.get = function(client, oauth2, cache, callback) {
 		access_token: this.accessToken
 	}
 
-	addedOpportunities = {}
-	var opportunitiesQuery = client.query("SELECT * from sales_pipeline")
-	opportunitiesQuery.on("row", function (row, result) {
-		result.addRow(row)
-	})
-	opportunitiesQuery.on("end", function (result) {
-		for (var entry in result.rows){
-			addedOpportunities[result.rows[entry].opportunity] = {
-				"STAGE": result.rows[entry].stage,
-				"AMOUNT": result.rows[entry].amount,
-				"EXPECTED_AMOUNT": result.rows[entry].expected_amount,
-				"CLOSE_DATE": result.rows[entry].close_date,
-				"START_DATE": result.rows[entry].start_date,
-				"PROBABILITY": result.rows[entry].probability,
-				"AGE": result.rows[entry].age,
-				"CREATED_DATE": result.rows[entry].create_date,
-				"ACCOUNT_NAME": result.rows[entry].account_name,
-				"PROJECT_SIZE": result.rows[entry].project_size
-			}
-		}
-	})
-
-	omitData = {}
-	var omitQuery = client.query("SELECT * from omit")
-	omitQuery.on("row", function (row, result) {
-		result.addRow(row)
-	})
-	omitQuery.on("end", function (result) {
-		for (var entry in result.rows){
-			omitData[result.rows[entry].opportunity] = {}
-		}
-	})
-
 	oauth2.api('GET', this.path, parameters, function (err, data) {
     	if (err)
         	console.log('GET Error: ', JSON.stringify(err)) 
@@ -69,7 +37,7 @@ Pipeline.prototype.get = function(client, oauth2, cache, callback) {
     
     	var factMap 				= data.factMap,
     		groupingsDown 			= data.groupingsDown.groupings,
-    		returnData				= [],
+    		cacheData 				= [],
     		newRow					= [],
     		stageIndex				= 0,
     		opportunityIndex		= 0,
@@ -111,91 +79,116 @@ Pipeline.prototype.get = function(client, oauth2, cache, callback) {
 							"AGE",
 							"CREATED_DATE",
 							"ACCOUNT_NAME",
-							"ROLE",
-							"PROJECT_SIZE",
-							"ESTIMATED_HOURS",
-							"WEEK_DATE"
+							"PROJECT_SIZE"
 						])
 
-	    for (var stage in factMap) {
-
-		    stageKey = stage.split('!')[stageIndex]
-		    currentStage = factMap[stage]
-			
-
-			if (stageKey != "T"){
-				for (var row in currentStage.rows){
-					currentRow = currentStage.rows[row]
-					currentOpportunity = currentRow.dataCells[opportunityIndex].label
-					if (!(omitData[currentOpportunity])){
-						rowData = []
-						rowData.push(groupingsDown[stageKey].label)
-						for (var cell in currentRow.dataCells){
-							if (indexes.indexOf(parseInt(cell, 10)) > -1) {
-								currentCell = currentRow.dataCells[cell]
-								if (cell == closeDateIndex)
-									rowData.push(cleanUpDate(currentCell.label), calculateStartDate(currentCell.label, week))
-								else if (cell == createdDateIndex)
-									rowData.push(cleanUpDate(currentCell.label))
-								else if (cell == expectedAmountIndex){
-									currentProjectSize = getProjectSize(currentCell.label)
-									stripAmount = currentCell.label.replace('USD ', '').replace(/,/g,'')
-									rowData.push(stripAmount)
-								} else if (cell == amountIndex){
-									stripAmount = currentCell.label.replace('USD ', '').replace(/,/g,'')
-									rowData.push(stripAmount)
-								} else {
-									rowData.push(currentCell.label)
-								}
+		async.each(factMap, function(stage){
+			stageKey = stage.split('!')[stageIndex]
+			if (stageKey != "T")
+				async.each(stage.rows, function(row){
+					currentOpportunity = row[opportunityIndex].label
+					rowData = []
+					rowData.push(groupingsDown[stageKey].label)
+					for (var cell in currentRow.dataCells){
+						if (indexes.indexOf(parseInt(cell, 10)) > -1) {
+							currentCell = currentRow.dataCells[cell]
+							if (cell == closeDateIndex)
+								rowData.push(cleanUpDate(currentCell.label), calculateStartDate(currentCell.label, week))
+							else if (cell == createdDateIndex)
+								rowData.push(cleanUpDate(currentCell.label))
+							else if (cell == expectedAmountIndex){
+								currentProjectSize = getProjectSize(currentCell.label)
+								stripAmount = currentCell.label.replace('USD ', '').replace(/,/g,'')
+								rowData.push(stripAmount)
+							} else if (cell == amountIndex){
+								stripAmount = currentCell.label.replace('USD ', '').replace(/,/g,'')
+								rowData.push(stripAmount)
+							} else {
+								rowData.push(currentCell.label)
 							}
 						}
-						if(addedOpportunities[currentOpportunity]){
-							rowData[0] = (addedOpportunities[currentOpportunity].STAGE || rowData[0])
-							rowData[2] = (addedOpportunities[currentOpportunity].AMOUNT || rowData[2])
-							rowData[3] = (addedOpportunities[currentOpportunity].EXPECTED_AMOUNT || rowData[3])
-							rowData[4] = (cleanUpDate(addedOpportunities[currentOpportunity].CLOSE_DATE) || rowData[4])
-							rowData[5] = (cleanUpDate(addedOpportunities[currentOpportunity].START_DATE) || rowData[5])
-							rowData[6] = ((addedOpportunities[currentOpportunity].PROBABILITY*100)+"%" || rowData[6])
-							rowData[7] = (addedOpportunities[currentOpportunity].AGE || rowData[7])
-							rowData[8] = (cleanUpDate(addedOpportunities[currentOpportunity].CREATED_DATE) || rowData[8])
-							rowData[9] = (addedOpportunities[currentOpportunity].ACCOUNT_NAME || rowData[9])
-							currentProjectSize = addedOpportunities[currentOpportunity].PROJECT_SIZE
-							delete addedOpportunities[currentOpportunity]
-						}
-						rowData = assignRoles(rowData,currentProjectSize)
-						for (var each in rowData)
-							returnData.push(rowData[each])
 					}
-				}
+					rowData.push(currentProjectSize)
+					cacheData.push(rowData)
+				}, function(err){
+					if (err)
+						console.log(err)
+				})
+		}, function(err){
+			if (err)
+				console.log(err)
+			else {
+				cache.set("sales_pipeline", cacheData, function(err, success) {
+					if(!err && success) {
+						console.log('caching sales_pipeline within pipeline.js')
+					} 
+				})
+				cacheData[0].push('ROLE','ESTIMATE_HOURS','WEEK_DATE')
+				async.each(cacheData, assignRoles, function(err){
+					if (err)
+						console.log(err)
+					else
+						callback(returnData)
+				})
 			}
-		}
-		for (var key in addedOpportunities){
-			if (!(omitData[key])){
-				newRow = []
-				newRow.push((addedOpportunities[key].STAGE || "New Opportunity"),
-								key,
-								(addedOpportunities[key].AMOUNT || "0"),
-								(addedOpportunities[key].EXPECTED_AMOUNT || "0"),
-								(cleanUpDate(addedOpportunities[key].CLOSE_DATE) || cleanUpDate(new Date())),
-								(cleanUpDate(addedOpportunities[key].START_DATE) || cleanUpDate(new Date())),
-								(((addedOpportunities[key].PROBABILITY*100)+"%") || "50%"),
-								(addedOpportunities[key].AGE || "0"),
-								(cleanUpDate(addedOpportunities[key].CREATED_DATE) || cleanUpDate(new Date())),
-								(addedOpportunities[key].ACCOUNT_NAME || "-")
-							)
-				newRow = assignRoles(newRow,addedOpportunities[key].PROJECT_SIZE)
-				for (var each in newRow)
-					returnData.push(newRow[each])
-			}
-		}
-
-		cache.set("sales_pipeline", returnData, function(err, success) {
-			if(!err && success) {
-				console.log('caching sales_pipeline within pipeline.js')
-				callback(returnData)
-			} 
 		})
 	})
+}
+
+Pipeline.prototype.applyDB = function(client, async, cachedArray, callback) {
+
+	var returnArray,
+		currentOpportunity
+
+	projectSizes = {}
+   	var projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
+	projectSizesQuery.on("row", function (row, result) {
+		result.addRow(row)
+	})
+	projectSizesQuery.on("end", function (result) {
+		for (var entry in result.rows){
+			projectSizes[result.rows[entry].sizeid] = {
+				"priceHigh": result.rows[entry].pricehigh,
+				"roles_allocations": result.rows[entry].roles_allocations
+			}
+		}
+	})
+
+	addedOpportunities = {}
+	var opportunitiesQuery = client.query("SELECT * from sales_pipeline")
+	opportunitiesQuery.on("row", function (row, result) {
+		result.addRow(row)
+	})
+	opportunitiesQuery.on("end", function (result) {
+		for (var entry in result.rows){
+			addedOpportunities[result.rows[entry].opportunity] = {
+				"STAGE": result.rows[entry].stage,
+				"AMOUNT": result.rows[entry].amount,
+				"EXPECTED_AMOUNT": result.rows[entry].expected_amount,
+				"CLOSE_DATE": result.rows[entry].close_date,
+				"START_DATE": result.rows[entry].start_date,
+				"PROBABILITY": result.rows[entry].probability,
+				"AGE": result.rows[entry].age,
+				"CREATED_DATE": result.rows[entry].create_date,
+				"ACCOUNT_NAME": result.rows[entry].account_name,
+				"PROJECT_SIZE": result.rows[entry].project_size
+			}
+		}
+	})
+
+	omitData = {}
+	var omitQuery = client.query("SELECT * from omit")
+	omitQuery.on("row", function (row, result) {
+		result.addRow(row)
+	})
+	omitQuery.on("end", function (result) {
+		for (var entry in result.rows){
+			omitData[result.rows[entry].opportunity] = {}
+		}
+	})
+
+
+
 }
 
 function calculateStartDate(closeDate, dateIncrement){
@@ -213,12 +206,13 @@ function cleanUpDate(date){
 	} else { return null }
 }
 
-function assignRoles(row,projectSize){
+function assignRoles(row){
+	var projectSizeIndex 		= 10,
+	    projectSize 			= row[projectSizeIndex]
 	if(projectSize) {
-		var tempRow 	= [],
-			returnData	= [],
-			roles 		= projectSizes[projectSize].roles_allocations,
-			daysInWeek 		= 7
+		var tempRow 			= [],
+			roles 				= projectSizes[projectSize].roles_allocations,
+			daysInWeek 			= 7
 
 		for (var role in roles) {
 			for(var i=0; i<roles[role].duration; i++) {
@@ -226,19 +220,18 @@ function assignRoles(row,projectSize){
 				for (var col in row) {
 					tempRow.push(row[col])
 				}
-				tempRow.push(role,projectSize,roles[role].allocation,calculateStartDate(row[5],(parseInt(roles[role].offset)+i)*daysInWeek))
+				tempRow.push(role,roles[role].allocation,calculateStartDate(row[5],(parseInt(roles[role].offset)+i)*daysInWeek))
 				returnData.push(tempRow)
 			}
 		}
-		return returnData
 	} else {
 		var tempRow 	= []
 
 		for (var col in row) {
 			tempRow.push(row[col])
 		}
-		tempRow.push('-','-','0',(CalculateStartDate(new Date(),0)))
-		return tempRow
+		tempRow.push('-','0',(CalculateStartDate(new Date(),0)))
+		returnData.push(tempRow)
 	}
 }
 
@@ -249,7 +242,6 @@ function getProjectSize(expectedAmount){
 			return each
 		}
 	}
-
 }
 
 function getMonday(d) {
