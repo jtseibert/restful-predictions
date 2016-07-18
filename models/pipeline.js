@@ -123,7 +123,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 						console.log('caching sales_pipeline within pipeline.js')
 					} 
 				})
-				cacheData[0].push('ROLE','ESTIMATE_HOURS','WEEK_DATE')
+				//cacheData[0].push('ROLE','ESTIMATE_HOURS','WEEK_DATE')
 				async.eachOf(cacheData, assignRoles)
 			}
 		}) //End of eachOf
@@ -230,6 +230,14 @@ function assignRoles(row, rowKey){
 			tempRow.push('-','0',(CalculateStartDate(new Date(),0)))
 			returnData.push(tempRow)
 		}
+	} else {
+		var tempRow = []
+
+		for (var col in row) {
+			tempRow.push(row[col])
+		}
+		tempRow.push('ROLE','ESTIMATE_HOURS','WEEK_DATE')
+		returnData.push(tempRow)
 	}
 }
 
