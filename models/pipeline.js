@@ -207,7 +207,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 			}
 			var rowsToAdd = assignRoles(row, projectSizes)
 			async.each(rowsToAdd,function(row){
-				returnData.push(row)
+				this.returnData.push(row)
 			})
 		}
 	}, function(err){
@@ -228,7 +228,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 							)
 				var rowsToAdd = assignRoles(newRow, projectSizes)
 				async.each(rowsToAdd,function(row){
-					returnData.push(row)
+					this.returnData.push(row)
 				})
 			}
 		})
