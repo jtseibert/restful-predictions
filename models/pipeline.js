@@ -129,7 +129,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 						accountNameIndex]
 
 		async.eachOf(factMap, function(stage, stageKey, callback){
-			console.log(objInstance.projectSizes)
+			console.log(projectSizes)
 			stageKey = stageKey.split('!')[stageIndex]
 			if (stageKey != "T")
 				async.each(stage.rows, function(row){
@@ -144,7 +144,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 							else if (cell == createdDateIndex)
 								rowData.push(cleanUpDate(currentCell.label))
 							else if (cell == expectedAmountIndex){
-								currentProjectSize = getProjectSize(currentCell.label, objInstance.projectSizes)
+								currentProjectSize = getProjectSize(currentCell.label, projectSizes)
 								stripAmount = currentCell.label.replace('USD ', '').replace(/,/g,'')
 								rowData.push(stripAmount)
 							} else if (cell == amountIndex){
