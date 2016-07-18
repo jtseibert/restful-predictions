@@ -22,6 +22,12 @@ function Pipeline(instance, accessToken, client) {
 								"ESTIMATED_HOURS",
 								"WEEK_DATE"
 								]]
+	this.projectSizes 		= {}
+	this.omitData 			= {}
+	this.addedOpportunities = {}
+
+
+	console.log('hello')
 
    	var projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
 	projectSizesQuery.on("row", function (row, result) {

@@ -72,6 +72,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 				pipeline.get(client, oauth2, async, cache, function(result) {
 					pipeline.applyDB(client, async, result, function(result){
 						res.json(result)
+						client.end()
 						delete pipeline
 					})
 				})
@@ -79,10 +80,10 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 				console.log('sales pipeline cached, ret')
 				pipeline.cachedGet(client, async, value, function(result) {
 					res.json(result)
+					client.end()
 					delete pipeline
 				})
 			}
-			client.end()
 		})
 	})
 
