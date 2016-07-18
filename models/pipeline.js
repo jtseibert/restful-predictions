@@ -119,9 +119,6 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 	    	currentOpportunity,
 	    	currentProjectSize,
 	    	stripAmount
-	    	
-
-			console.log(objInstance.projectSizes)
 
 	    var indexes	= [opportunityIndex,
 						amountIndex,
@@ -147,7 +144,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 							else if (cell == createdDateIndex)
 								rowData.push(cleanUpDate(currentCell.label))
 							else if (cell == expectedAmountIndex){
-								currentProjectSize = getProjectSize(currentCell.label, projectSizes)
+								currentProjectSize = getProjectSize(currentCell.label, objInstance.projectSizes)
 								stripAmount = currentCell.label.replace('USD ', '').replace(/,/g,'')
 								rowData.push(stripAmount)
 							} else if (cell == amountIndex){
