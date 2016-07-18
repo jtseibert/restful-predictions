@@ -260,7 +260,7 @@ function assignRoles(row, projectSizes){
 	//console.log(row)
 
 	var projectSizeIndex 		= 10,
-		returnArray,
+		returnArray				= [],
 	    projectSize 			= row[projectSizeIndex]
 
 	if(projectSize) {
