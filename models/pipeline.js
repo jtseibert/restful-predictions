@@ -178,11 +178,6 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 		currentOpportunity,
 		tempRow,
 		opportunityIndex = 1
-
-	console.log(this.returnData)
-	console.log(this.omitData)
-	console.log(this.addedOpportunities)
-	console.log(this.projectSizes)
 	/*
 		- make sure not in omit
 		- update if in addedOpportunities
@@ -190,6 +185,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 	*/
 	async.each(cacheData, function(row, objInstance, callback){
 		currentOpportunity = row[opportunityIndex]
+		console.log(objInstance.omitData)
 		if (!(objInstance.omitData[currentOpportunity])){
 			if(objInstance.addedOpportunities[currentOpportunity]){
 				row[0] = (objInstance.addedOpportunities[currentOpportunity].STAGE || row[0])
