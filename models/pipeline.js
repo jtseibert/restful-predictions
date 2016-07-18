@@ -174,7 +174,8 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 
 Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 
-	var currentOpportunity,
+	var objInstance = this,
+		currentOpportunity,
 		tempRow,
 		opportunityIndex = 1
 
@@ -187,28 +188,28 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 		- update if in addedOpportunities
 		- call assignRoles
 	*/
-	async.each(cacheData, function(row, callback){
+	async.each(cacheData, function(row, objInstance, callback){
 		currentOpportunity = row[opportunityIndex]
-		if (!(this.omitData[currentOpportunity])){
-			if(this.addedOpportunities[currentOpportunity]){
-				row[0] = (this.addedOpportunities[currentOpportunity].STAGE || row[0])
-				row[2] = (this.addedOpportunities[currentOpportunity].AMOUNT || row[2])
-				row[3] = (this.addedOpportunities[currentOpportunity].EXPECTED_AMOUNT || row[3])
-				row[4] = (cleanUpDate(this.addedOpportunities[currentOpportunity].CLOSE_DATE) || row[4])
-				row[5] = (cleanUpDate(this.addedOpportunities[currentOpportunity].START_DATE) || row[5])
-				row[6] = ((this.addedOpportunities[currentOpportunity].PROBABILITY*100)+"%" || row[6])
-				row[7] = (this.addedOpportunities[currentOpportunity].AGE || rowData[7])
-				row[8] = (cleanUpDate(this.addedOpportunities[currentOpportunity].CREATED_DATE) || row[8])
-				row[9] = (this.addedOpportunities[currentOpportunity].ACCOUNT_NAME || row[9])
-				currentProjectSize = this.addedOpportunities[currentOpportunity].PROJECT_SIZE
-				delete this.addedOpportunities[currentOpportunity]
+		if (!(objInstance.omitData[currentOpportunity])){
+			if(objInstance.addedOpportunities[currentOpportunity]){
+				row[0] = (objInstance.addedOpportunities[currentOpportunity].STAGE || row[0])
+				row[2] = (objInstance.addedOpportunities[currentOpportunity].AMOUNT || row[2])
+				row[3] = (objInstance.addedOpportunities[currentOpportunity].EXPECTED_AMOUNT || row[3])
+				row[4] = (cleanUpDate(objInstance.addedOpportunities[currentOpportunity].CLOSE_DATE) || row[4])
+				row[5] = (cleanUpDate(objInstance.addedOpportunities[currentOpportunity].START_DATE) || row[5])
+				row[6] = ((objInstance.addedOpportunities[currentOpportunity].PROBABILITY*100)+"%" || row[6])
+				row[7] = (objInstance.addedOpportunities[currentOpportunity].AGE || rowData[7])
+				row[8] = (cleanUpDate(objInstance.addedOpportunities[currentOpportunity].CREATED_DATE) || row[8])
+				row[9] = (objInstance.addedOpportunities[currentOpportunity].ACCOUNT_NAME || row[9])
+				currentProjectSize = objInstance.addedOpportunities[currentOpportunity].PROJECT_SIZE
+				delete objInstance.addedOpportunities[currentOpportunity]
 			}
 			assignRoles(row)
 		}
 		callback()
 	}, function(err){
-		async.eachOf(this.addedOpportunities, function(opportunity, key){
-			if (!this.omitData[key]){
+		async.eachOf(objInstance.addedOpportunities, objInstance, function(opportunity, key){
+			if (!objInstance.omitData[key]){
 				newRow = []
 				newRow.push((opportunity.STAGE || "New Opportunity"),
 								key,
