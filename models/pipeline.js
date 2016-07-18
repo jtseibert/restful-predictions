@@ -254,7 +254,7 @@ function cleanUpDate(date){
 
 function assignRoles(row, projectSizes){
 
-	console.log(row)
+	//console.log(row)
 
 	var projectSizeIndex 		= 10,
 		returnArray,
