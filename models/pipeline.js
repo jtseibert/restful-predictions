@@ -22,9 +22,6 @@ function Pipeline(instance, accessToken, client) {
 								"ESTIMATED_HOURS",
 								"WEEK_DATE"
 								]]
-	this.projectSizes 		= {}
-	this.omitData 			= {}
-	this.addedOpportunities = {}
 
 
 	console.log('hello')
@@ -34,6 +31,7 @@ function Pipeline(instance, accessToken, client) {
 		result.addRow(row)
 	})
 	projectSizesQuery.on("end", function (result) {
+		this.projectSizes = {}
 		for (var entry in result.rows){
 			this.projectSizes[result.rows[entry].sizeid] = {
 				"priceHigh": result.rows[entry].pricehigh,
@@ -47,6 +45,7 @@ function Pipeline(instance, accessToken, client) {
 		result.addRow(row)
 	})
 	omitQuery.on("end", function (result) {
+		this.omitData = {}
 		for (var entry in result.rows){
 			this.omitData[result.rows[entry].opportunity] = {}
 			console.log(omitData)
@@ -58,6 +57,7 @@ function Pipeline(instance, accessToken, client) {
 		result.addRow(row)
 	})
 	opportunitiesQuery.on("end", function (result) {
+		this.addedOpportunities = {}
 		for (var entry in result.rows){
 			this.addedOpportunities[result.rows[entry].opportunity] = {
 				"STAGE": result.rows[entry].stage,
