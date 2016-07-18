@@ -229,6 +229,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 			callback(returnData)
 		})
 	})
+	callback(returnData)
 }
 
 function calculateStartDate(closeDate, dateIncrement){
