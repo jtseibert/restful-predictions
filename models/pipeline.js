@@ -86,9 +86,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 			stageKey = stageKey.split('!')[stageIndex]
 			if (stageKey != "T")
 				async.each(stage.rows, function(row){
-					console.log(row)
-					console.log(opportunityIndex)
-					currentOpportunity = row[opportunityIndex].label
+					currentOpportunity = row.dataCells[opportunityIndex].label
 					rowData = []
 					rowData.push(groupingsDown[stageKey].label)
 					for (var cell in currentRow.dataCells){
