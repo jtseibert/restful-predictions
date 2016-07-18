@@ -111,6 +111,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 					rowData.push(currentProjectSize)
 					cacheData.push(rowData)
 				})
+			    console.log('finished async, end of inline fn')
 		}, function(err){
 			console.log('second callback')
 			if (err)
