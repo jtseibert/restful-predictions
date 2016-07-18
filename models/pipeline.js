@@ -110,12 +110,9 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 					}
 					rowData.push(currentProjectSize)
 					cacheData.push(rowData)
-					console.log('just pushed rowData')
-				}, function(err){
-					if (err)
-						console.log(err)
 				})
 		}, function(err){
+			console.log('second callback')
 			if (err)
 				callback(err)
 			else {
