@@ -89,7 +89,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 					currentOpportunity = row.dataCells[opportunityIndex].label
 					rowData = []
 					rowData.push(groupingsDown[stageKey].label)
-					for (var cell in row.dataCells){
+					for (var cell in row.dataCells) {
 						if (indexes.indexOf(parseInt(cell, 10)) > -1) {
 							currentCell = row.dataCells[cell]
 							if (cell == closeDateIndex)
@@ -111,6 +111,10 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 					rowData.push(currentProjectSize)
 					cacheData.push(rowData)
 					callback(null)
+				}, function(err) {
+					if(err) 
+						callback(err)
+				   }
 				})
 		}, function(err) {
 			console.log('second callback')
