@@ -132,7 +132,6 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 				})
 			}
 		})
-		console.log('end of outer async')
 	})	// End of api.GET
 }
 
