@@ -25,20 +25,7 @@ function Pipeline(instance, accessToken) {
 } 
 
 Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
-	projectSizes 	= {}
-   	var projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
-	projectSizesQuery.on("row", function (row, result) {
-		result.addRow(row)
-	})
-	projectSizesQuery.on("end", function (result) {
-		for (var entry in result.rows){
-			projectSizes[result.rows[entry].sizeid] = {
-				"priceHigh": result.rows[entry].pricehigh,
-				"roles_allocations": result.rows[entry].roles_allocations
-			}
-		}
-	})
-
+	
 	parameters = {
 		access_token: this.accessToken
 	}
@@ -204,7 +191,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 				currentProjectSize = addedOpportunities[currentOpportunity].PROJECT_SIZE
 				delete addedOpportunities[currentOpportunity]
 			}
-			assignRoles(row)
+			assignRoles(row, projectSizes)
 		}
 		callback()
 	}, function(err){
@@ -223,7 +210,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 								(opportunity.ACCOUNT_NAME || "-"),
 								(opportunity.PROJECT_SIZE)
 							)
-				assignRoles(newRow)
+				assignRoles(newRow, projectSizes)
 			}
 		})
 	})
@@ -245,7 +232,7 @@ function cleanUpDate(date){
 	} else { return null }
 }
 
-function assignRoles(row){
+function assignRoles(row, projectSizes){
 	var projectSizeIndex 		= 10,
 	    projectSize 			= row[projectSizeIndex]
 	if(projectSize) {
