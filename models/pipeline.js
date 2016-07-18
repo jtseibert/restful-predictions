@@ -111,7 +111,12 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 	    	currentCell,
 	    	currentOpportunity,
 	    	currentProjectSize,
-	    	stripAmount
+	    	stripAmount,
+	    	returnData = this.returnData,
+			omitData = this.omitData,
+			addedOpportunities = this.addedOpportunities,
+			projectSizes = this.projectSizes,
+			returnData = this.returnData
 
 	    var indexes	= [opportunityIndex,
 						amountIndex,
@@ -137,7 +142,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 							else if (cell == createdDateIndex)
 								rowData.push(cleanUpDate(currentCell.label))
 							else if (cell == expectedAmountIndex){
-								currentProjectSize = getProjectSize(currentCell.label)
+								currentProjectSize = getProjectSize(currentCell.label, projectSizes)
 								stripAmount = currentCell.label.replace('USD ', '').replace(/,/g,'')
 								rowData.push(stripAmount)
 							} else if (cell == amountIndex){
@@ -200,13 +205,12 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 				currentProjectSize = addedOpportunities[currentOpportunity].PROJECT_SIZE
 				delete addedOpportunities[currentOpportunity]
 			}
-			assignRoles(row, projectSizes, returnData)
+			var rowsToAdd = assignRoles(row, projectSizes)
+			async.each(rowsToAdd,function(row){
+				returnData.push(row)
+			})
 		}
-		console.log(returnData)
-		callback(returnData)
-	}, function(err, result){
-		returnData = result
-		console.log(returnData)
+	}, function(err){
 		async.eachOf(addedOpportunities, function(opportunity, key){
 			if (!omitData[key]){
 				newRow = []
@@ -222,11 +226,14 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 								(opportunity.ACCOUNT_NAME || "-"),
 								(opportunity.PROJECT_SIZE)
 							)
-				assignRoles(newRow, projectSizes, returnData)
+				var rowsToAdd = assignRoles(newRow, projectSizes)
+				async.each(rowsToAdd,function(row){
+					returnData.push(row)
+				})
 			}
 		})
 	})
-	callback(this.returnData)
+	callback(returnData)
 }
 
 function calculateStartDate(closeDate, dateIncrement){
@@ -246,6 +253,7 @@ function cleanUpDate(date){
 
 function assignRoles(row, projectSizes, returnData){
 	var projectSizeIndex 		= 10,
+		returnArray,
 	    projectSize 			= row[projectSizeIndex]
 
 	if(projectSize) {
@@ -260,16 +268,17 @@ function assignRoles(row, projectSizes, returnData){
 					tempRow.push(row[col])
 				}
 				tempRow.push(role,roles[role].allocation,calculateStartDate(row[5],(parseInt(roles[role].offset)+i)*daysInWeek))
-				returnData.push(tempRow)
+				returnArray.push(tempRow)
 			}
 		}
 	}
+	return returnArray
 }
 
-function getProjectSize(expectedAmount){
+function getProjectSize(expectedAmount, projectSizes){
 	expectedAmount = expectedAmount.replace('USD ', '').replace(/,/g,'')
-	for (var each in this.projectSizes){
-		if (parseInt(expectedAmount) <= this.projectSizes[each].priceHigh){
+	for (var each in projectSizes){
+		if (parseInt(expectedAmount) <= projectSizes[each].priceHigh){
 			return each
 		}
 	}
