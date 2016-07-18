@@ -183,7 +183,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 		omitData = this.omitData,
 		addedOpportunities = this.addedOpportunities,
 		projectSizes = this.projectSizes,
-		returnData = this.returnData
+		objInstance = this
 	/*
 		- make sure not in omit
 		- update if in addedOpportunities
@@ -207,7 +207,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 			}
 			var rowsToAdd = assignRoles(row, projectSizes)
 			async.each(rowsToAdd,function(row){
-				this.returnData.push(row)
+				objInstance.returnData.push(row)
 			})
 		}
 	}, function(err){
@@ -228,7 +228,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 							)
 				var rowsToAdd = assignRoles(newRow, projectSizes)
 				async.each(rowsToAdd,function(row){
-					this.returnData.push(row)
+					objInstance.returnData.push(row)
 				})
 			}
 		})
