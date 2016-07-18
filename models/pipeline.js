@@ -110,14 +110,16 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 					}
 					rowData.push(currentProjectSize)
 					cacheData.push(rowData)
+					console.log('just pushed rowData')
 				}, function(err){
 					if (err)
 						console.log(err)
 				})
 		}, function(err){
 			if (err)
-				console.log(err)
+				callback(err)
 			else {
+				console.log('going to cache cacheData')
 				cache.set("sales_pipeline", cacheData, function(err, success) {
 					if(!err && success) {
 						console.log('caching sales_pipeline within pipeline.js')
