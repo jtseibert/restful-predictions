@@ -5,6 +5,7 @@
 module.exports = Pipeline
 
 function Pipeline(instance, accessToken, client) {
+	var objInstance = this
 	this.accessToken 		= accessToken
 	this.path 				= 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093sCD'
 	this.returnData			= [["STAGE",
@@ -33,9 +34,9 @@ function Pipeline(instance, accessToken, client) {
 		result.addRow(row)
 	})
 	projectSizesQuery.on("end", function (result) {
-		this.projectSizes = {}
+		objInstance.projectSizes = {}
 		for (var entry in result.rows){
-			this.projectSizes[result.rows[entry].sizeid] = {
+			objInstance.projectSizes[result.rows[entry].sizeid] = {
 				"priceHigh": result.rows[entry].pricehigh,
 				"roles_allocations": result.rows[entry].roles_allocations
 			}
@@ -47,11 +48,11 @@ function Pipeline(instance, accessToken, client) {
 		result.addRow(row)
 	})
 	omitQuery.on("end", function (result) {
-		this.omitData = {}
+		objInstance.omitData = {}
 		for (var entry in result.rows){
-			this.omitData[result.rows[entry].opportunity] = {}
+			objInstance.omitData[result.rows[entry].opportunity] = {}
 		}
-		console.log(this.omitData)
+		console.log(objInstance.omitData)
 	})
 
 		var opportunitiesQuery = client.query("SELECT * from sales_pipeline")
@@ -59,9 +60,9 @@ function Pipeline(instance, accessToken, client) {
 		result.addRow(row)
 	})
 	opportunitiesQuery.on("end", function (result) {
-		this.addedOpportunities = {}
+		objInstance.addedOpportunities = {}
 		for (var entry in result.rows){
-			this.addedOpportunities[result.rows[entry].opportunity] = {
+			objInstance.addedOpportunities[result.rows[entry].opportunity] = {
 				"STAGE": result.rows[entry].stage,
 				"AMOUNT": result.rows[entry].amount,
 				"EXPECTED_AMOUNT": result.rows[entry].expected_amount,
