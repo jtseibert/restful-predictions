@@ -207,6 +207,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 			}
 			var rowsToAdd = assignRoles(row, projectSizes)
 			async.each(rowsToAdd,function(row){
+				console.log(row)
 				objInstance.returnData.push(row)
 			})
 		}
@@ -228,13 +229,13 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 							)
 				var rowsToAdd = assignRoles(newRow, projectSizes)
 				async.each(rowsToAdd,function(row){
+					console.log()
 					objInstance.returnData.push(row)
 				})
 			}
 		})
-	}, function(){
-		callback(callback())
 	})
+	callback()
 }
 
 function calculateStartDate(closeDate, dateIncrement){
