@@ -124,10 +124,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 					} 
 				})
 				cacheData[0].push('ROLE','ESTIMATE_HOURS','WEEK_DATE')
-				async.each(cacheData, assignRoles, function(err){
-					if (err)
-						console.log(err)
-				})
+				async.each(cacheData, assignRoles)
 			}
 		}) //End of eachOf
 		callback(returnData)
@@ -205,7 +202,7 @@ function cleanUpDate(date){
 	} else { return null }
 }
 
-function assignRoles(row,callback){
+function assignRoles(row){
 	var projectSizeIndex 		= 10,
 	    projectSize 			= row[projectSizeIndex]
 	if(projectSize) {
@@ -232,7 +229,6 @@ function assignRoles(row,callback){
 		tempRow.push('-','0',(CalculateStartDate(new Date(),0)))
 		returnData.push(tempRow)
 	}
-	callback()
 }
 
 function getProjectSize(expectedAmount){
