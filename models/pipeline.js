@@ -48,7 +48,6 @@ function Pipeline(instance, accessToken, client) {
 		this.omitData = {}
 		for (var entry in result.rows){
 			this.omitData[result.rows[entry].opportunity] = {}
-			console.log(omitData)
 		}
 	})
 
