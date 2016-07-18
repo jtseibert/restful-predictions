@@ -183,7 +183,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 		- update if in addedOpportunities
 		- call assignRoles
 	*/
-	async.each(cacheData, function(row, objInstance, callback){
+	async.each(cacheData, function(row, objInstance.omitData, callback){
 		currentOpportunity = row[opportunityIndex]
 		console.log(objInstance.omitData)
 		if (!(objInstance.omitData[currentOpportunity])){
