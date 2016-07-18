@@ -202,7 +202,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 				row[7] = (addedOpportunities[currentOpportunity].AGE || rowData[7])
 				row[8] = (cleanUpDate(addedOpportunities[currentOpportunity].CREATED_DATE) || row[8])
 				row[9] = (addedOpportunities[currentOpportunity].ACCOUNT_NAME || row[9])
-				currentProjectSize = addedOpportunities[currentOpportunity].PROJECT_SIZE
+				row[10] = (addedOpportunities[currentOpportunity].PROJECT_SIZE || row[10])
 				delete addedOpportunities[currentOpportunity]
 			}
 			var rowsToAdd = assignRoles(row, projectSizes)
