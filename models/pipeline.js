@@ -7,11 +7,25 @@ module.exports = Pipeline
 function Pipeline(instance, accessToken) {
 	this.accessToken = accessToken
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093sCD'
+	this.returnData = [["STAGE",
+	    					"OPPORTUNITY_NAME",
+							"AMOUNT",
+							"EXP_AMOUNT",
+							"CLOSE_DATE",
+							"START_DATE",
+							"PROBABILITY",
+							"AGE",
+							"CREATED_DATE",
+							"ACCOUNT_NAME",
+							"PROJECT_SIZE",
+							"ROLE",
+							"ESTIMATED_HOURS",
+							"WEEK_DATE"
+						]]
 } 
 
 Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 	projectSizes 	= {}
-	returnData 		= []
    	var projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
 	projectSizesQuery.on("row", function (row, result) {
 		result.addRow(row)
@@ -69,22 +83,6 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 						createdDateIndex,
 						accountNameIndex]
 
-	    returnData.push(["STAGE",
-	    					"OPPORTUNITY_NAME",
-							"AMOUNT",
-							"EXP_AMOUNT",
-							"CLOSE_DATE",
-							"START_DATE",
-							"PROBABILITY",
-							"AGE",
-							"CREATED_DATE",
-							"ACCOUNT_NAME",
-							"PROJECT_SIZE",
-							"ROLE",
-							"ESTIMATED_HOURS",
-							"WEEK_DATE"
-						])
-
 		async.eachOf(factMap, function(stage, stageKey, callback){
 			stageKey = stageKey.split('!')[stageIndex]
 			if (stageKey != "T")
@@ -126,17 +124,21 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 						console.log('caching sales_pipeline within pipeline.js')
 					} 
 				})
-				async.eachOf(cacheData, assignRoles)
 			}
 		}) //End of eachOf
-		callback(returnData)
+		applyDB(client, async, cacheData, function(err, result) {
+			if (err)
+				console.log(err)
+			callback(result)
+		})	
 	})	// End of api.GET
 } // End prototype.get
 
-Pipeline.prototype.applyDB = function(client, async, cachedArray, callback) {
+Pipeline.prototype.applyDB = function(client, async, cachedData, callback) {
 
-	var returnArray,
-		currentOpportunity
+	var currentOpportunity,
+		tempRow,
+		opportunityIndex = 1
 
 	projectSizes = {}
    	var projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
@@ -185,8 +187,51 @@ Pipeline.prototype.applyDB = function(client, async, cachedArray, callback) {
 		}
 	})
 
-
-
+	/*
+		- make sure not in omit
+		- update if in addedOpportunities
+		- call assignRoles
+	*/
+	async.each(cacheData, function(row, callback){
+		currentOpportunity = row[opportunityIndex]
+		if (!omitData[currentOpportunity]){
+			if(addedOpportunities[currentOpportunity]){
+				row[0] = (addedOpportunities[currentOpportunity].STAGE || row[0])
+				row[2] = (addedOpportunities[currentOpportunity].AMOUNT || row[2])
+				row[3] = (addedOpportunities[currentOpportunity].EXPECTED_AMOUNT || row[3])
+				row[4] = (cleanUpDate(addedOpportunities[currentOpportunity].CLOSE_DATE) || row[4])
+				row[5] = (cleanUpDate(addedOpportunities[currentOpportunity].START_DATE) || row[5])
+				row[6] = ((addedOpportunities[currentOpportunity].PROBABILITY*100)+"%" || row[6])
+				row[7] = (addedOpportunities[currentOpportunity].AGE || rowData[7])
+				row[8] = (cleanUpDate(addedOpportunities[currentOpportunity].CREATED_DATE) || row[8])
+				row[9] = (addedOpportunities[currentOpportunity].ACCOUNT_NAME || row[9])
+				currentProjectSize = addedOpportunities[currentOpportunity].PROJECT_SIZE
+				delete addedOpportunities[currentOpportunity]
+			}
+			assignRoles(row)
+		}
+		callback()
+	}, function(err){
+		async.eachOf(addedOpportunities, function(opportunity, key){
+			if (!(omitData[key])){
+				newRow = []
+				newRow.push((opportunity.STAGE || "New Opportunity"),
+								key,
+								(opportunity.AMOUNT || "0"),
+								(opportunity.EXPECTED_AMOUNT || "0"),
+								(cleanUpDate(opportunity.CLOSE_DATE) || cleanUpDate(new Date())),
+								(cleanUpDate(opportunity.START_DATE) || cleanUpDate(new Date())),
+								(((opportunity.PROBABILITY*100)+"%") || "50%"),
+								(opportunity.AGE || "0"),
+								(cleanUpDate(opportunity.CREATED_DATE) || cleanUpDate(new Date())),
+								(opportunity.ACCOUNT_NAME || "-"),
+								(opportunity.PROJECT_SIZE)
+							)
+				assignRoles(newRow)
+			}
+		})
+	})
+	callback()
 }
 
 function calculateStartDate(closeDate, dateIncrement){
@@ -204,33 +249,23 @@ function cleanUpDate(date){
 	} else { return null }
 }
 
-function assignRoles(row, rowKey){
+function assignRoles(row){
 	var projectSizeIndex 		= 10,
 	    projectSize 			= row[projectSizeIndex]
-	if (rowKey != 0){
-		if(projectSize) {
-			var tempRow 			= [],
-				roles 				= projectSizes[projectSize].roles_allocations,
-				daysInWeek 			= 7
+	if(projectSize) {
+		var tempRow 			= [],
+			roles 				= projectSizes[projectSize].roles_allocations,
+			daysInWeek 			= 7
 
-			for (var role in roles) {
-				for(var i=0; i<roles[role].duration; i++) {
-					tempRow = []
-					for (var col in row) {
-						tempRow.push(row[col])
-					}
-					tempRow.push(role,roles[role].allocation,calculateStartDate(row[5],(parseInt(roles[role].offset)+i)*daysInWeek))
-					returnData.push(tempRow)
+		for (var role in roles) {
+			for(var i=0; i<roles[role].duration; i++) {
+				tempRow = []
+				for (var col in row) {
+					tempRow.push(row[col])
 				}
+				tempRow.push(role,roles[role].allocation,calculateStartDate(row[5],(parseInt(roles[role].offset)+i)*daysInWeek))
+				this.returnData.push(tempRow)
 			}
-		} else {
-			var tempRow 	= []
-
-			for (var col in row) {
-				tempRow.push(row[col])
-			}
-			tempRow.push('-','0',(CalculateStartDate(new Date(),0)))
-			returnData.push(tempRow)
 		}
 	}
 }

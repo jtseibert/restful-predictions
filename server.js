@@ -67,10 +67,6 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 			pg.connect(process.env.DATABASE_URL, function(err, client) {
 				if (err) throw err
 				pipeline.get(client, oauth2, async, cache, function(result) {
-					for (var each in result){
-						if (result[each].length > 14 || result[each].length == 11)
-							console.log(result[each])
-					}
 					res.json(result)
 					client.end()
 					delete pipeline
