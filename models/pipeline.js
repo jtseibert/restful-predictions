@@ -82,6 +82,13 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 		access_token: this.accessToken
 	}
 
+	var returnData = this.returnData,
+		omitData = this.omitData,
+		addedOpportunities = this.addedOpportunities,
+		projectSizes = this.projectSizes,
+		returnData = this.returnData,
+		objInstance = this
+
 	oauth2.api('GET', this.path, parameters, function (err, data) {
     	if (err)
         	console.log('GET Error: ', JSON.stringify(err)) 
@@ -111,15 +118,10 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 	    	currentCell,
 	    	currentOpportunity,
 	    	currentProjectSize,
-	    	stripAmount,
-	    	returnData = this.returnData,
-			omitData = this.omitData,
-			addedOpportunities = this.addedOpportunities,
-			projectSizes = this.projectSizes,
-			returnData = this.returnData,
-			objInstance = this
+	    	stripAmount
+	    	
 
-			console.log(this.projectSizes)
+			console.log(objInstance.projectSizes)
 
 	    var indexes	= [opportunityIndex,
 						amountIndex,
