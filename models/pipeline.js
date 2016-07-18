@@ -202,6 +202,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 			}
 			assignRoles(row, projectSizes, returnData)
 		}
+		console.log(returnData)
 		callback(returnData)
 	}, function(err, result){
 		returnData = result
