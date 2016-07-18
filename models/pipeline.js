@@ -51,7 +51,6 @@ function Pipeline(instance, accessToken, client) {
 		for (var entry in result.rows){
 			objInstance.omitData[result.rows[entry].opportunity] = {}
 		}
-		console.log(objInstance.omitData)
 	})
 
 		var opportunitiesQuery = client.query("SELECT * from sales_pipeline")
@@ -190,6 +189,9 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 		objInstance = this
 
 		console.log(this.omitData)
+		console.log(this.projectSizes)
+		console.log(this.addedOpportunities)
+
 	/*
 		- make sure not in omit
 		- update if in addedOpportunities
