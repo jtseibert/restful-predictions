@@ -52,7 +52,6 @@ function Pipeline(instance, accessToken, client) {
 		for (var entry in result.rows){
 			objInstance.omitData[result.rows[entry].opportunity] = {}
 		}
-		console.log(objInstance.omitData)
 	})
 
 		var opportunitiesQuery = client.query("SELECT * from sales_pipeline")
@@ -247,6 +246,8 @@ function assignRoles(row){
 	var projectSizeIndex 		= 10,
 	    projectSize 			= row[projectSizeIndex],
 	    projectSizes 			= this.projectSizes
+
+	console.log(projectSizes)
 	if(projectSize) {
 		var tempRow 			= [],
 			roles 				= projectSizes[projectSize].roles_allocations,
