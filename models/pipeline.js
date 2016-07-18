@@ -107,11 +107,11 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 								rowData.push(currentCell.label)
 							}
 						}
-					}
+					} // End for loop
 					rowData.push(currentProjectSize)
 					cacheData.push(rowData)
 					callback(null)
-				})
+				}) // End async.each
 		}, function(err) {
 			console.log('second callback')
 			if (err)
