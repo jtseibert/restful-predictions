@@ -126,11 +126,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 				})
 			}
 		}) //End of eachOf
-		this.applyDB(client, async, cacheData, function(err, result) {
-			if (err)
-				console.log(err)
-			callback(result)
-		})	
+		callback(cacheData)
 	})	// End of api.GET
 } // End prototype.get
 
@@ -231,7 +227,7 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 			}
 		})
 	})
-	callback()
+	callback(this.returnData)
 }
 
 function calculateStartDate(closeDate, dateIncrement){
