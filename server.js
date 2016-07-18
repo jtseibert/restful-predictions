@@ -65,23 +65,23 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err
 			pipeline = new Pipeline(req.params.instance, req.params.accessToken, client)
-			client.end()
-		})
-		if(value == undefined) {
-	    	console.log('sales pipeline cache undefined')
-			pipeline.get(client, oauth2, async, cache, function(result) {
-				pipeline.applyDB(client, async, result, function(result){
+			if(value == undefined) {
+		    	console.log('sales pipeline cache undefined')
+				pipeline.get(client, oauth2, async, cache, function(result) {
+					pipeline.applyDB(client, async, result, function(result){
+						res.json(result)
+						delete pipeline
+					})
+				})
+			} else { 
+				console.log('sales pipeline cached, ret')
+				pipeline.cachedGet(client, async, value, function(result) {
 					res.json(result)
 					delete pipeline
 				})
-			})
-		} else { 
-			console.log('sales pipeline cached, ret')
-			pipeline.cachedGet(client, async, value, function(result) {
-				res.json(result)
-				delete pipeline
-			})
-		}
+			}
+			client.end()
+		})
 	})
 
 //Create sales_pipeline DB routes
