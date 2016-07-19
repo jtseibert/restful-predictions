@@ -66,7 +66,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if(!err) {
-				pipeline = new Pipeline(instance, accessToken, client, function() {
+				pipeline = new Pipeline(async, instance, accessToken, client, function() {
 					client.end()
 					cache.get("sales_pipeline", function(err, value) {
 						if(!err) {
@@ -91,7 +91,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 			} 
 		}) // End DB connect
 	}) // End route get
-	
+
 //Create sales_pipeline DB routes
 router.route('/addOpportunity')
 	.post(function(req,res){
