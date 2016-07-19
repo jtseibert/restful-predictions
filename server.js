@@ -64,33 +64,30 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 			instance = req.params.instance,
 			accessToken = req.params.accessToken
 
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if(!err) {
-				pipeline = new Pipeline(async, instance, accessToken, client, function() {
-					client.end()
-					cache.get("sales_pipeline", function(err, value) {
-						if(!err) {
-							if(value == undefined) {
-				    			console.log('sales pipeline cache undefined')
-								pipeline.get(oauth2, async, cache, function(result) {
-									pipeline.applyDB(async, result, function(){
-										res.json(pipeline.returnData)
-										delete pipeline
-									})
-								})
-							} else { 
-								console.log('sales pipeline cached, ret')
-								pipeline.applyDB(async, value, function(){
+		pipeline = new Pipeline(async, instance, accessToken, pg, function() {
+			cache.get("sales_pipeline", function(err, value) {
+				if(!err) {
+					if(value == undefined) {
+			    		console.log('sales pipeline cache undefined')
+						pipeline.get(oauth2, async, cache, function(result) {
+							pipeline.applyDB(async, result, function(){
 									res.json(pipeline.returnData)
 									delete pipeline
-								})
-							}
-						}
-					})// End cache.get
-				}) // End new Pipeline
-			} 
-		}) // End DB connect
-	}) // End route get
+							})
+						})
+					} else { 
+						console.log('sales pipeline cached, ret')
+						pipeline.applyDB(async, value, function(){
+							res.json(pipeline.returnData)
+							delete pipeline
+						})
+					}
+				} else {
+					res.json({message: err})
+				}
+			})
+		})
+	})
 
 //Create sales_pipeline DB routes
 router.route('/addOpportunity')
