@@ -44,7 +44,7 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 							"roles_allocations": result.rows[entry].roles_allocations
 						}
 					}
-					return callback(projectSizes)
+					callback(projectSizes)
 				})
 			})
 		},
@@ -62,7 +62,7 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 					for (var entry in result.rows){
 						omitData[result.rows[entry].opportunity] = {}
 					}
-					return callback(omitData)
+					callback(omitData)
 				})
 			})
 		},
@@ -91,7 +91,7 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 							"PROJECT_SIZE": result.rows[entry].project_size
 						}
 					}
-					return callback(addedOpportunities)
+					callback(addedOpportunities)
 				})
 			})
 		}
