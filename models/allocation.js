@@ -52,7 +52,7 @@ function Allocation(async, instance, accessToken, callback) {
 
 } 
 
-Allocation.prototype.get = function(oauth2, async, cache, callback) {
+Allocation.prototype.getstuff = function(oauth2, async, cache, callback) {
 	var objInstance = this
 	var parameters = {
 		access_token: objInstance.accessToken
