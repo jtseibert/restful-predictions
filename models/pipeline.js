@@ -103,8 +103,8 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 		'three': getAddedOpportunities
 	}, function(err, results){
 		console.log('in callback')
-		if (err) 
-			console.log(err)
+		//if (err) 
+			//console.log(err)
 		objInstance.projectSizes 		= results.one
 		objInstance.omitData 			= results.two
 		objInstance.addedOpportunities 	= results.three
