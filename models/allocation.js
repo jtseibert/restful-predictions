@@ -7,7 +7,7 @@
 	
 module.exports = Allocation
 
-function Allocation(instance, accessToken) {
+function Allocation(instance, accessToken, callback) {
 	this.accessToken = accessToken
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093smp'
 	this.returnData = [["Project",
@@ -15,6 +15,7 @@ function Allocation(instance, accessToken) {
 						"Start Date",
 						"Estimated Hours"
 						]]
+	callback()
 } 
 
 Allocation.prototype.get = function(oauth2, async, cache, callback) {
