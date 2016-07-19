@@ -8,7 +8,7 @@ function Opportunity(data) {
 	this.data = data
 } 
 
-Opportunity.prototype.add = function(pg, callback) {
+Opportunity.prototype.add = function(async, pg, callback) {
 	var data = this.data
 	async.each(data, function(opportunity, callback){
 		pg.connect(process.env.DATABASE_URL, function(err, client, done) {

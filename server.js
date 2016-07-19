@@ -97,7 +97,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 router.route('/addOpportunity')
 	.post(function(req,res){
 		opportunity = new Opportunity(req.body)
-		opportunity.add(pg,function(err){
+		opportunity.add(async, pg,function(err){
 			if (err)
 				res.send(err)
 			res.json({message: 'Success!'})
