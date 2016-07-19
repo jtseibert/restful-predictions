@@ -44,6 +44,7 @@ pg.defaults.ssl = true
 //Create SF routes
 router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req,res){
+		console.log('Entered DATA_Allocation')
 		var allocation
 		allocation = new Allocation(req.params.instance, req.params.accessToken, function() {
 			cache.get("allocation", function(err, value) {
