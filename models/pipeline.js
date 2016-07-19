@@ -89,6 +89,7 @@ function Pipeline(async, instance, accessToken, client, callback) {
 			})
 		}
 	}, function(err, results){
+		console.log('in callback')
 		if (err) 
 			console.log(err)
 		objInstance.projectSizes 		= results.one
