@@ -106,7 +106,7 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 		objInstance.projectSizes 		= results.one
 		objInstance.omitData 			= results.two
 		objInstance.addedOpportunities 	= results.three
-		process.nextTick(callback())
+		process.nextTick(callback)
 	})
 } 
 
