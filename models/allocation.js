@@ -17,7 +17,7 @@ function Allocation(instance, accessToken, callback) {
 						"Estimated Hours"
 						]]
 	console.log('accessToken: '+this.accessToken+'\npath: '+this.path+'\nreturnData'+this.returnData)
-	callback()
+	//callback()
 } 
 
 Allocation.prototype.get = function(oauth2, async, cache, callback) {
