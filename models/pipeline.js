@@ -48,7 +48,7 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 				})
 			})
 		},
-		getOmitData = function(client, callback){
+		getOmitData = function(callback){
 			console.log('function two')
 			pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 				if (err) return callback(err)
@@ -66,7 +66,7 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 				})
 			})
 		},
-		getAddedOpportunities = function(client, callback){
+		getAddedOpportunities = function(callback){
 			console.log('function three')
 			pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 				if (err) return callback(err)
