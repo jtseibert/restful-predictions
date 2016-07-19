@@ -34,7 +34,7 @@ function Allocation(async, instance, accessToken, callback) {
 		'one': setAccessToken,
 		'two': setPath,
 		'three': setReturnData
-	}, function(err, result){
+	}, function(err, results){
 		console.log('in callback')
 		if (err) 
 			console.log('error: ' + JSON.stringify(err))
