@@ -7,7 +7,7 @@
 	
 module.exports = Allocation
 
-function Allocation(instance, accessToken, callback) {
+function Allocation(instance, accessToken) {
 	objInstance = this
 	this.accessToken = accessToken
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093smp'
@@ -16,7 +16,6 @@ function Allocation(instance, accessToken, callback) {
 						"Start Date",
 						"Estimated Hours"
 						]]
-	callback()
 
 	// var setAccessToken = function(callback) {
 	// 	var accessToken = accessToken
