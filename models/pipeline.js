@@ -29,7 +29,7 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 
 	var getProjectSize = function(callback){
 			console.log('function one')
-			pg.connect(conString, function(err, client, done) {
+			pg.connect(process.env.DATABASE_URL, function(err, client, done) {
       			if (err) return callback(err)
 				var projectSizes,
 					projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
@@ -50,7 +50,7 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 		},
 		getOmitData = function(client, callback){
 			console.log('function two')
-			pg.connect(conString, function(err, client, done) {
+			pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 				if (err) return callback(err)
 				var omitData,
 					omitQuery = client.query("SELECT * from omit")
@@ -68,7 +68,7 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 		},
 		getAddedOpportunities = function(client, callback){
 			console.log('function three')
-			pg.connect(conString, function(err, client, done) {
+			pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 				if (err) return callback(err)
 				var addedOpportunities,
 					opportunitiesQuery = client.query("SELECT * from sales_pipeline")
