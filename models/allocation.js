@@ -10,14 +10,20 @@ module.exports = Allocation
 function Allocation(instance, accessToken) {
 	this.accessToken = accessToken
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093smp'
+	this.returnData = [["Project",
+						"Resource: Resource Role",
+						"Start Date",
+						"Estimated Hours"
+						]]
 } 
 
-Allocation.prototype.get = function(oauth2, cache, callback) {
-	parameters = {
-		access_token: this.accessToken
+Allocation.prototype.get = function(oauth2, async, cache, callback) {
+	var objInstance = this
+	var parameters = {
+		access_token: objInstance.accessToken
 	}
 
-	oauth2.api('GET', this.path, parameters, function (err, data) {
+	oauth2.api('GET', objInstance.path, parameters, function (err, data) {
 	    if (err)
 	        console.log('GET Error: ', JSON.stringify(err)) 
 	    
@@ -31,10 +37,7 @@ Allocation.prototype.get = function(oauth2, cache, callback) {
 	        weekKey,
 	        valueKey
 
-	    returnData.push(["Project", "Resource: Resource Role", "Start Date", "Estimated Hours"])
-
-	    for (var key in factMap) {
-
+	    async.eachOf(factMap, function(field, key, callback) {
 		    valueKey = key
 			splitKey = key.split('!')
 			weekKey = splitKey[1]
@@ -46,19 +49,26 @@ Allocation.prototype.get = function(oauth2, cache, callback) {
 				projectKey = "T"
 			}
 
-			if (!(weekKey == "T" || employeeKey == "T" || projectKey == "T") && factMap[key].aggregates[0].value != 0){
-				returnData.push([groupingsDown[employeeKey].label, 
+			if (!(weekKey == "T" || employeeKey == "T" || projectKey == "T") && field.aggregates[0].value != 0){
+				objInstance.returnData.push([groupingsDown[employeeKey].label, 
 									groupingsDown[employeeKey].groupings[projectKey].label, 
 									groupingsAcross[weekKey].label, 
-									factMap[key].aggregates[0].value])
+									field.aggregates[0].value])
 			}
-		}
-
-	    cache.set("allocation", returnData, function(err, success) {
-			if(!err && success) {
-				console.log('caching allocation within allocation.js')
-				callback(returnData)
-			} 
-		})
+		}, function(err) {
+			if(err) {
+				callback(err)
+			} else {
+				cache.set("allocation", objInstance.returnData, function(err, success) {
+					if(!err && success) {
+						console.log('caching allocation within allocation.js')
+						callback(objInstance.returnData)
+					}
+				}) 
+			}
+		})	    
 	})  
 }
+
+
+
