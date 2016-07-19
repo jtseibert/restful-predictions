@@ -63,26 +63,30 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 		var pipeline,
 			instance = req.params.instance,
 			accessToken = req.params.accessToken
-		value = cache.get("sales_pipeline")
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err
-			pipeline = new Pipeline(instance, accessToken, client)
-			if(value == undefined) {
-		    	console.log('sales pipeline cache undefined')
-				pipeline.get(client, oauth2, async, cache, function(result) {
-					pipeline.applyDB(client, async, result, function(){
+		cache.get("sales_pipeline", function(err, value) {
+			if(!err) {
+				if(value == undefined) {
+					pg.connect(process.env.DATABASE_URL, function(err, client) {
+						if (err) throw err
+						pipeline = new Pipeline(instance, accessToken, client)
+		    			console.log('sales pipeline cache undefined')
+						pipeline.get(client, oauth2, async, cache, function(result) {
+							pipeline.applyDB(client, async, result, function(){
+								res.json(pipeline.returnData)
+								client.end()
+								delete pipeline
+							})
+
+						})
+					})
+				} else { 
+					console.log('sales pipeline cached, ret')
+					pipeline.applyDB(client, async, value, function(){
 						res.json(pipeline.returnData)
 						client.end()
 						delete pipeline
 					})
-				})
-			} else { 
-				console.log('sales pipeline cached, ret')
-				pipeline.applyDB(client, async, value, function(){
-					res.json(pipeline.returnData)
-					client.end()
-					delete pipeline
-				})
+				}
 			}
 		})
 	})
