@@ -5,7 +5,6 @@
 module.exports = Pipeline
 
 function Pipeline(instance, accessToken, client, callback) {
-	console.log('hello')
 	var objInstance = this
 	this.accessToken 		= accessToken
 	this.path 				= 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093sCD'
@@ -31,6 +30,7 @@ function Pipeline(instance, accessToken, client, callback) {
 
 	async.parallel({
 		one: function(client, callback){
+			console.log('function one')
 			var projectSizes,
 				projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
 			projectSizesQuery.on("row", function (row, result) {
@@ -48,6 +48,7 @@ function Pipeline(instance, accessToken, client, callback) {
 			})
 		},
 		two: function(client, callback){
+			console.log('function two')
 			var omitData,
 				omitQuery = client.query("SELECT * from omit")
 			omitQuery.on("row", function (row, result) {
@@ -62,6 +63,7 @@ function Pipeline(instance, accessToken, client, callback) {
 			})
 		},
 		three: function(client, callback){
+			console.log('function three')
 			var addedOpportunities,
 				opportunitiesQuery = client.query("SELECT * from sales_pipeline")
 			opportunitiesQuery.on("row", function (row, result) {
