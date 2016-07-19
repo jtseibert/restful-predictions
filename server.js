@@ -52,17 +52,19 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 			    		console.log('allocation cache undefined')
 						allocation.get(oauth2, async, cache, function() {
 							res.json(allocation.returnData)
+							delete allocation
 						})
 					} else { 
 						console.log('allocation cached, ret')
 						res.json(value)
+						delete allocation
 					}
 				} else {
 					res.json({message: err})
+					delete allocation
 				}
 			})
 		})
-		//delete allocation
 	})
 	   
 router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
@@ -76,20 +78,22 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 						pipeline.get(oauth2, async, cache, function(result) {
 							pipeline.applyDB(async, result, function(){
 								res.json(pipeline.returnData)
+								delete pipeline
 							})
 						})
 					} else { 
 						console.log('sales pipeline cached, ret')
 						pipeline.applyDB(async, value, function() {
 							res.json(pipeline.returnData)
+							delete pipeline
 						})
 					}
 				} else {
 					res.json({message: err})
+					delete pipeline
 				}
 			})
 		})
-		delete pipeline
 	})
 
 //Create sales_pipeline DB routes
