@@ -16,6 +16,7 @@ function Allocation(instance, accessToken, callback) {
 						"Start Date",
 						"Estimated Hours"
 						]]
+	console.log('accessToken: '+this.accessToken+'\npath: '+this.path+'\nreturnData'+this.returnData)
 	callback()
 } 
 
