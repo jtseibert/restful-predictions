@@ -32,6 +32,7 @@ Capacity.prototype.get = function(oauth2, async, cache, callback) {
 	    	if(err) {
 				console.log(err)
 			} else {
+				console.log('headers: '+headers)
 				objInstance.returnData.push(headers)
 				async.each(rows, function(row){
 					var tempRow = []
@@ -39,6 +40,7 @@ Capacity.prototype.get = function(oauth2, async, cache, callback) {
 						tempRow.push(dataCell.label)
 						process.nextTick(callback)
 					}, function(){
+						console.log('tempRow: '+tempRow)
 						objInstance.returnData.push(tempRow)
 					})
 				})
