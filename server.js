@@ -244,7 +244,7 @@ router.route('/getRoles')
 app.use(function(req, res, next){
     res.setTimeout(5000, function(){
         console.log('Request has timed out, caught by our timeout.');
-            res.send(408);
+            res.sendStatus(408);
         });
 
     next();
