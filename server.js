@@ -50,7 +50,7 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 				if(!err) {
 					if(value == undefined) {
 			    		console.log('allocation cache undefined')
-						allocation.get(oauth2, async, cache, function(result) {
+						allocation.get(oauth2, async, cache, function() {
 							res.json(allocation.returnData)
 						})
 					} else { 
