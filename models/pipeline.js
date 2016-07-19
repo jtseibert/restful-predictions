@@ -4,7 +4,7 @@
 
 module.exports = Pipeline
 
-function Pipeline(async, instance, accessToken, client, callback) {
+function Pipeline(async, instance, accessToken, pg, callback) {
 	var objInstance = this
 	this.accessToken 		= accessToken
 	this.path 				= 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093sCD'
@@ -27,67 +27,80 @@ function Pipeline(async, instance, accessToken, client, callback) {
 	this.projectSizes
 	this.addedOpportunities
 
-
-	async.parallel({
-		one: function(client, callback){
+	var getProjectSize = function(callback){
 			console.log('function one')
-			var projectSizes,
-				projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
-			projectSizesQuery.on("row", function (row, result) {
-				result.addRow(row)
-			})
-			projectSizesQuery.on("end", function (result) {
-				projectSizes = {}
-				for (var entry in result.rows){
-					projectSizes[result.rows[entry].sizeid] = {
-						"priceHigh": result.rows[entry].pricehigh,
-						"roles_allocations": result.rows[entry].roles_allocations
+			pg.connect(conString, function(err, client, done) {
+      			if (err) return callback(err)
+				var projectSizes,
+					projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
+				projectSizesQuery.on("row", function (row, result) {
+					result.addRow(row)
+				})
+				projectSizesQuery.on("end", function (result) {
+					projectSizes = {}
+					for (var entry in result.rows){
+						projectSizes[result.rows[entry].sizeid] = {
+							"priceHigh": result.rows[entry].pricehigh,
+							"roles_allocations": result.rows[entry].roles_allocations
+						}
 					}
-				}
-				callback(projectSizes)
+					callback(projectSizes)
+				})
 			})
 		},
-		two: function(client, callback){
+		getOmitData = function(client, callback){
 			console.log('function two')
-			var omitData,
-				omitQuery = client.query("SELECT * from omit")
-			omitQuery.on("row", function (row, result) {
-				result.addRow(row)
-			})
-			omitQuery.on("end", function (result) {
-				omitData = {}
-				for (var entry in result.rows){
-					omitData[result.rows[entry].opportunity] = {}
-				}
-				callback(omitData)
+			pg.connect(conString, function(err, client, done) {
+				if (err) return callback(err)
+				var omitData,
+					omitQuery = client.query("SELECT * from omit")
+				omitQuery.on("row", function (row, result) {
+					result.addRow(row)
+				})
+				omitQuery.on("end", function (result) {
+					omitData = {}
+					for (var entry in result.rows){
+						omitData[result.rows[entry].opportunity] = {}
+					}
+					callback(omitData)
+				})
 			})
 		},
-		three: function(client, callback){
+		getAddedOpportunities = function(client, callback){
 			console.log('function three')
-			var addedOpportunities,
-				opportunitiesQuery = client.query("SELECT * from sales_pipeline")
-			opportunitiesQuery.on("row", function (row, result) {
-				result.addRow(row)
-			})
-			opportunitiesQuery.on("end", function (result) {
-				addedOpportunities = {}
-				for (var entry in result.rows){
-					addedOpportunities[result.rows[entry].opportunity] = {
-						"STAGE": result.rows[entry].stage,
-						"AMOUNT": result.rows[entry].amount,
-						"EXPECTED_AMOUNT": result.rows[entry].expected_amount,
-						"CLOSE_DATE": result.rows[entry].close_date,
-						"START_DATE": result.rows[entry].start_date,
-						"PROBABILITY": result.rows[entry].probability,
-						"AGE": result.rows[entry].age,
-						"CREATED_DATE": result.rows[entry].create_date,
-						"ACCOUNT_NAME": result.rows[entry].account_name,
-						"PROJECT_SIZE": result.rows[entry].project_size
+			pg.connect(conString, function(err, client, done) {
+				if (err) return callback(err)
+				var addedOpportunities,
+					opportunitiesQuery = client.query("SELECT * from sales_pipeline")
+				opportunitiesQuery.on("row", function (row, result) {
+					result.addRow(row)
+				})
+				opportunitiesQuery.on("end", function (result) {
+					addedOpportunities = {}
+					for (var entry in result.rows){
+						addedOpportunities[result.rows[entry].opportunity] = {
+							"STAGE": result.rows[entry].stage,
+							"AMOUNT": result.rows[entry].amount,
+							"EXPECTED_AMOUNT": result.rows[entry].expected_amount,
+							"CLOSE_DATE": result.rows[entry].close_date,
+							"START_DATE": result.rows[entry].start_date,
+							"PROBABILITY": result.rows[entry].probability,
+							"AGE": result.rows[entry].age,
+							"CREATED_DATE": result.rows[entry].create_date,
+							"ACCOUNT_NAME": result.rows[entry].account_name,
+							"PROJECT_SIZE": result.rows[entry].project_size
+						}
 					}
-				}
-				callback(addedOpportunities)
+					callback(addedOpportunities)
+				})
 			})
 		}
+
+
+	async.parallel({
+		'one': getProjectSize,
+		'two': getOmitData,
+		'three': getAddedOpportunities
 	}, function(err, results){
 		console.log('in callback')
 		if (err) 
