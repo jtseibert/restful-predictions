@@ -7,15 +7,44 @@
 	
 module.exports = Allocation
 
-function Allocation(instance, accessToken, callback) {
-	this.accessToken = accessToken
-	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093smp'
-	this.returnData = [["Project",
+function Allocation(async, instance, accessToken, callback) {
+	objInstance = this
+	this.accessToken
+	this.path
+	this.returnData
+
+	var setAccessToken = function(callback) {
+		var accessToken = accessToken
+		callback(null,accessToken)
+	}
+	var setPath = function(callback) {
+		var path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093smp'
+		callback(null,path)
+	}
+	var setReturnData = function(callback) {
+		var returnData = [["Project",
 						"Resource: Resource Role",
 						"Start Date",
 						"Estimated Hours"
 						]]
-	callback()
+		callback(null,returnData)
+	}
+
+	async.parallel({
+		'one': setAccessToken,
+		'two': setPath,
+		'three': setReturnData
+	}, function(err, result){
+		console.log('in callback')
+		if (err) 
+			console.log('error: ' + JSON.stringify(err))
+		console.log('results: ' + JSON.stringify(results))
+		objInstance.accessToken 		= results.one
+		objInstance.path 				= results.two
+		objInstance.returnData 			= results.three
+		callback()
+	})
+
 } 
 
 Allocation.prototype.get = function(oauth2, async, cache, callback) {

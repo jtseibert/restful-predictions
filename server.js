@@ -45,7 +45,7 @@ pg.defaults.ssl = true
 router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req, res) {
 		var allocation
-		allocation = new Allocation(req.params.instance, req.params.accessToken, function() {
+		allocation = new Allocation(async, req.params.instance, req.params.accessToken, function() {
 			cache.get("allocation", function(err, value) {
 				if(!err) {
 					if(value == undefined) {
