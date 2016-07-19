@@ -44,8 +44,7 @@ pg.defaults.ssl = true
 //Create SF routes
 router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req, res) {
-		var allocation
-		allocation = new Allocation(async, req.params.instance, req.params.accessToken, function() {
+		var allocation = new Allocation(req.params.instance, req.params.accessToken, function() {
 			cache.get("allocation", function(err, value) {
 				if(!err) {
 					if(value == undefined) {
@@ -69,8 +68,7 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 	   
 router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
-		var pipeline
-		pipeline = new Pipeline(async, req.params.instance, req.params.accessToken, pg, function() {
+		var pipeline = new Pipeline(async, req.params.instance, req.params.accessToken, pg, function() {
 			cache.get("sales_pipeline", function(err, value) {
 				if(!err) {
 					if(value == undefined) {

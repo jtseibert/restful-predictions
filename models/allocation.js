@@ -7,7 +7,7 @@
 	
 module.exports = Allocation
 
-function Allocation(async, instance, accessToken, callback) {
+function Allocation(instance, accessToken, callback) {
 	//objInstance = this
 	this.accessToken = accessToken
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093smp'
