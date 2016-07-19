@@ -10,9 +10,9 @@ function Opportunity(data) {
 
 Opportunity.prototype.add = function(async, pg, callback) {
 	var data = this.data
-	async.each(data, function(opportunity, callback){
+	async.each(opportunity, function(opportunity, callback){
 		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-			console.log(data)
+			console.log(opportunity)
 			client.query('INSERT INTO sales_pipeline(opportunity, stage, amount, expected_amount, close_date, start_date, probability, age, created_date, account_name, project_size) '
 							+ 'values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, '
 							+ '(SELECT CASE WHEN EXISTS (SELECT sizeid FROM project_size WHERE sizeid=$11) '
@@ -59,10 +59,10 @@ Opportunity.prototype.add = function(async, pg, callback) {
 
 Opportunity.prototype.remove = function(async, pg, callback) {
 	var data = this.data
-	async.each(data, function(opportunity, callback){
+	async.eachOf(opportunity, opportunityKey  function(opportunity, callback){
 		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-			console.log(this.data)
-			client.query('DELETE FROM sales_pipeline WHERE opportunity = $1',[entry])
+			console.log(opportunityKey)
+			client.query('DELETE FROM sales_pipeline WHERE opportunity = $1',opportunityKey)
 			process.nextTick(callback)
 		})
 	}, function(){
