@@ -104,7 +104,7 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 	}, function(err, results){
 		console.log('in callback')
 		if (err) 
-			console.log('error: 'err)
+			console.log('error: ' + err)
 		console.log('results: ' + results)
 		objInstance.projectSizes 		= results.one
 		objInstance.omitData 			= results.two
