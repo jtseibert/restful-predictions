@@ -7,7 +7,7 @@ module.exports = Capacity
 function Capacity(instance, accessToken) {
 	this.accessToken = accessToken
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093ued'
-	this.returnData = [[]]
+	this.returnData = []
 } 
 
 Capacity.prototype.get = function(oauth2, async, cache, callback) {
