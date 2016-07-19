@@ -37,7 +37,7 @@ Allocation.prototype.getstuff = function(oauth2, async, cache, callback) {
 	        weekKey,
 	        valueKey
 
-	    async.forEachOf(factMap, function(field, key, callback) {
+	    async.eachOf(factMap, ensureAsync(function(field, key, callback) {
 		    valueKey = key
 			splitKey = key.split('!')
 			weekKey = splitKey[1]
@@ -56,7 +56,7 @@ Allocation.prototype.getstuff = function(oauth2, async, cache, callback) {
 									field.aggregates[0].value])
 			}
 			callback()
-		}, function(err) {
+		}), function(err) {
 			if(err) {
 				console.log(err)
 			} else {
