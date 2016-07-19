@@ -55,7 +55,7 @@ Allocation.prototype.getstuff = function(oauth2, async, cache, callback) {
 									groupingsAcross[weekKey].label, 
 									field.aggregates[0].value])
 			}
-			process.nextTick(callback)
+			process.nextTick(callback())
 		}, function(err) {
 			if(err) {
 				console.log(err)
@@ -67,7 +67,7 @@ Allocation.prototype.getstuff = function(oauth2, async, cache, callback) {
 				}) 
 			}
 		})
-		process.nextTick(callback)
+		process.nextTick(callback())
 	})  
 }
 
