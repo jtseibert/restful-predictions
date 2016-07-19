@@ -13,7 +13,8 @@ var newRelic		= require('newrelic'),
 	pg 				= require('pg'),
 	ProjectSize 	= require('./models/projectSize'),
 	Roles 			= require('./models/roles'),
-	Cache           = require('node-cache')
+	Cache           = require('node-cache'),
+	Capacity        = require('./models/capacity')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
@@ -88,6 +89,30 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 				} else {
 					res.json({message: err})
 					delete pipeline
+				}
+			})
+		})
+	})
+
+	router.route('/:instance/DATA_Capacity/:accessToken')
+	.get(function(req, res) {
+		var capacity = new Capacity(async, req.params.instance, req.params.accessToken, pg, function() {
+			cache.get("capacity", function(err, value) {
+				if(!err) {
+					if(value == undefined) {
+			    		console.log('capacity data not cached')
+						capacity.get(oauth2, async, cache, function(result) {
+							res.json(capacity.returnData)
+							delete capacity
+						})
+					} else { 
+						console.log('capacity cached, returning')
+						res.json(capacity.returnData)
+						delete capacity
+					}
+				} else {
+					res.json({message: err})
+					delete capacity
 				}
 			})
 		})
