@@ -108,7 +108,7 @@ router.route('/addOpportunity')
 router.route('/removeOpportunity')
 	.post(function(req,res){
 		opportunity = new Opportunity(req.body)
-		opportunity.remove(pg,function(err){
+		opportunity.remove(async, pg,function(err){
 			if (err)
 				res.send(err)
 			res.json({message: 'Success!'})

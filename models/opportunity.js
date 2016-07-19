@@ -66,7 +66,6 @@ Opportunity.prototype.remove = function(async, pg, callback) {
 			process.nextTick(callback)
 		})
 	}, function(){
-		//testing
 		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 			var query = client.query("SELECT * from sales_pipeline")
 			query.on("row", function (row, result) {
