@@ -14,7 +14,6 @@ ProjectSize.prototype.add = function(pg, callback) {
 			client.query('INSERT INTO project_size(sizeId,pricehigh,roles_allocations,numweeks) values($1,$2,$3,$4)',
 				[this.data[entry].sizeid,this.data[entry].pricehigh,this.data[entry].roles_allocations,this.data[entry].numweeks])
 		}
-
 		//testing
 		var query = client.query("SELECT * from project_size")
 		query.on("row", function (row, result) {
@@ -37,7 +36,6 @@ ProjectSize.prototype.update = function(pg, callback) {
 							'WHERE sizeId = $1',
 				[this.data[entry].sizeid,this.data[entry].pricehigh,this.data[entry].roles_allocations,this.data[entry].numweeks])
 		}
-
 		//testing
 		var query = client.query("SELECT * from project_size")
 		query.on("row", function (row, result) {
@@ -81,7 +79,6 @@ ProjectSize.prototype.remove = function(pg, callback) {
 			console.log('should be deleting: ' + entry)
 			client.query('DELETE FROM project_size WHERE sizeId = $1', [entry])
 		}
-
 		//testing
 		var query = client.query("SELECT * from project_size")
 		query.on("row", function (row, result) {

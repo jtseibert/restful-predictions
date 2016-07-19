@@ -13,7 +13,6 @@ Omit.prototype.add = function(pg, callback) {
 		for (var entry in this.data){
 			client.query('INSERT INTO omit(opportunity) values($1)', [entry])
 		}
-
 		//testing
 		var query = client.query("SELECT * from omit")
 		query.on("row", function (row, result) {
@@ -32,7 +31,6 @@ Omit.prototype.remove = function(pg, callback) {
 			console.log('should be deleting: ' + entry)
 			client.query('DELETE FROM omit WHERE opportunity = $1', [entry])
 		}
-
 		//testing
 		var query = client.query("SELECT * from omit")
 		query.on("row", function (row, result) {

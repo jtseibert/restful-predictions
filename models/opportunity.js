@@ -9,10 +9,10 @@ function Opportunity(data) {
 } 
 
 Opportunity.prototype.add = function(pg, callback) {
-	
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		console.log(this.data)
-		for (var entry in this.data){	
+	var data = this.data
+	async.each(data, function(opportunity, callback){
+		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+			console.log(data)
 			client.query('INSERT INTO sales_pipeline(opportunity, stage, amount, expected_amount, close_date, start_date, probability, age, created_date, account_name, project_size) '
 							+ 'values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, '
 							+ '(SELECT CASE WHEN EXISTS (SELECT sizeid FROM project_size WHERE sizeid=$11) '
@@ -27,52 +27,57 @@ Opportunity.prototype.add = function(pg, callback) {
 							+ 'THEN (SELECT sizeid FROM project_size WHERE sizeid=$11) '
 							+ 'ELSE (SELECT sizeid FROM (SELECT * FROM project_size ORDER BY pricehigh ASC) AS foo WHERE pricehigh>$4 limit 1) '
 							+ 'END),sales_pipeline.project_size)',
-							[this.data[entry].opportunity,
-								this.data[entry].stage,
-								this.data[entry].amount,
-								this.data[entry].expected_amount,
-								this.data[entry].close_date,
-								this.data[entry].start_date,
-								this.data[entry].probability,
-								this.data[entry].age,
-								this.data[entry].created_date,
-								this.data[entry].account_name,
-								this.data[entry].project_size
+							[opportunity.opportunity,
+								opportunity.stage,
+								opportunity.amount,
+								opportunity.expected_amount,
+								opportunity.close_date,
+								opportunity.start_date,
+								opportunity.probability,
+								opportunity.age,
+								opportunity.created_date,
+								opportunity.account_name,
+								opportunity.project_size
 							]
 						)
-		}
-
+			callback()
+		})
+	}, function(){
 		//testing
-		var query = client.query("SELECT * from sales_pipeline")
-		query.on("row", function (row, result) {
-			result.addRow(row)
+		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+			var query = client.query("SELECT * from sales_pipeline")
+			query.on("row", function (row, result) {
+				result.addRow(row)
+			})
+			query.on("end", function (result) {
+				console.log(JSON.stringify(result.rows, null, "    "))
+			})
 		})
-		query.on("end", function (result) {
-			console.log(JSON.stringify(result.rows, null, "    "))
-		})
-		callback()
 	})
+	callback()
 }
 
 Opportunity.prototype.remove = function(pg, callback) {
-
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		console.log(this.data)
-
-		for (var entry in this.data){
+	var data = this.data
+	async.each(data, function(opportunity, callback){
+		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+			console.log(this.data)
 			client.query('DELETE FROM sales_pipeline WHERE opportunity = $1',[entry])
-		}
-
+			callback()
+		})
+	}, function(){
 		//testing
-		var query = client.query("SELECT * from sales_pipeline")
-		query.on("row", function (row, result) {
-			result.addRow(row)
+		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+			var query = client.query("SELECT * from sales_pipeline")
+			query.on("row", function (row, result) {
+				result.addRow(row)
+			})
+			query.on("end", function (result) {
+				console.log(JSON.stringify(result.rows, null, "    "))
+			})
 		})
-		query.on("end", function (result) {
-			console.log(JSON.stringify(result.rows, null, "    "))
-		})
-		callback()
 	})
+	callback()
 }
 
 Opportunity.prototype.get = function(pg, callback) {
