@@ -25,7 +25,7 @@ Capacity.prototype.get = function(oauth2, async, cache, callback) {
 	    	columnInfo	= data.reportExtendedMetadata.detailColumnInfo,
 	    	headers 	= []
 
-	    aysnc.eachSeries(columnInfo, function(header, callback){
+	    async.eachSeries(columnInfo, function(header, callback){
 	    	headers.push(header.label)
 	    	process.nextTick(callback)
 	    }, function(err){
