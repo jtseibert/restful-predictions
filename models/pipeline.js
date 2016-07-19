@@ -4,7 +4,7 @@
 
 module.exports = Pipeline
 
-function Pipeline(instance, accessToken, client) {
+function Pipeline(instance, accessToken, client, callback) {
 	console.log('hello')
 	var objInstance = this
 	this.accessToken 		= accessToken
@@ -28,53 +28,72 @@ function Pipeline(instance, accessToken, client) {
 	this.projectSizes
 	this.addedOpportunities
 
-   	var projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
-	projectSizesQuery.on("row", function (row, result) {
-		result.addRow(row)
-	})
-	projectSizesQuery.on("end", function (result) {
-		objInstance.projectSizes = {}
-		for (var entry in result.rows){
-			objInstance.projectSizes[result.rows[entry].sizeid] = {
-				"priceHigh": result.rows[entry].pricehigh,
-				"roles_allocations": result.rows[entry].roles_allocations
-			}
-		}
-	})
 
-	var omitQuery = client.query("SELECT * from omit")
-	omitQuery.on("row", function (row, result) {
-		result.addRow(row)
-	})
-	omitQuery.on("end", function (result) {
-		objInstance.omitData = {}
-		for (var entry in result.rows){
-			objInstance.omitData[result.rows[entry].opportunity] = {}
+	async.parallel({
+		one: function(client, callback){
+			var projectSizes,
+				projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
+			projectSizesQuery.on("row", function (row, result) {
+				result.addRow(row)
+			})
+			projectSizesQuery.on("end", function (result) {
+				projectSizes = {}
+				for (var entry in result.rows){
+					projectSizes[result.rows[entry].sizeid] = {
+						"priceHigh": result.rows[entry].pricehigh,
+						"roles_allocations": result.rows[entry].roles_allocations
+					}
+				}
+				callback(projectSizes)
+			})
+		},
+		two: function(client, callback){
+			var omitData,
+				omitQuery = client.query("SELECT * from omit")
+			omitQuery.on("row", function (row, result) {
+				result.addRow(row)
+			})
+			omitQuery.on("end", function (result) {
+				omitData = {}
+				for (var entry in result.rows){
+					omitData[result.rows[entry].opportunity] = {}
+				}
+				callback(omitData)
+			})
+		},
+		three: function(client, callback){
+			var addedOpportunities,
+				opportunitiesQuery = client.query("SELECT * from sales_pipeline")
+			opportunitiesQuery.on("row", function (row, result) {
+				result.addRow(row)
+			})
+			opportunitiesQuery.on("end", function (result) {
+				addedOpportunities = {}
+				for (var entry in result.rows){
+					addedOpportunities[result.rows[entry].opportunity] = {
+						"STAGE": result.rows[entry].stage,
+						"AMOUNT": result.rows[entry].amount,
+						"EXPECTED_AMOUNT": result.rows[entry].expected_amount,
+						"CLOSE_DATE": result.rows[entry].close_date,
+						"START_DATE": result.rows[entry].start_date,
+						"PROBABILITY": result.rows[entry].probability,
+						"AGE": result.rows[entry].age,
+						"CREATED_DATE": result.rows[entry].create_date,
+						"ACCOUNT_NAME": result.rows[entry].account_name,
+						"PROJECT_SIZE": result.rows[entry].project_size
+					}
+				}
+				callback(addedOpportunities)
+			})
 		}
+	}, function(err, results){
+		if (err) 
+			console.log(err)
+		objInstance.projectSizes 		= results.one
+		objInstance.omitData 			= results.two
+		objInstance.addedOpportunities 	= results.three
+		callback()
 	})
-
-		var opportunitiesQuery = client.query("SELECT * from sales_pipeline")
-	opportunitiesQuery.on("row", function (row, result) {
-		result.addRow(row)
-	})
-	opportunitiesQuery.on("end", function (result) {
-		objInstance.addedOpportunities = {}
-		for (var entry in result.rows){
-			objInstance.addedOpportunities[result.rows[entry].opportunity] = {
-				"STAGE": result.rows[entry].stage,
-				"AMOUNT": result.rows[entry].amount,
-				"EXPECTED_AMOUNT": result.rows[entry].expected_amount,
-				"CLOSE_DATE": result.rows[entry].close_date,
-				"START_DATE": result.rows[entry].start_date,
-				"PROBABILITY": result.rows[entry].probability,
-				"AGE": result.rows[entry].age,
-				"CREATED_DATE": result.rows[entry].create_date,
-				"ACCOUNT_NAME": result.rows[entry].account_name,
-				"PROJECT_SIZE": result.rows[entry].project_size
-			}
-		}
-	})
-
 } 
 
 Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
@@ -198,7 +217,6 @@ Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
 		- call assignRoles
 	*/
 	async.each(cacheData, function(row, callback){
-		console.log(omitData)
 		currentOpportunity = row[opportunityIndex]
 		if (!(omitData[currentOpportunity])){
 			if(addedOpportunities[currentOpportunity]){
