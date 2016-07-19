@@ -59,7 +59,7 @@ Opportunity.prototype.add = function(async, pg, callback) {
 
 Opportunity.prototype.remove = function(async, pg, callback) {
 	var data = this.data
-	async.eachOf(opportunity, opportunityKey  function(opportunity, callback){
+	async.eachOf(opportunity, opportunityKey,  function(opportunity, callback){
 		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 			console.log(opportunityKey)
 			client.query('DELETE FROM sales_pipeline WHERE opportunity = $1',opportunityKey)
