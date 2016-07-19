@@ -78,8 +78,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 									delete pipeline
 								})
 							})
-					 	}
-					}	else { 
+						} else { 
 							pipeline = new Pipeline(instance, accessToken, client)
 							console.log('sales pipeline cached, ret')
 							pipeline.applyDB(client, async, value, function(){
@@ -87,6 +86,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 								client.end()
 								delete pipeline
 							})
+						}
 					}
 				})// End cache.get
 			}
