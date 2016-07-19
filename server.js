@@ -62,7 +62,7 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 				}
 			})
 		})
-		delete allocation
+		//delete allocation
 	})
 	   
 router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
