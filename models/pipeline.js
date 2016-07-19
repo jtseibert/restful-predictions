@@ -1,8 +1,19 @@
+/**
+* Pipeline
+* @module Pipeline
+* @desc The pipeline module is responsible for querying SalesForce for a Sales Pipeline report.
+The report is converted into a 2D array, synced with the database, and then passed down to Google Sheets to
+be displayed.
+*/
 module.exports = Pipeline
 
 /**
-* Pipeline object is a container for salesforce auth info and database data for syncing with Google Sheets
-* @constructor
+* Creates a Pipeline object for OAuth2 credentials and postgres DB data for importing to Google Sheets
+* @param async - async module object
+* @param {string} instance - OAuth2 instance
+* @param {string} accessToken - OAuth2 access token
+* @param pg - pg module object
+* @param callback - callback function
 */
 function Pipeline(async, instance, accessToken, pg, callback) {
 	var objInstance = this
@@ -106,6 +117,14 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 	})
 } 
 
+/**
+* Gets Sales Pipeline report information from SalesForce and parses it into a 2D array
+* @function get
+* @param oauth2 - simple-oauth2 module object
+* @param async - async module object
+* @param cache - node-cache module object
+* @param callback - callback function that handles Sales Pipeline data
+*/
 Pipeline.prototype.get = function(oauth2, async, cache, callback) {
 	
 	parameters = {
@@ -202,6 +221,14 @@ Pipeline.prototype.get = function(oauth2, async, cache, callback) {
 	})	// End of api.GET
 } // End prototype.get
 
+/**
+* Filters 2D array of Sales Pipeline data with database
+* (Is a callback for get method)
+* @function applyDB
+* @param async - async module object
+* @param {Array} cacheData - Sales Pipeline data
+* @param callback - callback function to handle filtered Sales Pipeline data
+*/
 Pipeline.prototype.applyDB = function(async, cacheData, callback) {
 
 	var currentOpportunity,
@@ -260,12 +287,20 @@ Pipeline.prototype.applyDB = function(async, cacheData, callback) {
 	process.nextTick(callback)
 }
 
+/**
+* Determines a project's start date
+* @function calculateStartDate
+* @param {Date} closeDate - project close date
+* @param {Integer} dateIncrement - number of days to add onto close date
+* @returns {Date} returnDate - a project's start date
+*/
 function calculateStartDate(closeDate, dateIncrement){
 	var date = new Date(closeDate)
 	var returnDate = getMonday(new Date(date.setDate(date.getDate() + dateIncrement)))
 	returnDate = JSON.stringify(returnDate).split('T')[0].split('-')
 	return returnDate[1]+'/'+returnDate[2]+'/'+returnDate[0].replace('"','')
 }
+
 
 function cleanUpDate(date){
 	if (date != null) {
@@ -275,6 +310,13 @@ function cleanUpDate(date){
 	} else { return null }
 }
 
+/**
+* Duplicates an opportunity row for every role in an opportunities list of roles
+* @function assignRoles
+* @param {Array} row - row in the sales pipeline data
+* @param {Object} - list of current project sizes
+* @returns {Array} returnArray - duplicated rows of an opportunity
+*/
 function assignRoles(row, projectSizes){
 
 	var projectSizeIndex 		= 10,
@@ -300,6 +342,13 @@ function assignRoles(row, projectSizes){
 	return returnArray
 }
 
+/**
+* Determines an opportunities project sized
+* @function getProjectSize
+* @param {Integer} expectedAmount - expected revenue from opportunity
+* @param {Object} projectSizes - list of current project sizes
+* @returns {string} each - an opportunities project size
+*/
 function getProjectSize(expectedAmount, projectSizes){
 	expectedAmount = expectedAmount.replace('USD ', '').replace(/,/g,'')
 	for (var each in projectSizes){
