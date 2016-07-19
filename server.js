@@ -46,6 +46,7 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req, res) {
 		var allocation
 		allocation = new Allocation(req.params.instance, req.params.accessToken, function() {
+			console.log(allocation.returnData)
 			cache.get("allocation", function(err, value) {
 				if(!err) {
 					if(value == undefined) {
