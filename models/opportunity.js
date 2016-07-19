@@ -57,7 +57,7 @@ Opportunity.prototype.add = function(async, pg, callback) {
 	process.nextTick(callback)
 }
 
-Opportunity.prototype.remove = function(pg, callback) {
+Opportunity.prototype.remove = function(async, pg, callback) {
 	var data = this.data
 	async.each(data, function(opportunity, callback){
 		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
