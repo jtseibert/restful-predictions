@@ -28,21 +28,17 @@ Capacity.prototype.get = function(oauth2, async, cache, callback) {
 	    async.eachSeries(columnInfo, function(header, callback){
 	    	headers.push(header.label)
 	    	process.nextTick(callback)
-	    }, function(err){
-	    	if(err) {
-				console.log(err)
-			} else {
-				objInstance.returnData.push(headers)
-				async.each(rows, function(row){
-					var tempRow = []
-					async.eachSeries(row.dataCells, function(dataCell, callback){
-						tempRow.push(dataCell.label)
-						process.nextTick(callback)
-					}, function(){
-						objInstance.returnData.push(tempRow)
-					})
+	    }, function(){
+			objInstance.returnData.push(headers)
+			async.each(rows, function(row){
+				var tempRow = []
+				async.eachSeries(row.dataCells, function(dataCell, callback){
+					tempRow.push(dataCell.label)
+					process.nextTick(callback)
+				}, function(){
+					objInstance.returnData.push(tempRow)
 				})
-			}
+			})
 	    })
 	    process.nextTick(callback)
 	})
