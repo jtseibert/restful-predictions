@@ -15,7 +15,7 @@ function Allocation(instance, accessToken, callback) {
 						"Start Date",
 						"Estimated Hours"
 						]]
-	//callback()
+	callback()
 } 
 
 Allocation.prototype.get = function(oauth2, async, cache, callback) {
