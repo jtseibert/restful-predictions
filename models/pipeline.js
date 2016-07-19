@@ -112,7 +112,7 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 	})
 } 
 
-Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
+Pipeline.prototype.get = function(oauth2, async, cache, callback) {
 	
 	parameters = {
 		access_token: this.accessToken
@@ -212,7 +212,7 @@ Pipeline.prototype.get = function(client, oauth2, async, cache, callback) {
 	})	// End of api.GET
 } // End prototype.get
 
-Pipeline.prototype.applyDB = function(client, async, cacheData, callback) {
+Pipeline.prototype.applyDB = function(async, cacheData, callback) {
 
 	var currentOpportunity,
 		tempRow,
