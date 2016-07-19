@@ -30,7 +30,7 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 	var getProjectSize = function(callback){
 			console.log('function one')
 			pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-      			if (err) return process.nextTick(callback(err))
+      			if (err) return process.nextTick(function(){callback(err)})
 				var projectSizes,
 					projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
 				projectSizesQuery.on("row", function (row, result) {
@@ -44,14 +44,14 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 							"roles_allocations": result.rows[entry].roles_allocations
 						}
 					}
-					process.nextTick(callback(null, projectSizes))
+					process.nextTick(function(){callback(null, projectSizes)})
 				})
 			})
 		},
 		getOmitData = function(callback){
 			console.log('function two')
 			pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-				if (err) return process.nextTick(callback(err))
+				if (err) return process.nextTick(function(){callback(err)})
 				var omitData,
 					omitQuery = client.query("SELECT * from omit")
 				omitQuery.on("row", function (row, result) {
@@ -62,14 +62,14 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 					for (var entry in result.rows){
 						omitData[result.rows[entry].opportunity] = {}
 					}
-					process.nextTick(callback(null, omitData))
+					process.nextTick(function(){callback(null, omitData)})
 				})
 			})
 		},
 		getAddedOpportunities = function(callback){
 			console.log('function three')
 			pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-				if (err) return process.nextTick(callback(err))
+				if (err) return process.nextTick(function(){callback(err)})
 				var addedOpportunities,
 					opportunitiesQuery = client.query("SELECT * from sales_pipeline")
 				opportunitiesQuery.on("row", function (row, result) {
@@ -91,7 +91,7 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 							"PROJECT_SIZE": result.rows[entry].project_size
 						}
 					}
-					process.nextTick(callback(null, addedOpportunities))
+					process.nextTick(function(){callback(null, addedOpportunities)})
 				})
 			})
 		}
@@ -192,7 +192,7 @@ Pipeline.prototype.get = function(oauth2, async, cache, callback) {
 					rowData.push(currentProjectSize)
 					cacheData.push(rowData)
 				}) // End async.each
-			process.nextTick(callback())
+			process.nextTick(callback)
 		}, function(err) {
 			console.log('second callback')
 			if (err)
@@ -206,7 +206,7 @@ Pipeline.prototype.get = function(oauth2, async, cache, callback) {
 				})
 			}
 		}) //End of eachOf
-		process.nextTick(callback(cacheData))
+		process.nextTick(function(){callback(cacheData)})
 	})	// End of api.GET
 } // End prototype.get
 
@@ -274,7 +274,7 @@ Pipeline.prototype.applyDB = function(async, cacheData, callback) {
 			}
 		})
 	})
-	process.nextTick(callback())
+	process.nextTick(callback)
 }
 
 function calculateStartDate(closeDate, dateIncrement){

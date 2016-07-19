@@ -14,7 +14,7 @@ Roles.prototype.get = function(pg, callback) {
 		})
 		query.on("end", function (result) {
 			console.log(JSON.stringify(result.rows, null, "    "))
-			process.nextTick(callback(result.rows))
+			process.nextTick(function(){callback(result.rows)})
 		})
 	})
 }

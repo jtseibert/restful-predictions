@@ -40,7 +40,7 @@ Opportunity.prototype.add = function(pg, callback) {
 								opportunity.project_size
 							]
 						)
-			process.nextTick(callback())
+			process.nextTick(callback)
 		})
 	}, function(){
 		//testing
@@ -54,7 +54,7 @@ Opportunity.prototype.add = function(pg, callback) {
 			})
 		})
 	})
-	process.nextTick(callback())
+	process.nextTick(callback)
 }
 
 Opportunity.prototype.remove = function(pg, callback) {
@@ -63,7 +63,7 @@ Opportunity.prototype.remove = function(pg, callback) {
 		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 			console.log(this.data)
 			client.query('DELETE FROM sales_pipeline WHERE opportunity = $1',[entry])
-			process.nextTick(callback())
+			process.nextTick(callback)
 		})
 	}, function(){
 		//testing
@@ -77,7 +77,7 @@ Opportunity.prototype.remove = function(pg, callback) {
 			})
 		})
 	})
-	process.nextTick(callback())
+	process.nextTick(callback)
 }
 
 Opportunity.prototype.get = function(pg, callback) {
@@ -88,7 +88,7 @@ Opportunity.prototype.get = function(pg, callback) {
 		})
 		query.on("end", function (result) {
 			console.log(JSON.stringify(result.rows, null, "    "))
-			process.nextTick(callback(result.rows))
+			process.nextTick(function(){callback(result.rows)})
 		})
 	})
 }

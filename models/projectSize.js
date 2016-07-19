@@ -22,7 +22,7 @@ ProjectSize.prototype.add = function(pg, callback) {
 		query.on("end", function (result) {
 			console.log(JSON.stringify(result.rows, null, "    "))
 		})
-		process.nextTick(callback())
+		process.nextTick(callback)
 	})
 }
 
@@ -44,7 +44,7 @@ ProjectSize.prototype.update = function(pg, callback) {
 		query.on("end", function (result) {
 			console.log(JSON.stringify(result.rows, null, "    "))
 		})
-		process.nextTick(callback())
+		process.nextTick(callback)
 	})
 }
 
@@ -55,7 +55,7 @@ ProjectSize.prototype.get = function(pg, callback) {
 			result.addRow(row)
 		})
 		query.on("end", function (result) {
-			process.nextTick(callback(result.rows))
+			process.nextTick(function(){callback(result.rows)})
 		})
 	})
 }
@@ -68,7 +68,7 @@ ProjectSize.prototype.edit = function(pg, callback) {
 		})
 		query.on("end", function (result) {
 			console.log(JSON.stringify(result.rows, null, "    "))
-			process.nextTick(callback(result.rows))
+			process.nextTick(function(){callback(result.rows)})
 		})
 	})
 }
@@ -87,7 +87,7 @@ ProjectSize.prototype.remove = function(pg, callback) {
 		query.on("end", function (result) {
 			console.log(JSON.stringify(result.rows, null, "    "))
 		})
-		process.nextTick(callback())
+		process.nextTick(callback)
 	})
 }
 
