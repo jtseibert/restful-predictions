@@ -21,7 +21,6 @@ Omit.prototype.add = function(pg, callback) {
 		})
 		query.on("end", function (result) {
 			console.log(JSON.stringify(result.rows, null, "    "))
-			client.end()
 		})
 		callback()
 	})
@@ -41,7 +40,6 @@ Omit.prototype.remove = function(pg, callback) {
 		})
 		query.on("end", function (result) {
 			console.log(JSON.stringify(result.rows, null, "    "))
-			client.end()
 		})
 		callback()
 	})
@@ -55,7 +53,6 @@ Omit.prototype.get = function(pg, callback) {
 		})
 		query.on("end", function (result) {
 			console.log(JSON.stringify(result.rows, null, "    "))
-			client.end()
 			callback(result.rows)
 		})
 	})

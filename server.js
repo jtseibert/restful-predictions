@@ -44,6 +44,7 @@ pg.defaults.ssl = true
 //Create SF routes
 router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req,res){
+		var allocation
 		allocation = new Allocation(req.params.instance, req.params.accessToken, function() {
 			cache.get("allocation", function(err, value) {
 				if(!err) {
@@ -66,11 +67,8 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 	   
 router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
-		var pipeline,
-			instance = req.params.instance,
-			accessToken = req.params.accessToken
-
-		pipeline = new Pipeline(async, instance, accessToken, pg, function() {
+		var pipeline
+		pipeline = new Pipeline(async, req.params.instance, req.params.accessToken, pg, function() {
 			cache.get("sales_pipeline", function(err, value) {
 				if(!err) {
 					if(value == undefined) {
@@ -98,42 +96,33 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 router.route('/addOpportunity')
 	.post(function(req,res){
 		opportunity = new Opportunity(req.body)
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err
-			opportunity.add(client,function(err){
-				if (err)
-					res.send(err)
-				res.json({message: 'Success!'})
-				delete opportunity
-			})
+		opportunity.add(pg,function(err){
+			if (err)
+				res.send(err)
+			res.json({message: 'Success!'})
+			delete opportunity
 		})
 	})
 
 router.route('/removeOpportunity')
 	.post(function(req,res){
 		opportunity = new Opportunity(req.body)
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err
-			opportunity.remove(client,function(err){
-				if (err)
-					res.send(err)
-				res.json({message: 'Success!'})
-				delete opportunity
-			})
+		opportunity.remove(pg,function(err){
+			if (err)
+				res.send(err)
+			res.json({message: 'Success!'})
+			delete opportunity
 		})
 	})
 
 router.route('/getOpportunity')
 	.get(function(req, res) {
 		opportunities = new Opportunity("")
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err
-			opportunities.get(client, function(err, response){
-				if (err)
-					res.send(err)
-				res.json(response)
-				delete opportunities
-			})
+		opportunities.get(pg, function(err, response){
+			if (err)
+				res.send(err)
+			res.json(response)
+			delete opportunities
 		})
 	})
 
@@ -141,42 +130,33 @@ router.route('/getOpportunity')
 router.route('/addOmit')
 	.post(function(req,res){
 		omit = new Omit(req.body)
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err
-			omit.add(client,function(err){
-				if (err)
-					res.send(err)
-				res.json({message: 'Success!'})
-				delete omit
-			})
+		omit.add(pg,function(err){
+			if (err)
+				res.send(err)
+			res.json({message: 'Success!'})
+			delete omit
 		})
 	})
 
 router.route('/removeOmit')
 	.post(function(req,res){
 		omit = new Omit(req.body)
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err
-			omit.remove(client,function(err){
-				if (err)
-					res.send(err)
-				res.json({message: 'Success!'})
-				delete omit
-			})
+		omit.remove(pg,function(err){
+			if (err)
+				res.send(err)
+			res.json({message: 'Success!'})
+			delete omit
 		})
 	})
 
 router.route('/getOmit')
 	.get(function(req, res) {
 		omit = new Omit("")
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err
-			omit.get(client, function(err, response){
-				if (err)
-					res.send(err)
-				res.json(response)
-				delete omit
-			})
+		omit.get(pg, function(err, response){
+			if (err)
+				res.send(err)
+			res.json(response)
+			delete omit
 		})
 	})
 
@@ -184,70 +164,55 @@ router.route('/getOmit')
 router.route('/addProjectSize')
 	.post(function(req,res){
 		projectSize = new ProjectSize(req.body)
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err
-			projectSize.add(client,function(err){
-				if (err)
-					res.send(err)
-				res.json({message: 'Success!'})
-				delete projectSize
-			})
+		projectSize.add(pg,function(err){
+			if (err)
+				res.send(err)
+			res.json({message: 'Success!'})
+			delete projectSize
 		})
 	})
 
 router.route('/removeProjectSize')
 	.post(function(req,res){
 		projectSize = new ProjectSize(req.body)
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err
-			projectSize.remove(client,function(err){
-				if (err)
-					res.send(err)
-				res.json({message: 'Success!'})
-				delete projectSize
-			})
+		projectSize.remove(pg,function(err){
+			if (err)
+				res.send(err)
+			res.json({message: 'Success!'})
+			delete projectSize
 		})
 	})
 
 router.route('/updateProjectSize')
 	.post(function(req,res){
 		projectSize = new ProjectSize(req.body)
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err
-			projectSize.update(client,function(err){
-				if (err)
-					res.send(err)
-				res.json({message: 'Success!'})
-				delete projectSize
-			})
+		projectSize.update(pg,function(err){
+			if (err)
+				res.send(err)
+			res.json({message: 'Success!'})
+			delete projectSize
 		})
 	})
 
 router.route('/getProjectSize')
 	.get(function(req,res){
 		projectSize = new ProjectSize("")
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err
-			projectSize.get(client,function(err,response){
-				if (err)
-					res.send(err)
-				res.json(response)
-				delete projectSize
-			})
+		projectSize.get(pg,function(err,response){
+			if (err)
+				res.send(err)
+			res.json(response)
+			delete projectSize
 		})
 	})
 
 router.route('/editProjectSize')
 	.post(function(req,res){
 		projectSize = new ProjectSize(req.body)
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err
-			projectSize.edit(client,function(err,response){
-				if (err)
-					res.send(err)
-				res.json(response)
-				delete projectSize
-			})
+		projectSize.edit(pg,function(err,response){
+			if (err)
+				res.send(err)
+			res.json(response)
+			delete projectSize
 		})
 	})
 
@@ -265,14 +230,11 @@ router.route('/clearDB')
 router.route('/getRoles')
 	.get(function(req,res){
 		roles = new Roles("")
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err
-			roles.get(client,function(err,response){
-				if (err)
-					res.send(err)
-				res.json(response)
-				delete roles
-			})
+		roles.get(pg,function(err,response){
+			if (err)
+				res.send(err)
+			res.json(response)
+			delete roles
 		})
 	})
 
