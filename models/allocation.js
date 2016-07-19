@@ -58,12 +58,12 @@ Allocation.prototype.get = function(oauth2, async, cache, callback) {
 			}
 		}, function(err) {
 			if(err) {
-				callback(err)
+				console.log(err)
 			} else {
 				cache.set("allocation", objInstance.returnData, function(err, success) {
 					if(!err && success) {
 						console.log('caching allocation within allocation.js')
-						callback(objInstance.returnData)
+						callback()
 					}
 				}) 
 			}
