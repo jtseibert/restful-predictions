@@ -8,7 +8,6 @@
 module.exports = Allocation
 
 function Allocation(instance, accessToken) {
-	objInstance = this
 	this.accessToken = accessToken
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093smp'
 	this.returnData = [["Project",
@@ -16,39 +15,6 @@ function Allocation(instance, accessToken) {
 						"Start Date",
 						"Estimated Hours"
 						]]
-
-	// var setAccessToken = function(callback) {
-	// 	var accessToken = accessToken
-	// 	callback(null,accessToken)
-	// }
-	// var setPath = function(callback) {
-	// 	var path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093smp'
-	// 	callback(null,path)
-	// }
-	// var setReturnData = function(callback) {
-	// 	var returnData = [["Project",
-	// 					"Resource: Resource Role",
-	// 					"Start Date",
-	// 					"Estimated Hours"
-	// 					]]
-	// 	callback(null,returnData)
-	// }
-
-	// async.parallel({
-	// 	'one': setAccessToken,
-	// 	'two': setPath,
-	// 	'three': setReturnData
-	// }, function(err, results){
-	// 	console.log('in callback')
-	// 	if (err) 
-	// 		console.log('error: ' + JSON.stringify(err))
-	// 	console.log('results: ' + JSON.stringify(results))
-	// 	objInstance.accessToken 		= results.one
-	// 	objInstance.path 				= results.two
-	// 	objInstance.returnData 			= results.three
-	// 	callback()
-	// })
-
 } 
 
 Allocation.prototype.getstuff = function(oauth2, async, cache, callback) {
@@ -89,6 +55,7 @@ Allocation.prototype.getstuff = function(oauth2, async, cache, callback) {
 									groupingsAcross[weekKey].label, 
 									field.aggregates[0].value])
 			}
+			callback()
 		}, function(err) {
 			if(err) {
 				console.log(err)
