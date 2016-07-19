@@ -27,7 +27,6 @@ Allocation.prototype.getstuff = function(oauth2, async, cache, callback) {
 	    if (err)
 	        console.log('GET Error: ', JSON.stringify(err)) 
 	    
-	    console.log("REST call within allocation.js")
 	    var factMap 				= data.factMap,
 	    	groupingsDown 			= data.groupingsDown.groupings,
 	    	groupingsAcross 		= data.groupingsAcross.groupings,
@@ -62,7 +61,7 @@ Allocation.prototype.getstuff = function(oauth2, async, cache, callback) {
 			} else {
 				cache.set("allocation", objInstance.returnData, function(err, success) {
 					if(!err && success) {
-						console.log('caching allocation within allocation.js')
+						console.log('allocation data cached')
 					}
 				}) 
 			}

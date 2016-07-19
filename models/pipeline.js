@@ -28,7 +28,6 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 	this.addedOpportunities
 
 	var getProjectSize = function(callback){
-			console.log('function one')
 			pg.connect(process.env.DATABASE_URL, function(err, client, done) {
       			if (err) return process.nextTick(function(){callback(err)})
 				var projectSizes,
@@ -49,7 +48,6 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 			})
 		},
 		getOmitData = function(callback){
-			console.log('function two')
 			pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 				if (err) return process.nextTick(function(){callback(err)})
 				var omitData,
@@ -67,7 +65,6 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 			})
 		},
 		getAddedOpportunities = function(callback){
-			console.log('function three')
 			pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 				if (err) return process.nextTick(function(){callback(err)})
 				var addedOpportunities,
@@ -102,7 +99,6 @@ function Pipeline(async, instance, accessToken, pg, callback) {
 		'two': getOmitData,
 		'three': getAddedOpportunities
 	}, function(err, results){
-		console.log('in callback')
 		objInstance.projectSizes 		= results.one
 		objInstance.omitData 			= results.two
 		objInstance.addedOpportunities 	= results.three
@@ -126,8 +122,6 @@ Pipeline.prototype.get = function(oauth2, async, cache, callback) {
 	oauth2.api('GET', this.path, parameters, function (err, data) {
     	if (err)
         	console.log('GET Error: ', JSON.stringify(err)) 
-
-        console.log('Made REST call within pipline.js')
     
     	var factMap 				= data.factMap,
     		groupingsDown 			= data.groupingsDown.groupings,
@@ -194,14 +188,12 @@ Pipeline.prototype.get = function(oauth2, async, cache, callback) {
 				}) // End async.each
 			process.nextTick(callback)
 		}, function(err) {
-			console.log('second callback')
 			if (err)
 				console.log(err)
 			else {
-				console.log('going to cache cacheData')
 				cache.set("sales_pipeline", cacheData, function(err, success) {
 					if(!err && success) {
-						console.log('caching sales_pipeline within pipeline.js')
+						console.log('sales_pipeline data cached')
 					} 
 				})
 			}
@@ -221,15 +213,6 @@ Pipeline.prototype.applyDB = function(async, cacheData, callback) {
 		projectSizes = this.projectSizes,
 		objInstance = this
 
-		console.log(this.omitData)
-		console.log(this.projectSizes)
-		console.log(this.addedOpportunities)
-
-	/*
-		- make sure not in omit
-		- update if in addedOpportunities
-		- call assignRoles
-	*/
 	async.each(cacheData, function(row, callback){
 		currentOpportunity = row[opportunityIndex]
 		if (!(omitData[currentOpportunity])){
