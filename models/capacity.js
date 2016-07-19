@@ -11,6 +11,7 @@ function Capacity(instance, accessToken) {
 } 
 
 Capacity.prototype.get = function(oauth2, async, cache, callback) {
+	console.log('entered .get')
 	var objInstance = this
 	var parameters = {
 		access_token: objInstance.accessToken
