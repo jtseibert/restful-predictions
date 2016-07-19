@@ -71,15 +71,13 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 			    		console.log('sales pipeline cache undefined')
 						pipeline.get(oauth2, async, cache, function(result) {
 							pipeline.applyDB(async, result, function(){
-									res.json(pipeline.returnData)
-									delete pipeline
+								res.json(pipeline.returnData)
 							})
 						})
 					} else { 
 						console.log('sales pipeline cached, ret')
-						pipeline.applyDB(async, value, function(){
+						pipeline.applyDB(async, value, function() {
 							res.json(pipeline.returnData)
-							delete pipeline
 						})
 					}
 				} else {
@@ -87,6 +85,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 				}
 			})
 		})
+		delete pipeline
 	})
 
 //Create sales_pipeline DB routes
