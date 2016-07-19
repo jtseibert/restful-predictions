@@ -1,9 +1,9 @@
-//pipeline.js
-//input: 
-	//SF instance and SF accessToken
-
 module.exports = Pipeline
 
+/**
+* Pipeline object is a container for salesforce auth info and database data for syncing with Google Sheets
+* @constructor
+*/
 function Pipeline(async, instance, accessToken, pg, callback) {
 	var objInstance = this
 	this.accessToken 		= accessToken
