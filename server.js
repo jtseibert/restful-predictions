@@ -263,6 +263,17 @@ router.route('/getRoles')
 		})
 	})
 
+router.route('/addRole')
+	.get(function(req, res) {
+		roles = new Roles(req.body)
+		roles.add(pg, function(err, response) {
+			if(err)
+				res.send(err)
+			res.json({message: 'Success!'})
+			delete roles
+		})
+	})
+
 //Register routes
 //All of our routes will be prefixed with /api
 app.use(function(req, res, next){
