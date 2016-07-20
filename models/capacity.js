@@ -44,9 +44,9 @@ Capacity.prototype.get = function(oauth2, async, cache, callback) {
 				})
 			}, function(){
 				console.log(objInstance.returnData)
+				process.nextTick(callback)
 			})
 	    })
-	    process.nextTick(callback)
 	})
 }
 
