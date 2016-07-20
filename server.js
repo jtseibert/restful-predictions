@@ -264,7 +264,7 @@ router.route('/getRoles')
 	})
 
 router.route('/addRole')
-	.get(function(req, res) {
+	.post(function(req, res) {
 		roles = new Roles(req.body)
 		roles.add(pg, function(err, response) {
 			if(err)
