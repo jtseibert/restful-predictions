@@ -23,7 +23,6 @@ Capacity.prototype.get = function(oauth2, async, cache, callback) {
 	    var rows 		= data.factMap['T!T'].rows,
 	    	columnInfo	= data.reportExtendedMetadata.detailColumnInfo,
 	    	headers 	= [],
-	    	tempRow 	= [],
 	    	testArray 	= [1,2,3,4,5]
 
 	    async.eachSeries(columnInfo, function(header, callback){
@@ -32,7 +31,7 @@ Capacity.prototype.get = function(oauth2, async, cache, callback) {
 	    }, function(){
 			objInstance.returnData.push(headers)
 			async.each(rows, function(row){
-				tempRow = []
+				var tempRow = []
 				async.eachSeries(row.dataCells, function(dataCell, callback){
 					tempRow.push(dataCell.label)
 					process.nextTick(callback)
