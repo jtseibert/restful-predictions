@@ -11,10 +11,11 @@ function Capacity(instance, accessToken) {
 } 
 
 Capacity.prototype.get = function(oauth2, async, cache, callback) {
-	var returnData = []
-	var parameters = {
-		access_token: objInstance.accessToken
-	}
+	var returnData = [],
+		objInstance = this,
+		parameters = {
+			access_token: objInstance.accessToken
+		}
 
 	oauth2.api('GET', objInstance.path, parameters, function (err, data) {
 	    if (err)
