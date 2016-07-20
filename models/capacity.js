@@ -11,7 +11,6 @@ function Capacity(instance, accessToken) {
 } 
 
 Capacity.prototype.get = function(oauth2, async, cache, callback) {
-	console.log('entered .get')
 	var objInstance = this
 	var parameters = {
 		access_token: objInstance.accessToken
@@ -29,7 +28,6 @@ Capacity.prototype.get = function(oauth2, async, cache, callback) {
 	    	headers.push(header.label)
 	    	process.nextTick(callback)
 	    }, function(){
-	    	console.log(headers)
 			objInstance.returnData.push(headers)
 			async.each(rows, function(row){
 				var tempRow = []
@@ -37,7 +35,7 @@ Capacity.prototype.get = function(oauth2, async, cache, callback) {
 					tempRow.push(dataCell.label)
 					process.nextTick(callback)
 				}, function(){
-					console.log(tempRow)
+					console.log("row is" + tempRow)
 					objInstance.returnData.push(tempRow)
 				})
 			})
