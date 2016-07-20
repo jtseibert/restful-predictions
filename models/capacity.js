@@ -22,7 +22,7 @@ Capacity.prototype.get = function(oauth2, async, cache, callback) {
 
 	    var rows 		= data.factMap['T!T'].rows,
 	    	columnInfo	= data.reportExtendedMetadata.detailColumnInfo,
-	    	headers 	= [],
+	    	headers 	= []
 
 	    async.eachSeries(columnInfo, function(header, callback){
 	    	headers.push(header.label)
