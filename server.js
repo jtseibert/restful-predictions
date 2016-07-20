@@ -107,7 +107,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 					})
 				} else { 
 					console.log('capacity cached, returning')
-					res.json(capacity.returnData)
+					res.json(value)
 					delete capacity
 				}
 			} else {
