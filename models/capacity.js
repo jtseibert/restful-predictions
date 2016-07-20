@@ -42,7 +42,7 @@ Capacity.prototype.get = function(oauth2, async, cache, callback) {
 				})
 			})
 	    })
-	    console.log('testArray: 'testArray)
+	    console.log('testArray: '+testArray)
 	    process.nextTick(callback)
 	})
 }
