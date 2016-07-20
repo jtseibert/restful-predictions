@@ -1,1 +1,1 @@
-web: node ./server.js
+web: node --trace-sync-io ./server.js
