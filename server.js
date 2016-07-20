@@ -267,10 +267,8 @@ router.route('/getRoles')
 //All of our routes will be prefixed with /api
 app.use(function(req, res, next){
     res.setTimeout(5000, function(){
-        console.log('Request has timed out, caught by our timeout.');
             res.sendStatus(408);
         });
-
     next();
 });
 
