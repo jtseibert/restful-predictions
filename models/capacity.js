@@ -11,7 +11,7 @@ function Capacity(instance, accessToken) {
 } 
 
 Capacity.prototype.get = function(oauth2, async, cache, callback) {
-	var objInstance = this
+	var returnData = []
 	var parameters = {
 		access_token: objInstance.accessToken
 	}
@@ -31,18 +31,18 @@ Capacity.prototype.get = function(oauth2, async, cache, callback) {
 	    }, function(err){
 	    	if (err)
 	    		console.log(err)
-			objInstance.returnData.push(headers)
+			returnData.push(headers)
 			async.each(rows, function(row){
 				var tempRow = []
 				async.eachSeries(row.dataCells, function(dataCell, callback){
 					tempRow.push(dataCell.label)
 					process.nextTick(callback)
 				}, function(){
-					objInstance.returnData.push(tempRow)
+					returnData.push(tempRow)
 				})
 			})
 	    })
-	    console.log(objInstance.returnData)
+	    console.log(returnData)
 	    process.nextTick(callback)
 	})
 }
