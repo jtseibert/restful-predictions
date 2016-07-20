@@ -42,6 +42,7 @@ Capacity.prototype.get = function(oauth2, async, cache, callback) {
 	    })
 	    process.nextTick(callback)
 	})
+	console.log(returnData)
 }
 
 
