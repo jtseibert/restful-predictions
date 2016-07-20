@@ -28,7 +28,9 @@ Capacity.prototype.get = function(oauth2, async, cache, callback) {
 	    async.eachSeries(columnInfo, function(header, callback){
 	    	headers.push(header.label)
 	    	process.nextTick(callback)
-	    }, function(){
+	    }, function(err){
+	    	if (err)
+	    		console.log(err)
 			objInstance.returnData.push(headers)
 			async.each(rows, function(row){
 				var tempRow = []
