@@ -22,7 +22,9 @@ Capacity.prototype.get = function(oauth2, async, cache, callback) {
 
 	    var rows 		= data.factMap['T!T'].rows,
 	    	columnInfo	= data.reportExtendedMetadata.detailColumnInfo,
-	    	headers 	= []
+	    	headers 	= [],
+	    	tempRow 	= [],
+	    	testArray 	= [1,2,3,4,5]
 
 	    async.eachSeries(columnInfo, function(header, callback){
 	    	headers.push(header.label)
@@ -30,16 +32,17 @@ Capacity.prototype.get = function(oauth2, async, cache, callback) {
 	    }, function(){
 			objInstance.returnData.push(headers)
 			async.each(rows, function(row){
-				var tempRow = []
+				tempRow = []
 				async.eachSeries(row.dataCells, function(dataCell, callback){
 					tempRow.push(dataCell.label)
 					process.nextTick(callback)
 				}, function(){
-					console.log("row is" + tempRow)
+					console.log("row is: " + tempRow)
 					objInstance.returnData.push(tempRow)
 				})
 			})
 	    })
+	    console.log('testArray: 'testArray)
 	    process.nextTick(callback)
 	})
 }
