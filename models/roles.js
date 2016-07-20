@@ -24,5 +24,6 @@ Roles.prototype.add = function(pg, callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client) {
 		var query = client.query('INSERT INTO roles (role) values ($1) ON CONFLICT (role) DO NOTHING',
 			[role])
+		callback()
 	})
 }
