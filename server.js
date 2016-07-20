@@ -16,8 +16,8 @@ var newRelic		= require('newrelic'),
 	Cache           = require('node-cache'),
 	Capacity        = require('./models/capacity')
 
-app.use([express.json(), express.urlencoded()])
-//app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
+app.use(bodyParser.json({ limit: '50mb' }))
+app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
 
 var port = process.env.PORT || 5000,
 	cache = new Cache()
