@@ -43,6 +43,11 @@ Capacity.prototype.get = function(oauth2, async, cache, callback) {
 					process.nextTick(callback)
 				})
 			}, function(){
+				cache.set("capacity", objInstance.returnData, function(err, success) {
+					if(!err && success) {
+						console.log('allocation data cached')
+					}
+				}) 
 				process.nextTick(callback)
 			})
 	    })
