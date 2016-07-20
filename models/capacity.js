@@ -33,17 +33,19 @@ Capacity.prototype.get = function(oauth2, async, cache, callback) {
 	    	if (err)
 	    		console.log(err)
 			returnData.push(headers)
-			async.each(rows, function(row){
+			async.each(rows, function(row, callback){
 				var tempRow = []
 				async.eachSeries(row.dataCells, function(dataCell, callback){
 					tempRow.push(dataCell.label)
 					process.nextTick(callback)
 				}, function(){
-					returnData.push(tempRow)
+					process.nextTick(callback)
 				})
+			}, function(){
+				returnData.push(tempRow)
+				console.log(returnData)
 			})
 	    })
-	    console.log(returnData)
 	    process.nextTick(callback)
 	})
 }
