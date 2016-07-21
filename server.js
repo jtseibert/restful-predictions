@@ -14,7 +14,8 @@ var newRelic		= require('newrelic'),
 	ProjectSize 	= require('./models/projectSize'),
 	Roles 			= require('./models/roles'),
 	Cache           = require('node-cache'),
-	Capacity        = require('./models/capacity')
+	Capacity        = require('./models/capacity'),
+	debug           = require('debug')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
@@ -49,7 +50,7 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 		cache.get("allocation", function(err, value) {
 			if(!err) {
 				if(value == undefined) {
-		    		console.log('allocation data not cached')
+		    		debug('allocation data not cached')
 					allocation.getstuff(oauth2, async, cache, function() {
 						res.json(allocation.returnData)
 						delete allocation
@@ -72,7 +73,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 			cache.get("sales_pipeline", function(err, value) {
 				if(!err) {
 					if(value == undefined) {
-			    		console.log('sales_pipeline data not cached')
+			    		debug('sales_pipeline data not cached')
 						pipeline.get(oauth2, async, cache, function(result) {
 							pipeline.applyDB(async, result, function(){
 								res.json(pipeline.returnData)
@@ -80,7 +81,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 							})
 						})
 					} else { 
-						console.log('sales_pipeline cached, returning')
+						debug('sales_pipeline cached, returning')
 						pipeline.applyDB(async, value, function() {
 							res.json(pipeline.returnData)
 							delete pipeline
