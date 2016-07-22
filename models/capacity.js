@@ -12,7 +12,7 @@ function Capacity(instance, accessToken) {
 	this.returnData = []
 } 
 
-Capacity.prototype.get = function(oauth2, async, callback) {
+Capacity.prototype.get = function(oauth2, callback) {
 	var returnData = [],
 		objInstance = this,
 		parameters = {
