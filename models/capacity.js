@@ -60,7 +60,6 @@ Capacity.prototype.get = function(oauth2, async, cache, pg, callback) {
 				}, function(){
 					process.nextTick(callback)
 				})
-			}
 			})
 	    })
 	})
