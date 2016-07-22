@@ -43,7 +43,7 @@ Capacity.prototype.get = function(oauth2, async, callback) {
 					process.nextTick(callback)
 				})
 			}, function(){
-				process.nextTick(callback)ß
+				process.nextTick(callback)
 			})
 	    })
 	})
