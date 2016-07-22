@@ -50,7 +50,7 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 			if(!err) {
 				if(value == undefined) {
 		    		console.log('allocation data not cached')
-					allocation.getstuff(oauth2, async, cache, function() {
+					allocation.getReport(oauth2, async, cache, function() {
 						res.json(allocation.returnData)
 						delete allocation
 					})
