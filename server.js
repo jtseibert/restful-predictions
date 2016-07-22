@@ -97,23 +97,11 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	router.route('/:instance/DATA_Capacity/:accessToken')
 	.get(function(req, res) {
 		var capacity = new Capacity(req.params.instance, req.params.accessToken)
-		cache.get("capacity", function(err, value) {
-			if(!err) {
-				if(value == undefined) {
-		    		console.log('capacity data not cached')
-					capacity.get(oauth2, async, cache, pg, function(result) {
-						res.json(capacity.returnData)
-						delete capacity
-					})
-				} else { 
-					console.log('capacity cached, returning')
-					res.json(value)
-					delete capacity
-				}
-			} else {
-				res.json({message: err})
+		capacity.get(oauth2, async, function(result) {
+			capacity.updateDB(pg)
+			res.json(capacity.returnData, function(){
 				delete capacity
-			}
+			})
 		})
 	})
 

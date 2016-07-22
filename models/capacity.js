@@ -10,7 +10,7 @@ function Capacity(instance, accessToken) {
 	this.returnData = []
 } 
 
-Capacity.prototype.get = function(oauth2, async, cache, pg, callback) {
+Capacity.prototype.get = function(oauth2, async, callback) {
 	var returnData = [],
 		objInstance = this,
 		parameters = {
@@ -43,27 +43,24 @@ Capacity.prototype.get = function(oauth2, async, cache, pg, callback) {
 					process.nextTick(callback)
 				})
 			}, function(){
-				cache.set("capacity", objInstance.returnData, function(err, success) {
-					if(!err && success) {
-						console.log('capacity data cached')
-					}
-				}) 
-				pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-					async.eachOf(objInstance.returnData, function(row, rowNumber, callback){
-						if (rowNumber != 0) {
-							client.query('INSERT INTO capacity(contact_id, name, title, available_hours) VALUES($3,$1,'
-											+'(SELECT role FROM roles WHERE role=$2),$4) ON CONFLICT (contact_id) DO NOTHING',
-											[row[0],row[1],row[2],40])
-						}
-						console.log(row[2])
-					}, function(){
-						process.nextTick(callback)
-					})
-				})
+				
 			})
 	    })
 	})
 }
 
-
+Capacity.prototype.updateDB = function(pg, callback){
+	objInstance = this
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		async.eachOf(objInstance.returnData, function(row, rowNumber, callback){
+			if (rowNumber != 0) {
+				client.query('INSERT INTO capacity(contact_id, name, title, available_hours) VALUES($3,$1,'
+								+'(SELECT role FROM roles WHERE role=$2),$4) ON CONFLICT (contact_id) DO NOTHING',
+								[row[0],row[1],row[2],40])
+			}
+		}, function(){
+			process.nextTick(callback)
+		})
+	})
+}
 
