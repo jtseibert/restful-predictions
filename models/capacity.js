@@ -4,20 +4,7 @@
 	
 module.exports = Capacity
 
-var oauth2 		= require('simple-oauth2'),
-	credentials = {
-        			clientID: '3MVG9uudbyLbNPZMn2emQiwwmoqmcudnURvLui8uICaepT6Egs.LFsHRMAnD00FSog.OXsLKpODzE.jxi.Ffu',
-       				clientSecret: '625133588109438640',
-        			site: 'https://login.salesforce.com',
-        			authorizationPath: '/services/oauth2/authorize',
-        			tokenPath: '/services/oauth2/token',
-        			revokePath: '/services/oauth2/revoke'
-    },
-    async 		= require('../node_modules/async'),
-    pg 			= require('pg'),
-    oauth2 		= oauth2(credentials)
-
-pg.defaults.ssl = true
+async = require('../node_modules/async')
 
 function Capacity(instance, accessToken) {
 	this.accessToken = accessToken
@@ -25,7 +12,7 @@ function Capacity(instance, accessToken) {
 	this.returnData = []
 } 
 
-Capacity.prototype.get = function(callback) {
+Capacity.prototype.get = function(oauth2, callback) {
 	var returnData = [],
 		objInstance = this,
 		parameters = {
@@ -45,6 +32,8 @@ Capacity.prototype.get = function(callback) {
 	    	headers.push(header.label)
 	    	process.nextTick(callback)
 	    }, function(err){
+	    	if (err)
+	    		console.log(err)
 			objInstance.returnData.push(headers)
 			async.each(rows, function(row, callback){
 				var tempRow = []
@@ -62,11 +51,13 @@ Capacity.prototype.get = function(callback) {
 	})
 }
 
-Capacity.prototype.updateDB = function(callback){
+Capacity.prototype.updateDB = function(pg, callback){
+	console.log('updateDB')
 	objInstance = this
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		async.eachOf(objInstance.returnData, function(row, rowNumber, callback){
 			if (rowNumber != 0) {
+				console.log('row: '+row[1])
 				client.query('INSERT INTO capacity(contact_id, name, title, available_hours) VALUES($3,$1,'
 								+'(SELECT role FROM roles WHERE role=$2),$4) ON CONFLICT (contact_id) DO UPDATE SET title=(SELECT role FROM roles WHERE role=$2)',
 								[row[0],row[1],row[2],40])
