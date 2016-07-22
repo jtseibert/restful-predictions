@@ -48,17 +48,17 @@ Capacity.prototype.get = function(oauth2, async, cache, pg, callback) {
 						console.log('capacity data cached')
 					}
 				}) 
-				async.eachOf(objInstance.returnData, function(row, rowNumber, callback){
-					if (rowNumber != 0) {
-						pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+				pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+					async.eachOf(objInstance.returnData, function(row, rowNumber, callback){
+						if (rowNumber != 0) {
 							client.query('INSERT INTO capacity(contact_id, name, title, available_hours) VALUES($3,$1,'
 											+'(SELECT role FROM roles WHERE role=$2),$4) ON CONFLICT (contact_id) DO NOTHING',
 											[row[0],row[1],row[2],40])
-						})
-					}
-					console.log(row[2])
-				}, function(){
-					process.nextTick(callback)
+						}
+						console.log(row[2])
+					}, function(){
+						process.nextTick(callback)
+					})
 				})
 			})
 	    })
