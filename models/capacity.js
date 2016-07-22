@@ -51,7 +51,7 @@ Capacity.prototype.get = function(oauth2, async, callback) {
 	})
 }
 
-Capacity.prototype.updateDB = function(async, pg, callback){
+Capacity.prototype.updateDB = function(pg, callback){
 	console.log('updateDB')
 	objInstance = this
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
