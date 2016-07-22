@@ -35,5 +35,6 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 
 
 		}
+	})
 		callback()
 }
