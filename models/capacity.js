@@ -4,6 +4,8 @@
 	
 module.exports = Capacity
 
+async = require('/async')
+
 function Capacity(instance, accessToken) {
 	this.accessToken = accessToken
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093ued'
@@ -49,7 +51,7 @@ Capacity.prototype.get = function(oauth2, async, callback) {
 	})
 }
 
-Capacity.prototype.updateDB = function(pg, callback){
+Capacity.prototype.updateDB = function(async, pg, callback){
 	console.log('updateDB')
 	objInstance = this
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
