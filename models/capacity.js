@@ -4,7 +4,7 @@
 	
 module.exports = Capacity
 
-async = require('../async')
+async = require('../node_modules/async')
 
 function Capacity(instance, accessToken) {
 	this.accessToken = accessToken
