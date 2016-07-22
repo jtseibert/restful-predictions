@@ -17,7 +17,7 @@ var oauth2 		= require('simple-oauth2'),
     pg 			= require('pg'),
     oauth2 		= oauth2(credentials)
 
-    pg.defaults.ssl = true
+pg.defaults.ssl = true
 
 function Capacity(instance, accessToken) {
 	this.accessToken = accessToken
