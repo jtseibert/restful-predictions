@@ -5,7 +5,7 @@ var newRelic		= require('newrelic'),
 	express			= require('express'),
 	app        		= express(),
 	bodyParser 		= require('body-parser'),
-	Allocation 		= require('./models/allocation'),
+	Allocation 		= require('./models/allocation2'),
 	async			= require('async'),
 	Opportunity 	= require('./models/opportunity'),
 	Pipeline 		= require('./models/pipeline'),
@@ -45,7 +45,7 @@ pg.defaults.ssl = true
 //Create SF routes
 router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req, res) {
-		var allocation = new Allocation(req.params.instance, req.params.accessToken)
+		var allocation = new Allocation2(req.params.instance, req.params.accessToken)
 		cache.get("allocation", function(err, value) {
 			if(!err) {
 				if(value == undefined) {
