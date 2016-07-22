@@ -101,7 +101,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 			if(!err) {
 				if(value == undefined) {
 		    		console.log('capacity data not cached')
-					capacity.get(oauth2, async, cache, function(result) {
+					capacity.get(oauth2, async, cache, pg, function(result) {
 						res.json(capacity.returnData)
 						delete capacity
 					})
