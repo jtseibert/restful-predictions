@@ -296,7 +296,7 @@ Pipeline.prototype.applyDB = function(async, cacheData, callback) {
 */
 function calculateStartDate(closeDate, dateIncrement){
 	var date = new Date(closeDate)
-	var returnDate = getMonday(new Date(date.setDate(date.getDate() + dateIncrement)))
+	var returnDate = getSaturday(new Date(date.setDate(date.getDate() + dateIncrement)))
 	returnDate = JSON.stringify(returnDate).split('T')[0].split('-')
 	return returnDate[1]+'/'+returnDate[2]+'/'+returnDate[0].replace('"','')
 }
