@@ -36,7 +36,16 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 	callback(instance.allocationData)
 }
 
-function getRoleData(role, roleKey, factMap, groupingsDown) {
+function getRoleData(role, roleKey, callback, factMap, groupingsDown) {
 	// Role is in form {key: label} E.G {2: Developer}
-	console.log(role + ' ' + roleKey)
+	var roleDateData, dateKey
+	for(var date in groupingsDown.groupings[roleKey]) {
+		var currentDate = groupingsDown.groupings[roleKey].date
+		roleDateData[role].currentDate.key = currentDate.label
+	}
+	console.log(roleDateData)
+
+
+
+
 }
