@@ -19,11 +19,6 @@ function Forecast(data) {
 								'SUM_SALES_PIPELINE_ESTIMATED_HOURS',
 								'SUM_CAPACTIY_ESTIMATED_HOURS']
 	this.sumCapacity
-} 
-
-Forecast.prototype.create = function(pg, callback) {
-	//console.log('SheetsData: '+JSON.stringify(this.sheetsData) + '\nSP: ' + JSON.stringify(this.sumSalesPipeline) + '\nCapacity: ' + JSON.stringify(this.sumCapacity))
-	objInstance = this
 
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		var query = client.query('SELECT * FROM omit')
@@ -32,11 +27,15 @@ Forecast.prototype.create = function(pg, callback) {
 			result.addRow(row)
 		})
 		query.on("end", function (result) {
-			//console.log(JSON.stringify(result.rows, null, "    "))
+			console.log(JSON.stringify(result.rows, null, "    "))
 			objInstance.sumCapacity = result.rows
-			process.nextTick(callback)
 		})
 	})
+} 
+
+Forecast.prototype.create = function(pg, callback) {
+	//console.log('SheetsData: '+JSON.stringify(this.sheetsData) + '\nSP: ' + JSON.stringify(this.sumSalesPipeline) + '\nCapacity: ' + JSON.stringify(this.sumCapacity))
+	objInstance = this
 
 	async.each(this.sheetsData, function(row, callback){
 		async.series({
