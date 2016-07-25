@@ -18,31 +18,33 @@ function Forecast(pg, data, callback) {
 								'REPORTS_TO',
 								'SUM_SALES_PIPELINE_ESTIMATED_HOURS',
 								'SUM_CAPACTIY_ESTIMATED_HOURS']
+	this.sumCapacity
 	objInstance = this
 
-	//var one = function(callback){
+	var one = function(callback){
 		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-			this.sumCapacity = {}
+			roles_hours = {}
 			if (err)
 				console.log(err)
 			var query = client.query('SELECT * FROM roles_hours')
 			query.on("row", function (row, result) {
-				console.log(row)
-				this.sumCapacity[row.role] = {'reports_to': row.reports_to, 'sum': row.sum}
+				result.addrow(row)
+				roles_hours[row.role] = {'reports_to': row.reports_to, 'sum': row.sum}
 			})
 			query.on("end", function (result) {
-				//process.nextTick(function(){callback(null, result.rows)})
-				process.nextTick(callback)
+				process.nextTick(function(){callback(null, roles_hours)})
+				//process.nextTick(callback)
 			})
 		})
-	//}
+	}
 
-	// async.parallel({
-	// 	'one': one
-	// }, function(err, results){
-	// 	objInstance.sumCapacity = results.one
-	// 	process.nextTick(callback)
-	// })
+	async.parallel({
+	 	'one': one
+	}, function(err, results){
+		console.log('roles_hours: '+JSON.stringify(roles_hours))
+	 	objInstance.sumCapacity = results.one
+	 	process.nextTick(callback)
+	})
 } 
 
 Forecast.prototype.create = function(callback) {
