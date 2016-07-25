@@ -34,9 +34,9 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 function getRoleData(role, roleKey) {
 	// Role is in form {key: label} E.G {2: Developer}
 	var roleDateData = []
-	roleDateData.push(role)
 
 	for(var date in groupingsDown.groupings[roleKey].groupings) {
+		// get data and define keys
 		var currentDateKey = groupingsDown.groupings[roleKey].groupings[date].key, 
 			currentDate = groupingsDown.groupings[roleKey].groupings[date].label,
 			datecellsKey,
@@ -44,10 +44,9 @@ function getRoleData(role, roleKey) {
 		
 		datacellsKey = currentDateKey + '!T'
 		aggregatesKey = roleKey + '!T'
-		
-		roleDateData.push(currentDate)
+	
 		// get project name, name, cid for a specific role and date
-		roleDateData.push(factMap[datacellsKey].rows[2].label)
+		roleDateData.push(role, currentDate, factMap[datacellsKey].rows[0])
 
 		// get sum of allocation hrs for a specific role
 		//roleDateData[role].SUM = factMap[aggregatesKey].aggregates
