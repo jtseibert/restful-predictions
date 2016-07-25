@@ -362,7 +362,7 @@ function getSaturday(d) {
 	var daySaturday = 6
 	d = new Date(d)
 	var day = d.getDay(),
-		diff = d.getDate() + (7 + daySaturday - date.getDay()) % 7
+		diff = d.getDate() + (7 + daySaturday - d.getDay()) % 7
 	return new Date(d.setDate(diff))
 }
 
