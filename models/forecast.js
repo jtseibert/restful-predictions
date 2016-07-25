@@ -8,7 +8,7 @@ async = require('../node_modules/async')
 
 function Forecast(pg, data, callback) {
 
-	console.log('this is sheetsData: '+JSON.stringify(data[0]))
+	console.log('this is an entry sheetsData: '+JSON.stringify(data[0][0]))
 
 	this.sheetsData 		= data[0]
 	this.sumSalesPipeline 	= data[1]
