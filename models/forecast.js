@@ -7,8 +7,8 @@ module.exports = Forecast
 async = require('../node_modules/async')
 
 function Forecast(pg, data) {
-	this.sheetsData 			= data[1]
-	this.sumSalesPipeline 	= data[2]
+	this.sheetsData 			= data[0]
+	this.sumSalesPipeline 	= data[1]
 	this.returnData 		= ['ROLE',
 								'START_DATE',
 								'ALLOCATED_ESTIMATED_HOURS(AEH)',
