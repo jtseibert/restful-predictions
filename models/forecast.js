@@ -45,7 +45,7 @@ Forecast.prototype.create = function(callback) {
 			two: function(callback){
 				var newData = []
 				newData.push(objInstance.sumCapacity[row.role].reports_to, objInstance.sumSalesPipeline[row.role], objInstance.sumCapacity[row.role].sum)
-				function(){ process.nextTick(function(){callback(newData)}) }
+				process.nextTick(function(){callback(newData)})
 			}
 		}, function(err, results){
 			objInstance.returnData.push(results.one.push(results.two[0], results.two[1], results.two[2]))
