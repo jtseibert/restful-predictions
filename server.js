@@ -276,8 +276,8 @@ router.route('/addRole')
 
 router.route('/DATA_forecast')
 	.post(function(req, res){
-		forecast = new Forecast(req.body)
-		forecast.create(pg, function(err, response){
+		forecast = new Forecast(pg, req.body)
+		forecast.create(function(err, response){
 			if(err)
 				res.send(err)
 			res.json(forecast.returnData)
