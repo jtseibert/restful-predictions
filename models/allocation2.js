@@ -45,7 +45,7 @@ function getRoleData(role, roleKey) {
 		datacellsKey = currentDateKey + '!T'
 		aggregatesKey = roleKey + '!T'
 		
-		roleDateData[.push(currentDate)
+		roleDateData.push(currentDate)
 		// get project name, name, cid for a specific role and date
 		roleDateData.push(factMap[datacellsKey].rows[2].label)
 
