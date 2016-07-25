@@ -18,10 +18,12 @@ function Forecast(pg, data) {
 								'REPORTS_TO',
 								'SUM_SALES_PIPELINE_ESTIMATED_HOURS',
 								'SUM_CAPACTIY_ESTIMATED_HOURS']
+	this.sumCapacity
 
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		var query = client.query('SELECT * FROM omit')
 		query.on("row", function (row, result) {
+			console.log(row)
 			result.addRow(row)
 		})
 		query.on("end", function (result) {
@@ -33,7 +35,7 @@ function Forecast(pg, data) {
 } 
 
 Forecast.prototype.create = function(callback) {
-	console.log('SheetsData: '+this.sheetsData + '\nSP: ' + this.sumSalesPipeline + '\nCapacity: ' + this.sumCapacity)
+	console.log('SheetsData: '+JSON.stringify(this.sheetsData) + '\nSP: ' + JSON.stringify(this.sumSalesPipeline) + '\nCapacity: ' + JSON.stringify(this.sumCapacity))
 	objInstance = this
 	async.each(this.sheetsData, function(row, callback){
 		async.series({
