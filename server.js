@@ -275,7 +275,7 @@ router.route('/addRole')
 	})
 
 router.route('/forecast')
-	.get(function(req, res){
+	.post(function(req, res){
 		forecast = new Forecast(pg, req.body)
 		forecast.create(function(err, response){
 			if(err)
