@@ -25,15 +25,14 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 				roleList[currentRole.key] = currentRole.label
 			}
 			//mapValues getRoleData
-			console.log(roleList)
-			//async.mapValues(roleList, getRoleData(role, roleKey))
+			async.mapValues(roleList, getRoleData)
 
 		}
 	})
 	callback(allocationData)
 }
 
-function getRoleData(role, roleKey) {
+function getRoleData(role, roleKey, callback) {
 	// Role is in form {key: label} E.G {2: Developer}
 	console.log(role + " " + rolekey)
 	var roleDateData, dateKey
@@ -46,8 +45,5 @@ function getRoleData(role, roleKey) {
 		//roleDateData[role].currentDateKey = currentDate
 	}
 	console.log(roleDateData)
-
-
-
-
+	callback()
 }
