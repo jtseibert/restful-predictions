@@ -49,7 +49,9 @@ Forecast.prototype.create = function(pg, callback) {
 			},
 			two: function(callback){
 				var newData = []
-				newData.push(JSON.stringify(objInstance.sumCapacity[row[0]].reports_to), objInstance.sumSalesPipeline[row[0]][1], objInstance.sumCapacity[row[0]].sum)
+				newData.push(JSON.stringify(objInstance.sumCapacity[row[0]].reports_to))
+				newData.push(objInstance.sumSalesPipeline[row[0]][1])
+				newData.push(objInstance.sumCapacity[row[0]].sum)
 				process.nextTick(function(){callback(null,newData)})
 			}
 		}, function(err, results){
