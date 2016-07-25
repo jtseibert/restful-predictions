@@ -52,19 +52,19 @@ Forecast.prototype.create = function(callback) {
 	objInstance = this
 
 	async.each(objInstance.sheetsData, function(row, callback){
-		console.log('CurrentRow: '+row)
+		//console.log('CurrentRow: '+row)
 		async.series({
 			one: function(callback){
 				var tempRow = []
 				async.eachSeries(row, function(value, callback){
-					console.log('CurrentValue: '+value)
+					//console.log('CurrentValue: '+value)
 					tempRow.push(value)
 					process.nextTick(callback)
 				}, function(){ process.nextTick(function(){callback(null,tempRow)}) })
 			},
 			two: function(callback){
 				var newData = []
-				console.log('I want this to be a role: '+row[0])
+				console.log('reports_to: '+JSON.stringify(objInstance.sumCapacity[row[0]].reports_to))
 				newData.push(JSON.stringify(objInstance.sumCapacity[row[0]].reports_to))
 				newData.push(objInstance.sumSalesPipeline[row[0]][row[1]])
 				newData.push(objInstance.sumCapacity[row[0]].sum)
