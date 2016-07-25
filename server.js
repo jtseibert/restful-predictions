@@ -274,7 +274,7 @@ router.route('/addRole')
 		})
 	})
 
-router.route('/DATA_forecast')
+router.route('/DATA_Forecast')
 	.post(function(req, res){
 		forecast = new Forecast(pg, req.body)
 		forecast.create(function(err, response){

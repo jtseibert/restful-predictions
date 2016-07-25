@@ -19,17 +19,27 @@ function Forecast(pg, data) {
 								'SUM_SALES_PIPELINE_ESTIMATED_HOURS',
 								'SUM_CAPACTIY_ESTIMATED_HOURS']
 	this.sumCapacity
+	objInstance = this
 
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		var query = client.query('SELECT * FROM roles_hours')
-		query.on("row", function (row, result) {
-			console.log(row)
-			result.addRow(row)
+	var one = function(callback){
+		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+			var query = client.query('SELECT * FROM roles_hours')
+			query.on("row", function (row, result) {
+				console.log(row)
+				result.addRow(row)
+			})
+			query.on("end", function (result) {
+				console.log('Hello: '+JSON.stringify(result.rows, null, "    "))
+				this.sumCapacity = result.rows
+			})
 		})
-		query.on("end", function (result) {
-			console.log('Hello: '+JSON.stringify(result.rows, null, "    "))
-			this.sumCapacity = result.rows
-		})
+	}
+
+	async.parallel({
+		'one': one
+	}, function(err, results){
+		objInstance.sumCapacity = results.one
+		process.nextTick(callback)
 	})
 } 
 
