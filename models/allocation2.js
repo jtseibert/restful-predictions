@@ -1,5 +1,9 @@
 /**
-@module Allocation
+* Allocation
+* @module Allocation
+* @desc The allocation module is responsible for querying SalesForce for a Allocation report.
+The allocation data is organized into a 2D array and passed down to Google Sheets.
+Role, week date, name, contact id, project, allocated hrs /role/week, and allocated hrs /role are grabbed.
 */
 module.exports = Allocation2
 
@@ -20,6 +24,13 @@ function Allocation2(instance, accessToken) {
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093vVN'
 } 
 
+/**
+* Queries SalesForce for allocation report, determines all roles in the report, and passes a list of
+roles to the getRoleData method. getRoleData is executed asyncronously on every role.
+* @param oauth2 - oauth2 instance
+* @param cache - node-cache instance
+* @param callback - callback function to return final array
+*/
 Allocation2.prototype.getReport = function(oauth2, cache, callback) {
 	var instance = this
 	var parameters = {
@@ -51,6 +62,14 @@ Allocation2.prototype.getReport = function(oauth2, cache, callback) {
 	})
 }
 
+/**
+* Creates a distinct row for each record in a role/week combination.
+Rows are 1D arrays appended to allocationData, the final 2D array.
+* @function getRoleData
+* @param {string} role - the current role being operated on
+* @param {string} roleKey - key value corresponding to the role
+* @param callback - callback to return to getReport eachOf structure
+*/
 function getRoleData(role, roleKey, callback) {
 	var dateList = groupingsDown.groupings[roleKey].groupings
 	async.eachOf(dateList, function(dateObj, dateKey, callback) {
