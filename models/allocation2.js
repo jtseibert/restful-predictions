@@ -29,7 +29,7 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 				roleList[currentRole.key] = currentRole.label
 			}
 			//mapValues getRoleData
-			async.mapValues(roleList, getRoleData, factMap, groupingsDown)
+			async.mapValues(roleList, getRoleData, callback, factMap, groupingsDown)
 
 		}
 	})
