@@ -62,6 +62,7 @@ Forecast.prototype.create = function(callback) {
 			},
 			two: function(callback){
 				var newData = []
+				console.log('reports_to: '+JSON.stringify(objInstance.sumCapacity[row[0]].reports_to))
 				newData.push(JSON.stringify(objInstance.sumCapacity[row[0]].reports_to))
 				newData.push(objInstance.sumSalesPipeline[row[0]][row[1]])
 				newData.push(objInstance.sumCapacity[row[0]].sum)
