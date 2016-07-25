@@ -37,16 +37,15 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 //concat each ret 
 function getRoleData(role, roleKey) {
 	// Role is in form {key: label} E.G {2: Developer}
-	var roleDateData = []
-
-	for(var date in groupingsDown.groupings[roleKey].groupings) {
-		// get date information and define keys for remaining data
-		var currentDateKey = groupingsDown.groupings[roleKey].groupings[date].key, 
-			currentDate    = groupingsDown.groupings[roleKey].groupings[date].label
+	//var roleDateData = []
+	var dateList = groupingsDown.groupings[roleKey].groupings
+	async.mapValues(dateList, function(dateObj, dateKey) {
+		var currentDateKey = groupingsDown.groupings[roleKey].groupings[dateKey].key, 
+			currentDate    = groupingsDown.groupings[roleKey].groupings[dateKey].label
 		
 		var datacellsKey   = currentDateKey + '!T',
 			aggregatesKey  = roleKey + '!T'
-	
+		var roleDateData = []
 		for(var record in factMap[datacellsKey].rows) {
 			// temp array to hold data for unique role/date combination
 			var temp = []
@@ -55,10 +54,10 @@ function getRoleData(role, roleKey) {
 				name 	   = factMap[datacellsKey].rows[record].dataCells[1].label,
 				project    = factMap[datacellsKey].rows[record].dataCells[2].label,
 				sum 	   = factMap[aggregatesKey].aggregates[0].label
-				// push the data to 1D array
-				temp.push(role, currentDate, name, contact_id, sum)
-				roleDateData.push(temp)
-		}	
+			// push the data to 1D array
+			temp.push(role, currentDate, name, contact_id, sum)
+			roleDateData.push(temp)
+		}
 		console.log(roleDateData)
-	}
+	})
 }
