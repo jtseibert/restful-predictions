@@ -64,9 +64,9 @@ Forecast.prototype.create = function(callback) {
 			},
 			two: function(callback){
 				var newData = []
-				//console.log('I want this to be a role: '+objInstance.sheetsData[row])
+				console.log('I want this to be a role: '+row[0])
 				newData.push(JSON.stringify(objInstance.sumCapacity[row[0]].reports_to))
-				newData.push(objInstance.sumSalesPipeline[row[0]][1])
+				newData.push(objInstance.sumSalesPipeline[row[0]][row[1]])
 				newData.push(objInstance.sumCapacity[row[0]].sum)
 				process.nextTick(function(){callback(null,newData)})
 			}
