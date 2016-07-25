@@ -45,11 +45,9 @@ function getRoleData(role, roleKey) {
 		// get date information and define keys for remaining data
 		var currentDateKey = groupingsDown.groupings[roleKey].groupings[date].key, 
 			currentDate    = groupingsDown.groupings[roleKey].groupings[date].label,
-			datecellsKey,
-			aggregatesKey
 		
-		datacellsKey   = currentDateKey + '!T'
-		aggregatesKey  = roleKey + '!T'
+		var datacellsKey   = currentDateKey + '!T',
+			aggregatesKey  = roleKey + '!T'
 	
 		// get remaining data for specific role and date
 		var contact_id = factMap[datacellsKey].rows[0].dataCells[0].label, 
