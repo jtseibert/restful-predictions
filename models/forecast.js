@@ -24,6 +24,8 @@ function Forecast(pg, data) {
 	var one = function(callback){
 		console.log('entered function one')
 		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+			if (err)
+				console.log(err)
 			console.log('should be querrying')
 			var query = client.query('SELECT * FROM roles_hours')
 			query.on("row", function (row, result) {
