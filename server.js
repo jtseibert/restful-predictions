@@ -289,6 +289,7 @@ router.route('/DATA_Forecast')
 				delete forecast
 			}
 		})
+	})
 
 //Register routes
 //All of our routes will be prefixed with /api
