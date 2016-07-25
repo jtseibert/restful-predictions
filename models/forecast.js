@@ -40,6 +40,8 @@ function Forecast(pg, data) {
 	async.parallel({
 		'one': one
 	}, function(err, results){
+		console.log('err: '+err)
+		console.log('results: '+results)
 		objInstance.sumCapacity = results.one
 		process.nextTick(callback)
 	})
