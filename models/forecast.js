@@ -54,7 +54,7 @@ Forecast.prototype.create = function(callback) {
 	async.eachSeries(objInstance.sheetsData, function(row, callback){
 		async.series({
 			one: function(callback){
-				console.low('function one role: '+row[0])
+				console.log('function one role: '+row[0])
 				var tempRow = []
 				async.eachSeries(row, function(value, callback){
 					tempRow.push(value)
