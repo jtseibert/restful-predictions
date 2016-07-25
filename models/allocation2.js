@@ -56,9 +56,9 @@ function getRoleData(role, roleKey, callback) {
 				sum 	   = factMap[aggregatesKey].aggregates[0].label
 			temp.push(role, currentDate, name, contact_id, sum)
 			allocationData.push(temp)
-			callback()
+			process.nextTick(callback)
 		})
-		callback()
+		process.nextTick(callback)
 	})
-	callback()
+	process.nextTick(callback)
 }
