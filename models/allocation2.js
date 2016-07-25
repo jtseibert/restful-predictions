@@ -1,4 +1,9 @@
+/**
+@module Allocation
+*/
 module.exports = Allocation2
+
+// module level variables
 var async = require('async')
 var factMap, groupingsDown
 var allocationData = [["ROLE",
@@ -15,7 +20,7 @@ function Allocation2(instance, accessToken) {
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093vVN'
 } 
 
-Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
+Allocation2.prototype.getReport = function(oauth2, cache, callback) {
 	var instance = this
 	var parameters = {
 		access_token: instance.accessToken
@@ -27,15 +32,20 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 			groupingsDown = data.groupingsDown
 			factMap = data.factMap
 
-			// Populate role list
 			var roleList = {}
 			for(var role in groupingsDown.groupings) {
 				var currentRole = groupingsDown.groupings[role]
 				roleList[currentRole.key] = currentRole.label
 			}
-			//iterate getRoleData
-			async.eachOf(roleList, getRoleData, function(err, result) {
-				callback(allocationData)
+			
+			async.eachOf(roleList, getRoleData, function(err) {
+				cache.set("allocation", allocationData, function(err, success) {
+					if(!err && success)
+						callback(allocationData)
+					else {
+						callback(err)
+					}
+				})
 			})
 		}
 	})
@@ -59,7 +69,7 @@ function getRoleData(role, roleKey, callback) {
 				name 	   = factMap[datacellsKey].rows[recordKey].dataCells[1].label,
 				project    = factMap[datacellsKey].rows[recordKey].dataCells[2].label,
 				estimate   = factMap[datacellsKey].rows[recordKey].dataCells[3].label,
-				sum 	   = factMap[aggregatesKey].aggregates[0].label
+				sum 	   = factMap[aggregatesKey].aggregates[0].label.replace(',', '')
 			temp.push(role, currentDate, name, contact_id, project, estimate, sum)
 			allocationData.push(temp)
 			process.nextTick(callback)
