@@ -56,7 +56,6 @@ function getRoleData(role, roleKey) {
 				sum 	   = factMap[aggregatesKey].aggregates[0].label
 			temp.push(role, currentDate, name, contact_id, sum)
 			allocationData.push(temp)
-			console.log('pushing allocation')
-		})
-	})
+		}, function(err, result) {console.log('innermostcallback')})
+	}, function(err, result) {'outer acllback'})
 }
