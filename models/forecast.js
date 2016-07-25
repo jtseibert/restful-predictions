@@ -51,11 +51,10 @@ Forecast.prototype.create = function(callback) {
 	objInstance = this
 
 	async.each(objInstance.sheetsData, function(row, callback){
-		var tempRow = row
 		async.series({
 			one: function(callback){
 				var tempRow = []
-				async.eachSeries(tempRow, function(value, callback){
+				async.eachSeries(row, function(value, callback){
 					tempRow.push(value)
 					process.nextTick(callback)
 				}, function(){ process.nextTick(function(){callback(null,tempRow)}) })
@@ -63,9 +62,9 @@ Forecast.prototype.create = function(callback) {
 			two: function(callback){
 				var newData = []
 				//console.log('current Role: '+row[0])
-				newData.push(JSON.stringify(objInstance.sumCapacity[tempRow[0]].reports_to))
-				newData.push(objInstance.sumSalesPipeline[tempRow[0]][row[1]])
-				newData.push(objInstance.sumCapacity[tempRow[0]].sum)
+				newData.push(JSON.stringify(objInstance.sumCapacity[row[0]].reports_to))
+				newData.push(objInstance.sumSalesPipeline[row[0]][row[1]])
+				newData.push(objInstance.sumCapacity[row[0]].sum)
 				process.nextTick(function(){callback(null,newData)})
 			}
 		}, function(err, results){
