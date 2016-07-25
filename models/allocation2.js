@@ -1,6 +1,7 @@
 module.exports = Allocation2
 var async = require('async')
-var factMap, groupingsDown, allocationData
+var factMap, groupingsDown
+var allocationData = []
 
 function Allocation2(instance, accessToken) {
 	this.accessToken = accessToken
@@ -27,7 +28,7 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 			}
 			//mapValues getRoleData
 			async.mapValues(roleList, getRoleData, function(err, results) {
-				console.log(results)
+				console.log(allocationData)
 			})
 		}
 	})
@@ -36,30 +37,26 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 
 //concat each ret 
 function getRoleData(role, roleKey) {
-	// Role is in form {key: label} E.G {2: Developer}
-	var roleDateData = []
-
-	for(var date in groupingsDown.groupings[roleKey].groupings) {
-		// temp array to hold data for unique role/date combination
-		var temp = []
-		// get date information and define keys for remaining data
-		var currentDateKey = groupingsDown.groupings[roleKey].groupings[date].key, 
-			currentDate    = groupingsDown.groupings[roleKey].groupings[date].label,
-			datecellsKey,
-			aggregatesKey
+	var dateList = groupingsDown.groupings[roleKey].groupings
+	async.mapValues(dateList, function(dateObj, dateKey) {
+		var currentDateKey = groupingsDown.groupings[roleKey].groupings[dateKey].key, 
+			currentDate    = groupingsDown.groupings[roleKey].groupings[dateKey].label
 		
-		datacellsKey   = currentDateKey + '!T'
-		aggregatesKey  = roleKey + '!T'
-	
-		// get remaining data for specific role and date
-		var contact_id = factMap[datacellsKey].rows[0].dataCells[0].label, 
-			name 	   = factMap[datacellsKey].rows[1].dataCells[1].label,
-			project    = factMap[datacellsKey].rows[2].dataCells[2].label,
-			sum 	   = factMap[aggregatesKey].aggregates[0].label
+		var datacellsKey   = currentDateKey + '!T',
+			aggregatesKey  = roleKey + '!T'
 
-		// push the data to 1D array
-		temp.push(role, currentDate, name, contact_id, sum)
-		roleDateData.push(temp)
-	}
-	console.log(roleDateData)
+		var datacellsList = factMap[datacellsKey].rows
+		async.mapValues(datacellsList, function(recordObj, recordKey) {
+			// temp array to hold data for unique row combination
+			var temp = []
+			// get remaining data for specific role and date
+			var contact_id = factMap[datacellsKey].rows[recordKey].dataCells[0].label, 
+				name 	   = factMap[datacellsKey].rows[recordKey].dataCells[1].label,
+				project    = factMap[datacellsKey].rows[recordKey].dataCells[2].label,
+				sum 	   = factMap[aggregatesKey].aggregates[0].label
+			temp.push(role, currentDate, name, contact_id, sum)
+			allocationData.push(temp)
+			console.log('pushing allocation')
+		})
+	})
 }
