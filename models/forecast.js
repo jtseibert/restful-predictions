@@ -18,11 +18,11 @@ function Forecast(pg, data, callback) {
 								'REPORTS_TO',
 								'SUM_SALES_PIPELINE_ESTIMATED_HOURS',
 								'SUM_CAPACTIY_ESTIMATED_HOURS']
-	this.sumCapacity = {}
 	objInstance = this
 
 	//var one = function(callback){
 		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+			this.sumCapacity = {}
 			if (err)
 				console.log(err)
 			var query = client.query('SELECT * FROM roles_hours')
