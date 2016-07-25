@@ -41,8 +41,7 @@ function Forecast(pg, data, callback) {
 	async.parallel({
 	 	'one': one
 	}, function(err, results){
-		console.log('roles_hours: '+JSON.stringify(roles_hours))
-	 	objInstance.sumCapacity = results.one
+	 	objInstance.sumCapacity = roles_hours
 	 	process.nextTick(callback)
 	})
 } 
