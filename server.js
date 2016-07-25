@@ -14,7 +14,8 @@ var newRelic		= require('newrelic'),
 	ProjectSize 	= require('./models/projectSize'),
 	Roles 			= require('./models/roles'),
 	Cache           = require('node-cache'),
-	Capacity        = require('./models/capacity')
+	Capacity        = require('./models/capacity'),
+	Forecast 		= require('./models/forecast')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
@@ -106,9 +107,10 @@ router.route('/:instance/DATA_Capacity/:accessToken')
 		})
 	})
 
-router.route('/:instance/updateCapacity')
+//Create sales_pipeline DB routes
+router.route('/updateCapacity')
 	.post(function(req, res) {
-		var capacity = new Capacity(null, null, req.params.data)
+		var capacity = new Capacity(null, null, req.body)
 		capacity.updateDB(pg, function(){
 			console.log('deleting capacity obj')
 			delete capacity
@@ -116,7 +118,6 @@ router.route('/:instance/updateCapacity')
 		res.json({message: 'Success!'})
 	})
 
-//Create sales_pipeline DB routes
 router.route('/addOpportunity')
 	.post(function(req,res){
 		opportunity = new Opportunity(req.body)
@@ -270,6 +271,17 @@ router.route('/addRole')
 				res.send(err)
 			res.json({message: 'Success!'})
 			delete roles
+		})
+	})
+
+router.route('/forecast')
+	.get(function(req, res){
+		forecast = new Forecast(req.body)
+		forecast.create(pg, function(err, response){
+			if(err)
+				res.send(err)
+			res.json(forecast.returnData)
+			delete forecast
 		})
 	})
 
