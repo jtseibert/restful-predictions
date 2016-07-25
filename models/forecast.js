@@ -6,7 +6,7 @@ module.exports = Forecast
 
 async = require('../node_modules/async')
 
-function Forecast(pg, data) {
+function Forecast(pg, data, callback) {
 	this.sheetsData 		= data[0][1]
 	this.sumSalesPipeline 	= data[0][0]
 	this.returnData 		= ['ROLE',
@@ -22,18 +22,14 @@ function Forecast(pg, data) {
 	objInstance = this
 
 	var one = function(callback){
-		console.log('entered function one')
 		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 			if (err)
 				console.log(err)
-			console.log('should be querrying')
 			var query = client.query('SELECT * FROM roles_hours')
 			query.on("row", function (row, result) {
-				console.log(row)
 				result.addRow(row)
 			})
 			query.on("end", function (result) {
-				console.log('Hello: '+JSON.stringify(result.rows, null, "    "))
 				process.nextTick(function(){callback(null, result.rows)})
 			})
 		})
@@ -42,8 +38,6 @@ function Forecast(pg, data) {
 	async.parallel({
 		'one': one
 	}, function(err, results){
-		console.log('err: '+err)
-		console.log('results: '+results)
 		objInstance.sumCapacity = results.one
 		process.nextTick(callback)
 	})
