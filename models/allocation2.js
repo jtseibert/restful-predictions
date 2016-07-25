@@ -32,17 +32,15 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 				var currentRole = groupingsDown.groupings[role]
 				roleList[currentRole.key] = currentRole.label
 			}
-			//mapValues getRoleData
+			//iterate getRoleData
 			async.eachOf(roleList, getRoleData, function(err, result) {
 				console.log(allocationData)
 				callback(allocationData)
 			})
 		}
 	})
-	//callback(allocationData)
 }
 
-//concat each ret 
 function getRoleData(role, roleKey, callback) {
 	var dateList = groupingsDown.groupings[roleKey].groupings
 	async.eachOf(dateList, function(dateObj, dateKey, callback) {
@@ -62,7 +60,7 @@ function getRoleData(role, roleKey, callback) {
 				project    = factMap[datacellsKey].rows[recordKey].dataCells[2].label,
 				estimate   = factMap[datacellsKey].rows[recordKey].dataCells[3].label,
 				sum 	   = factMap[aggregatesKey].aggregates[0].label
-			temp.push(role, currentDate, name, contact_id, estimate, sum)
+			temp.push(role, currentDate, name, contact_id, project, estimate, sum)
 			allocationData.push(temp)
 			process.nextTick(callback)
 		})
