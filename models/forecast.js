@@ -28,7 +28,7 @@ function Forecast(pg, data, callback) {
 				console.log(err)
 			var query = client.query('SELECT * FROM roles_hours')
 			query.on("row", function (row, result) {
-				result.addrow(row)
+				//result.addrow(row)
 				roles_hours[row.role] = {'reports_to': row.reports_to, 'sum': row.sum}
 			})
 			query.on("end", function (result) {
