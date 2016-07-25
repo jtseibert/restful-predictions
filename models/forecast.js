@@ -40,7 +40,7 @@ Forecast.prototype.create = function(callback) {
 				var tempRow = []
 				async.eachSeries(row, function(value, callback){
 					tempRow.push(value)
-				}, function(){ process.nextTick(function(){callback(tempRow)}) })
+				}, function(){ process.nextTick(function(){callback(tempRow)}) }
 			},
 			two: function(callback){
 				var newData = []
