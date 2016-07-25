@@ -10,8 +10,8 @@ function Forecast(pg, data) {
 	this.sheetsData 			= data[0]
 	this.sumSalesPipeline 	= data[1]
 	this.returnData 		= ['ROLE',
-								'START_DATE',
-								'ALLOCATED_ESTIMATED_HOURS(AEH)',
+								'WEEK_DATE',
+								'ALLOCATED_ESTIMATED_HOURS(WEEK)',
 								'SUM(AEH)',
 								'NAME',
 								'CONTACT_ID',
@@ -44,7 +44,7 @@ Forecast.prototype.create = function(callback) {
 			},
 			two: function(callback){
 				var newData = []
-				newData.push(objInstance.sumCapacity[row.role].reports_to, objInstance.sumSalesPipeline[row.role], objInstance.sumCapacity[row.role].sum)
+				newData.push(JSON.stringify(objInstance.sumCapacity[row[0]].reports_to), objInstance.sumSalesPipeline[row[0]][1], objInstance.sumCapacity[row[0]].sum)
 				process.nextTick(function(){callback(newData)})
 			}
 		}, function(err, results){
