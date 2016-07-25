@@ -21,7 +21,7 @@ function Forecast(pg, data) {
 	this.sumCapacity
 
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		var query = client.query('SELECT * FROM omit')
+		var query = client.query('SELECT * FROM roles_hours')
 		query.on("row", function (row, result) {
 			console.log(row)
 			result.addRow(row)
