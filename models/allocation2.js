@@ -37,9 +37,24 @@ function getRoleData(role, roleKey) {
 	roleDateData[role] = {}
 
 	for(var date in groupingsDown.groupings[roleKey].groupings) {
-		var currentDateKey = groupingsDown.groupings[roleKey].groupings[date].key 
-		var currentDate = groupingsDown.groupings[roleKey].groupings[date].label
-		roleDateData[role][currentDateKey] = currentDate
+		var currentDateKey = groupingsDown.groupings[roleKey].groupings[date].key, 
+			currentDate = groupingsDown.groupings[roleKey].groupings[date].label,
+			datecellsKey,
+			aggregatesKey
+		
+		datacellsKey = currentDateKey + '!T'
+		aggregatesKey = roleKey + '!T'
+		
+		roleDateData[role][currentDate] = {}
+		// get project name, name, cid for a specific role and date
+		roleDateData[role][currentDate].PROJECT = factMap[datacellsKey].rows
+
+		// get sum of allocation hrs for a specific role
+		roleDateData[role].SUM = factMap[aggregatesKey].aggregates
+
+
+
+
 	}
 	console.log(roleDateData)
 }
