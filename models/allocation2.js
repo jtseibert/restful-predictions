@@ -27,7 +27,7 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 				roleList[currentRole.key] = currentRole.label
 			}
 			//mapValues getRoleData
-			async.mapValues(roleList, getRoleData, function(err, result) {
+			async.eachOf(roleList, getRoleData, function(err, result) {
 				console.log(allocationData)
 			})
 		}
@@ -38,7 +38,7 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 //concat each ret 
 function getRoleData(role, roleKey, callback) {
 	var dateList = groupingsDown.groupings[roleKey].groupings
-	async.mapValues(dateList, function(dateObj, dateKey, callback) {
+	async.eachOf(dateList, function(dateObj, dateKey, callback) {
 		var currentDateKey = groupingsDown.groupings[roleKey].groupings[dateKey].key, 
 			currentDate    = groupingsDown.groupings[roleKey].groupings[dateKey].label
 		
@@ -46,7 +46,7 @@ function getRoleData(role, roleKey, callback) {
 			aggregatesKey  = roleKey + '!T'
 
 		var datacellsList = factMap[datacellsKey].rows
-		async.mapValues(datacellsList, function(recordObj, recordKey, callback) {
+		async.eachOf(datacellsList, function(recordObj, recordKey, callback) {
 			// temp array to hold data for unique row combination
 			var temp = []
 			// get remaining data for specific role and date
