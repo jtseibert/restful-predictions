@@ -46,13 +46,15 @@ function getRoleData(role, roleKey) {
 		
 		datacellsKey   = currentDateKey + '!T'
 		aggregatesKey  = roleKey + '!T'
+
+		console.log(factMap[datacellsKey])
 	
 		// get remaining data for specific role and date
-		var contact_id = factMap[datacellsKey].rows.datacells[0].label, 
+		/*var contact_id = factMap[datacellsKey].rows.datacells[0].label, 
 			name 	   = factMap[datacellsKey].rows.datacells[1].label,
 			project    = factMap[datacellsKey].rows.datacells[2].label,
 			sum 	   = factMap[aggregatesKey].aggregates[0].label
-
+*/
 		// push the data to 1D array
 		temp.push(role, currentDate, name, contact_id, project, sum)
 		roleDateData.push(temp)
