@@ -94,7 +94,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 		})
 	})
 
-	router.route('/:instance/DATA_Capacity/:accessToken')
+router.route('/:instance/DATA_Capacity/:accessToken')
 	.get(function(req, res) {
 		var capacity = new Capacity(req.params.instance, req.params.accessToken)
 		capacity.get(oauth2, function(result) {
@@ -104,6 +104,16 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 			})
 			res.json(capacity.returnData)
 		})
+	})
+
+router.route('/:instance/updateCapacity')
+	.post(function(req, res) {
+		var capacity = new Capacity(null, null, req.params.data)
+		capacity.updateDB(pg, function(){
+			console.log('deleting capacity obj')
+			delete capacity
+		})
+		res.json({message: 'Success!'})
 	})
 
 //Create sales_pipeline DB routes

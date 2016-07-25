@@ -6,10 +6,12 @@ module.exports = Capacity
 
 async = require('../node_modules/async')
 
-function Capacity(instance, accessToken) {
+function Capacity(instance, accessToken, data) {
 	this.accessToken = accessToken
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093ued'
 	this.returnData = []
+	if (data)
+		this.returnData = data
 } 
 
 Capacity.prototype.get = function(oauth2, callback) {
