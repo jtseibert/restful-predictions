@@ -29,6 +29,7 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 			//mapValues getRoleData
 			async.eachOf(roleList, getRoleData, function(err, result) {
 				console.log(allocationData)
+				callback(allocationData)
 			})
 		}
 	})
