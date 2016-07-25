@@ -38,9 +38,9 @@ function getRoleData(role, roleKey) {
 		dateKey
 
 	for(var date in groupingsDown.groupings[roleKey].groupings) {
+		var currentDateKey = groupingsDown.groupings[roleKey].groupings[date].key 
 		var currentDate = groupingsDown.groupings[roleKey].groupings[date].label
-		console.log(currentDate)
-		//roleDateData[role][currentDate.key] = currentDate.label
+		roleDateData[role].currentDateKey = currentDate
 	}
 	console.log(roleDateData)
 
