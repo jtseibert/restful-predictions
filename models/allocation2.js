@@ -48,9 +48,9 @@ function getRoleData(role, roleKey) {
 		aggregatesKey  = roleKey + '!T'
 	
 		// get remaining data for specific role and date
-		var contact_id = factMap[datacellsKey].rows[0].datacells[0].label, 
-			name 	   = factMap[datacellsKey].rows[0].datacells[1].label,
-			project    = factMap[datacellsKey].rows[0].datacells[2].label,
+		var contact_id = factMap[datacellsKey].rows.datacells[0].label, 
+			name 	   = factMap[datacellsKey].rows.datacells[1].label,
+			project    = factMap[datacellsKey].rows.datacells[2].label,
 			sum 	   = factMap[aggregatesKey].aggregates[0].label
 
 		// push the data to 1D array
