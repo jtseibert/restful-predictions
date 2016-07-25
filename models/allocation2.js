@@ -46,8 +46,6 @@ function getRoleData(role, roleKey) {
 		
 		datacellsKey   = currentDateKey + '!T'
 		aggregatesKey  = roleKey + '!T'
-
-		console.log(factMap[datacellsKey].rows[0])
 	
 		// get remaining data for specific role and date
 		var contact_id = factMap[datacellsKey].rows[0].dataCells[0].label, 
