@@ -5,6 +5,7 @@ var allocationData = [["ROLE",
 						"WEEK_DATE",
 						"NAME",
 						"CONTACT_ID",
+						"PROJECT",
 						"ESTIMATED_HOURS",
 						"SUM_EH"
 						]]
@@ -34,7 +35,6 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 			}
 			//iterate getRoleData
 			async.eachOf(roleList, getRoleData, function(err, result) {
-				console.log(allocationData)
 				callback(allocationData)
 			})
 		}
