@@ -29,7 +29,7 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 			//mapValues getRoleData
 			async.mapValues(roleList, getRoleData, function(err,result) {
 				callback(allocationData)
-			}
+			})
 		}
 	})
 	//callback(allocationData)
