@@ -27,12 +27,11 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 				roleList[currentRole.key] = currentRole.label
 			}
 			//mapValues getRoleData
-			async.mapValues(roleList, getRoleData, function(err, results) {
-				console.log(allocationData)
-			})
+			async.mapValues(roleList, getRoleData)
 		}
 	})
 	//callback(allocationData)
+	console.log(allocationData)
 }
 
 //concat each ret 
@@ -56,6 +55,6 @@ function getRoleData(role, roleKey) {
 				sum 	   = factMap[aggregatesKey].aggregates[0].label
 			temp.push(role, currentDate, name, contact_id, sum)
 			allocationData.push(temp)
-		}, function(err, result) {console.log('innermostcallback')})
-	}, function(err, result) {'outer acllback'})
+		})
+	})
 }
