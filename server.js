@@ -276,14 +276,19 @@ router.route('/addRole')
 
 router.route('/DATA_Forecast')
 	.post(function(req, res){
-		forecast = new Forecast(pg, req.body)
-		forecast.create(function(err, response){
-			if(err)
-				res.send(err)
-			res.json(forecast.returnData)
-			delete forecast
+		async.series({
+			one: function(callback) { forecast = new Forecast(pg, req.body, function(){
+					process.nextTick(function(){callback(null, forecast)})
+				}) }
+			two: function(callback) { forecast.create(function(err, response){
+					process.nextTick(function(){callback(null)})
+				})}
+		}, function(err, results){
+			if(!err) {
+				res.json(results.one.returnData)
+				delete forecast
+			}
 		})
-	})
 
 //Register routes
 //All of our routes will be prefixed with /api
