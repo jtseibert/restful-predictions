@@ -358,10 +358,11 @@ function getProjectSize(expectedAmount, projectSizes){
 	}
 }
 
-function getMonday(d) {
+function getSaturday(d) {
+	var daySaturday = 6
 	d = new Date(d)
 	var day = d.getDay(),
-		diff = d.getDate() - day + (day == 0 ? -6:1)
+		diff = d.getDate() + (7 + daySaturday - date.getDay()) % 7
 	return new Date(d.setDate(diff))
 }
 
