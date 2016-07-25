@@ -33,7 +33,7 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 
 		}
 	})
-	callback(allocationData)
+	callback(instance.allocationData)
 }
 
 function getRoleData(role, roleKey) {
