@@ -1,7 +1,13 @@
 module.exports = Allocation2
 var async = require('async')
 var factMap, groupingsDown
-var allocationData = []
+var allocationData = [["ROLE",
+						"WEEK_DATE",
+						"NAME",
+						"CONTACT_ID",
+						"ESTIMATED_HOURS",
+						"SUM_EH"
+						]]
 
 function Allocation2(instance, accessToken) {
 	this.accessToken = accessToken
@@ -54,8 +60,9 @@ function getRoleData(role, roleKey, callback) {
 			var contact_id = factMap[datacellsKey].rows[recordKey].dataCells[0].label, 
 				name 	   = factMap[datacellsKey].rows[recordKey].dataCells[1].label,
 				project    = factMap[datacellsKey].rows[recordKey].dataCells[2].label,
+				estimate   = factMap[datacellsKey].rows[recordKey].dataCells[3].label,
 				sum 	   = factMap[aggregatesKey].aggregates[0].label
-			temp.push(role, currentDate, name, contact_id, sum)
+			temp.push(role, currentDate, name, contact_id, estimate, sum)
 			allocationData.push(temp)
 			process.nextTick(callback)
 		})
