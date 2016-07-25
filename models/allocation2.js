@@ -27,11 +27,12 @@ function Allocation2(instance, accessToken) {
 /**
 * Queries SalesForce for allocation report, determines all roles in the report, and passes a list of
 roles to the getRoleData method. getRoleData is executed asyncronously on every role.
+* @function getReportData
 * @param oauth2 - oauth2 instance
 * @param cache - node-cache instance
 * @param callback - callback function to return final array
 */
-Allocation2.prototype.getReport = function(oauth2, cache, callback) {
+Allocation2.prototype.getReportData = function(oauth2, cache, callback) {
 	var instance = this
 	var parameters = {
 		access_token: instance.accessToken
