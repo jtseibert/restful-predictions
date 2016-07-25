@@ -33,7 +33,7 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 
 function getRoleData(role, roleKey) {
 	// Role is in form {key: label} E.G {2: Developer}
-	console.log(role + " " + rolekey)
+	console.log(role + ' ' + roleKey)
 	var roleDateData, dateKey
 	//roleDateData[role] = {}
 
