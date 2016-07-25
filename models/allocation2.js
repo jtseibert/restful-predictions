@@ -57,8 +57,7 @@ function getRoleData(role, roleKey, callback) {
 		var currentDateKey = groupingsDown.groupings[roleKey].groupings[dateKey].key, 
 			currentDate    = groupingsDown.groupings[roleKey].groupings[dateKey].label
 		
-		var datacellsKey   = currentDateKey + '!T',
-			aggregatesKey  = roleKey + '!T'
+		var datacellsKey   = currentDateKey + '!T'
 
 		var datacellsList = factMap[datacellsKey].rows
 		async.eachOf(datacellsList, function(recordObj, recordKey, callback) {
@@ -69,7 +68,7 @@ function getRoleData(role, roleKey, callback) {
 				name 	   = factMap[datacellsKey].rows[recordKey].dataCells[1].label,
 				project    = factMap[datacellsKey].rows[recordKey].dataCells[2].label,
 				estimate   = factMap[datacellsKey].rows[recordKey].dataCells[3].label,
-				sum 	   = factMap[aggregatesKey].aggregates[0].label.replace(',', '')
+				sum 	   = factMap[datacellsKey].aggregates[0].label.replace(',', '')
 				console.log(sum)
 			temp.push(role, currentDate, name, contact_id, project, estimate, sum)
 			allocationData.push(temp)
