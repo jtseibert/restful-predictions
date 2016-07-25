@@ -62,7 +62,7 @@ Forecast.prototype.create = function(callback) {
 			},
 			two: function(callback){
 				var newData = []
-				console.log(objInstance.sumCapacity)
+				console.log('I found undefined here: '+objInstance.sumCapacity)
 				newData.push(JSON.stringify(objInstance.sumCapacity[row[0]].reports_to))
 				newData.push(objInstance.sumSalesPipeline[row[0]][1])
 				newData.push(objInstance.sumCapacity[row[0]].sum)
