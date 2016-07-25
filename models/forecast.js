@@ -45,12 +45,12 @@ Forecast.prototype.create = function(pg, callback) {
 				async.eachSeries(row, function(value, callback){
 					tempRow.push(value)
 					process.nextTick(callback)
-				}, function(){ process.nextTick(function(){callback(tempRow)}) })
+				}, function(){ process.nextTick(function(){callback(null,tempRow)}) })
 			},
 			two: function(callback){
 				var newData = []
 				newData.push(JSON.stringify(objInstance.sumCapacity[row[0]].reports_to), objInstance.sumSalesPipeline[row[0]][1], objInstance.sumCapacity[row[0]].sum)
-				process.nextTick(function(){callback(newData)})
+				process.nextTick(function(){callback(null,newData)})
 			}
 		}, function(err, results){
 			objInstance.returnData.push(results.one.push(results.two[0], results.two[1], results.two[2]))
