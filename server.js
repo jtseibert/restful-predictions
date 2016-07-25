@@ -279,7 +279,7 @@ router.route('/DATA_Forecast')
 		async.series({
 			one: function(callback) { forecast = new Forecast(pg, req.body, function(){
 					process.nextTick(function(){callback(null, forecast)})
-				}) }
+				}) },
 			two: function(callback) { forecast.create(function(err, response){
 					process.nextTick(function(){callback(null)})
 				})}
