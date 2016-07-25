@@ -53,6 +53,7 @@ Forecast.prototype.create = function(pg, callback) {
 				process.nextTick(function(){callback(null,newData)})
 			}
 		}, function(err, results){
+			console.log(results)
 			objInstance.returnData.push(results.one.push(results.two[0], results.two[1], results.two[2]))
 			process.nextTick(callback)
 		})
