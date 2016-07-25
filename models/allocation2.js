@@ -11,8 +11,8 @@ var allocationData = [["ROLE",
 						"NAME",
 						"CONTACT_ID",
 						"PROJECT",
-						"ALLOCATED_ESTIMATED_HOURS(PERSON/WEEK)",
-						"ALLOCATED_ESTIMATED_HOURS(WEEK)"
+						"ALLOCATED_ESTIMATED_HOURS",
+						"SUM_AEH"
 						]]
 
 function Allocation2(instance, accessToken) {
