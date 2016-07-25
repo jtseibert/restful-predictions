@@ -1,6 +1,7 @@
 module.exports = Allocation2
 var async = require('async')
-var factMap, groupingsDown, allocationData
+var factMap, groupingsDown
+var allocationData = []
 
 function Allocation2(instance, accessToken) {
 	this.accessToken = accessToken
@@ -27,7 +28,7 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 			}
 			//mapValues getRoleData
 			async.mapValues(roleList, getRoleData, function(err, results) {
-				console.log(results)
+				console.log(allocationData)
 			})
 		}
 	})
@@ -57,6 +58,7 @@ function getRoleData(role, roleKey) {
 				sum 	   = factMap[aggregatesKey].aggregates[0].label
 			// push the data to 1D array
 			temp.push(role, currentDate, name, contact_id, sum)
+			allocationData.push(temp)
 		})
 	})
 }
