@@ -27,7 +27,7 @@ function Forecast(pg, data) {
 			result.addRow(row)
 		})
 		query.on("end", function (result) {
-			console.log('Hello: 'JSON.stringify(result.rows, null, "    "))
+			console.log('Hello: '+JSON.stringify(result.rows, null, "    "))
 			this.sumCapacity = result.rows
 		})
 	})
