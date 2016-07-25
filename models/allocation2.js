@@ -1,13 +1,9 @@
 module.exports = Allocation2
+var factMap, groupingsDown, allocationData
 
 function Allocation2(instance, accessToken) {
 	this.accessToken = accessToken
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093vVN'
-	this.allocationData = [["Project",
-						"Resource: Resource Role",
-						"Start Date",
-						"Estimated Hours"
-						]]
 } 
 
 Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
@@ -19,8 +15,8 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 		if(err) {
 			console.log('OAuth2.api GET Error: ', JSON.stringify(err)) 
 		} else {
-			var groupingsDown = data.groupingsDown
-			var factMap = data.factMap
+			groupingsDown = data.groupingsDown
+			factMap = data.factMap
 
 			// Populate role list
 			var roleList = {}
@@ -29,14 +25,14 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 				roleList[currentRole.key] = currentRole.label
 			}
 			//mapValues getRoleData
-			async.mapValues(roleList, getRoleData, callback, factMap, groupingsDown)
+			async.mapValues(roleList, getRoleData, callback)
 
 		}
 	})
-	callback(instance.allocationData)
+	callback(allocationData)
 }
 
-function getRoleData(role, roleKey, callback, factMap, groupingsDown) {
+function getRoleData(role, roleKey) {
 	// Role is in form {key: label} E.G {2: Developer}
 	var roleDateData, dateKey
 	for(var date in groupingsDown.groupings[roleKey]) {
