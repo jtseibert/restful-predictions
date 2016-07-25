@@ -6,7 +6,7 @@ module.exports = Forecast
 
 async = require('../node_modules/async')
 
-function Forecast(data) {
+function Forecast(pg, data) {
 	this.sheetsData 		= data[0][1]
 	this.sumSalesPipeline 	= data[0][0]
 	this.returnData 		= ['ROLE',
@@ -33,7 +33,7 @@ function Forecast(data) {
 	})
 } 
 
-Forecast.prototype.create = function(pg, callback) {
+Forecast.prototype.create = function(callback) {
 	//console.log('SheetsData: '+JSON.stringify(this.sheetsData) + '\nSP: ' + JSON.stringify(this.sumSalesPipeline) + '\nCapacity: ' + JSON.stringify(this.sumCapacity))
 	objInstance = this
 
