@@ -8,8 +8,6 @@ async = require('../node_modules/async')
 
 function Forecast(pg, data, callback) {
 
-	console.log('this is an entry sheetsData: '+JSON.stringify(data[0][0]))
-
 	this.sheetsData 		= data[0]
 	this.sumSalesPipeline 	= data[1]
 	this.returnData 		= ['ROLE',
@@ -53,13 +51,13 @@ Forecast.prototype.create = function(callback) {
 	//console.log('SheetsData: '+JSON.stringify(this.sheetsData) + '\nSP: ' + JSON.stringify(this.sumSalesPipeline) + '\nCapacity: ' + JSON.stringify(this.sumCapacity))
 	objInstance = this
 
-	async.each(this.sheetsData, function(row, callback){
-		//console.log('CurrentRow: '+row)
+	async.each(objInstance.sheetsData, function(row, callback){
+		console.log('CurrentRow: '+row)
 		async.series({
 			one: function(callback){
 				var tempRow = []
 				async.eachSeries(row, function(value, callback){
-					//console.log('CurrentValue: '+value)
+					console.log('CurrentValue: '+value)
 					tempRow.push(value)
 					process.nextTick(callback)
 				}, function(){ process.nextTick(function(){callback(null,tempRow)}) })
