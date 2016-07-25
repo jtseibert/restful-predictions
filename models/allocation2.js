@@ -22,13 +22,14 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 			var groupingsDown = data.groupingsDown
 			var factMap = data.factMap
 
-			// Populate role key list to pass to async functions
-			var roleKeyList = []
+			// Populate role list
+			var roleList = {}
 			for(var role in groupingsDown.groupings) {
-				roleKeyList.push(groupingsDown.groupings[role].key)
+				var currentRole = groupingsDown.groupings[role]
+				roleList[currentRole.key] = currentRole.label
 			}
-			console.log(roleKeyList)
-
+			console.log(roleList)
+			//async.each(roleKeyList, someFunction, someCallback)
 				
 			//for each role key in groupings down
 			//call grab role function
@@ -36,5 +37,5 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 
 		}
 	})
-		callback()
+	callback()
 }
