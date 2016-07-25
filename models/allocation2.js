@@ -70,6 +70,7 @@ function getRoleData(role, roleKey, callback) {
 				project    = factMap[datacellsKey].rows[recordKey].dataCells[2].label,
 				estimate   = factMap[datacellsKey].rows[recordKey].dataCells[3].label,
 				sum 	   = factMap[aggregatesKey].aggregates[0].label.replace(',', '')
+				console.log(sum)
 			temp.push(role, currentDate, name, contact_id, project, estimate, sum)
 			allocationData.push(temp)
 			process.nextTick(callback)
