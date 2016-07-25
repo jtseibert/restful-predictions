@@ -33,6 +33,7 @@ function Forecast(pg, data) {
 } 
 
 Forecast.prototype.create = function(callback) {
+	console.log('SheetsData: '+this.sheetsData + '\nSP: ' + this.sumSalesPipeline + '\nCapacity: ' + this.sumCapacity)
 	objInstance = this
 	async.each(this.sheetsData, function(row, callback){
 		async.series({
