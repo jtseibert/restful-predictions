@@ -33,7 +33,7 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 
 function getRoleData(role, roleKey) {
 	// Role is in form {key: label} E.G {2: Developer}
-	var roleDateData, dateKey
+	var roleDateData = {}
 	roleDateData[role] = {}
 
 	for(var date in groupingsDown.groupings[roleKey].groupings) {
