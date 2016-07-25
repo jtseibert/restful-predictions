@@ -37,8 +37,6 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 
 //concat each ret 
 function getRoleData(role, roleKey) {
-	// Role is in form {key: label} E.G {2: Developer}
-	//var roleDateData = []
 	var dateList = groupingsDown.groupings[roleKey].groupings
 	async.mapValues(dateList, function(dateObj, dateKey) {
 		var currentDateKey = groupingsDown.groupings[roleKey].groupings[dateKey].key, 
@@ -49,16 +47,16 @@ function getRoleData(role, roleKey) {
 
 		var datacellsList = factMap[datacellsKey].rows
 		async.mapValues(datacellsList, function(recordObj, recordKey) {
-			// temp array to hold data for unique role/date combination
+			// temp array to hold data for unique row combination
 			var temp = []
 			// get remaining data for specific role and date
 			var contact_id = factMap[datacellsKey].rows[recordKey].dataCells[0].label, 
 				name 	   = factMap[datacellsKey].rows[recordKey].dataCells[1].label,
 				project    = factMap[datacellsKey].rows[recordKey].dataCells[2].label,
 				sum 	   = factMap[aggregatesKey].aggregates[0].label
-			// push the data to 1D array
 			temp.push(role, currentDate, name, contact_id, sum)
 			allocationData.push(temp)
+			console.log('pushing allocation')
 		})
 	})
 }
