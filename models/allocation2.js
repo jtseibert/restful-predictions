@@ -44,7 +44,7 @@ function getRoleData(role, roleKey) {
 		var temp = []
 		// get date information and define keys for remaining data
 		var currentDateKey = groupingsDown.groupings[roleKey].groupings[date].key, 
-			currentDate    = groupingsDown.groupings[roleKey].groupings[date].label,
+			currentDate    = groupingsDown.groupings[roleKey].groupings[date].label
 		
 		var datacellsKey   = currentDateKey + '!T',
 			aggregatesKey  = roleKey + '!T'
