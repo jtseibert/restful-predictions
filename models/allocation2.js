@@ -29,14 +29,14 @@ Allocation2.prototype.getReport = function(oauth2, async, cache, callback) {
 				roleList[currentRole.key] = currentRole.label
 			}
 			//mapValues getRoleData
-			async.mapValues(roleList, getRoleData)
+			async.mapValues(roleList, getRoleData, factMap, groupingsDown)
 
 		}
 	})
 	callback(instance.allocationData)
 }
 
-function getRoleData(role, roleKey) {
+function getRoleData(role, roleKey, factMap, groupingsDown) {
 	// Role is in form {key: label} E.G {2: Developer}
 	console.log(role + ' ' + roleKey)
 }
