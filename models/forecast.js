@@ -8,10 +8,10 @@ async = require('../node_modules/async')
 
 function Forecast(pg, data, callback) {
 
-	console.log('this is sheetsData: '+data[0])
+	console.log('this is sheetsData: '+JSON.stringify(data[0]))
 
-	this.sheetsData 		= data[0][1]
-	this.sumSalesPipeline 	= data[0][0]
+	this.sheetsData 		= data[0]
+	this.sumSalesPipeline 	= data[1]
 	this.returnData 		= ['ROLE',
 								'WEEK_DATE',
 								'ALLOCATED_ESTIMATED_HOURS(WEEK)',
