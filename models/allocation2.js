@@ -57,7 +57,6 @@ function getRoleData(role, roleKey) {
 				sum 	   = factMap[aggregatesKey].aggregates[0].label
 			// push the data to 1D array
 			temp.push(role, currentDate, name, contact_id, sum)
-			console.log(temp)
 		})
 	})
 }
