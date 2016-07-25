@@ -48,17 +48,14 @@ function Forecast(pg, data, callback) {
 } 
 
 Forecast.prototype.create = function(callback) {
-	//console.log('SheetsData: '+JSON.stringify(this.sheetsData) + '\nSP: ' + JSON.stringify(this.sumSalesPipeline) + '\nCapacity: ' + JSON.stringify(this.sumCapacity))
 	objInstance = this
 
 	async.each(objInstance.sheetsData, function(row, callback){
-		//console.log('CurrentRow: '+row)
+		var tempRow = row
 		async.series({
 			one: function(callback){
 				var tempRow = []
-				async.eachOfSeries(row, function(value, valueKey, callback){
-					if (valueKey == 0)
-						console.log('CurrentValue: '+value)
+				async.eachSeries(tempRow, function(value, callback){
 					tempRow.push(value)
 					process.nextTick(callback)
 				}, function(){ process.nextTick(function(){callback(null,tempRow)}) })
@@ -66,13 +63,12 @@ Forecast.prototype.create = function(callback) {
 			two: function(callback){
 				var newData = []
 				//console.log('current Role: '+row[0])
-				newData.push(JSON.stringify(objInstance.sumCapacity[row[0]].reports_to))
-				newData.push(objInstance.sumSalesPipeline[row[0]][row[1]])
-				newData.push(objInstance.sumCapacity[row[0]].sum)
+				newData.push(JSON.stringify(objInstance.sumCapacity[tempRow[0]].reports_to))
+				newData.push(objInstance.sumSalesPipeline[tempRow[0]][row[1]])
+				newData.push(objInstance.sumCapacity[tempRow[0]].sum)
 				process.nextTick(function(){callback(null,newData)})
 			}
 		}, function(err, results){
-			//console.log(results)
 			objInstance.returnData.push(results.one.push(results.two[0], results.two[1], results.two[2]))
 			process.nextTick(callback)
 		})
