@@ -279,6 +279,7 @@ router.route('/DATA_Forecast')
 		forecast = new Forecast(pg, req.body, function(){
 			forecast.create(function(){
 				res.send(forecast.returnData)
+				console.log('row 0: '+forecast.returnData[0]+'\nrow 100: '+forecast.returnData[100])
 				delete forecast
 			})
 		})
