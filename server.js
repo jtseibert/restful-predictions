@@ -280,7 +280,7 @@ router.route('/DATA_Forecast')
 			forecast.create(function(){
 				res.send(forecast.returnData)
 				async.each(forecast.returnData, function(row){
-					if (row.length != 9)
+					if (row.length != 10)
 						console.log(row)
 				})
 				delete forecast

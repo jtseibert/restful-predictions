@@ -12,10 +12,11 @@ function Forecast(pg, data, callback) {
 	this.sumSalesPipeline 	= data[1]
 	this.returnData 		= [['ROLE',
 								'WEEK_DATE',
-								'ALLOCATED_ESTIMATED_HOURS(WEEK)',
-								'SUM_AEH',
 								'NAME',
 								'CONTACT_ID',
+								'PROJECT',
+								'ALLOCATED_ESTIMATED_HOURS',
+								'SUM_AEH',
 								'REPORTS_TO',
 								'SUM_SALES_PIPELINE_ESTIMATED_HOURS',
 								'SUM_CAPACTIY_ESTIMATED_HOURS']]
