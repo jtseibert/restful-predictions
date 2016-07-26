@@ -285,7 +285,7 @@ router.route('/DATA_Forecast')
 				})}
 		}, function(err, results){
 			if(!err) {
-				console.log(JSON.stringify(results))
+				console.log(JSON.stringify(results.two))
 				res.json(results.two.returnData)
 				delete forecast
 			}
