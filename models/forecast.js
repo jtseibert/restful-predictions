@@ -80,7 +80,7 @@ Forecast.prototype.create = function(callback) {
 				tempRow.push(value)
 			process.nextTick(callback)
 		}, function(){
-			if(objInstance.sumSalesPipeline[row[0]][row[1]])
+			if(objInstance.sumSalesPipeline[row[0]])
 				tempRow.push((objInstance.sumSalesPipeline[row[0]][row[1]])* -1)
 			else
 				tempRow.push(0)
