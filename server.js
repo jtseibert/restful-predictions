@@ -278,14 +278,15 @@ router.route('/DATA_Forecast')
 	.post(function(req, res){
 		async.series({
 			one: function(callback) { forecast = new Forecast(pg, req.body, function(){
-					process.nextTick(function(){callback(null, forecast)})
+					process.nextTick(function(){callback(null)})
 				}) },
 			two: function(callback) { forecast.create(function(err, response){
-					process.nextTick(function(){callback(null)})
+					process.nextTick(function(){callback(null, forecast)})
 				})}
 		}, function(err, results){
 			if(!err) {
-				res.json(results.one.returnData)
+				console.log(results.two.retrunData)
+				res.json(results.two.returnData)
 				delete forecast
 			}
 		})
