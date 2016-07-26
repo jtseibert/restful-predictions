@@ -70,6 +70,8 @@ to the same 2D array to send to Google Sheets. Create is executed asyncronously 
 Forecast.prototype.create = function(callback) {
 	objInstance = this
 
+	console.log(objInstance.sumSalesPipeline)
+
 	async.each(objInstance.sheetsData, function(row, callback){
 		var tempRow = []
 		var newData = []
@@ -80,8 +82,8 @@ Forecast.prototype.create = function(callback) {
 				tempRow.push(value)
 			process.nextTick(callback)
 		}, function(){
-			if(!objInstance.sumSalesPipeline[row[0]][row[1]])
-				console.log('role: '+row[0]+'\t\tweek: '+row[1])
+			//if(!objInstance.sumSalesPipeline[row[0]][row[1]])
+			console.log('role: '+row[0]+'\t\tweek: '+row[1])
 			tempRow.push((objInstance.sumSalesPipeline[row[0]][row[1]])* -1)
 			tempRow.push(objInstance.sumCapacity[row[0]].sum)
 			objInstance.returnData.push(tempRow)
