@@ -278,7 +278,7 @@ router.route('/DATA_Forecast')
 	.post(function(req, res){
 		forecast = new Forecast(pg, req.body, function(){
 			forecast.create(function(){
-				JSON.send(forecast.returnData)
+				res.send(forecast.returnData)
 				delete forecast
 			})
 		})
