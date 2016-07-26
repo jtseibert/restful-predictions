@@ -47,9 +47,10 @@ function Forecast(pg, data, callback) {
 
 Forecast.prototype.create = function(callback) {
 	objInstance = this
+	var tempRow
 
 	async.each(objInstance.sheetsData, function(row, callback){
-		var tempRow = []
+		tempRow = []
 		async.series({
 			one: function(callback){
 				async.eachSeries(row, function(value, callback){
