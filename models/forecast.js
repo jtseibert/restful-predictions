@@ -57,7 +57,7 @@ Forecast.prototype.create = function(callback) {
 		}, function(){
 			tempRow.push(JSON.stringify(objInstance.sumCapacity[row[0]].reports_to))
 			if(objInstance.sumSalesPipeline[row[0]][row[1]] == null)
-				console.log('role: '+fow[0]+'\tweek: '+row[1])
+				console.log('role: '+row[0]+'\tweek: '+row[1])
 			tempRow.push(objInstance.sumSalesPipeline[row[0]][row[1]])
 			tempRow.push(objInstance.sumCapacity[row[0]].sum)
 			objInstance.returnData.push(tempRow)
