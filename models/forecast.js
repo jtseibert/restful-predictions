@@ -52,15 +52,16 @@ Forecast.prototype.create = function(callback) {
 		var tempRow = []
 		var newData = []
 		async.eachOfSeries(row, function(value, valueKey, callback){
-			// if (valueKey == 1)
-			// 	console.log(value)
-			tempRow.push(value)
+			if (valueKey == 5)
+				tempRow.push(value*-1)
+			else
+				tempRow.push(value)
 			process.nextTick(callback)
 		}, function(){
 			//tempRow.push(objInstance.sumCapacity[row[0]].reports_to)
 			// if(objInstance.sumSalesPipeline[row[0]][row[1]] == null)
 			// 	console.log('role: '+row[0]+'\tweek: '+row[1])
-			tempRow.push(objInstance.sumSalesPipeline[row[0]][row[1]])
+			tempRow.push((objInstance.sumSalesPipeline[row[0]][row[1]])* -1)
 			tempRow.push(objInstance.sumCapacity[row[0]].sum)
 			objInstance.returnData.push(tempRow)
 			process.nextTick(callback)
