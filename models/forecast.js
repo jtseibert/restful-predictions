@@ -17,7 +17,6 @@ function Forecast(pg, data, callback) {
 								'PROJECT',
 								'ALLOCATED_ESTIMATED_HOURS',
 								'SUM_AEH',
-								'REPORTS_TO',
 								'SUM_SALES_PIPELINE_ESTIMATED_HOURS',
 								'SUM_CAPACTIY_ESTIMATED_HOURS']]
 	this.sumCapacity
@@ -58,7 +57,7 @@ Forecast.prototype.create = function(callback) {
 			tempRow.push(value)
 			process.nextTick(callback)
 		}, function(){
-			tempRow.push(objInstance.sumCapacity[row[0]].reports_to)
+			//tempRow.push(objInstance.sumCapacity[row[0]].reports_to)
 			// if(objInstance.sumSalesPipeline[row[0]][row[1]] == null)
 			// 	console.log('role: '+row[0]+'\tweek: '+row[1])
 			tempRow.push(objInstance.sumSalesPipeline[row[0]][row[1]])
