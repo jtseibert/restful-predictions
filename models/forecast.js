@@ -61,13 +61,12 @@ Forecast.prototype.create = function(callback) {
 				}, function(){ process.nextTick(function(){callback(null)}) })
 			},
 			two: function(callback){
-				newData.push(JSON.stringify(objInstance.sumCapacity[row[0]].reports_to))
-				newData.push(objInstance.sumSalesPipeline[row[0]][row[1]])
-				newData.push(objInstance.sumCapacity[row[0]].sum)
+				tempRow.push(JSON.stringify(objInstance.sumCapacity[row[0]].reports_to))
+				tempRow.push(objInstance.sumSalesPipeline[row[0]][row[1]])
+				tempRow.push(objInstance.sumCapacity[row[0]].sum)
 				process.nextTick(function(){callback(null)})
 			}
 		}, function(err, results){
-			tempRow.push(newData[0], newData[1], newData[2])
 			objInstance.returnData.push(tempRow)
 			process.nextTick(callback)
 		})
