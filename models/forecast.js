@@ -24,8 +24,6 @@ async = require('../node_modules/async')
 */
 function Forecast(pg, data, callback) {
 
-	console.log(data[1])
-
 	this.sheetsData 		= data[0]
 	this.sumSalesPipeline 	= data[1]
 	this.returnData 		= [['ROLE',
@@ -72,8 +70,6 @@ to the same 2D array to send to Google Sheets. Create is executed asyncronously 
 Forecast.prototype.create = function(callback) {
 	objInstance = this
 
-	console.log(objInstance.sumSalesPipeline)
-
 	async.each(objInstance.sheetsData, function(row, callback){
 		var tempRow = []
 		var newData = []
@@ -84,6 +80,7 @@ Forecast.prototype.create = function(callback) {
 				tempRow.push(value)
 			process.nextTick(callback)
 		}, function(){
+			console.log(objInstance.sumSalesPipeline)
 			tempRow.push((objInstance.sumSalesPipeline[row[0]][row[1]])* -1)
 			tempRow.push(objInstance.sumCapacity[row[0]].sum)
 			objInstance.returnData.push(tempRow)
