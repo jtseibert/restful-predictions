@@ -276,20 +276,26 @@ router.route('/addRole')
 
 router.route('/DATA_Forecast')
 	.post(function(req, res){
-		async.series({
-			one: function(callback) { forecast = new Forecast(pg, req.body, function(){
-					process.nextTick(function(){callback(null)})
-				}) },
-			two: function(callback) { forecast.create(function(err, response){
-					process.nextTick(function(){callback(null, forecast.returnData)})
-				})}
-		}, function(err, results){
-			if(!err) {
+		forecast = new Forecast(pg, req.body, function)(){
+			forecast.create(function(){
 				console.log(results.two)
-				//res.json(results.two)
 				delete forecast
-			}
-		})
+			})
+		}
+		// async.series({
+		// 	one: function(callback) { forecast = new Forecast(pg, req.body, function(){
+		// 			process.nextTick(function(){callback(null)})
+		// 		}) },
+		// 	two: function(callback) { forecast.create(function(err, response){
+		// 			process.nextTick(function(){callback(null, forecast.returnData)})
+		// 		})}
+		// }, function(err, results){
+		// 	if(!err) {
+		// 		console.log(results.two)
+		// 		//res.json(results.two)
+		// 		delete forecast
+		// 	}
+		// })
 	})
 
 //Register routes
