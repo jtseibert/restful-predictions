@@ -66,7 +66,9 @@ Forecast.prototype.create = function(callback) {
 				process.nextTick(function(){callback(null,newData)})
 			}
 		}, function(err, results){
-			objInstance.returnData.push(results.one.push(results.two[0], results.two[1], results.two[2]))
+			results.one.push(results.two[0], results.two[1], results.two[2])
+			console.log(results.one)
+			objInstance.returnData.push(results.one)
 			process.nextTick(callback)
 		})
 	}, function(err){
