@@ -48,14 +48,14 @@ function Forecast(pg, data, callback) {
 Forecast.prototype.create = function(callback) {
 	objInstance = this
 
-	//console.log(objInstance.sumSalesPipeline)
+	console.log(objInstance.sumSalesPipeline)
 
 	async.each(objInstance.sheetsData, function(row, callback){
 		var tempRow = []
 		var newData = []
 		async.eachOfSeries(row, function(value, valueKey, callback){
-			if (valueKey == 1)
-				console.log(value)
+			// if (valueKey == 1)
+			// 	console.log(value)
 			if (valueKey == 5 || valueKey == 6)
 				tempRow.push(value*-1)
 			else
