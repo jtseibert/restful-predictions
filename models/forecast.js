@@ -48,7 +48,7 @@ function Forecast(pg, data, callback) {
 Forecast.prototype.create = function(callback) {
 	objInstance = this
 
-	console.log(sumSalesPipeline)
+	console.log(objInstance.sumSalesPipeline)
 
 	async.each(objInstance.sheetsData, function(row, callback){
 		var tempRow = []
