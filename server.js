@@ -276,12 +276,12 @@ router.route('/addRole')
 
 router.route('/DATA_Forecast')
 	.post(function(req, res){
-		forecast = new Forecast(pg, req.body, function)(){
+		forecast = new Forecast(pg, req.body, function(){
 			forecast.create(function(){
 				console.log(results.two)
 				delete forecast
 			})
-		}
+		})
 		// async.series({
 		// 	one: function(callback) { forecast = new Forecast(pg, req.body, function(){
 		// 			process.nextTick(function(){callback(null)})
