@@ -55,7 +55,7 @@ Forecast.prototype.create = function(callback) {
 			tempRow.push(value)
 			process.nextTick(callback)
 		}, function(){
-			tempRow.push(objInstance.sumCapacity[row[0]].reports_to)
+			tempRow.push(JSON.stringify(objInstance.sumCapacity[row[0]].reports_to))
 			tempRow.push(objInstance.sumSalesPipeline[row[0]][row[1]])
 			tempRow.push(objInstance.sumCapacity[row[0]].sum)
 			objInstance.returnData.push(tempRow)
