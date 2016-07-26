@@ -281,7 +281,7 @@ router.route('/DATA_Forecast')
 					process.nextTick(function(){callback(null)})
 				}) },
 			two: function(callback) { forecast.create(function(err, response){
-					process.nextTick(function(){callback(null, forecast)})
+					process.nextTick(function(){callback(null, forecast.returnData)})
 				})}
 		}, function(err, results){
 			if(!err) {
