@@ -53,23 +53,32 @@ Forecast.prototype.create = function(callback) {
 	async.each(objInstance.sheetsData, function(row, callback){
 		tempRow = []
 		newData = []
-		async.series({
-			one: function(callback){
-				async.eachSeries(row, function(value){
-					tempRow.push(value)
-					process.nextTick(function(){callback(null)})
-				})
-			},
-			two: function(callback){
-				tempRow.push(objInstance.sumCapacity[row[0]].reports_to)
-				tempRow.push(objInstance.sumSalesPipeline[row[0]][row[1]])
-				tempRow.push(objInstance.sumCapacity[row[0]].sum)
-				process.nextTick(function(){callback(null)})
-			}
-		}, function(err, results){
-			objInstance.returnData.push(tempRow)
+		async.eachSeries(row, function(value, callback){
+			tempRow.push(value)
+			process.nextTick(callback)
+		}, function(){
+			tempRow.push(objInstance.sumCapacity[row[0]].reports_to)
+			tempRow.push(objInstance.sumSalesPipeline[row[0]][row[1]])
+			tempRow.push(objInstance.sumCapacity[row[0]].sum)
 			process.nextTick(callback)
 		})
+		// async.series({
+		// 	one: function(callback){
+		// 		async.eachSeries(row, function(value){
+		// 			tempRow.push(value)
+		// 			process.nextTick(function(){callback(null)})
+		// 		})
+		// 	},
+		// 	two: function(callback){
+		// 		tempRow.push(objInstance.sumCapacity[row[0]].reports_to)
+		// 		tempRow.push(objInstance.sumSalesPipeline[row[0]][row[1]])
+		// 		tempRow.push(objInstance.sumCapacity[row[0]].sum)
+		// 		process.nextTick(function(){callback(null)})
+		// 	}
+		// }, function(err, results){
+		// 	objInstance.returnData.push(tempRow)
+		// 	process.nextTick(callback)
+		// })
 	}, function(err){
 		if (err)
 			console.log(err)

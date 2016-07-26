@@ -1,1 +1,1 @@
-web: node ./server.js
+web: node --trace_gc ./server.js
