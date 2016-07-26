@@ -75,14 +75,14 @@ Forecast.prototype.create = function(callback) {
 		var newData = []
 		async.eachOfSeries(row, function(value, valueKey, callback){
 			if (valueKey == 5 || valueKey == 6)
-				tempRow.push(value*-1)
+				tempRow.push(value)
 			else
 				tempRow.push(value)
 			process.nextTick(callback)
 		}, function(){
 			if(objInstance.sumSalesPipeline[row[0]]){
 				if(objInstance.sumSalesPipeline[row[0]][row[1]])
-					tempRow.push((objInstance.sumSalesPipeline[row[0]][row[1]])* -1)
+					tempRow.push((objInstance.sumSalesPipeline[row[0]][row[1]]))
 				else
 					tempRow.push(0)
 			} else {
