@@ -49,12 +49,12 @@ function Forecast(pg, data, callback) {
 Forecast.prototype.create = function(callback) {
 	objInstance = this
 
-	console.log(JSON.stringify(objInstance.sumSalesPipeline))
-
 	async.each(objInstance.sheetsData, function(row, callback){
 		var tempRow = []
 		var newData = []
-		async.eachSeries(row, function(value, callback){
+		async.eachOfSeries(row, function(value, valueKey, callback){
+			if (valueKey == 1)
+				console.log(value)
 			tempRow.push(value)
 			process.nextTick(callback)
 		}, function(){
