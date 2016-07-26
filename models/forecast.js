@@ -55,10 +55,10 @@ Forecast.prototype.create = function(callback) {
 		newData = []
 		async.series({
 			one: function(callback){
-				async.eachSeries(row, function(value, callback){
+				async.eachSeries(row, function(value){
 					tempRow.push(value)
-					process.nextTick(callback)
-				}, function(){ process.nextTick(function(){callback(null)}) })
+					process.nextTick(function(){callback(null)})
+				})
 			},
 			two: function(callback){
 				tempRow.push(objInstance.sumCapacity[row[0]].reports_to)
