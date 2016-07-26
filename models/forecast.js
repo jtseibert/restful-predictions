@@ -1,11 +1,27 @@
-//forecast.js
-//output:
-	//forecast report as a 2D array
-	
+/**
+* Forecast
+* @module Forecast
+* @desc The forecast module is responsible for receiving the allocation data from Google Sheets and creating
+the final forecasting sheet.
+The forecast data is organized into a 2D array and passed down to Google Sheets.
+Role, Week Date, Name, Contact ID, Project, Allocated Estimated Hours, Sum of Allocated Estimated Hours,
+and Sum of Sales Pipeline Estimated Hours are received from Google Sheets.
+Sum of Capacity Estimated Hours is queried from the PostgreSQL database and appended along with
+Sum of Allocated Estimated Hours to the original Allocation report recieved and sent back to Google Sheets
+*/	
 module.exports = Forecast
 
+// module level variables
 async = require('../node_modules/async')
 
+/**
+* Creates an Forecast object with the allocation data as sheetsData, the Sum of Sales Pipeline data as sumSalesPipeline,
+* the Sum of Capacity Estimated Hours as sumCapacity, and the 2D array to be returned as returnData
+* @function Forecast
+* @param pg - the PostgreSQL database object
+* @param data - the 2 part JSON received from Google Sheets containing Allocations and sum of Sales Pipeline Estimated Hours
+* @param callback - callback function to return the constructed object
+*/
 function Forecast(pg, data, callback) {
 
 	this.sheetsData 		= data[0]
@@ -45,6 +61,12 @@ function Forecast(pg, data, callback) {
 	})
 } 
 
+/**
+* Adds all of allocation data and Sum of Capacity Estimated Hours and Sum of Sales Pipeline Estimated hours
+to the same 2D array to send to Google Sheets. Create is executed asyncronously on every role.
+* @function create
+* @param callback - callback function to return final array
+*/
 Forecast.prototype.create = function(callback) {
 	objInstance = this
 
@@ -54,17 +76,12 @@ Forecast.prototype.create = function(callback) {
 		var tempRow = []
 		var newData = []
 		async.eachOfSeries(row, function(value, valueKey, callback){
-			// if (valueKey == 1)
-			// 	console.log(value)
 			if (valueKey == 5 || valueKey == 6)
 				tempRow.push(value*-1)
 			else
 				tempRow.push(value)
 			process.nextTick(callback)
 		}, function(){
-			//tempRow.push(objInstance.sumCapacity[row[0]].reports_to)
-			// if(objInstance.sumSalesPipeline[row[0]][row[1]] == null)
-			// 	console.log('role: '+row[0]+'\tweek: '+row[1])
 			tempRow.push((objInstance.sumSalesPipeline[row[0]][row[1]])* -1)
 			tempRow.push(objInstance.sumCapacity[row[0]].sum)
 			objInstance.returnData.push(tempRow)

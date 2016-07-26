@@ -1,11 +1,20 @@
-//capacity.js
-//output:
-	//Capacity report as a 2D array
-	
+/**
+* Capacity
+* @module Capacity
+* @desc The Capacity module is responsible for persisting all employees and thier roles if they are in the roles database table
+*/
 module.exports = Capacity
 
+// module level variables
 async = require('../node_modules/async')
 
+/**
+* Creates a Capacity object with the optional parameter of input capacity data for update the data table in the database.
+* @function Capacity
+* @param instance - the user's SalesForce instance
+* @param accessToken - the user's SalesForce access token
+* @param data - (optional) user input changes to the capacity database table
+*/
 function Capacity(instance, accessToken, data) {
 	this.accessToken = accessToken
 	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093ued'

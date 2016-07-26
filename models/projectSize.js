@@ -1,13 +1,26 @@
-//projectSize.js
-//input: 
-	//JSON of a project size to add to project_size or remove from project_size
-	
+/**
+* Project Size
+* @module ProjectSize
+* @desc The projectSize module is responsible for persisting, modifying, and deleting from the projectSize PostgreSQL database table.
+The projectSize table consists of SizeId, Price High, Roles and Allocations, and the Number of Weeks.
+*/
 module.exports = ProjectSize
 
+/**
+* Creates a ProjectSize object with the project size information as member data
+* @function ProjectSize
+* @param data - sizeid, pricehigh, roles_allocations, and numweeks all in one JSON
+*/
 function ProjectSize(data) {
 	this.data = data
 } 
 
+/**
+* Inserts the projectSize in data to the projectSize database table
+* @function add
+* @param pg - pg module object
+* @param callback - callback function
+*/
 ProjectSize.prototype.add = function(pg, callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		for (var entry in this.data){
@@ -26,6 +39,12 @@ ProjectSize.prototype.add = function(pg, callback) {
 	})
 }
 
+/**
+* Updates the projectSize in data to the projectSize database table
+* @function update
+* @param pg - pg module object
+* @param callback - callback function
+*/
 ProjectSize.prototype.update = function(pg, callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		for (var entry in this.data){
@@ -48,6 +67,12 @@ ProjectSize.prototype.update = function(pg, callback) {
 	})
 }
 
+/**
+* Returns the projectSizes in the projectSize database table
+* @function get
+* @param pg - pg module object
+* @param callback - callback function
+*/
 ProjectSize.prototype.get = function(pg, callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		var query = client.query('SELECT sizeId FROM project_size')
@@ -60,6 +85,12 @@ ProjectSize.prototype.get = function(pg, callback) {
 	})
 }
 
+/**
+* Returns the projectSize in the projectSize database table equal to the input projectSize
+* @function edit
+* @param pg - pg module object
+* @param callback - callback function
+*/
 ProjectSize.prototype.edit = function(pg, callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		var query = client.query('SELECT * FROM project_size WHERE sizeId = $1', [this.data.project])
@@ -73,6 +104,12 @@ ProjectSize.prototype.edit = function(pg, callback) {
 	})
 }
 
+/**
+* Removes the projectSize in data from the projectSize database table
+* @function remove
+* @param pg - pg module object
+* @param callback - callback function
+*/
 ProjectSize.prototype.remove = function(pg, callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		for (var entry in this.data){

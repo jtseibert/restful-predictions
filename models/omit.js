@@ -16,7 +16,7 @@ function Omit(data) {
 } 
 
 /**
-* Inserts the opportunities in data to the omit database
+* Inserts the opportunities in data to the omit database table
 * @function add
 * @param pg - pg module object
 * @param callback - callback function
@@ -39,7 +39,7 @@ Omit.prototype.add = function(pg, callback) {
 }
 
 /**
-* Removes the opportunities in data from the omit database
+* Removes the opportunities in data from the omit database table
 * @function remove
 * @param pg - pg module object
 * @param callback - callback function
@@ -63,7 +63,7 @@ Omit.prototype.remove = function(pg, callback) {
 }
 
 /**
-* Returns the opportunities in the omit database
+* Returns the opportunities in the omit database table
 * @function get
 * @param pg - pg module object
 * @param callback - callback function
