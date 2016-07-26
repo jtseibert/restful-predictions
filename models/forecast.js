@@ -31,10 +31,10 @@ function Forecast(pg, data, callback) {
 								'NAME',
 								'CONTACT_ID',
 								'PROJECT',
-								'ALLOCATED_ESTIMATED_HOURS',
-								'SUM_AEH',
-								'SUM_SALES_PIPELINE_ESTIMATED_HOURS',
-								'SUM_CAPACTIY_ESTIMATED_HOURS']]
+								'ESTIMATED_HOURS',
+								'ALLOCATED',
+								'FORCASTED',
+								'CAPACITY']]
 	this.sumCapacity
 	objInstance = this
 
