@@ -1,13 +1,26 @@
-//omit.js
-//input: 
-	//JSON of opportunities to add to omit or remove from omit
-	
+/**
+* Omit
+* @module Omit
+* @desc The omit module is responsible for adding and removing opportunities
+from the omit database.
+*/
 module.exports = Omit
 
+/**
+* Creates an Omit object with the opportunity name(s) as member data
+* @function Omit
+* @param data - opportunity name from POST request
+*/
 function Omit(data) {
 	this.data = data
 } 
 
+/**
+* Inserts the opportunities in data to the omit database
+* @function add
+* @param pg - pg module object
+* @param callback - callback function
+*/
 Omit.prototype.add = function(pg, callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		for (var entry in this.data){
@@ -25,6 +38,12 @@ Omit.prototype.add = function(pg, callback) {
 	})
 }
 
+/**
+* Removes the opportunities in data from the omit database
+* @function remove
+* @param pg - pg module object
+* @param callback - callback function
+*/
 Omit.prototype.remove = function(pg, callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		for (var entry in this.data){
@@ -43,6 +62,12 @@ Omit.prototype.remove = function(pg, callback) {
 	})
 }
 
+/**
+* Returns the opportunities in the omit database
+* @function get
+* @param pg - pg module object
+* @param callback - callback function
+*/
 Omit.prototype.get = function(pg, callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		var query = client.query('SELECT * FROM omit')
