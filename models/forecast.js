@@ -10,7 +10,7 @@ function Forecast(pg, data, callback) {
 
 	this.sheetsData 		= data[0]
 	this.sumSalesPipeline 	= data[1]
-	this.returnData 		= ['ROLE',
+	this.returnData 		= [['ROLE',
 								'WEEK_DATE',
 								'ALLOCATED_ESTIMATED_HOURS(WEEK)',
 								'SUM_AEH',
@@ -18,7 +18,7 @@ function Forecast(pg, data, callback) {
 								'CONTACT_ID',
 								'REPORTS_TO',
 								'SUM_SALES_PIPELINE_ESTIMATED_HOURS',
-								'SUM_CAPACTIY_ESTIMATED_HOURS']
+								'SUM_CAPACTIY_ESTIMATED_HOURS']]
 	this.sumCapacity
 	objInstance = this
 
