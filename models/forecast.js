@@ -29,12 +29,10 @@ function Forecast(pg, data, callback) {
 				console.log(err)
 			var query = client.query('SELECT * FROM roles_hours')
 			query.on("row", function (row, result) {
-				//result.addrow(row)
 				roles_hours[row.role] = {'reports_to': row.reports_to, 'sum': row.sum}
 			})
 			query.on("end", function (result) {
 				process.nextTick(function(){callback(null, roles_hours)})
-				//process.nextTick(callback)
 			})
 		})
 	}
@@ -49,12 +47,10 @@ function Forecast(pg, data, callback) {
 
 Forecast.prototype.create = function(callback) {
 	objInstance = this
-	console.log(objInstance.sumSalesPipeline)
 
-	async.eachSeries(objInstance.sheetsData, function(row, callback){
+	async.each(objInstance.sheetsData, function(row, callback){
 		async.series({
 			one: function(callback){
-				console.log('function one role: '+row[0])
 				var tempRow = []
 				async.eachSeries(row, function(value, callback){
 					tempRow.push(value)
@@ -63,7 +59,6 @@ Forecast.prototype.create = function(callback) {
 			},
 			two: function(callback){
 				var newData = []
-				console.log('Function 2 role: '+row[0])
 				newData.push(JSON.stringify(objInstance.sumCapacity[row[0]].reports_to))
 				newData.push(objInstance.sumSalesPipeline[row[0]][row[1]])
 				newData.push(objInstance.sumCapacity[row[0]].sum)
