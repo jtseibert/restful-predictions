@@ -278,7 +278,7 @@ router.route('/DATA_Forecast')
 	.post(function(req, res){
 		forecast = new Forecast(pg, req.body, function(){
 			forecast.create(function(){
-				res.send(forecast.returnData)
+				res.json(forecast.returnData)
 				async.each(forecast.returnData, function(row){
 					if (row.length != 9)
 						console.log(row)
