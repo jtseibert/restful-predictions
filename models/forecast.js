@@ -48,6 +48,8 @@ function Forecast(pg, data, callback) {
 Forecast.prototype.create = function(callback) {
 	objInstance = this
 
+	console.log(JSON.stringify(objInstance.sumSalesPipeline))
+
 	async.each(objInstance.sheetsData, function(row, callback){
 		var tempRow = []
 		var newData = []
@@ -56,8 +58,8 @@ Forecast.prototype.create = function(callback) {
 			process.nextTick(callback)
 		}, function(){
 			tempRow.push(JSON.stringify(objInstance.sumCapacity[row[0]].reports_to))
-			if(objInstance.sumSalesPipeline[row[0]][row[1]] == null)
-				console.log('role: '+row[0]+'\tweek: '+row[1])
+			// if(objInstance.sumSalesPipeline[row[0]][row[1]] == null)
+			// 	console.log('role: '+row[0]+'\tweek: '+row[1])
 			tempRow.push(objInstance.sumSalesPipeline[row[0]][row[1]])
 			tempRow.push(objInstance.sumCapacity[row[0]].sum)
 			objInstance.returnData.push(tempRow)
