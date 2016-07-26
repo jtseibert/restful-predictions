@@ -24,6 +24,8 @@ async = require('../node_modules/async')
 */
 function Forecast(pg, data, callback) {
 
+	console.log(data[1])
+
 	this.sheetsData 		= data[0]
 	this.sumSalesPipeline 	= data[1]
 	this.returnData 		= [['ROLE',
