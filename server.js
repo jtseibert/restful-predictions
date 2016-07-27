@@ -15,7 +15,7 @@ var newRelic		= require('newrelic'),
 	Roles 			= require('./models/roles'),
 	Cache           = require('node-cache'),
 	Capacity        = require('./models/capacity'),
-	Forecast 		= require('./models/forecast')
+	Forecast 		= require('./models/forecast2')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
@@ -279,10 +279,8 @@ router.route('/DATA_Forecast')
 		forecast = new Forecast(pg, req.body, function(){
 			forecast.create(function(){
 				res.json(forecast.returnData)
-				async.each(forecast.returnData, function(row){
-					if (row.length != 9)
-						console.log(row)
-				})
+				// async.each(forecast.returnData, function(row){
+				// })
 				delete forecast
 			})
 		})
