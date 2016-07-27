@@ -114,13 +114,13 @@ Forecast2.prototype.create = function(callback) {
 							-objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE])
 							/objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE])
 					} else {
-						tempRow[5] = objInstance.capacity[row.ROLE].sum
+						tempRow[5] = objInstance.capacity[row.ROLE].sum/objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE]
 					}
 				} else {
-					tempRow[5] = objInstance.capacity[row.ROLE].sum
+					tempRow[5] = objInstance.capacity[row.ROLE].sum/objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE]
 				}
 			} else {
-				tempRow[5] = objInstance.capacity[row.ROLE].sum
+				tempRow[5] = objInstance.capacity[row.ROLE].sum/objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE]
 			}
 
 			objInstance.returnData.push(tempRow)
