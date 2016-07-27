@@ -28,14 +28,16 @@ function Forecast2(pg, data, callback) {
 	this.forecastedData 		= data[1]
 	this.numberRolesAllocated 	= data[2]
 	this.numberRolesForecasted	= data[3]
-	this.returnData 		= [['PROJECT',
-								'WEEK_DATE',
-								'PROBABILITY',
-								'ROLE',
-								'ESTIMATED_HOURS',
-								'CAPACITY',
-								'TYPE']]
+	this.allocatedHours 		= data[4]
+	this.returnData 			= [['PROJECT',
+									'WEEK_DATE',
+									'PROBABILITY',
+									'ROLE',
+									'ESTIMATED_HOURS',
+									'CAPACITY',
+									'TYPE']]
 	this.capacity
+
 	objInstance = this
 
 	var one = function(callback){
@@ -83,7 +85,7 @@ Forecast2.prototype.create = function(callback) {
 			tempRow.push('')
 			tempRow.push('ALLOCATED')
 
-			if (row.ALLOCATED < objInstance.capacity[row.ROLE].sum)
+			if (objInstance.allocatedHours[row.ROLE][row.WEEK_DATE] < objInstance.capacity[row.ROLE].sum)
 				tempRow[5] = row.ESTIMATED_HOURS
 			else
 				tempRow[5] = objInstance.capacity[row.ROLE].sum/objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]
@@ -107,9 +109,9 @@ Forecast2.prototype.create = function(callback) {
 			tempRow.push('')
 			tempRow.push('FORECASTED')
 
-			if (objInstance.numberRolesAllocated[row.WEEK_DATE]) {
-				if (objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]) {
-					if ((objInstance.capacity[row.ROLE].sum-objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]) > 0) {
+			if (objInstance.allocatedHours[row.ROLE]) {
+				if (objInstance.allocatedHours[row.ROLE][row.WEEK_DATE]) {
+					if ((objInstance.capacity[row.ROLE].sum-objInstance.allocatedHours[row.ROLE][row.WEEK_DATE]) > 0) {
 						tempRow[5] = ((objInstance.capacity[row.ROLE].sum
 							-objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE])
 							/objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE])
