@@ -83,10 +83,10 @@ Forecast2.prototype.create = function(callback) {
 			tempRow.push('')
 			tempRow.push('ALLOCATED')
 
-			if (row.ALLOCATED < objInstance.capacity[row.ROLE])
+			if (row.ALLOCATED < objInstance.capacity[row.ROLE].sum)
 				tempRow[5] = row.ESTIMATED_HOURS
 			else
-				tempRow[5] = objInstance.capacity[row.ROLE]/objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]
+				tempRow[5] = objInstance.capacity[row.ROLE].sum/objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]
 			objInstance.returnData.push(tempRow)
 			process.nextTick(callback)
 		},function(){
@@ -109,19 +109,18 @@ Forecast2.prototype.create = function(callback) {
 
 			if (objInstance.numberRolesAllocated[row.WEEK_DATE]) {
 				if (objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]) {
-					if ((objInstance.capacity[row.ROLE]-objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]) > 0) {
-						tempRow[5] = ((objInstance.capacity[row.ROLE]
+					if ((objInstance.capacity[row.ROLE].sum-objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]) > 0) {
+						tempRow[5] = ((objInstance.capacity[row.ROLE].sum
 							-objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE])
 							/objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE])
-						//tempRow[5] = (objInstance.capacity[row.ROLE]/objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE])
 					} else {
-						tempRow[5] = objInstance.capacity[row.ROLE]
+						tempRow[5] = objInstance.capacity[row.ROLE].sum
 					}
 				} else {
-					tempRow[5] = objInstance.capacity[row.ROLE]
+					tempRow[5] = objInstance.capacity[row.ROLE].sum
 				}
 			} else {
-				tempRow[5] = objInstance.capacity[row.ROLE]
+				tempRow[5] = objInstance.capacity[row.ROLE].sum
 			}
 
 			objInstance.returnData.push(tempRow)
