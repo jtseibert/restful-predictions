@@ -1,21 +1,21 @@
 {
-  "name": "hello-world360",
+  "name": "restful-predictions",
   "version": "1.0.0",
-  "main": "main.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jtseibert/hello-world360.git"
+    "url": "git+https://github.com/sheldon-tan-magnet/restful-predictions.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Jacob Seibert, Sheldon Tan",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jtseibert/hello-world360/issues"
+    "url": "https://github.com/sheldon-tan-magnet/restful-predictions/issues"
   },
-  "homepage": "https://github.com/jtseibert/hello-world360#readme",
+  "homepage": "https://github.com/sheldon-tan-magnet/restful-predictions#readme",
   "dependencies": {
     "async": "2.0.0-rc.6",
     "body-parser": "1.15.1",
@@ -28,5 +28,5 @@
     "simple-oauth2": "0.7.0"
   },
   "devDependencies": {},
-  "description": ""
+  "description": "restful api for salesforce"
 }
