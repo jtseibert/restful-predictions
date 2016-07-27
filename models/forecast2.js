@@ -113,7 +113,7 @@ Forecast2.prototype.create = function(callback) {
 				if (objInstance.allocatedHours[row.ROLE][row.WEEK_DATE]) {
 					if ((objInstance.capacity[row.ROLE].sum-objInstance.allocatedHours[row.ROLE][row.WEEK_DATE]) > 0) {
 						tempRow[5] = ((objInstance.capacity[row.ROLE].sum
-							-objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE])
+							-objInstance.allocatedHours[row.ROLE][row.WEEK_DATE])
 							/objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE])
 					} else {
 						tempRow[5] = 0
