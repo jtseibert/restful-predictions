@@ -107,20 +107,23 @@ Forecast2.prototype.create = function(callback) {
 			tempRow.push('')
 			tempRow.push('FORECASTED')
 
-			if ( (objInstance.capacity[row.ROLE]-objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]) > 0) {
-				if (objInstance.numberRolesAllocated[row.WEEK_DATE]) {
-					if (objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]) {
+			if (objInstance.numberRolesAllocated[row.WEEK_DATE]) {
+				if (objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]) {
+					if ((objInstance.capacity[row.ROLE]-objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]) > 0) {
 						tempRow[5] = ((objInstance.capacity[row.ROLE]
 							-objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE])
 							/objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE])
+						//tempRow[5] = (objInstance.capacity[row.ROLE]/objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE])
 					} else {
-						tempRow[5] = (objInstance.capacity[row.ROLE]/objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE])
+						tempRow[5] = objInstance.capacity[row.ROLE]
 					}
 				} else {
-					tempRow[5] = (objInstance.capacity[row.ROLE]/objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE])
+					tempRow[5] = objInstance.capacity[row.ROLE]
 				}
-			} else
-				tempRow[5] = 0
+			} else {
+				tempRow[5] = objInstance.capacity[row.ROLE]
+			}
+
 			objInstance.returnData.push(tempRow)
 			process.nextTick(callback)
 		},function(){
