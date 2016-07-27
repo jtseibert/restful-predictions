@@ -73,13 +73,15 @@ Forecast2.prototype.create = function(callback) {
 	// Handle all allocatedData and push to returnData for output
 	var prepareAllocated = function(allocatedData, callback){
 		async.each(allocatedData, function(row,callback){
-			var tempRow = [],
-				tempRow[0] = row.PROJECT,
-				tempRow[1] = row.WEEK_DATE,
-				tempRow[2] = row.PROBABILITY,
-				tempRow[3] = row.ROLE,
-				tempRow[4] = row.ESTIMATED_HOURS,
-				tempRow[6] = 'ALLOCATED'
+			var tempRow = []
+
+			tempRow.push(row.PROJECT)
+			tempRow.push(row.WEEK_DATE)
+			tempRow.push(row.PROBABILITY)
+			tempRow.push(row.ROLE)
+			tempRow.push(row.ESTIMATED_HOURS)
+			tempRow.push('')
+			tempRow.push('ALLOCATED')
 
 			if (row.ALLOCATED < objInstance.capacity[row.ROLE])
 				tempRow[5] = row.ESTIMATED_HOURS
@@ -96,13 +98,14 @@ Forecast2.prototype.create = function(callback) {
 	var prepareForecasted = function(forecastedData, callback){
 		async.each(forecasted, function(row,callback){
 			var tempRow = []
-			
-			tempRow[0] = row.OPPORTUNITY_NAME,
-			tempRow[1] = row.WEEK_DATE,
-			tempRow[2] = row.PROBABILITY,
-			tempRow[3] = row.ROLE,
-			tempRow[4] = row.ESTIMATED_HOURS,
-			tempRow[6] = 'FORECASTED'
+
+			tempRow.push(row.OPPORTUNITY_NAME)
+			tempRow.push(row.WEEK_DATE)
+			tempRow.push(row.PROBABILITY)
+			tempRow.push(row.ROLE)
+			tempRow.push(row.ESTIMATED_HOURS)
+			tempRow.push('')
+			tempRow.push('FORECASTED')
 
 			if ( (objInstance.capacity[row.ROLE]-objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]) > 0) {
 				if (objInstance.numberRolesAllocated[row.WEEK_DATE]) {
