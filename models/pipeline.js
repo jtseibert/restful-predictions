@@ -183,25 +183,24 @@ Pipeline.prototype.get = function(oauth2, async, cache, callback) {
 					currentOpportunity = row.dataCells[opportunityIndex].label
 					rowData = []
 					rowData.push(groupingsDown[stageKey].label)
-					for (var cell in row.dataCells) {
-						if (indexes.indexOf(parseInt(cell, 10)) > -1) {
-							currentCell = row.dataCells[cell]
-							if (cell == closeDateIndex)
-								rowData.push(cleanUpDate(currentCell.label), calculateStartDate(currentCell.label, week))
-							else if (cell == createdDateIndex)
-								rowData.push(cleanUpDate(currentCell.label))
-							else if (cell == expectedAmountIndex){
-								currentProjectSize = getProjectSize(currentCell.label, objInstance.projectSizes)
-								stripAmount = currentCell.label.replace('USD ', '').replace(/,/g,'')
+					async.eachOfSeries(row.dataCells, function(cell, cellKey){
+						if (indexes.indexOf(parseInt(cellKey, 10)) > -1) {
+							if (cellKey == closeDateIndex)
+								rowData.push(cleanUpDate(cell.label), calculateStartDate(cell.label, week))
+							else if (cellKey == createdDateIndex)
+								rowData.push(cleanUpDate(cell.label))
+							else if (cellKey == expectedAmountIndex){
+								currentProjectSize = getProjectSize(cell.label, objInstance.projectSizes)
+								stripAmount = cell.label.replace('USD ', '').replace(/,/g,'')
 								rowData.push(stripAmount)
-							} else if (cell == amountIndex){
-								stripAmount = currentCell.label.replace('USD ', '').replace(/,/g,'')
+							} else if (cellKey == amountIndex){
+								stripAmount = cell.label.replace('USD ', '').replace(/,/g,'')
 								rowData.push(stripAmount)
 							} else {
-								rowData.push(currentCell.label)
+								rowData.push(cell.label)
 							}
 						}
-					} // End for loop
+					})
 					rowData.push(currentProjectSize)
 					cacheData.push(rowData)
 				}) // End async.each
@@ -328,16 +327,16 @@ function assignRoles(row, projectSizes){
 			roles 				= projectSizes[projectSize].roles_allocations,
 			daysInWeek 			= 7
 
-		for (var role in roles) {
-			for(var i=0; i<roles[role].duration; i++) {
+		async.eachOf(roles, function(role, roleKey){ //for (var role in roles) {
+			async.times(role.duration, function(n,next){ //for(var i=0; i<role.duration; i++) {
 				tempRow = []
-				for (var col in row) {
-					tempRow.push(row[col])
-				}
-				tempRow.push(role,roles[role].allocation,calculateStartDate(row[5],(parseInt(roles[role].offset)+i)*daysInWeek))
+				async.eachSeries(row, function(col){ //for (var col in row) {
+					tempRow.push(col)
+				})
+				tempRow.push(roleKey,role.allocation,calculateStartDate(row[5],(parseInt(role.offset)+i)*daysInWeek))
 				returnArray.push(tempRow)
-			}
-		}
+			})
+		})
 	}
 	return returnArray
 }
