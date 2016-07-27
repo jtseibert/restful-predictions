@@ -95,13 +95,14 @@ Forecast2.prototype.create = function(callback) {
 	// Handle all forecastedData and push to returnData for output
 	var prepareForecasted = function(forecastedData, callback){
 		async.each(forecasted, function(row,callback){
-			var tempRow = [],
-				tempRow[0] = row.OPPORTUNITY_NAME,
-				tempRow[1] = row.WEEK_DATE,
-				tempRow[2] = row.PROBABILITY,
-				tempRow[3] = row.ROLE,
-				tempRow[4] = row.ESTIMATED_HOURS,
-				tempRow[6] = 'FORECASTED'
+			var tempRow = []
+			
+			tempRow[0] = row.OPPORTUNITY_NAME,
+			tempRow[1] = row.WEEK_DATE,
+			tempRow[2] = row.PROBABILITY,
+			tempRow[3] = row.ROLE,
+			tempRow[4] = row.ESTIMATED_HOURS,
+			tempRow[6] = 'FORECASTED'
 
 			if ( (objInstance.capacity[row.ROLE]-objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]) > 0) {
 				if (objInstance.numberRolesAllocated[row.WEEK_DATE]) {
