@@ -96,7 +96,7 @@ Forecast2.prototype.create = function(callback) {
 
 	// Handle all forecastedData and push to returnData for output
 	var prepareForecasted = function(forecastedData, callback){
-		async.each(forecasted, function(row,callback){
+		async.each(forecastedData, function(row,callback){
 			var tempRow = []
 
 			tempRow.push(row.OPPORTUNITY_NAME)
