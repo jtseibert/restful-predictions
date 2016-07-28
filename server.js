@@ -294,6 +294,11 @@ router.route('/DATA_Forecast')
 		})
 	})
 
+router.route('/importProjectSize')
+	.post(function(req,res){
+		console.log(req.body)
+	})
+
 //Register routes
 //All of our routes will be prefixed with /api
 app.use(function(req, res, next){
