@@ -120,6 +120,7 @@ router.route('/updateCapacity')
 
 router.route('/addOpportunity')
 	.post(function(req,res){
+		console.log('addOpportunity')
 		opportunity = new Opportunity(req.body)
 		opportunity.add(async, pg,function(err){
 			if (err)
@@ -142,6 +143,7 @@ router.route('/removeOpportunity')
 
 router.route('/getOpportunity')
 	.get(function(req, res) {
+		console.log('getOpportunity')
 		opportunities = new Opportunity("")
 		opportunities.get(pg, function(err, response){
 			if (err)
