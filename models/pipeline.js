@@ -183,9 +183,9 @@ Pipeline.prototype.get = function(oauth2, async, cache, callback) {
 					currentOpportunity = row.dataCells[opportunityIndex].label
 					rowData = []
 					rowData.push(groupingsDown[stageKey].label)
-					console.log(row.dataCells)
+					//console.log(row.dataCells)
 					async.eachOfSeries(row.dataCells, function(cell, cellKey){
-						//console.log(cellKey)
+						console.log('cellKey: '+cellKey+'\t\tcell: '+cell)
 						if (indexes.indexOf(parseInt(cellKey, 10)) > -1) {
 							if (cellKey == closeDateIndex)
 								rowData.push(cleanUpDate(cell.label), calculateStartDate(cell.label, week))
