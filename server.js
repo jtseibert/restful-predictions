@@ -271,17 +271,6 @@ router.route('/getRoles')
 		})
 	})
 
-router.route('/addRole')
-	.post(function(req, res) {
-		roles = new Roles(req.body)
-		roles.add(pg, function(err, response) {
-			if(err)
-				res.send(err)
-			res.json({message: 'Success!'})
-			delete roles
-		})
-	})
-
 router.route('/DATA_Forecast')
 	.post(function(req, res){
 		forecast = new Forecast(pg, req.body, function(){

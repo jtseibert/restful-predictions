@@ -32,18 +32,3 @@ Roles.prototype.get = function(pg, callback) {
 		})
 	})
 }
-
-/**
-* Inserts the roles in data to the roles database table
-* @function add
-* @param pg - pg module object
-* @param callback - callback function
-*/
-Roles.prototype.add = function(pg, callback) {
-	var role = this.data.role
-	pg.connect(process.env.DATABASE_URL, function(err, client) {
-		var query = client.query('INSERT INTO roles (role) values ($1) ON CONFLICT (role) DO NOTHING',
-			[role])
-		callback()
-	})
-}
