@@ -291,7 +291,9 @@ router.route('/importProjectSize')
 	.post(function(req,res){
 		//console.log(req.body)
 		//var b = blobUtil.blobToBinaryString(req.body)
-		console.log(req.body instanceof Blob)
+		var MyBlob = new Blob(['test text'], {type : 'text/plain'});
+console.log(MyBlob instanceof Blob)
+		//console.log(req.body instanceof Blob)
 		//res.send({message: "HEYHEYHEYHEYH"})
 		// .then(
 		// function(binaryString) {
