@@ -285,8 +285,9 @@ router.route('/DATA_Forecast')
 
 router.route('/importProjectSize')
 	.post(function(req,res){
+		console.log("type is: " + req.body instanceof Blob)
 		console.log(req.body)
-		res.send({message: "hey"})
+		res.send({message: "HEYHEYHEYHEYH"})
 	})
 
 //Register routes
