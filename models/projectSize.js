@@ -23,10 +23,11 @@ function ProjectSize(data, callback) {
 * @param callback - callback function
 */
 ProjectSize.prototype.add = function(pg, callback) {
+	objInstance = this
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		for (var entry in this.data){
+		for (var entry in objInstance.data){
 			client.query('INSERT INTO project_size(sizeId,pricehigh,roles_allocations,numweeks) values($1,$2,$3,$4)',
-				[this.data[entry].sizeid,this.data[entry].pricehigh,this.data[entry].roles_allocations,this.data[entry].numweeks])
+				[objInstance.data[entry].sizeid,objInstance.data[entry].pricehigh,objInstance.data[entry].roles_allocations,objInstance.data[entry].numweeks])
 		}
 		//testing
 		var query = client.query("SELECT * from project_size")
@@ -47,14 +48,15 @@ ProjectSize.prototype.add = function(pg, callback) {
 * @param callback - callback function
 */
 ProjectSize.prototype.update = function(pg, callback) {
+	objInstance = this
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		for (var entry in this.data){
+		for (var entry in objInstance.data){
 			client.query('UPDATE project_size SET ' 								+
 	  						'pricehigh = COALESCE($2, pricehigh),'					+
 	  						'roles_allocations = COALESCE($3, roles_allocations),' 	+
 	  						'numweeks = COALESCE($4, numweeks)' 					+
 							'WHERE sizeId = $1',
-				[this.data[entry].sizeid,this.data[entry].pricehigh,this.data[entry].roles_allocations,this.data[entry].numweeks])
+				[objInstance.data[entry].sizeid,objInstance.data[entry].pricehigh,objInstance.data[entry].roles_allocations,objInstance.data[entry].numweeks])
 		}
 		//testing
 		var query = client.query("SELECT * from project_size")
@@ -114,8 +116,9 @@ ProjectSize.prototype.edit = function(pg, callback) {
 * @param callback - callback function
 */
 ProjectSize.prototype.remove = function(pg, callback) {
+	objInstance = this
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		for (var entry in this.data){
+		for (var entry in objInstance.data){
 			console.log('should be deleting: ' + entry)
 			client.query('DELETE FROM project_size WHERE sizeId = $1', [entry])
 		}
