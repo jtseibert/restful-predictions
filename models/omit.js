@@ -22,8 +22,9 @@ function Omit(data) {
 * @param callback - callback function
 */
 Omit.prototype.add = function(pg, callback) {
+	objInstance = this
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		for (var entry in this.data){
+		for (var entry in objInstance.data){
 			client.query('INSERT INTO omit(opportunity) values($1)', [entry])
 		}
 		//testing
@@ -45,8 +46,9 @@ Omit.prototype.add = function(pg, callback) {
 * @param callback - callback function
 */
 Omit.prototype.remove = function(pg, callback) {
+	objInstance = this
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		for (var entry in this.data){
+		for (var entry in objInstance.data){
 			console.log('should be deleting: ' + entry)
 			client.query('DELETE FROM omit WHERE opportunity = $1', [entry])
 		}
