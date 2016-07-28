@@ -183,8 +183,10 @@ Pipeline.prototype.get = function(oauth2, async, cache, callback) {
 					currentOpportunity = row.dataCells[opportunityIndex].label
 					rowData = []
 					rowData.push(groupingsDown[stageKey].label)
-					for (var cell in row.dataCells) {
-						if (indexes.indexOf(parseInt(cell, 10)) > -1) {
+					//for (var cell in row.dataCells) {
+					async.eachOfSeries(row.dataCells, function(cell, cellKey){
+						console.log('cell: '+JSON.stringify(cell)+'\t\tcellKey: '+cellKey)
+						/*if (indexes.indexOf(parseInt(cell, 10)) > -1) {
 							currentCell = row.dataCells[cell]
 							if (cell == closeDateIndex)
 								rowData.push(cleanUpDate(currentCell.label), calculateStartDate(currentCell.label, week))
@@ -200,8 +202,8 @@ Pipeline.prototype.get = function(oauth2, async, cache, callback) {
 							} else {
 								rowData.push(currentCell.label)
 							}
-						}
-					} // End for loop
+						}*/
+					}) // End for loop
 					rowData.push(currentProjectSize)
 					cacheData.push(rowData)
 				}) // End async.each
