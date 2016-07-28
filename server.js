@@ -16,7 +16,8 @@ var newRelic		= require('newrelic'),
 	Cache           = require('node-cache'),
 	Capacity        = require('./models/capacity'),
 	Forecast 		= require('./models/forecast2'),
-	xls             = require('xlsjs')
+	xls             = require('xlsjs'),
+	blob 			= require('blob-util')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
@@ -286,13 +287,16 @@ router.route('/DATA_Forecast')
 
 router.route('/importProjectSize')
 	.post(function(req,res){
-		//console.log("type is: " + req.body instanceof Blob)
 		//console.log(req.body)
-		var str = new Buffer(req.body, "binary")
-		var workbook = xls.read(str, {type:"binary"})
-		var json = xls.Utils.sheet_to_json(workbook)
-		console.log(json)
-		res.send({message: "HEYHEYHEYHEYH"})
+		blobUtil.blobToBinaryString(req.body).then(
+		function(binaryString) {
+			var workbook = xls.read(binaryString, {type:"binary"})
+			var json = xls.Utils.sheet_to_json(workbook)
+			console.log(json)
+			res.send({message: "HEYHEYHEYHEYH"})
+		}).catch( function(err) {
+			res.send(err)
+		})
 	})
 
 //Register routes
