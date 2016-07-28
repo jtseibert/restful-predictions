@@ -18,7 +18,8 @@ var newRelic		= require('newrelic'),
 	Forecast 		= require('./models/forecast2'),
 	xls             = require('xlsjs'),
 	blobUtil 		= require('blob-util'),
-	Promise 		= require('promise')
+	Promise 		= require('promise'),
+	Blob 	  		= require('blob')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
@@ -289,9 +290,9 @@ router.route('/DATA_Forecast')
 router.route('/importProjectSize')
 	.post(function(req,res){
 		//console.log(req.body)
-		var b = blobUtil.blobToBinaryString(req.body)
-		console.log(b)
-		res.send({message: "HEYHEYHEYHEYH"})
+		//var b = blobUtil.blobToBinaryString(req.body)
+		console.log(req.body instanceof Blob)
+		//res.send({message: "HEYHEYHEYHEYH"})
 		// .then(
 		// function(binaryString) {
 		// 	console.log("before workbook")
