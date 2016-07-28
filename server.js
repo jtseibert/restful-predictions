@@ -287,8 +287,8 @@ router.route('/DATA_Forecast')
 	})
 
 router.route('/importProjectSize')
-	.post(function(req,res){
-		//console.log(req.body)
+	.post(function(req, res){
+		console.log(req.body)
 		blobUtil.blobToBinaryString(req.body).then(
 		function(binaryString) {
 			console.log("before workbook")
