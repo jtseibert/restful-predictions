@@ -288,7 +288,7 @@ router.route('/importProjectSize')
 	.post(function(req,res){
 		//console.log("type is: " + req.body instanceof Blob)
 		//console.log(req.body)
-		var workbook = xls.read(req.body, {type:"binary"})
+		var workbook = xls.read(req.body, {type:"utf8"})
 		var json = xls.Utils.sheet_to_json(workbook)
 		console.log(json)
 		res.send({message: "HEYHEYHEYHEYH"})
