@@ -190,45 +190,49 @@ router.route('/getOmit')
 //Create project_sizes routes
 router.route('/addProjectSize')
 	.post(function(req,res){
-		projectSize = new ProjectSize(req.body)
-		projectSize.add(pg,function(err){
-			if (err)
-				res.send(err)
-			res.json({message: 'Success!'})
-			delete projectSize
+		projectSize = new ProjectSize(req.body, function(){
+			projectSize.add(pg,function(err){
+				if (err)
+					res.send(err)
+				res.json({message: 'Success!'})
+				delete projectSize
+			})
 		})
 	})
 
 router.route('/removeProjectSize')
 	.post(function(req,res){
-		projectSize = new ProjectSize(req.body)
-		projectSize.remove(pg,function(err){
-			if (err)
-				res.send(err)
-			res.json({message: 'Success!'})
-			delete projectSize
+		projectSize = new ProjectSize(req.body, function(){
+			projectSize.remove(pg,function(err){
+				if (err)
+					res.send(err)
+				res.json({message: 'Success!'})
+				delete projectSize
+			})
 		})
 	})
 
 router.route('/updateProjectSize')
 	.post(function(req,res){
-		projectSize = new ProjectSize(req.body)
-		projectSize.update(pg,function(err){
-			if (err)
-				res.send(err)
-			res.json({message: 'Success!'})
-			delete projectSize
+		projectSize = new ProjectSize(req.body, function(){
+			projectSize.update(pg,function(err){
+				if (err)
+					res.send(err)
+				res.json({message: 'Success!'})
+				delete projectSize
+			})
 		})
 	})
 
 router.route('/getProjectSize')
 	.get(function(req,res){
-		projectSize = new ProjectSize("")
-		projectSize.get(pg,function(err,response){
-			if (err)
-				res.send(err)
-			res.json(response)
-			delete projectSize
+		projectSize = new ProjectSize("", function(){
+			projectSize.get(pg,function(err,response){
+				if (err)
+					res.send(err)
+				res.json(response)
+				delete projectSize
+			})
 		})
 	})
 
