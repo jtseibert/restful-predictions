@@ -176,14 +176,12 @@ Pipeline.prototype.get = function(oauth2, async, cache, callback) {
 		async.eachOf(factMap, function(stage, stageKey, callback){
 			var stageKey = stageKey.split('!')[stageIndex]
 			if (stageKey != "T")
-				async.eachSeries(stage.rows, function(row){
+				async.each(stage.rows, function(row){
 					var currentOpportunity = row.dataCells[opportunityIndex].label,
 						rowData = []
 					rowData.push(groupingsDown[stageKey].label)
-					//for (var cell in row.dataCells) {
-					async.eachOfSeries(row.dataCells, function(cell, cellKey){
-						console.log('cell: '+JSON.stringify(cell)+'\t\tcellKey: '+cellKey)
-						/*if (indexes.indexOf(parseInt(cell, 10)) > -1) {
+					for (var cell in row.dataCells) {
+						if (indexes.indexOf(parseInt(cell, 10)) > -1) {
 							currentCell = row.dataCells[cell]
 							if (cell == closeDateIndex)
 								rowData.push(cleanUpDate(currentCell.label), calculateStartDate(currentCell.label, week))
@@ -199,8 +197,8 @@ Pipeline.prototype.get = function(oauth2, async, cache, callback) {
 							} else {
 								rowData.push(currentCell.label)
 							}
-						}*/
-					}) // End for loop
+						}
+					}// End for loop
 					rowData.push(currentProjectSize)
 					cacheData.push(rowData)
 				}) // End async.each
