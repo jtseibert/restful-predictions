@@ -286,6 +286,7 @@ router.route('/DATA_Forecast')
 router.route('/importProjectSize')
 	.post(function(req,res){
 		console.log(req.body)
+		res.send({message: "hey"})
 	})
 
 //Register routes
