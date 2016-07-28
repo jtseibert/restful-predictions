@@ -17,7 +17,7 @@ var newRelic		= require('newrelic'),
 	Capacity        = require('./models/capacity'),
 	Forecast 		= require('./models/forecast2'),
 	xls             = require('xlsjs'),
-	blob 			= require('blob-util')
+	blobUtil 		= require('blob-util')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
