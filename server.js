@@ -239,6 +239,7 @@ router.route('/getProjectSize')
 router.route('/editProjectSize')
 	.post(function(req,res){
 		projectSize = new ProjectSize(req.body, function(){
+			console.log(projectSize.data)
 			projectSize.edit(pg,function(err,response){
 				if (err)
 					res.send(err)
