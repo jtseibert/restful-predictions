@@ -234,14 +234,14 @@ router.route('/getProjectSize')
 
 router.route('/editProjectSize')
 	.post(function(req,res){
-		console.log(req.body)
-		projectSize = new ProjectSize(req.body)
-		projectSize.edit(pg,function(err,response){
-			if (err)
-				res.send(err)
-			res.json(response)
-			delete projectSize
-		})
+		projectSize = new ProjectSize(req.body, function(){
+			projectSize.edit(pg,function(err,response){
+				if (err)
+					res.send(err)
+				res.json(response)
+				delete projectSize
+			})
+		})	
 	})
 
 //Create general DB routes

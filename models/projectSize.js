@@ -11,8 +11,9 @@ module.exports = ProjectSize
 * @function ProjectSize
 * @param data - sizeid, pricehigh, roles_allocations, and numweeks all in one JSON
 */
-function ProjectSize(data) {
+function ProjectSize(data, callback) {
 	this.data = data
+	process.nextTick(callback)
 } 
 
 /**
