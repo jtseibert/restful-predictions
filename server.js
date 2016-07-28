@@ -289,19 +289,16 @@ router.route('/DATA_Forecast')
 router.route('/importProjectSize')
 	.post(function(req,res){
 		//console.log(req.body)
-		var b = blobUtil.blobToBinaryString(req.body)
-		console.log(b)
-		res.send({message: "HEYHEYHEYHEYH"})
-		// .then(
-		// function(binaryString) {
-		// 	console.log("before workbook")
-		// 	var workbook = xls.read(binaryString, {type:"binary"})
-		// 	var json = xls.Utils.sheet_to_json(workbook)
-		// 	console.log(json)
-		// 	res.send({message: "HEYHEYHEYHEYH"})
-		// }).catch( function(err) {
-		// 	res.send(err)
-		// })
+		blobUtil.blobToBinaryString(req.body).then(
+		function(binaryString) {
+			console.log("before workbook")
+			var workbook = xls.read(binaryString, {type:"binary"})
+			var json = xls.Utils.sheet_to_json(workbook)
+			console.log(json)
+			res.send({message: "HEYHEYHEYHEYH"})
+		}).catch( function(err) {
+			res.send(err)
+		})
 	})
 
 //Register routes
