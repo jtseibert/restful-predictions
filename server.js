@@ -76,6 +76,10 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 			    		console.log('sales_pipeline data not cached')
 						pipeline.get(oauth2, async, cache, function(result) {
 							pipeline.applyDB(async, result, function(){
+								async.each(pipeline.returnData, function(row){
+									if (row.length != 14)
+										console.log(row)
+								})
 								res.json(pipeline.returnData)
 								delete pipeline
 							})
