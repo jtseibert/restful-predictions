@@ -94,6 +94,7 @@ ProjectSize.prototype.get = function(pg, callback) {
 */
 ProjectSize.prototype.edit = function(pg, callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		console.log(this.data)
 		var query = client.query('SELECT * FROM project_size WHERE sizeId = $1', [this.data.project])
 		query.on("row", function (row, result) {
 			result.addRow(row)
