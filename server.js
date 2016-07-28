@@ -290,6 +290,7 @@ router.route('/importProjectSize')
 		//console.log(req.body)
 		blobUtil.blobToBinaryString(req.body).then(
 		function(binaryString) {
+			console.log("before workbook")
 			var workbook = xls.read(binaryString, {type:"binary"})
 			var json = xls.Utils.sheet_to_json(workbook)
 			console.log(json)
