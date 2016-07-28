@@ -13,7 +13,7 @@ module.exports = ProjectSize
 */
 function ProjectSize(data, callback) {
 	this.data = data
-	process.nextTick(callback)
+	callback()
 } 
 
 /**
