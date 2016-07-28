@@ -184,6 +184,7 @@ Pipeline.prototype.get = function(oauth2, async, cache, callback) {
 					rowData = []
 					rowData.push(groupingsDown[stageKey].label)
 					async.eachOfSeries(row.dataCells, function(cell, cellKey){
+						console.log(cellKey)
 						if (indexes.indexOf(parseInt(cellKey, 10)) > -1) {
 							if (cellKey == closeDateIndex)
 								rowData.push(cleanUpDate(cell.label), calculateStartDate(cell.label, week))
