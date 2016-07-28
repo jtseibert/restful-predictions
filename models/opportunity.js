@@ -33,7 +33,7 @@ Opportunity.prototype.add = function(async, pg, callback) {
 								opportunity.expected_amount,
 								opportunity.close_date,
 								opportunity.start_date,
-								opportunity.probability,
+								opportunity.probability/100,
 								opportunity.age,
 								opportunity.created_date,
 								opportunity.account_name,
