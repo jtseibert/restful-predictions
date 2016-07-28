@@ -286,10 +286,10 @@ router.route('/DATA_Forecast')
 
 router.route('/importProjectSize')
 	.post(function(req, res){
-		//console.log(req.body)
-		var workbook = xls.read(req.body, {type:"base64"})
-		var json = xls.Utils.sheet_to_json(workbook)
-		console.log(json)
+		console.log(req.body)
+		//var workbook = xls.read(req.body, {type:"base64"})
+		//var json = xls.Utils.sheet_to_json(workbook)
+		//console.log(json)
 		res.send({message: "HEYHEYHEYHEYH"})
 	})
 
