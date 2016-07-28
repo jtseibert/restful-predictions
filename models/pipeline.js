@@ -176,7 +176,7 @@ Pipeline.prototype.get = function(oauth2, async, cache, callback) {
 		async.eachOf(factMap, function(stage, stageKey, callback){
 			var stageKey = stageKey.split('!')[stageIndex]
 			if (stageKey != "T")
-				async.each(stage.rows, function(row){
+				async.eachSeries(stage.rows, function(row){
 					var currentOpportunity = row.dataCells[opportunityIndex].label,
 						rowData = []
 					rowData.push(groupingsDown[stageKey].label)
