@@ -264,9 +264,10 @@ Pipeline.prototype.applyDB = function(async, cacheData, callback) {
 			process.nextTick(callback)
 		}
 	}, function(err){
-		async.eachOf(addedOpportunities, function(opportunity, key){
-			console.log('opportunity: '+opportunity+'\nkey: '+key)
+		async.eachOf(addedOpportunities, function(opportunity, key, callback){
+			console.log('opportunity: '+JSON.stringify(opportunity)+'\nkey: '+key)
 			if (!omitData[key]){
+				console.log('adding: '+key)
 				newRow = []
 				newRow.push((opportunity.STAGE || "New Opportunity"),
 								key,
@@ -281,13 +282,20 @@ Pipeline.prototype.applyDB = function(async, cacheData, callback) {
 								(opportunity.PROJECT_SIZE)
 							)
 				var rowsToAdd = assignRoles(newRow, projectSizes)
-				async.each(rowsToAdd,function(row){
+				async.each(rowsToAdd,function(row,callback){
 					objInstance.returnData.push(row)
+					process.nextTick(callback)
+				}, function(){
+					process.nextTick(callback)
 				})
+			} else {
+				process.nextTick(callback)
 			}
+		}, function(){
+			process.nextTick(callback)
 		})
+			}
 	})
-	process.nextTick(callback)
 }
 
 /**
