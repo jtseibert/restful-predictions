@@ -158,12 +158,9 @@ Pipeline.prototype.get = function(oauth2, async, cache, callback) {
 	    	accountNameIndex 		= 13,
 	    	stageOffset 			= 1,
 	    	week					= 7,
-	    	rowData,
-	    	stageKey,
 	    	currentStage,
 	    	currentRow,
 	    	currentCell,
-	    	currentOpportunity,
 	    	currentProjectSize,
 	    	stripAmount
 
@@ -177,11 +174,11 @@ Pipeline.prototype.get = function(oauth2, async, cache, callback) {
 						accountNameIndex]
 
 		async.eachOf(factMap, function(stage, stageKey, callback){
-			stageKey = stageKey.split('!')[stageIndex]
+			var stageKey = stageKey.split('!')[stageIndex]
 			if (stageKey != "T")
 				async.each(stage.rows, function(row){
-					currentOpportunity = row.dataCells[opportunityIndex].label
-					rowData = []
+					var currentOpportunity = row.dataCells[opportunityIndex].label,
+						rowData = []
 					rowData.push(groupingsDown[stageKey].label)
 					//for (var cell in row.dataCells) {
 					async.eachOfSeries(row.dataCells, function(cell, cellKey){
