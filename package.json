@@ -26,6 +26,7 @@
     "newrelic": "1.28.3",
     "node-cache": "3.2.1",
     "pg": "5.2.0",
+    "promise": "7.1.1",
     "simple-oauth2": "0.7.0",
     "xlsjs": "0.7.5"
   },
