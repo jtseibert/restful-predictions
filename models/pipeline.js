@@ -294,7 +294,6 @@ Pipeline.prototype.applyDB = function(async, cacheData, callback) {
 		}, function(){
 			process.nextTick(callback)
 		})
-			}
 	})
 }
 
