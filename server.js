@@ -301,8 +301,8 @@ router.route('/importProjectSize')
 			//console.log(text)
 			
 			var workbook = xls.read(p.toString(), {type:"base64"})
-			//var json = xls.Utils.sheet_to_json(workbook)
-			//console.log(json)
+			var json = xls.Utils.sheet_to_json(workbook)
+			console.log(json)
 
 		}
 		res.send({message: "HEYHEYHEYHEYH"})
