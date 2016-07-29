@@ -291,7 +291,7 @@ router.route('/importProjectSize')
 	.post(function(req, res){
 		//console.log(Object.prototype.toString.call(req.body))
 		for(var b in req.body) {
-			//console.log(b)
+			console.log(b)
 			
 			//console.log("TYPE IS: " + Object.prototype.toString.call(b));
 
