@@ -53,6 +53,7 @@ function authorize(callback) {
 			console.log('cache get err')
 		}
 	})
+}
 
 /**
  * Get and store new token after prompting for user authorization, and then
@@ -127,8 +128,5 @@ function listFiles(auth) {
         console.log('%s (%s)', file.name, file.id);
       }
     }
-  });
+  })
 }
-
-
-
