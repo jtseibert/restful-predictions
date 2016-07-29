@@ -312,7 +312,7 @@ router.route('/importProjectSize')
 		  var color = part.added ? 'green' :
 		    part.removed ? 'red' : 'grey'
 		  process.stderr.write(part.value[color])
-		});
+		})
 		 
 		console.log()
 		//console.log(test)

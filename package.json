@@ -21,6 +21,7 @@
     "base-64": "0.1.0",
     "body-parser": "1.15.1",
     "buffer-json": "1.0.0",
+    "diff": "2.2.3",
     "express": "4.13.4",
     "google-auth-library": "0.9.8",
     "googleapis": "12.0.0",
