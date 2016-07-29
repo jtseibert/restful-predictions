@@ -301,9 +301,7 @@ router.route('/importProjectSize')
 
 router.route('/drive')
 	.get(function(req, res){
-		var drive = new Drive(function() {
-			drive.go()
-		})
+		drive = new Drive()
 	})
 
 //Register routes

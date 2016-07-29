@@ -6,7 +6,7 @@ var googleAuth = require('google-auth-library')
 var cache = require('node-cache')
 var SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
 
-function Drive(callback) {
+function Drive() {
 	this.credentials = {
 		client_id: "495458014485-sna9qsdtheiq02ou4imhjme970eunb2u.apps.googleusercontent.com",
 		project_id: "steel-climber-138714","auth_uri":"https://accounts.google.com/o/oauth2/auth",
@@ -16,10 +16,6 @@ function Drive(callback) {
 		redirect_uris: ["https://restful-predictions.herokuapp.com/oauthcallback"],
 		javascript_origins: ["https://restful-predictions.herokuapp.com"]
 	}
-	callback()
-}
-
-Drive.prototype.go = function() {
 	authorize(listFiles)
 }
 
