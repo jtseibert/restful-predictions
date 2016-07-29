@@ -290,11 +290,14 @@ router.route('/importProjectSize')
 		//console.log(req.body)
 		for(var b in req.body) {
 			//console.log(b)
-			//var workbook = xls.read(b, {type:"base64"})
-			//var json = xls.Utils.sheet_to_json(workbook)
-			//console.log(json)
+			
+			
 			var buf = new Buffer(b, 'base64')
 			console.log(buf.toString())
+			var workbook = xls.read(buf, {type:"base64"})
+			var json = xls.Utils.sheet_to_json(workbook)
+			console.log(json)
+
 		}
 		res.send({message: "HEYHEYHEYHEYH"})
 	})
