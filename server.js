@@ -296,7 +296,7 @@ router.route('/importProjectSize')
 			//console.log("TYPE IS: " + Object.prototype.toString.call(b));
 
 			var buf = new Buffer(b, 'base64')
-			var bytes = base64.decode(buf.toString)
+			var bytes = base64.decode(b)
 			var text = utf8.decode(bytes)
 			console.log(text)
 			
