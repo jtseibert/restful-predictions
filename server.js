@@ -287,7 +287,7 @@ router.route('/DATA_Forecast')
 
 router.route('/importProjectSize')
 	.post(function(req, res){
-		//console.log(req.body)
+		console.log(Object.prototype.toString.call(req.body))
 		for(var b in req.body) {
 			//console.log(b)
 			
