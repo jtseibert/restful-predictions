@@ -294,9 +294,6 @@ router.route('/importProjectSize')
 		for(var b in req.body) {
 			console.log(b)
 			
-			//console.log("TYPE IS: " + Object.prototype.toString.call(b));
-			var z = zip(b, {base64: true, checkCRC32: true})
-			console.log(z)
 			var buf = new Buffer(b, 'base64')
 			console.log("buf is " + buf)
 			var bytes = base64.decode(b)
