@@ -294,7 +294,7 @@ router.route('/importProjectSize')
 			//var json = xls.Utils.sheet_to_json(workbook)
 			//console.log(json)
 			var buf = new Buffer(b, 'base64')
-			console.log(b.toString())
+			console.log(buf.toString())
 		}
 		res.send({message: "HEYHEYHEYHEYH"})
 	})
