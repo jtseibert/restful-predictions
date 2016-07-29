@@ -31,7 +31,8 @@
     "pg": "5.2.0",
     "simple-oauth2": "0.7.0",
     "utf8": "2.1.1",
-    "xlsjs": "0.7.5"
+    "xlsjs": "0.7.5",
+    "xlsx": "0.8.0"
   },
   "devDependencies": {},
   "description": "restful api for salesforce"

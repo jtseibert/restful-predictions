@@ -16,7 +16,7 @@ var newRelic		= require('newrelic'),
 	Cache           = require('node-cache'),
 	Capacity        = require('./models/capacity'),
 	Forecast 		= require('./models/forecast2'),
-	xls             = require('xlsjs'),
+	xlsx            = require('xlxs'),
 	Drive 			= require('./models/drive'),
 	base64    		= require('base-64'),
 	utf8  			= require('utf8'),
@@ -292,16 +292,16 @@ router.route('/importProjectSize')
 	.post(function(req, res){
 		//console.log(Object.prototype.toString.call(req.body))
 		for(var b in req.body) {
-			var p = b
-			p = p + '=='
-			console.log(p)
+			//var p = b
+			//p = p + '=='
+			//console.log(p)
 			//var bytes = base64.decode(b)
 			//console.log(bytes)
 			//var text = utf8.decode(bytes)
 			//console.log(text)
 			
-			var workbook = xls.read(p.toString(), {type:"base64"})
-			var json = xls.Utils.sheet_to_json(workbook)
+			var workbook = xlsx.read(b, {type:"base64"})
+			var json = xlsx.utils.sheet_to_json(workbook)
 			console.log(json)
 
 		}
