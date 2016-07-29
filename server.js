@@ -292,6 +292,7 @@ router.route('/importProjectSize')
 	.post(function(req, res){
 		//console.log(Object.prototype.toString.call(req.body))
 		for(var b in req.body) {
+			console.log(b)
 			//var p = b
 			//p = p + '=='
 			//console.log(p)
@@ -300,9 +301,9 @@ router.route('/importProjectSize')
 			//var text = utf8.decode(bytes)
 			//console.log(text)
 			
-			var workbook = xlsx.read(b, {type:"base64"})
-			var json = xlsx.utils.sheet_to_json(workbook)
-			console.log(json)
+			//var workbook = xlsx.read(b, {type: 'base64'})
+			//var json = xlsx.utils.sheet_to_json(workbook)
+			//console.log(json)
 
 		}
 		res.send({message: "HEYHEYHEYHEYH"})
