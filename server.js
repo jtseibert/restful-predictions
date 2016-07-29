@@ -323,7 +323,7 @@ var b = req.body.b64
 			//console.log(text)
 			
 			var workbook = xlsx.read(b, {type: 'base64'})
-			var json = xlsx.utils.sheet_to_json(workbook.Sheets[SheetNames[0]])
+			var json = xlsx.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]])
 			console.log(json)
 
 		res.send({message: "HEYHEYHEYHEYH"})
