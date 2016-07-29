@@ -17,7 +17,9 @@ var newRelic		= require('newrelic'),
 	Capacity        = require('./models/capacity'),
 	Forecast 		= require('./models/forecast2'),
 	xls             = require('xlsjs'),
-	Drive 			= require('./models/drive')
+	Drive 			= require('./models/drive'),
+	base64    		= require('base-64'),
+	utf8  			= require('utf8')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
@@ -287,17 +289,20 @@ router.route('/DATA_Forecast')
 
 router.route('/importProjectSize')
 	.post(function(req, res){
-		console.log(Object.prototype.toString.call(req.body))
+		//console.log(Object.prototype.toString.call(req.body))
 		for(var b in req.body) {
 			//console.log(b)
 			
-			console.log("TYPE IS: " + Object.prototype.toString.call(b));
+			//console.log("TYPE IS: " + Object.prototype.toString.call(b));
 
 			var buf = new Buffer(b, 'base64')
-			console.log(buf.toString())
-			var workbook = xls.read(buf.toString(), {type:"base64"})
-			var json = xls.Utils.sheet_to_json(workbook)
-			console.log(json)
+			var bytes = base64.decode(buf.toString)
+			var text = utf8.decode(bytes)
+			console.log(text)
+			
+			//var workbook = xls.read(buf.toString(), {type:"base64"})
+			//var json = xls.Utils.sheet_to_json(workbook)
+			//console.log(json)
 
 		}
 		res.send({message: "HEYHEYHEYHEYH"})
