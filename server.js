@@ -292,10 +292,7 @@ router.route('/importProjectSize')
 	.post(function(req, res){
 		//console.log(Object.prototype.toString.call(req.body))
 		for(var b in req.body) {
-			console.log(b)
-			
-			var buf = new Buffer(b, 'base64')
-			var bytes = base64.decode(buf)
+			var bytes = base64.decode(b)
 			var text = utf8.decode(bytes)
 			console.log(text)
 			
