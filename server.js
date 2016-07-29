@@ -19,7 +19,8 @@ var newRelic		= require('newrelic'),
 	xls             = require('xlsjs'),
 	Drive 			= require('./models/drive'),
 	base64    		= require('base-64'),
-	utf8  			= require('utf8')
+	utf8  			= require('utf8'),
+	zip				= require('node-zip')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
@@ -294,8 +295,10 @@ router.route('/importProjectSize')
 			console.log(b)
 			
 			//console.log("TYPE IS: " + Object.prototype.toString.call(b));
-
+			var z = zip(b, {base64: true, checkCRC32: true})
+			console.log(z)
 			var buf = new Buffer(b, 'base64')
+			console.log("buf is " + buf)
 			var bytes = base64.decode(b)
 			var text = utf8.decode(bytes)
 			console.log(text)

@@ -27,6 +27,7 @@
     "jsdoc": "3.4.0",
     "newrelic": "1.28.3",
     "node-cache": "3.2.1",
+    "node-zip": "1.1.1",
     "pg": "5.2.0",
     "simple-oauth2": "0.7.0",
     "utf8": "2.1.1",
