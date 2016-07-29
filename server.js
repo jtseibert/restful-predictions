@@ -288,6 +288,7 @@ router.route('/importProjectSize')
 	.post(function(req, res){
 		//console.log(req.body)
 		for(var b in req.body) {
+			console.log(b)
 			var workbook = xls.read(b, {type:"binary"})
 			var json = xls.Utils.sheet_to_json(workbook)
 			console.log(json)
