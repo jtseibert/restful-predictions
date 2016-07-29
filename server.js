@@ -292,14 +292,14 @@ router.route('/importProjectSize')
 	.post(function(req, res){
 		//console.log(Object.prototype.toString.call(req.body))
 		for(var b in req.body) {
-			var bytes = base64.decode(b)
-			console.log(bytes)
+			//var bytes = base64.decode(b)
+			//console.log(bytes)
 			//var text = utf8.decode(bytes)
 			//console.log(text)
 			
-			//var workbook = xls.read(buf.toString(), {type:"base64"})
-			//var json = xls.Utils.sheet_to_json(workbook)
-			//console.log(json)
+			var workbook = xls.read(b, {type:"base64"})
+			var json = xls.Utils.sheet_to_json(workbook)
+			console.log(json)
 
 		}
 		res.send({message: "HEYHEYHEYHEYH"})
