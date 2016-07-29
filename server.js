@@ -300,8 +300,8 @@ router.route('/importProjectSize')
 	})
 
 router.route('/drive')
-	.post(function(req, res){
-		drive = new Drive(pg, req.body, function(){
+	.get(function(req, res){
+		drive = new Drive(function() {
 			drive.go()
 		})
 	})
