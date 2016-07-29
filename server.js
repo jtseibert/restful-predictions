@@ -291,7 +291,8 @@ router.route('/importProjectSize')
 		for(var b in req.body) {
 			//console.log(b)
 			
-			
+			console.log("TYPE IS: " + Object.prototype.toString.call(b));
+
 			var buf = new Buffer(b, 'base64')
 			console.log(buf.toString())
 			var workbook = xls.read(buf.toString(), {type:"base64"})
