@@ -298,7 +298,7 @@ router.route('/importProjectSize')
 			//var text = utf8.decode(bytes)
 			//console.log(text)
 			
-			var workbook = xls.read(b, {type:"base64"})
+			var workbook = xls.read(b, {type:"binary"})
 			//var json = xls.Utils.sheet_to_json(workbook)
 			//console.log(json)
 
