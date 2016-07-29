@@ -17,7 +17,7 @@ var newRelic		= require('newrelic'),
 	Capacity        = require('./models/capacity'),
 	Forecast 		= require('./models/forecast2'),
 	xls             = require('xlsjs'),
-	Drive 			= require('drive')
+	Drive 			= require('./models/drive')
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
