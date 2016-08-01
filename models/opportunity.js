@@ -57,7 +57,7 @@ Opportunity.prototype.add = function(async, pg, callback) {
 	process.nextTick(callback)
 }
 
-Opportunity.prototype.update = function(pg, callback {
+Opportunity.prototype.update = function(pg, callback) {
 	var objInstance = this
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		client.query('UPDATE sales_pipeline SET ' +
