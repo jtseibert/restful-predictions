@@ -65,9 +65,9 @@ Opportunity.prototype.update = function(pg, callback) {
   						'probability = COALESCE($2, probability),' + 
   						'project_size = COALESCE($3, project_size)' +
 						'WHERE opportunity = $4',
-			[objInstance.data.start_date, objInstance.data.probability, objInstance.data.project_size]/100, objInstance.data.opportunity)
-	}
-	process.nextTick(callback))
+			[objInstance.data.start_date, objInstance.data.probability, objInstance.data.project_size/100, objInstance.data.opportunity])
+	})
+	process.nextTick(callback)
 }
 
 Opportunity.prototype.remove = function(async, pg, callback) {
