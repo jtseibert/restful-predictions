@@ -57,6 +57,19 @@ Opportunity.prototype.add = function(async, pg, callback) {
 	process.nextTick(callback)
 }
 
+Opportunity.prototype.update = function(pg, callback {
+	var objInstance = this
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		client.query('UPDATE sales_pipeline SET ' +
+  						'start_date = COALESCE($1, start_date),' +
+  						'probability = COALESCE($2, probability),' + 
+  						'project_size = COALESCE($3, project_size)' +
+						'WHERE opportunity = $4',
+			[objInstance.data.start_date, objInstance.data.probability, objInstance.data.project_size])
+		callback()
+	})
+}
+
 Opportunity.prototype.remove = function(async, pg, callback) {
 	var data = this.data
 	async.eachOf(data, function(opportunity, opportunityKey, callback){

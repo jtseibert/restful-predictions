@@ -151,12 +151,24 @@ router.route('/addOpportunity')
 		opportunity.add(async, pg, function(err) {
 			if (err)
 				res.send(err)
-			res.json({message: 'Success!'})
+			else
+				res.json({message: 'Success!'})
 			delete opportunity
 		})
 	})
 
-//update opportunitiy here
+//WIPPPP::::
+router.route('/updateOpportunity')
+	.post(function(req, res) {
+		opportunity = new Opportunity(req.body)
+		opportunity.update(pg, function(err) {
+			if(err) 
+				res.send(err)
+			else
+				res.json({message: 'Success!'})
+			delete opportunity
+		})
+	})
 
 router.route('/removeOpportunity')
 	.post(function(req,res) {
@@ -164,7 +176,8 @@ router.route('/removeOpportunity')
 		opportunity.remove(async, pg,function(err) {
 			if (err)
 				res.send(err)
-			res.json({message: 'Success!'})
+			else
+				res.json({message: 'Success!'})
 			delete opportunity
 		})
 	})
@@ -176,7 +189,8 @@ router.route('/addOmit')
 		omit.add(pg,function(err) {
 			if (err)
 				res.send(err)
-			res.json({message: 'Success!'})
+			else
+				res.json({message: 'Success!'})
 			delete omit
 		})
 	})
@@ -187,7 +201,8 @@ router.route('/removeOmit')
 		omit.remove(pg,function(err) {
 			if (err)
 				res.send(err)
-			res.json({message: 'Success!'})
+			else
+				res.json({message: 'Success!'})
 			delete omit
 		})
 	})
@@ -200,7 +215,8 @@ router.route('/addProjectSize')
 			projectSize.add(pg,function(err) {
 				if (err)
 					res.send(err)
-				res.json({message: 'Success!'})
+				else
+					res.json({message: 'Success!'})
 				delete projectSize
 			})
 		})
@@ -212,7 +228,8 @@ router.route('/updateProjectSize')
 		projectSize.update(pg,function(err) {
 			if (err)
 				res.send(err)
-			res.json({message: 'Success!'})
+			else
+				res.json({message: 'Success!'})
 			delete projectSize
 		})
 	})
@@ -225,7 +242,8 @@ router.route('/editProjectSize')
 			projectSize.edit(pg,function(err,response) {
 				if (err)
 					res.send(err)
-				res.json(response)
+				else
+					res.json(response)
 				delete projectSize
 			})
 		})	
@@ -237,7 +255,8 @@ router.route('/removeProjectSize')
 			projectSize.remove(pg,function(err) {
 				if (err)
 					res.send(err)
-				res.json({message: 'Success!'})
+				else
+					res.json({message: 'Success!'})
 				delete projectSize
 			})
 		})
