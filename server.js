@@ -19,7 +19,7 @@ var	Allocation2 	= require('./models/allocation2'),
 	xlsx            = require('xlsx')
 require('colors')
 
-var app = express(),
+var app = express()
 var router = express.Router()
 
 app.use(bodyParser.json({ limit: '50mb' }))
