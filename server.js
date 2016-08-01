@@ -2,7 +2,6 @@
 
 // Initialize dependencies
 var	Allocation2 	= require('./models/allocation2'),
-	app        		= express(),
 	async			= require('async'),
 	bodyParser 		= require('body-parser'),
 	Cache           = require('node-cache'),
@@ -20,6 +19,7 @@ var	Allocation2 	= require('./models/allocation2'),
 	xlsx            = require('xlsx')
 require('colors')
 
+var app = express(),
 var router = express.Router()
 
 app.use(bodyParser.json({ limit: '50mb' }))
@@ -274,7 +274,7 @@ router.route('/importProjectSize')
 		console.log(json)
 		res.send({message: "Success!"})
 	})
-	
+
 // Catch timeouts
 app.use(function(req, res, next) {
     res.setTimeout(5000, function() {
