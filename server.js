@@ -21,11 +21,9 @@ var newRelic		= require('newrelic'),
 require('colors')
 
 // Helper function to query any table in database
-var q
-function query(callback) {
+function query(query, callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client) {
-		console.log(q)
-		var query = client.query(q)
+		var query = client.query(query)
 		query.on("row", function (row, result) {
 			console.log(row)
 			result.addRow(row)
@@ -312,8 +310,7 @@ router.route('/importProjectSize')
 
 router.route('/query')
 	.post(function(req, res) {
-		q = req.body.query
-		query(function(results) {
+		query(req.body.query, function(results) {
 			res.json(results)
 		})
 	})
