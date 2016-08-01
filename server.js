@@ -26,6 +26,7 @@ function query(query, callback) {
 		console.log(query)
 		var query = client.query(query)
 		query.on("row", function (row, result) {
+			console.log(row)
 			result.addRow(row)
 		})
 		query.on("end", function (result) {
