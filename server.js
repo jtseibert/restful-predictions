@@ -1,6 +1,8 @@
 // server.js
 
 // Initialize dependencies
+var	newRelic		= require('newrelic')
+
 var	Allocation2 	= require('./models/allocation2'),
 	async			= require('async'),
 	bodyParser 		= require('body-parser'),
@@ -9,7 +11,6 @@ var	Allocation2 	= require('./models/allocation2'),
 	express			= require('express'),
 	Forecast 		= require('./models/forecast2'),
 	jsdiff 			= require('diff'),
-	newRelic		= require('newrelic'),
 	Omit 			= require('./models/omit'),
 	Opportunity 	= require('./models/opportunity'),
 	pg 				= require('pg'),
