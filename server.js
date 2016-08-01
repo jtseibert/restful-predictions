@@ -20,9 +20,9 @@ var newRelic		= require('newrelic'),
 	jsdiff 			= require('diff')
 require('colors')
 
-// helper function to query any table in database
+// Helper function to query any table in database
 function query(query) {
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+	pg.connect(process.env.DATABASE_URL, function(err, client, query) {
 		console.log(query)
 		var query = client.query(query)
 		query.on("row", function (row, result) {
