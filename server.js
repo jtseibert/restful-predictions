@@ -1,6 +1,6 @@
-//server.js
+// server.js
 
-//Initialize dependencies
+// Initialize dependencies
 var newRelic		= require('newrelic'),
 	express			= require('express'),
 	app        		= express(),
@@ -20,10 +20,19 @@ var newRelic		= require('newrelic'),
 	jsdiff 			= require('diff')
 require('colors')
 
+app.use(bodyParser.json({ limit: '50mb' }))
+app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
+app.use('/api', router)
+pg.defaults.ssl = true
+
+var port = process.env.PORT || 5000,
+	cache = new Cache()
+
 // Helper function to query any table in database
 function query(query, callback) {
 	q = query
 	pg.connect(process.env.DATABASE_URL, function(err, client) {
+		console.log("query is: " + q)
 		var query = client.query(q)
 		query.on("row", function (row, result) {
 			console.log(row)
@@ -35,13 +44,7 @@ function query(query, callback) {
 	})
 }
 
-app.use(bodyParser.json({ limit: '50mb' }))
-app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
-
-var port = process.env.PORT || 5000,
-	cache = new Cache()
-
-//Setup oauth2
+// Setup oauth2
 var oauth2 = require('simple-oauth2'),
 	credentials = {
         clientID: '3MVG9uudbyLbNPZMn2emQiwwmoqmcudnURvLui8uICaepT6Egs.LFsHRMAnD00FSog.OXsLKpODzE.jxi.Ffu',
@@ -52,16 +55,13 @@ var oauth2 = require('simple-oauth2'),
         revokePath: '/services/oauth2/revoke'
     }
 
-//Initialize the OAuth2 Library
+// Initialize the OAuth2 Library
 var oauth2 = oauth2(credentials)
 
-//Setup routes for API
+// Setup routes for API
 var router = express.Router()
 
-//Database
-pg.defaults.ssl = true
-
-//Create report routes
+// Define routes
 router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req, res) {
 		var allocation = new Allocation2(req.params.instance, req.params.accessToken)
@@ -170,7 +170,7 @@ router.route('/removeOpportunity')
 			delete opportunity
 		})
 	})
-
+/****
 router.route('/getOpportunity')
 	.get(function(req, res) {
 		console.log('getOpportunity')
@@ -182,7 +182,7 @@ router.route('/getOpportunity')
 			delete opportunities
 		})
 	})
-
+*/
 //Create omit DB routes
 router.route('/addOmit')
 	.post(function(req,res){
@@ -324,8 +324,6 @@ app.use(function(req, res, next){
         });
     next();
 });
-
-app.use('/api', router)
 
 //Start server
 app.listen(port)
