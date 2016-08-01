@@ -15,7 +15,6 @@ var	Allocation2 	= require('./models/allocation2'),
 	pg 				= require('pg'),
 	Pipeline 		= require('./models/pipeline'),
 	ProjectSize 	= require('./models/projectSize'),
-	Roles 			= require('./models/roles'),
 	xlsx            = require('xlsx')
 require('colors')
 

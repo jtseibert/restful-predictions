@@ -67,16 +67,3 @@ Opportunity.prototype.remove = function(async, pg, callback) {
 	})
 	process.nextTick(callback)
 }
-
-Opportunity.prototype.get = function(pg, callback) {
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		var query = client.query('SELECT * FROM sales_pipeline')
-		query.on("row", function (row, result) {
-			result.addRow(row)
-		})
-		query.on("end", function (result) {
-			console.log(JSON.stringify(result.rows, null, "    "))
-			process.nextTick(function(){callback(result.rows)})
-		})
-	})
-}

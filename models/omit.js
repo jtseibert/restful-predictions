@@ -64,26 +64,6 @@ Omit.prototype.remove = function(pg, callback) {
 	})
 }
 
-/**
-* Returns the opportunities in the omit database table
-* @function get
-* @param pg - pg module object
-* @param callback - callback function
-*/
-Omit.prototype.get = function(pg, callback) {
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		var query = client.query('SELECT * FROM omit')
-		query.on("row", function (row, result) {
-			result.addRow(row)
-		})
-		query.on("end", function (result) {
-			console.log(JSON.stringify(result.rows, null, "    "))
-			process.nextTick(function(){callback(result.rows)})
-		})
-	})
-}
-
-
 
 
 

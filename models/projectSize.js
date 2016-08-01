@@ -71,24 +71,6 @@ ProjectSize.prototype.update = function(pg, callback) {
 }
 
 /**
-* Returns the projectSizes in the projectSize database table
-* @function get
-* @param pg - pg module object
-* @param callback - callback function
-*/
-ProjectSize.prototype.get = function(pg, callback) {
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		var query = client.query('SELECT sizeId FROM project_size')
-		query.on("row", function (row, result) {
-			result.addRow(row)
-		})
-		query.on("end", function (result) {
-			process.nextTick(function(){callback(result.rows)})
-		})
-	})
-}
-
-/**
 * Returns the projectSize in the projectSize database table equal to the input projectSize
 * @function edit
 * @param pg - pg module object
