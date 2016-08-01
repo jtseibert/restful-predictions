@@ -311,9 +311,9 @@ router.route('/importProjectSize')
 
 router.route('/query')
 	.post(function(req, res) {
-		console.log("in post")
-		query(req.body.query, function(req, res) {
-			res.json(res)
+		console.log(req.body.query)
+		query(req.body.query, function(results) {
+			res.json(results)
 		})
 	})
 
