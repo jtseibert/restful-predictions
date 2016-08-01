@@ -23,6 +23,7 @@ require('colors')
 // helper function to query any table in database
 function query(query) {
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		console.log(query)
 		var query = client.query(query)
 		query.on("row", function (row, result) {
 			result.addRow(row)
@@ -309,6 +310,7 @@ router.route('/importProjectSize')
 
 router.route('/query')
 	.post(function(req, res) {
+		console.log("in post")
 		res.json(query(req.body.query))
 	})
 
