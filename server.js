@@ -22,8 +22,8 @@ require('colors')
 
 // Helper function to query any table in database
 function query(query, callback) {
-	var q = query
-	pg.connect(process.env.DATABASE_URL, function(err, client, q) {
+	q = query
+	pg.connect(process.env.DATABASE_URL, function(err, client) {
 		var query = client.query(q)
 		query.on("row", function (row, result) {
 			console.log(row)
