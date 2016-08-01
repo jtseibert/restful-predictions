@@ -161,7 +161,6 @@ router.route('/addOpportunity')
 //WIPPPP::::
 router.route('/updateOpportunity')
 	.post(function(req, res) {
-		console.log(req.body)
 		opportunity = new Opportunity(req.body)
 		opportunity.update(pg, function(err) {
 			if(err) 
