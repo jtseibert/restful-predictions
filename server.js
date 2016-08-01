@@ -20,6 +20,8 @@ var newRelic		= require('newrelic'),
 	jsdiff 			= require('diff')
 require('colors')
 
+var router = express.Router()
+
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
 app.use('/api', router)
@@ -57,9 +59,6 @@ var oauth2 = require('simple-oauth2'),
 
 // Initialize the OAuth2 Library
 var oauth2 = oauth2(credentials)
-
-// Setup routes for API
-var router = express.Router()
 
 // Define routes
 router.route('/:instance/DATA_Allocation/:accessToken')
