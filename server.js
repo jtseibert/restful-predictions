@@ -1,23 +1,23 @@
 // server.js
 
 // Initialize dependencies
-var newRelic		= require('newrelic'),
-	express			= require('express'),
+var	Allocation2 	= require('./models/allocation2'),
 	app        		= express(),
-	bodyParser 		= require('body-parser'),
-	Allocation2 	= require('./models/allocation2'),
 	async			= require('async'),
-	Opportunity 	= require('./models/opportunity'),
-	Pipeline 		= require('./models/pipeline'),
-	Omit 			= require('./models/omit'),
-	pg 				= require('pg'),
-	ProjectSize 	= require('./models/projectSize'),
-	Roles 			= require('./models/roles'),
+	bodyParser 		= require('body-parser'),
 	Cache           = require('node-cache'),
 	Capacity        = require('./models/capacity'),
+	express			= require('express'),
 	Forecast 		= require('./models/forecast2'),
-	xlsx            = require('xlsx'),
-	jsdiff 			= require('diff')
+	jsdiff 			= require('diff'),
+	newRelic		= require('newrelic'),
+	Omit 			= require('./models/omit'),
+	Opportunity 	= require('./models/opportunity'),
+	pg 				= require('pg'),
+	Pipeline 		= require('./models/pipeline'),
+	ProjectSize 	= require('./models/projectSize'),
+	Roles 			= require('./models/roles'),
+	xlsx            = require('xlsx')
 require('colors')
 
 var router = express.Router()
@@ -46,7 +46,7 @@ function query(query, callback) {
 	})
 }
 
-// Setup oauth2
+// Setup oauth2 with connected app credentials
 var oauth2 = require('simple-oauth2'),
 	credentials = {
         clientID: '3MVG9uudbyLbNPZMn2emQiwwmoqmcudnURvLui8uICaepT6Egs.LFsHRMAnD00FSog.OXsLKpODzE.jxi.Ffu',
@@ -61,6 +61,14 @@ var oauth2 = require('simple-oauth2'),
 var oauth2 = oauth2(credentials)
 
 // Define routes
+router.route('/query')
+	.post(function(req, res) {
+		query(req.body.query, function(results) {
+			res.json(results)
+		})
+	})
+
+// Import allocation/sales_pipeline/capacity/forecast
 router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req, res) {
 		var allocation = new Allocation2(req.params.instance, req.params.accessToken)
@@ -116,7 +124,7 @@ router.route('/:instance/DATA_Capacity/:accessToken')
 	.get(function(req, res) {
 		var capacity = new Capacity(req.params.instance, req.params.accessToken)
 		capacity.get(oauth2, function(result) {
-			capacity.updateDB(pg, function(){
+			capacity.updateDB(pg, function() {
 				console.log('deleting capacity obj')
 				delete capacity
 			})
@@ -125,9 +133,9 @@ router.route('/:instance/DATA_Capacity/:accessToken')
 	})
 
 router.route('/DATA_Forecast')
-	.post(function(req, res){
-		forecast = new Forecast(pg, req.body, function(){
-			forecast.create(function(){
+	.post(function(req, res) {
+		forecast = new Forecast(pg, req.body, function() {
+			forecast.create(function() {
 				res.json(forecast.returnData)
 				// async.each(forecast.returnData, function(row){
 				// })
@@ -136,22 +144,12 @@ router.route('/DATA_Forecast')
 		})
 	})
 
-//Create database routes
-router.route('/updateCapacity')
-	.post(function(req, res) {
-		var capacity = new Capacity(null, null, req.body)
-		capacity.updateDB(pg, function(){
-			console.log('deleting capacity obj')
-			delete capacity
-		})
-		res.json({message: 'Success!'})
-	})
-
+// Add/update/remove opportunities
 router.route('/addOpportunity')
-	.post(function(req,res){
+	.post(function(req,res) {
 		console.log('addOpportunity')
 		opportunity = new Opportunity(req.body)
-		opportunity.add(async, pg,function(err){
+		opportunity.add(async, pg, function(err) {
 			if (err)
 				res.send(err)
 			res.json({message: 'Success!'})
@@ -159,34 +157,24 @@ router.route('/addOpportunity')
 		})
 	})
 
+//update opportunitiy here
+
 router.route('/removeOpportunity')
-	.post(function(req,res){
+	.post(function(req,res) {
 		opportunity = new Opportunity(req.body)
-		opportunity.remove(async, pg,function(err){
+		opportunity.remove(async, pg,function(err) {
 			if (err)
 				res.send(err)
 			res.json({message: 'Success!'})
 			delete opportunity
 		})
 	})
-/****
-router.route('/getOpportunity')
-	.get(function(req, res) {
-		console.log('getOpportunity')
-		opportunities = new Opportunity("")
-		opportunities.get(pg, function(err, response){
-			if (err)
-				res.send(err)
-			res.json(response)
-			delete opportunities
-		})
-	})
-*/
-//Create omit DB routes
+
+// Add/remove ommited opportunities
 router.route('/addOmit')
-	.post(function(req,res){
+	.post(function(req,res) {
 		omit = new Omit(req.body)
-		omit.add(pg,function(err){
+		omit.add(pg,function(err) {
 			if (err)
 				res.send(err)
 			res.json({message: 'Success!'})
@@ -197,7 +185,7 @@ router.route('/addOmit')
 router.route('/removeOmit')
 	.post(function(req,res){
 		omit = new Omit(req.body)
-		omit.remove(pg,function(err){
+		omit.remove(pg,function(err) {
 			if (err)
 				res.send(err)
 			res.json({message: 'Success!'})
@@ -205,33 +193,12 @@ router.route('/removeOmit')
 		})
 	})
 
-router.route('/getOmit')
-	.get(function(req, res) {
-		omit = new Omit("")
-		omit.get(pg, function(err, response){
-			if (err)
-				res.send(err)
-			res.json(response)
-			delete omit
-		})
-	})
+
 
 router.route('/addProjectSize')
 	.post(function(req,res){
-		projectSize = new ProjectSize(req.body, function(){
-			projectSize.add(pg,function(err){
-				if (err)
-					res.send(err)
-				res.json({message: 'Success!'})
-				delete projectSize
-			})
-		})
-	})
-
-router.route('/removeProjectSize')
-	.post(function(req,res){
-		projectSize = new ProjectSize(req.body, function(){
-			projectSize.remove(pg,function(err){
+		projectSize = new ProjectSize(req.body, function() {
+			projectSize.add(pg,function(err) {
 				if (err)
 					res.send(err)
 				res.json({message: 'Success!'})
@@ -241,34 +208,22 @@ router.route('/removeProjectSize')
 	})
 
 router.route('/updateProjectSize')
-	.post(function(req,res){
-		projectSize = new ProjectSize(req.body, function(){
-			projectSize.update(pg,function(err){
-				if (err)
-					res.send(err)
-				res.json({message: 'Success!'})
-				delete projectSize
-			})
+.post(function(req,res) {
+	projectSize = new ProjectSize(req.body, function() { 
+		projectSize.update(pg,function(err) {
+			if (err)
+				res.send(err)
+			res.json({message: 'Success!'})
+			delete projectSize
 		})
 	})
-
-router.route('/getProjectSize')
-	.get(function(req,res){
-		projectSize = new ProjectSize("", function(){
-			projectSize.get(pg,function(err,response){
-				if (err)
-					res.send(err)
-				res.json(response)
-				delete projectSize
-			})
-		})
-	})
+})
 
 router.route('/editProjectSize')
-	.post(function(req,res){
-		projectSize = new ProjectSize(req.body, function(){
+	.post(function(req,res) {
+		projectSize = new ProjectSize(req.body, function() {
 			console.log(projectSize.data)
-			projectSize.edit(pg,function(err,response){
+			projectSize.edit(pg,function(err,response) {
 				if (err)
 					res.send(err)
 				res.json(response)
@@ -277,9 +232,32 @@ router.route('/editProjectSize')
 		})	
 	})
 
-//Create general DB routes
-router.route('/clearDB')
+router.route('/removeProjectSize')
 	.post(function(req,res){
+		projectSize = new ProjectSize(req.body, function() {
+			projectSize.remove(pg,function(err) {
+				if (err)
+					res.send(err)
+				res.json({message: 'Success!'})
+				delete projectSize
+			})
+		})
+	})
+
+// Update capacity
+router.route('/updateCapacity')
+	.post(function(req, res) {
+		var capacity = new Capacity(null, null, req.body)
+		capacity.updateDB(pg, function() {
+			console.log('deleting capacity obj')
+			delete capacity
+		})
+		res.json({message: 'Success!'})
+	})
+
+// Debug routes
+router.route('/clearDB')
+	.post(function(req,res) {
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			client.query('delete from sales_pipeline *')
 			client.query('delete from omit *')
@@ -287,38 +265,19 @@ router.route('/clearDB')
 		res.json({message: 'Success!'})
 	})
 
-//Create roles routes
-router.route('/getRoles')
-	.get(function(req,res){
-		roles = new Roles("")
-		roles.get(pg,function(err,response){
-			if (err)
-				res.send(err)
-			res.json(response)
-			delete roles
-		})
-	})
-
 // Updates project sizes database with data from SF opportunity attachment
+//WIP
 router.route('/importProjectSize')
-	.post(function(req, res){
+	.post(function(req, res) {
 		var workbook = xlsx.read(req.body.b64, {type: 'base64'})
 		var json = xlsx.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[2]])
 		console.log(json)
 		res.send({message: "Success!"})
 	})
-
-router.route('/query')
-	.post(function(req, res) {
-		query(req.body.query, function(results) {
-			res.json(results)
-		})
-	})
-
-//Register routes
-//All of our routes will be prefixed with /api
-app.use(function(req, res, next){
-    res.setTimeout(5000, function(){
+	
+// Catch timeouts
+app.use(function(req, res, next) {
+    res.setTimeout(5000, function() {
             res.sendStatus(408);
         });
     next();
