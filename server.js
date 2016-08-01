@@ -18,10 +18,20 @@ var newRelic		= require('newrelic'),
 	Forecast 		= require('./models/forecast2'),
 	xlsx            = require('xlsx'),
 	jsdiff 			= require('diff')
+require('colors')
 
-
-	require('colors')
-
+// helper function to query any table in database
+function query(query) {
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		client.query(query)
+		query.on("row", function (row, result) {
+			result.addRow(row)
+		})
+		query.on("end", function (result) {
+			process.nextTick(function() {callback(result.rows)})
+		})
+	})
+}
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
@@ -49,7 +59,7 @@ var router = express.Router()
 //Database
 pg.defaults.ssl = true
 
-//Create SF routes
+//Create report routes
 router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req, res) {
 		var allocation = new Allocation2(req.params.instance, req.params.accessToken)
@@ -113,7 +123,19 @@ router.route('/:instance/DATA_Capacity/:accessToken')
 		})
 	})
 
-//Create sales_pipeline DB routes
+router.route('/DATA_Forecast')
+	.post(function(req, res){
+		forecast = new Forecast(pg, req.body, function(){
+			forecast.create(function(){
+				res.json(forecast.returnData)
+				// async.each(forecast.returnData, function(row){
+				// })
+				delete forecast
+			})
+		})
+	})
+
+//Create database routes
 router.route('/updateCapacity')
 	.post(function(req, res) {
 		var capacity = new Capacity(null, null, req.body)
@@ -193,7 +215,6 @@ router.route('/getOmit')
 		})
 	})
 
-//Create project_sizes routes
 router.route('/addProjectSize')
 	.post(function(req,res){
 		projectSize = new ProjectSize(req.body, function(){
@@ -277,25 +298,18 @@ router.route('/getRoles')
 		})
 	})
 
-router.route('/DATA_Forecast')
-	.post(function(req, res){
-		forecast = new Forecast(pg, req.body, function(){
-			forecast.create(function(){
-				res.json(forecast.returnData)
-				// async.each(forecast.returnData, function(row){
-				// })
-				delete forecast
-			})
-		})
-	})
-
+// Updates project sizes database with data from SF opportunity attachment
 router.route('/importProjectSize')
 	.post(function(req, res){
-		var b = req.body.b64
-		var workbook = xlsx.read(b, {type: 'base64'})
+		var workbook = xlsx.read(req.body.b64, {type: 'base64'})
 		var json = xlsx.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[2]])
 		console.log(json)
 		res.send({message: "Success!"})
+	})
+
+router.route('/query')
+	.post(function(req, res) {
+		res.json(query(req.body.query))
 	})
 
 //Register routes
