@@ -112,9 +112,10 @@ Forecast2.prototype.create = function(callback) {
 			if (objInstance.allocatedHours[row.ROLE]) {
 				if (objInstance.allocatedHours[row.ROLE][row.WEEK_DATE]) {
 					if ((objInstance.capacity[row.ROLE].sum-objInstance.allocatedHours[row.ROLE][row.WEEK_DATE]) > 0) {
+						if (row.ROLE == 'Business Consultant' && row.WEEK_DATE == '07/30/2016'){
 						console.log('capacity: '+((objInstance.capacity[row.ROLE].sum
 							-objInstance.allocatedHours[row.ROLE][row.WEEK_DATE])
-							/objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE])+'\ttotalCap: '+objInstance.capacity[row.ROLE].sum+'\tallocated: '+objInstance.allocatedHours[row.ROLE][row.WEEK_DATE]+'\trolesForecasted: '+objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE])
+							/objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE])+'\ttotalCap: '+objInstance.capacity[row.ROLE].sum+'\tallocated: '+objInstance.allocatedHours[row.ROLE][row.WEEK_DATE]+'\trolesForecasted: '+objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE])}
 						tempRow[5] = ((objInstance.capacity[row.ROLE].sum
 							-objInstance.allocatedHours[row.ROLE][row.WEEK_DATE])
 							/objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE])
