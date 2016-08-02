@@ -71,6 +71,8 @@ to the same 2D array to send to Google Sheets. Create is executed asyncronously 
 Forecast2.prototype.create = function(callback) {
 	objInstance = this
 
+	console.log(this.forecastedData)
+
 	// Handle all allocatedData and push to returnData for output
 	var prepareAllocated = function(allocatedData, callback){
 		async.each(allocatedData, function(row,callback){
@@ -83,10 +85,6 @@ Forecast2.prototype.create = function(callback) {
 			tempRow.push('')
 			tempRow.push('ALLOCATED')
 
-			// if (!objInstance.numberRolesForecasted[row.ROLE])
-			// 	tempRow[5] = objInstance.capacity[row.ROLE].sum/objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]
-			// else if (!objInstance.numberRolesForecasted[row.ROLE][row.WEEK_DATE])
-			// 	tempRow[5] = objInstance.capacity[row.ROLE].sum/objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]
 			if (objInstance.numberRolesForecasted[row.WEEK_DATE]){
 				if (objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE]){
 					if (objInstance.allocatedHours[row.ROLE][row.WEEK_DATE] < objInstance.capacity[row.ROLE].sum)
