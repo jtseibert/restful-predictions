@@ -294,9 +294,29 @@ router.route('/importProjectSize')
    			if(z[0] === '!') continue;
     		//console.log(z + "=" + JSON.stringify(sheet[z].v));
   		}
+
+  		var rowStart = 18
+  		var colStart = 28
+  		var projectSizeData = {}
+  		while(sheet[xlsx.utils.encode_cell({r:rowStart,c:1})].v != 'Subtotal') {
+  			var cellValue = sheet[xlsx.utils.encode_cell({r:rowStart,c:1})].v
+  			if(cellValue != '') {
+  				projectSizeData[cellValue] = {}
+  				var date
+  				for(var i = 0; i < 19; i++) {//temp 
+  					date = sheet[xlsx.utils.encode_cell({r:17,c:colStart+i})].v
+  					projectSizeData[cellValue][date] = sheet[xlsx.utils.encode_cell({r:rowStart,c:colStart+i})].v
+  				}
+  			}
+  			rowStart++
+  		}
+  		console.log(projectSizeData)
+
+
+
 		//var json = xlsx.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[2]])
-		console.log("9is: " + sheet[xlsx.utils.encode_cell({r:19,c:7})].v)
-				console.log("29is: " + sheet[xlsx.utils.encode_cell({r:19,c:28})].v)
+		//console.log("9is: " + sheet[xlsx.utils.encode_cell({r:19,c:7})].v)
+		//		console.log("29is: " + sheet[xlsx.utils.encode_cell({r:19,c:28})].v)
 
 
 		res.send({message: "Success!"})
