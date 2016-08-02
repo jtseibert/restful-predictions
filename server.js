@@ -295,7 +295,7 @@ router.route('/importProjectSize')
     		//console.log(z + "=" + JSON.stringify(sheet[z].v));
   		}
 		//var json = xlsx.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[2]])
-		console.log(sheet[xlsx.utils.format_cell({1,19})].v)
+		console.log(sheet[xlsx.utils.decode_{1, 19}].v)
 		res.send({message: "Success!"})
 	})
 
