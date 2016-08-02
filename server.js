@@ -292,10 +292,10 @@ router.route('/importProjectSize')
 		for (var z in sheet) {
     		/* all keys that do not begin with "!" correspond to cell addresses */
    			if(z[0] === '!') continue;
-    		console.log(z + "=" + JSON.stringify(sheet[z].v));
+    		//console.log(z + "=" + JSON.stringify(sheet[z].v));
   		}
-		//var json = xlsx.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[2]])
-		//console.log(json)
+		var json = xlsx.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[2]])
+		console.log(json)
 		res.send({message: "Success!"})
 	})
 
