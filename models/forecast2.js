@@ -71,9 +71,6 @@ to the same 2D array to send to Google Sheets. Create is executed asyncronously 
 Forecast2.prototype.create = function(callback) {
 	objInstance = this
 
-	console.log(this.allocatedData)
-	console.log(this.forecastedData)
-
 	// Handle all allocatedData and push to returnData for output
 	var prepareAllocated = function(allocatedData, callback){
 		async.each(allocatedData, function(row,callback){
