@@ -2,8 +2,6 @@
 * Allocation
 * @module Allocation
 */
-module.exports.queryAllocation = queryAllocation
-
 var queryAllocation = function(accessToken, path, callback) {
 	var sf = require('node-salesforce')
 	// Set up the sheet headers
@@ -42,6 +40,8 @@ var queryAllocation = function(accessToken, path, callback) {
 		})
 	.run({ autoFetch : true, maxFetch : 8000 });
 }
+
+module.exports.queryAllocation = queryAllocation
 
 
 
