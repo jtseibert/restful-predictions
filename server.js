@@ -3,7 +3,7 @@
 // Initialize dependencies
 var	newRelic		= require('newrelic')
 
-var	Allocation3 	= require('./models/allocation3'),
+var	allocation 		= require('./models/allocation3'),
 	async			= require('async'),
 	bodyParser 		= require('body-parser'),
 	Cache           = require('node-cache'),
@@ -71,24 +71,10 @@ router.route('/query')
 // Import allocation/sales_pipeline/capacity/forecast
 router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req, res) {
-		var allocation = new Allocation3(req.params.instance, req.params.accessToken)
-		cache.get("allocation", function(err, value) {
-			if(!err) {
-				if(value == undefined) {
-		    		console.log('allocation data not cached')
-					allocation.querySF(req.params.accessToken, req.params.instance, function(allocationData) {
-						res.json(allocationData)
-						delete allocation
-					})
-				} else { 
-					console.log('allocation data cached, returning')
-					res.json(value)
-					delete allocation
-				}
-			} else {
-				res.json({message: err})
-				delete allocation
-			}
+		var accessToken = req.params.accessToken,
+			instance    = req.params.instance
+		allocation.queryAllocation(accessToken, instance, function(allocationData) {
+			res.json(allocationData)
 		})
 	})
 	   
