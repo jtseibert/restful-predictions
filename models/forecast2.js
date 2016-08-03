@@ -105,7 +105,7 @@ Forecast2.prototype.create = function(callback) {
 				} else { tempRow.push(0) }
 			} else { tempRow.push(0) }
 
-			tempRow.push(objInstance.roleCapacities[role])
+			tempRow.push(objInstance.roleCapacities[role].capacity)
 			objInstance.returnData.push(tempRow)
 			process.nextTick(callback)
 		}, function(){
