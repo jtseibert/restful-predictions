@@ -42,6 +42,7 @@ Allocation3.prototype.querySF = function(accessToken, path, callback) {
 			record.pse__Estimated_Hours__c,
 			record.pse__Start_Date__c
     	);
+    	console.log(recordData)
     	allocationData.push(recordData)
 		})
 	.on("end", function(query) {
