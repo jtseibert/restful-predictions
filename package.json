@@ -23,6 +23,7 @@
     "diff": "2.2.3",
     "express": "4.13.4",
     "jsdoc": "3.4.0",
+    "moment": "2.14.1",
     "newrelic": "1.28.3",
     "node-cache": "3.2.1",
     "node-salesforce": "0.8.0",

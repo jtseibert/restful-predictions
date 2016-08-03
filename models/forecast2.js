@@ -13,6 +13,7 @@ module.exports = Forecast2
 
 // module level variables
 async = require('../node_modules/async')
+moment = require('../node_modules/moment')
 
 /**
 * Creates an Forecast object with the allocation data as sheetsData, the Sum of Sales Pipeline data as sumSalesPipeline,
@@ -66,7 +67,7 @@ to the same 2D array to send to Google Sheets. Create is executed asyncronously 
 */
 Forecast2.prototype.create = function(callback) {
 
-	var today = new Date()
+	var today = moment().format('L')
 
 	console.log(today)
 
