@@ -44,7 +44,7 @@ function Forecast2(pg, data, callback) {
 				console.log(err)
 			var query = client.query('SELECT * FROM roles_capacities')
 			query.on("row", function (row, result) {
-				roleCapacities[row.role] = {'capacity': row.capacity}
+				roleCapacities[row.role] = row.capacity
 			})
 			query.on("end", function (result) {
 				process.nextTick(function(){callback(null, roleCapacities)})
@@ -85,26 +85,28 @@ Forecast2.prototype.create = function(callback) {
 
 	var objInstance = this
 
-	async.eachOf(objInstance.roleCapacities, function(role, roleKey, callback){
+	async.eachOf(objInstance.roleCapacities, function(capacity, role, callback){
+		var role = role,
+			capacity = capacity
 		async.each(objInstance.weeks, function(week,callback){
 			var tempRow = []
 
-			tempRow.push(roleKey)
+			tempRow.push(role)
 			tempRow.push(week)
 
-			if (objInstance.allocatedHours[roleKey]){
-				if (objInstance.allocatedHours[roleKey][week]){
-					tempRow.push(objInstance.allocatedHours[roleKey][week])
+			if (objInstance.allocatedHours[role]){
+				if (objInstance.allocatedHours[role][week]){
+					tempRow.push(objInstance.allocatedHours[role][week])
 				} else { tempRow.push(0) }
 			} else { tempRow.push(0) }
 
-			if (objInstance.forecastedHours[roleKey]){
-				if (objInstance.forecastedHours[roleKey][week]){
-					tempRow.push(objInstance.forecastedHours[roleKey][week])
+			if (objInstance.forecastedHours[role]){
+				if (objInstance.forecastedHours[role][week]){
+					tempRow.push(objInstance.forecastedHours[role][week])
 				} else { tempRow.push(0) }
 			} else { tempRow.push(0) }
 
-			tempRow.push(objInstance.role.capacity)
+			tempRow.push(objInstance.capacity)
 			objInstance.returnData.push(tempRow)
 			process.nextTick(callback)
 		}, function(){
