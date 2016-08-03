@@ -30,7 +30,7 @@ Allocation3.prototype.querySF = function(accessToken, path, callback) {
 	  accessToken: accessToken
 	})
 
-	conn.query("SELECT pse__Resource__r.ContactID_18__c, pse__Resource__r.Name, pse__Project__r.Name FROM pse__Est_Vs_Actuals__c")
+	conn.query("SELECT pse__Resource__r.ContactID_18__c, pse__Resource__r.Name, pse__Project__r.Name, pse__Resource__r.pse__Resource_Role__c FROM pse__Est_Vs_Actuals__c")
   	.on("record", function(record) {
   		var recordData = []
   		console.log(record)
@@ -45,7 +45,7 @@ Allocation3.prototype.querySF = function(accessToken, path, callback) {
 	.on("error", function(err) {
 		console.error(err);
 		})
-	.run({ autoFetch : true, maxFetch : 4000 });
+	.run({ autoFetch : true, maxFetch : 8000 });
 }
 
 

@@ -323,12 +323,12 @@ router.route('/importProjectSize')
 	})
 
 // Catch timeouts
-app.use(function(req, res, next) {
-    res.setTimeout(5000, function() {
-            res.sendStatus(408);
-        });
-    next();
-});
+// app.use(function(req, res, next) {
+//     res.setTimeout(5000, function() {
+//             res.sendStatus(408);
+//         });
+//     next();
+// });
 
 //Start server
 app.listen(port)
