@@ -26,11 +26,10 @@ roles to the getRoleData method. getRoleData is executed asyncronously on every 
 * @param callback - callback function to return final array
 */
 Allocation2.prototype.getReportData = function(accessToken, path, callback) {
-	var instance = this
 	var conn = new sf.Connection({
-	  instanceUrl : path
-	  accessToken : accessToken
-	});
+	  instanceUrl: path
+	  accessToken: accessToken
+	})
 
 	conn.query("SELECT Resource.ContactID_18__c, Resource.Name, Project.Name, Resource.pse__Resource_Role__c, pse__Estimated_Hours__c, pse__Start_Date__c FROM pse__Est_Vs_Actuals__c")
   	.on("record", function(record) {
