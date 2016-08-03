@@ -69,7 +69,7 @@ Forecast2.prototype.create = function(callback) {
 
 	var today = moment().format('L')
 
-	console.log(today)
+	console.log(today+'hello')
 
 }
 
