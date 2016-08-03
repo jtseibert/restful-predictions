@@ -67,9 +67,9 @@ to the same 2D array to send to Google Sheets. Create is executed asyncronously 
 */
 Forecast2.prototype.create = function(callback) {
 
-	var today = moment().format('L')
+	var today = moment(new date()).day(-6).format('L')
 
-	console.log(today+'hello')
+	console.log(today)
 
 }
 
