@@ -30,7 +30,7 @@ Allocation3.prototype.querySF = function(accessToken, path, callback) {
 	  accessToken: accessToken
 	})
 
-	conn.query("select pse__Resource__r.ContactID_18__c, pse__Resource__r.Name, pse__Project__r.Name, pse__Resource__r.pse__Resource_Role__c, pse__Estimated_Hours__c, pse__Start_Date__c from pse__Est_Vs_Actuals__c where pse__Estimated_Hours__c > 0 and pse__Resource__r.pse__Exclude_from_Resource_Planner__c = False and pse__End_Date__c >= 2016-08-03 and pse__End_Date__c < 2017-02-03 and pse__Resource__r.ContactID_18__c != null")
+	conn.query("SELECT Name FROM pse__Est_Vs_Actuals__c")
   	.on("record", function(record) {
   		var recordData = []
   		console.log(record)
