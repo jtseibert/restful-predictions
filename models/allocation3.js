@@ -34,15 +34,13 @@ Allocation3.prototype.querySF = function(accessToken, path, callback) {
   	.on("record", function(record) {
   		var recordData = []
   		// Push all fields of a single record
-    	recordData.push(
-    		record[pse__Resource__r].ContactID_18__c,
+    	recordData.push(record[pse__Resource__r].ContactID_18__c,
 			record[pse__Resource__r].Name,
 			record[pse__Resource__r].pse__Resource_Role__c,
 			record[pse__Project__r].Name,
 			record.pse__Estimated_Hours__c,
 			record.pse__Start_Date__c
-    	);
-    	console.log(recordData)
+		);
     	allocationData.push(recordData)
 		})
 	.on("end", function(query) {
