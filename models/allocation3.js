@@ -34,7 +34,7 @@ Allocation3.prototype.querySF = function(accessToken, path, callback) {
   	.on("record", function(record) {
   		var recordData = []
     	recordData.push(
-    		record.pse__Resource__r.ContactID_18__c
+    		record.pse__Resource__r.ContactID_18__c,
 			record.pse__Resource__r.Name,
 			record.pse__Resource__r.pse__Resource_Role__c,
 			record.pse__Project__r.Name,
