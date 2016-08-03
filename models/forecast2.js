@@ -52,7 +52,7 @@ function Forecast2(pg, data, callback) {
 		})
 	},
 	two = function(callback){
-		var today = moment(new Date()).day(-6),
+		var today = moment(new Date()).day(-1),
 			forecastedWeeks = 26,
 			weeks = []
 
