@@ -56,6 +56,8 @@ function Forecast2(pg, data, callback) {
 			forecastedWeeks = 26,
 			weeks = []
 
+		today = today.add(7,'d')
+
 		async.times(forecastedWeeks, function(n,next){
 			weeks.push(today)
 			today = today.add(7,'d')
