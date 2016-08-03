@@ -27,7 +27,7 @@ roles to the getRoleData method. getRoleData is executed asyncronously on every 
 */
 Allocation2.prototype.getReportData = function(accessToken, path, callback) {
 	var conn = new sf.Connection({
-	  instanceUrl: path
+	  instanceUrl: path,
 	  accessToken: accessToken
 	})
 
