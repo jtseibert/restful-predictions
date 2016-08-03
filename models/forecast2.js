@@ -68,7 +68,7 @@ Forecast2.prototype.create = function(callback) {
 
 	var today = new Date()
 
-	console.log(today.getDate())
+	console.log(today)
 
 }
 
