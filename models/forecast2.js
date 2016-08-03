@@ -88,9 +88,9 @@ Forecast2.prototype.create = function(callback) {
 	async.eachOf(objInstance.roleCapacities, function(capacity, role, callback){
 		var role = role,
 			capacity = capacity
-		console.log('outerCap: '+capacity)
+		console.log('outerCap: '+capacity+'\touterRole: '+role)
 		async.each(objInstance.weeks, function(week,callback){
-			cosole.log('innerCap: '+capacity)
+			console.log('innerCap: '+capacity+'\tinnerRole: '+role)
 			var tempRow = []
 
 			tempRow.push(role)
