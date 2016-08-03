@@ -25,7 +25,7 @@ roles to the getRoleData method. getRoleData is executed asyncronously on every 
 * @param callback - callback function to return final array
 */
 Allocation3.prototype.querySF = function(accessToken, path, callback) {
-	console.log("https://" + path + '/services/data/v35.0')
+	console.log("https://" + path + '/services/data/v35.0/query')
 	var conn = new sf.Connection({
 	  instanceUrl: "https://" + path + '/services/data/v35.0',
 	  accessToken: accessToken
