@@ -39,7 +39,7 @@ Allocation3.prototype.querySF = function(accessToken, path, callback) {
 	.on("end", function(query) {
 		console.log("total in database : " + query.totalSize);
 		console.log("total fetched : " + query.totalFetched);
-		process.nextTick(function() {callback(null, allocationData)})
+		process.nextTick(function() {callback(allocationData)})
 		})
 	.on("error", function(err) {
 		console.error(err);
