@@ -30,7 +30,7 @@ Allocation3.prototype.querySF = function(accessToken, path, callback) {
 	  accessToken: accessToken
 	})
 
-	conn.query("SELECT pse__Resource__r.ContactID_18__c FROM pse__Est_Vs_Actuals__c")
+	conn.query("SELECT pse__Resource__r.ContactID_18__c, pse__Resource__r.Name FROM pse__Est_Vs_Actuals__c")
   	.on("record", function(record) {
   		var recordData = []
   		console.log(record)
