@@ -37,6 +37,8 @@ Allocation2.prototype.getReportData = function(oauth2, cache, callback) {
 	var parameters = {
 		access_token: instance.accessToken
 	}
+
+
 	oauth2.api('GET', instance.path, parameters, function (err, data) {
 		if(err) {
 			console.log('OAuth2.api GET Error: ', JSON.stringify(err)) 
