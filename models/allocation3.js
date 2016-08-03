@@ -29,7 +29,7 @@ Allocation3.prototype.querySF = function(accessToken, path, callback) {
 	var allocationData = [[
 		"CONTACT_ID", "NAME",
 		"ROLE", "PROJECT",
-		"START_DATE"
+		"ESTIMATED_HOURS", "START_DATE"
 		]]
 
 	// Connect to SF and populate allocationData
