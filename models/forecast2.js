@@ -32,7 +32,8 @@ function Forecast2(pg, data, callback) {
 									'ALLOCATED_HOURS',
 									'FORECASTED_HOURS',
 									'CAPACITY']]
-	this.capacity
+	this.roleCapacities
+	this.weeks
 
 	objInstance = this
 
@@ -49,12 +50,29 @@ function Forecast2(pg, data, callback) {
 				process.nextTick(function(){callback(null, roleCapacities)})
 			})
 		})
+	},
+	two = function(callback){
+		var today = moment(new Date()).day(-6).format('L'),
+			forecastedWeeks = 26,
+			weeks = []
+
+		async.times(forecastedWeeks, function(n,next){
+			weeks.push(today)
+			today = today.add(7,'d')
+			process.nextTick(function(){next(err)})
+		}, function(err){
+			if (err)
+				throw err
+			process.nextTick(function(){callback(null, weeks)})
+		})
 	}
 
 	async.parallel({
-	 	'one': one
+	 	'one': one,
+	 	'two': two
 	}, function(err, results){
-	 	objInstance.roleCapacities = roleCapacities
+	 	objInstance.roleCapacities = results.one
+	 	objInstance.weeks = results.two
 	 	process.nextTick(callback)
 	})
 } 
@@ -67,11 +85,9 @@ to the same 2D array to send to Google Sheets. Create is executed asyncronously 
 */
 Forecast2.prototype.create = function(callback) {
 
-	console.log('Hello')
+	var objInstance = this
 
-	var today = moment(new Date()).day(-6).format('L')
-
-	console.log(today)
+	console.log(weeks)
 
 }
 
