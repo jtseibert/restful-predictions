@@ -24,17 +24,13 @@ async = require('../node_modules/async')
 */
 function Forecast2(pg, data, callback) {
 
-	//this.allocatedData			= data[0]
-	this.forecastedData 		= data[0]
-	this.numberRolesAllocated 	= data[1]
-	this.numberRolesForecasted	= data[2]
-	this.allocatedHours 		= data[3]
-	this.returnData 			= [['PROJECT',
+	this.allocatedHours			= data[0]
+	this.forecastedHours 		= data[1]
+	this.returnData 			= [['ROLE',
 									'WEEK_DATE',
-									'ROLE',
-									'ESTIMATED_HOURS',
-									'CAPACITY',
-									'TYPE']]
+									'ALLOCATED_HOURS',
+									'FORECASTED_HOURS',
+									'CAPACITY']]
 	this.capacity
 
 	objInstance = this
@@ -69,82 +65,10 @@ to the same 2D array to send to Google Sheets. Create is executed asyncronously 
 * @param callback - callback function to return final array
 */
 Forecast2.prototype.create = function(callback) {
-	objInstance = this
 
-	// Handle all allocatedData and push to returnData for output
-	/*var prepareAllocated = function(allocatedData, callback){
-		async.each(allocatedData, function(row,callback){
-			var tempRow = []
+	var today = new Date()
 
-			tempRow.push(row.PROJECT)
-			tempRow.push(row.WEEK_DATE)
-			tempRow.push(row.ROLE)
-			tempRow.push(row.ESTIMATED_HOURS)
-			tempRow.push('')
-			tempRow.push('ALLOCATED')
+	console.log(today)
 
-			if (objInstance.numberRolesForecasted[row.WEEK_DATE]){
-				if (objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE]){
-					if (objInstance.allocatedHours[row.ROLE][row.WEEK_DATE] < objInstance.roleCapacities[row.ROLE].capacity)
-						tempRow[4] = row.ESTIMATED_HOURS
-					else
-						tempRow[4] = objInstance.roleCapacities[row.ROLE].capacity/objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]
-				} else {
-					tempRow[4] = objInstance.roleCapacities[row.ROLE].capacity/objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]
-				}
-			} else {
-				tempRow[4] = objInstance.roleCapacities[row.ROLE].capacity/objInstance.numberRolesAllocated[row.WEEK_DATE][row.ROLE]
-			}
-			
-			objInstance.returnData.push(tempRow)
-			process.nextTick(callback)
-		},function(){
-			process.nextTick(callback)
-		})
-	}*/
-
-	// Handle all forecastedData and push to returnData for output
-	var prepareForecasted = function(forecastedData, callback){
-		async.each(forecastedData, function(row,callback){
-			var tempRow = []
-
-			tempRow.push(row.OPPORTUNITY_NAME)
-			tempRow.push(row.WEEK_DATE)
-			tempRow.push(row.ROLE)
-			tempRow.push(row.ESTIMATED_HOURS)
-			tempRow.push('')
-			tempRow.push('FORECASTED')
-
-			if (objInstance.allocatedHours[row.ROLE]) {
-				if (objInstance.allocatedHours[row.ROLE][row.WEEK_DATE]) {
-					if ((objInstance.roleCapacities[row.ROLE].capacity-objInstance.allocatedHours[row.ROLE][row.WEEK_DATE]) > 0) {
-						tempRow[4] = ((objInstance.roleCapacities[row.ROLE].capacity
-							-objInstance.allocatedHours[row.ROLE][row.WEEK_DATE])
-							/objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE])
-					} else {
-						tempRow[4] = 0
-					}
-				} else {
-					tempRow[4] = objInstance.roleCapacities[row.ROLE].capacity/objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE]
-				}
-			} else {
-				tempRow[4] = objInstance.roleCapacities[row.ROLE].capacity/objInstance.numberRolesForecasted[row.WEEK_DATE][row.ROLE]
-			}
-
-			objInstance.returnData.push(tempRow)
-			process.nextTick(callback)
-		},function(){
-			process.nextTick(callback)
-		})
-	}
-
-	async.parallel({
-	 	'allocated': prepareAllocated.bind(null, objInstance.allocatedData),
-	 	'forecasted': prepareForecasted.bind(null, objInstance.forecastedData)
-	}, function(err){
-		if(err)
-			throw err
-	 	process.nextTick(callback)
-	})
 }
 
