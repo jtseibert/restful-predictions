@@ -31,7 +31,7 @@ Allocation3.prototype.querySF = function(accessToken, path, callback) {
 	  accessToken: accessToken
 	})
 
-	conn.query("select stagename from opportunity where name='Zoetis - Cloud Craze'")
+	conn.query("select stagename from opportunity")
   	.on("record", function(record) {
     	allocationData.push(record);
 		})
