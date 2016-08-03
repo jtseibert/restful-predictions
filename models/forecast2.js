@@ -24,11 +24,11 @@ async = require('../node_modules/async')
 */
 function Forecast2(pg, data, callback) {
 
-	this.allocatedData			= data[0]
-	this.forecastedData 		= data[1]
-	this.numberRolesAllocated 	= data[2]
-	this.numberRolesForecasted	= data[3]
-	this.allocatedHours 		= data[4]
+	//this.allocatedData			= data[0]
+	this.forecastedData 		= data[0]
+	this.numberRolesAllocated 	= data[1]
+	this.numberRolesForecasted	= data[2]
+	this.allocatedHours 		= data[3]
 	this.returnData 			= [['PROJECT',
 									'WEEK_DATE',
 									'ROLE',
@@ -72,7 +72,7 @@ Forecast2.prototype.create = function(callback) {
 	objInstance = this
 
 	// Handle all allocatedData and push to returnData for output
-	var prepareAllocated = function(allocatedData, callback){
+	/*var prepareAllocated = function(allocatedData, callback){
 		async.each(allocatedData, function(row,callback){
 			var tempRow = []
 
@@ -101,7 +101,7 @@ Forecast2.prototype.create = function(callback) {
 		},function(){
 			process.nextTick(callback)
 		})
-	}
+	}*/
 
 	// Handle all forecastedData and push to returnData for output
 	var prepareForecasted = function(forecastedData, callback){
