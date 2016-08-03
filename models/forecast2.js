@@ -52,14 +52,12 @@ function Forecast2(pg, data, callback) {
 		})
 	},
 	two = function(callback){
-		var today = moment(new Date()).day(-6).format('L'),
+		var today = moment(new Date()).day(-6),
 			forecastedWeeks = 26,
 			weeks = []
 
-		today = today.add(7,'d')
-
 		async.times(forecastedWeeks, function(n,next){
-			weeks.push(today)
+			weeks.push(today.format('L'))
 			today = today.add(7,'d')
 			process.nextTick(function(){next()})
 		}, function(){
