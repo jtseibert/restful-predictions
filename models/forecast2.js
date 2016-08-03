@@ -85,7 +85,34 @@ Forecast2.prototype.create = function(callback) {
 
 	var objInstance = this
 
-	console.log(this.weeks)
+	async.each(objInstance.roleCapacities, function(role, callback){
+		var role = role
+		async.each(objInstance.weeks, function(week,callback){
+			var tempRow = []
 
+			tempRow.push(role)
+			tempRow.push(week)
+
+			if (objInstance.allocatedHours[role]){
+				if (objInstance.allocatedHours[role][week]){
+					tempRow.push(objInstance.allocatedHours[role][week])
+				} else { tempRow.push(0) }
+			} else { tempRow.push(0) }
+
+			if (objInstance.forecastedHours[role]){
+				if (objInstance.forecastedHours[role][week]){
+					tempRow.push(objInstance.forecastedHours[role][week])
+				} else { tempRow.push(0) }
+			} else { tempRow.push(0) }
+
+			tempRow.push(objInstance.roleCapacities[role])
+			objInstance.returnData.push(tempRow)
+			process.nextTick(callback)
+		}, functon(){
+			process.nextTick(callback)
+		})
+	}, function(){
+		process.nextTick(callback)
+	})
 }
 
