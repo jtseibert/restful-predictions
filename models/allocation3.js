@@ -33,8 +33,8 @@ Allocation3.prototype.querySF = function(accessToken, path, callback) {
 
 	conn.query("select stagename from opportunity")
   	.on("record", function(record) {
-    	allocationData.push(record);
-    	console.log(record)
+    	allocationData.push(record.StageName);
+    	console.log(record.StageName)
 		})
 	.on("end", function(query) {
 		console.log("total in database : " + query.totalSize);
