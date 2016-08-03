@@ -76,7 +76,7 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 			if(!err) {
 				if(value == undefined) {
 		    		console.log('allocation data not cached')
-					allocation.getReportData(req.params.accessToken, req.params.instance, function(allocationData) {
+					allocation.querySF(req.params.accessToken, req.params.instance, function(allocationData) {
 						res.json(allocationData)
 						delete allocation
 					})

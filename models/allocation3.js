@@ -8,7 +8,6 @@ Role, week date, name, contact id, project, allocated hrs /role/week, and alloca
 module.exports = Allocation3
 
 // module level variables
-var async = require('async')
 var sf = require('node-salesforce');
 var allocationData = []
 
@@ -20,18 +19,18 @@ function Allocation3(instance, accessToken) {
 /**
 * Queries SalesForce for allocation report, determines all roles in the report, and passes a list of
 roles to the getRoleData method. getRoleData is executed asyncronously on every role.
-* @function getReportData
+* @function querySF
 * @param oauth2 - oauth2 instance
 * @param cache - node-cache instance
 * @param callback - callback function to return final array
 */
-Allocation3.prototype.getReportData = function(accessToken, path, callback) {
+Allocation3.prototype.querySF = function(accessToken, path, callback) {
 	var conn = new sf.Connection({
-	  instanceUrl: 'https://' + path,
+	  instanceUrl: "https://" + path,
 	  accessToken: accessToken
 	})
 
-	conn.query("SELECT Resource.ContactID_18__c, Resource.Name, Project.Name, Resource.pse__Resource_Role__c, pse__Estimated_Hours__c, pse__Start_Date__c FROM pse__Est_Vs_Actuals__c")
+	conn.query("SELECT pse__Resource__c.ContactID_18__c, pse__Resource__c.Name, pse__Project__c.Name, pse__Resource__c.pse__Resource_Role__c, pse__Estimated_Hours__c, pse__Start_Date__c FROM pse__Est_V FROM pse__Est_Vs_Actuals__c")
   	.on("record", function(record) {
     	allocationData.push(record);
 		})
