@@ -22,9 +22,17 @@ roles to the getRoleData method. getRoleData is executed asyncronously on every 
 * @param cache - node-cache instance
 * @param callback - callback function to return final array
 */
-var sf = require('node-salesforce')
-var allocationData = []
+
 Allocation3.prototype.querySF = function(accessToken, path, callback) {
+	var sf = require('node-salesforce')
+	// Set up the sheet headers
+	var allocationData = [[
+		"CONTACT_ID", "NAME",
+		"ROLE", "PROJECT",
+		"START_DATE"
+		]]
+
+	// Connect to SF and populate allocationData
 	var conn = new sf.Connection({
 	  instanceUrl: "https://" + path,
 	  accessToken: accessToken
