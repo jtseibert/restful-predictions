@@ -85,26 +85,26 @@ Forecast2.prototype.create = function(callback) {
 
 	var objInstance = this
 
-	async.each(objInstance.roleCapacities, function(role, callback){
+	async.eachOf(objInstance.roleCapacities, function(role, roleKey, callback){
 		async.each(objInstance.weeks, function(week,callback){
 			var tempRow = []
 
-			tempRow.push(role)
+			tempRow.push(roleKey)
 			tempRow.push(week)
 
-			if (objInstance.allocatedHours[role]){
-				if (objInstance.allocatedHours[role][week]){
-					tempRow.push(objInstance.allocatedHours[role][week])
+			if (objInstance.allocatedHours[roleKey]){
+				if (objInstance.allocatedHours[roleKey][week]){
+					tempRow.push(objInstance.allocatedHours[roleKey][week])
 				} else { tempRow.push(0) }
 			} else { tempRow.push(0) }
 
-			if (objInstance.forecastedHours[role]){
-				if (objInstance.forecastedHours[role][week]){
-					tempRow.push(objInstance.forecastedHours[role][week])
+			if (objInstance.forecastedHours[roleKey]){
+				if (objInstance.forecastedHours[roleKey][week]){
+					tempRow.push(objInstance.forecastedHours[roleKey][week])
 				} else { tempRow.push(0) }
 			} else { tempRow.push(0) }
 
-			tempRow.push(objInstance.roleCapacities[role].capacity)
+			tempRow.push(objInstance.role.capacity)
 			objInstance.returnData.push(tempRow)
 			process.nextTick(callback)
 		}, function(){
