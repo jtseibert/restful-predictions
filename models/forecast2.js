@@ -85,7 +85,7 @@ Forecast2.prototype.create = function(callback) {
 
 	var objInstance = this
 
-	console.log(weeks)
+	console.log(this.weeks)
 
 }
 
