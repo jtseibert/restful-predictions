@@ -1,6 +1,15 @@
 /**
 * Allocation
 * @module Allocation
+* @desc The Allocation module contains function(s) to perform SOQL queries via the 
+node-salesforce library to return allocation data to Google Sheets.
+*/
+
+/**
+* @function queryAllocation
+* @params {string} accessToken - oauth2 access token
+* @params {string} path - salesforce server url
+* @params callback - callback function to return allocation data
 */
 var queryAllocation = function(accessToken, path, callback) {
 	var sf = require('node-salesforce')

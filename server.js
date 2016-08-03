@@ -73,7 +73,6 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req, res) {
 		var accessToken = req.params.accessToken,
 			instance    = req.params.instance
-		console.log(allocation)
 		allocation.queryAllocation(accessToken, instance, function(allocationData) {
 			res.json(allocationData)
 		})
