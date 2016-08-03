@@ -38,7 +38,7 @@ var queryAllocation = function(accessToken, path, callback) {
 			record.pse__Resource__r.pse__Resource_Role__c,
 			record.pse__Project__r.Name,
 			record.pse__Estimated_Hours__c,
-			moment(new Date(record.pse__Start_Date__c)).format("dd/MM/yyyy")
+			moment(new Date(record.pse__Start_Date__c)).format("DD/MM/YYYY")
 		)
     	allocationData.push(recordData)
 		})
