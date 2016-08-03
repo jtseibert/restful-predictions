@@ -108,7 +108,7 @@ Forecast2.prototype.create = function(callback) {
 			tempRow.push(objInstance.roleCapacities[role])
 			objInstance.returnData.push(tempRow)
 			process.nextTick(callback)
-		}, functon(){
+		}, function(){
 			process.nextTick(callback)
 		})
 	}, function(){
