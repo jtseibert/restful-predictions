@@ -25,7 +25,7 @@ roles to the getRoleData method. getRoleData is executed asyncronously on every 
 * @param cache - node-cache instance
 * @param callback - callback function to return final array
 */
-Allocation2.prototype.getReportData = function(accessToken, path, callback) {
+Allocation3.prototype.getReportData = function(accessToken, path, callback) {
 	var conn = new sf.Connection({
 	  instanceUrl: path,
 	  accessToken: accessToken
