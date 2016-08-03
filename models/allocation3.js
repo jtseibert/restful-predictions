@@ -25,7 +25,6 @@ roles to the getRoleData method. getRoleData is executed asyncronously on every 
 * @param callback - callback function to return final array
 */
 Allocation3.prototype.querySF = function(accessToken, path, callback) {
-	console.log("https://" + path)
 	var conn = new sf.Connection({
 	  instanceUrl: "https://" + path,
 	  accessToken: accessToken
@@ -33,8 +32,9 @@ Allocation3.prototype.querySF = function(accessToken, path, callback) {
 
 	conn.query("select stagename from opportunity")
   	.on("record", function(record) {
-    	allocationData.push(record.StageName);
-    	console.log(record.StageName)
+  		var recordData = []
+    	recordData.push(record.StageName);
+    	allocationData.push(recordData)
 		})
 	.on("end", function(query) {
 		console.log("total in database : " + query.totalSize);
