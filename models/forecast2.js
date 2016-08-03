@@ -86,7 +86,6 @@ Forecast2.prototype.create = function(callback) {
 	var objInstance = this
 
 	async.each(objInstance.roleCapacities, function(role, callback){
-		var role = role
 		async.each(objInstance.weeks, function(week,callback){
 			var tempRow = []
 
