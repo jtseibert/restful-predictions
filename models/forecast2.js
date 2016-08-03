@@ -59,10 +59,8 @@ function Forecast2(pg, data, callback) {
 		async.times(forecastedWeeks, function(n,next){
 			weeks.push(today)
 			today = moment(today).add(7,'d')
-			process.nextTick(function(){next(err)})
-		}, function(err){
-			if (err)
-				throw err
+			process.nextTick(function(){next()})
+		}, function(){
 			process.nextTick(function(){callback(null, weeks)})
 		})
 	}
