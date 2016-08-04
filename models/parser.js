@@ -28,7 +28,7 @@ var parseExcelSheet = function(b64String, callback) {
 		topCol: 1,
 		bottomRow: 0,
 		bottomCol: 8,
-		flagRow: 3,
+		flagRow: 4,
 		flagCol: 0
 	}
 	var temp = getBottomRow(sheet, indexes)
