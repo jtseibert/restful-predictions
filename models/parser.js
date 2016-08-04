@@ -39,6 +39,7 @@ var parseExcelSheet = function(b64String) {
 
 function getCellValue(sheet, row, col, type) {
 	if(sheet[xlsx.utils.encode_cell({r:row,c:col})] != undefined) {
+		console.log(JSON.stringify(sheet[xlsx.utils.encode_cell({r:row,c:col})]))
 		return sheet[xlsx.utils.encode_cell({r:row,c:col})][type]
 	} else {
 		return ''
