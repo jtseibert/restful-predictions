@@ -159,13 +159,9 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 		valid = false
 	}
 
-	// Check bottom row labels
+	// Check bottom row label
 	if(getCellValue(sheet, indexes.bottomRow + 1, indexes.bottomCol, 'v') != 'Total Cost') {
 		console.log('invalid total cost check')
-		valid = false
-	}
-	if(getCellValue(sheet, indexes.bottomRow + 2, indexes.bottomCol, 'v') != 'Total Billable') {
-		console.log('invalid total billable check')
 		valid = false
 	}
 
