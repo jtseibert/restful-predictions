@@ -60,7 +60,7 @@ function getColumnLimit(sheet, subTotalRow, colStart, n) {
 			console.log("bool is " + (getCellValue(sheet, subTotalRow, i, 'v') == 0.00))
 			consecutiveCheck = consecutiveCheck && (getCellValue(sheet, subTotalRow, i, 'v') == 0.00)
 		}
-		if(!consecutive) {
+		if(!consecutiveCheck) {
 			currentCol += n
 			console.log("change from " + (currentCol - n) + " to " + currentCol)
 			consecutiveCheck = true
