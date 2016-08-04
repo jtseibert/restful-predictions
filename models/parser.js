@@ -15,45 +15,49 @@ xlsx workbook object for parsing using the xlsx library.
 * @returns JSON format object of estimated forecasted hours for each role/week
 */
 var parseExcelSheet = function(b64String, callback) {
+	// Create xlsx objects and determine indexes
 	var workbook = xlsx.read(b64String, {type: 'base64'})	
 	var sheet 	 = workbook.Sheets[workbook.SheetNames[2]]
 	// Template indexes are hardcoded here
 	var indexes = {
-		rowStart: 18,
-		colStart: 28,
+		dataRowStart: 18,
+		dataColStart: 28,
 		headerRow: 17,
-		subTotalRow: 60
+		headerCol: 1,
+		subTotalIndex: 0
 	}
+	var temp = getSubTotalIndex(sheet, indexes)
+	indexes.subTotalIndex = temp
 
-	if(!sheetIsValidFormat) {
-		console.log('invalid format')
+	// Parse the sheet if valid
+	if(!sheetIsValidFormat(workbook, sheet, indexes)) {
 		callback(undefined)
-	}
-
-	var sheetData = {}
-	var colEnd = getColumnLimit(sheet, indexes.subTotalRow, indexes.colStart, 3)
-	//var initialDate = getCellValue(sheet, indexes.headerRow, indexes.colStart, 'w')
-	// Iterate over the roles column until subtotal is reached
-	//	* For each role, grab each estimated hour for each week date
-	//  * If a role, date, or hour is empty, do nothing
-	while(getCellValue(sheet, indexes.rowStart, 1, 'v') != 'Subtotal') {
-		var role = getCellValue(sheet, indexes.rowStart, 1, 'v')
-		if(role != '') {
-			sheetData[role] = {}
-			for(var i = indexes.colStart; i < colEnd; i++) {
-				var date = moment(new Date(getCellValue(sheet, indexes.headerRow, i, 'w')))
-						   .format('MM/DD/YYYY')
-				if(date != '') {
-					var hours = getCellValue(sheet, indexes.rowStart, i, 'v')
-					if(hours != '') {
-						sheetData[role][date] = hours
+	} else {
+		var sheetData = {}
+		var colEnd = getColumnLimit(sheet, indexes.subTotalRow, indexes.dataColStart, 3)
+		//var initialDate = getCellValue(sheet, indexes.headerRow, indexes.dataColStart, 'w')
+		// Iterate over the roles column until subtotal is reached
+		//	* For each role, grab each estimated hour for each week date
+		//  * If a role, date, or hour is empty, do nothing
+		while(getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal') {
+			var role = getCellValue(sheet, indexes.dataRowStart, 1, 'v')
+			if(role != '') {
+				sheetData[role] = {}
+				for(var i = indexes.dataColStart; i < colEnd; i++) {
+					var date = moment(new Date(getCellValue(sheet, indexes.headerRow, i, 'w')))
+							   .format('MM/DD/YYYY')
+					if(date != '') {
+						var hours = getCellValue(sheet, indexes.dataRowStart, i, 'v')
+						if(hours != '') {
+							sheetData[role][date] = hours
+						}
 					}
 				}
 			}
+			indexes.dataRowStart += 1
 		}
-		indexes.rowStart += 1
+		callback(sheetData)
 	}
-	callback(sheetData)
 }
 
 /**
@@ -79,13 +83,13 @@ function getCellValue(sheet, row, col, type) {
 n consecutive 0.00 values in the subtotal row.
 * @param {worksheet} sheet - xlsx sheet object
 * @param {int} subTotalRow - numeric index of the row for subtotals
-* @param {int} colStart - numeric index of column where subtotal data begins
+* @param {int} dataColStart - numeric index of column where subtotal data begins
 * @param {int} n - number of consecutive 0.00 values before stop
 * @returns {int} colEnd - numeric index of last column of row data
 */
-function getColumnLimit(sheet, subTotalRow, colStart, n) {	
+function getColumnLimit(sheet, subTotalRow, dataColStart, n) {	
 	var colEnd
-	var currentCol = colStart
+	var currentCol = dataColStart
 	var done = false
 	var consecutiveCheck = true
 	while(!done) {
@@ -105,6 +109,26 @@ function getColumnLimit(sheet, subTotalRow, colStart, n) {
 }
 
 /**
+* @function getSubTotalIndex
+* @desc Finds numeric row index of cell with value 'Subtotal'.
+* @param {worksheet} sheet - xlsx worksheet object
+* @param indexes - JSON formatted object of numeric indexes of key rows/cols
+* @returns numeric row index of cell containing 'Subtotal'
+*/
+function getSubTotalIndex(sheet, indexes) {
+	var subTotalIndex = indexes.headerRow
+		max = 75
+	while(subTotalIndex < max) {
+		if(getCellValue(sheet, subTotalIndex, indexes.headerCol, 'v') == 'Subtotal') {
+			return subTotalIndex
+		} else {
+			subTotalIndex++
+		}
+	}
+	return 0
+}
+
+/**
 * @function sheetIsValidFormat
 * @desc Validates the sheet format.
 * @param {workbook} - xlsx workbook object
@@ -115,23 +139,39 @@ function getColumnLimit(sheet, subTotalRow, colStart, n) {
 function sheetIsValidFormat(workbook, sheet, indexes) {
 	var valid = true
 	// Validate sheet at index 2 is 'Estimate'
-	if(workbook.Props.SheetNames[2] != 'Estimate') 
+	if(workbook.Props.SheetNames[2] != 'Estimate') {
+		console.log('invalid tab check')
 		valid = false
-	
-	// Verify correct subtotal row
-	if(getCellValue(sheet, indexes.subTotalRow, 1, 'v') != 'Subtotal') 
-		valid = false
+	}
 
-	// Verify Roles* column
-	if(getCellValue(sheet, indexes.headerRow, 1, 'v') != 'Roles*')
+	// Verify Role* column
+	if(getCellValue(sheet, indexes.headerRow, indexes.headerCol, 'v') != 'Role*') {
+		console.log('invalid role check')
 		valid = false
+	}
+
+	// Verify Responsibilities column
+	if(getCellValue(sheet, indexes.headerRow, indexes.headerCol + 1, 'v') != 'Responsibilities') {
+		console.log('invalid responsibilities check')
+		valid = false
+	}
 
 	// Verify label cells "Total Cost" and "Total Billable"
-	if(getCellValue(sheet, 61, 27, 'v') != 'Total Cost')
+	if(getCellValue(sheet, indexes.subTotalIndex + 1, 7, 'v') != 'Total Cost') {
+		console.log('invalid total cost check')
 		valid = false
+	}
 
-	if(getCellValue(sheet, 62, 27, 'v') != 'Total Billable')
+	if(getCellValue(sheet, indexes.subTotalIndex + 2, 7, 'v') != 'Total Billable') {
+		console.log('invalid total billable check')
 		valid = false
+	}
+
+	// Verify subtotal row
+	if(getCellValue(sheet, indexes.subTotalIndex, indexes.headerCol, 'v') != 'Subtotal') {
+		console.log('invalid subtotal check')
+		valid = false
+	}
 
 	return valid
 }
