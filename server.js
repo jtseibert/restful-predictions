@@ -312,8 +312,8 @@ router.route('/importProjectSize')
 
 function checkCell(sheet, row, col, type) {
 	if(sheet[xlsx.utils.encode_cell({r:row,c:col})] != undefined) {
-		console.log("inner val is " + sheet[xlsx.utils.encode_cell({r:row,c:col})].type)
-		return sheet[xlsx.utils.encode_cell({r:row,c:col})].type
+		console.log("inner val is " + sheet[xlsx.utils.encode_cell({r:row,c:col})][type])
+		return sheet[xlsx.utils.encode_cell({r:row,c:col})][type]
 	} else {
 		return ''
 	}
