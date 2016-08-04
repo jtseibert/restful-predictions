@@ -119,6 +119,7 @@ function getSubTotalIndex(sheet, indexes) {
 		max = 75
 	while(subTotalIndex < max) {
 		if(getCellValue(sheet, subTotalIndex, indexes.headerCol, 'v') == 'Subtotal') {
+			console.log('subtotal index is ' + subTotalIndex)
 			return subTotalIndex
 		} else {
 			subTotalIndex++
