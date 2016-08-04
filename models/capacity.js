@@ -3,7 +3,6 @@
 * @module Capacity
 * @desc The Capacity module is responsible for persisting all employees and thier roles if they are in the roles database table
 */
-module.exports = Capacity
 
 var queryCapacity = function(accessToken, path, callback) {
 	var sf = require('node-salesforce')
