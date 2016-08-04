@@ -283,6 +283,7 @@ router.route('/importProjectSize')
 
   		var rowStart = 18
   		var colStart = 28
+  		var dateRow = 17
   		var projectSizeData = {}
   		while(sheet[xlsx.utils.encode_cell({r:rowStart,c:1})].v != 'Subtotal') {
   			var cellValue = sheet[xlsx.utils.encode_cell({r:rowStart,c:1})].v
