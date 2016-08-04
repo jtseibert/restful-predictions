@@ -15,7 +15,6 @@ xlsx workbook object for parsing using the xlsx library.
 * @returns JSON format object of estimated forecasted hours for each role/week
 */
 var parseExcelSheet = function(b64String, callback) {
-	// Create xlsx objects and determine indexes
 	var workbook = xlsx.read(b64String, {type: 'base64'})	
 	var sheet 	 = workbook.Sheets[workbook.SheetNames[2]]
 	// Template indexes are hardcoded here
@@ -47,14 +46,27 @@ var parseExcelSheet = function(b64String, callback) {
 		while(getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal') {
 			var role = getCellValue(sheet, indexes.dataRowStart, 1, 'v')
 			if(role != '') {
-				sheetData[role] = {}
-				for(var i = indexes.dataColStart; i < colEnd; i++) {
-					var date = moment(new Date(getCellValue(sheet, indexes.topRow, i, 'w')))
-							   .format('MM/DD/YYYY')
-					if(date != '') {
-						var hours = getCellValue(sheet, indexes.dataRowStart, i, 'v')
-						if(hours != '') {
-							sheetData[role][date] = hours
+				if(sheetData[role]) {
+					sheetData[role][indexes.dataRowStart] = {}
+					for(var i = indexes.dataColStart; i < colEnd; i++) {
+						var date = moment(new Date(getCellValue(sheet, indexes.topRow, i, 'w')))
+								   .format('MM/DD/YYYY')
+						if(date != '') {
+							var hours = getCellValue(sheet, indexes.dataRowStart, i, 'v')
+							if(hours != '') {
+								sheetData[role][indexes.dataRowStart][date] = hours
+							}
+						}
+				} else {
+					sheetData[role] = {}
+					for(var i = indexes.dataColStart; i < colEnd; i++) {
+						var date = moment(new Date(getCellValue(sheet, indexes.topRow, i, 'w')))
+								   .format('MM/DD/YYYY')
+						if(date != '') {
+							var hours = getCellValue(sheet, indexes.dataRowStart, i, 'v')
+							if(hours != '') {
+								sheetData[role][date] = hours
+							}
 						}
 					}
 				}
