@@ -281,6 +281,7 @@ router.route('/importProjectSize')
   		var dateRow = 17
   		var projectSizeData = {}
   		while(checkCell(sheet, rowStart, 1, 'v') != 'Subtotal') {
+  			var cellValue = checkCell(sheet, rowStart, 1, 'v')
   			console.log("cell val is " + cellValue)
   			if(cellValue != '') {
   				projectSizeData[cellValue] = {}
