@@ -275,11 +275,6 @@ router.route('/importProjectSize')
 	.post(function(req, res) {
 		var workbook = xlsx.read(req.body.b64, {type: 'base64'})
 		var sheet = workbook.Sheets[workbook.SheetNames[2]]
-		for (var z in sheet) {
-    		/* all keys that do not begin with "!" correspond to cell addresses */
-   			if(z[0] === '!') continue;
-    		//console.log(z + "=" + JSON.stringify(sheet[z].v));
-  		}
 
   		var rowStart = 18
   		var colStart = 28
@@ -293,8 +288,9 @@ router.route('/importProjectSize')
   				var date
   				for(var i = 0; i < 19; i++) {//temp 
   					date = checkCell(sheet, dateRow, colStart+i, 'w')
-  					if(date != '')
+  					if(date != '') {
   						projectSizeData[cellValue][date] = checkCell(sheet, rowStart, colStart+i, 'v')
+  					}
   				}
   			}
   			rowStart++
@@ -310,6 +306,7 @@ router.route('/importProjectSize')
 
 		res.send({message: "Success!"})
 	})
+
 
 function checkCell(sheet, row, col, type) {
 	if(sheet[xlsx.utils.encode_cell({r:row,c:col})]) {
