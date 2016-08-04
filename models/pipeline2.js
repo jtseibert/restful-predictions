@@ -17,7 +17,7 @@ function queryPipeline(accessToken, path, callback) {
 							'Close Date',
 							'Probability',
 							'Created Date',
-							'Account Nama']]
+							'Account Name']]
 
 	// Connect to SF
 	var conn = new sf.Connection({
@@ -54,3 +54,52 @@ function queryPipeline(accessToken, path, callback) {
 }
 
 module.exports.queryPipeline = queryPipeline
+
+
+
+
+
+function applyDB(pipelineData, callback){
+	var moment 	= require('moment'),
+		async 	= require('async'),
+		utils 	= require('./utilities')
+
+
+	// Sets omittedOpportunities, addedOpportunities, and defaultProjectSizes to the values stored in their respective tables in the DB
+	function getFromDB(pipelineData, callback){
+		var DB = {}
+
+		async.parallel({
+			'one': 		utils.getDefaultProjectSizes,
+			'two': 		utils.getOmittedOpportunities,
+			'three': 	utils.getAddedOpportunities
+		}, function(err, results){
+			DB[defaultProjectSizes] 	= results.one
+			DB[omittedOpportunities] 	= results.two
+			DB[addedOpportunities] 		= results.three
+			process.nextTick(function(){ null, callback(pipelineData, DB) })
+		})		
+	}
+
+	// Looks at all opportunities in pipelineData and updates them if we have any persisted data for that opportunity in the DB
+	function updateCurrentOpportunites(pipelineData, DB, callback){
+
+	}
+
+	// Adds any user added opportunities to pipelineData
+	function addNewOpportunities(pipelineData, DB, callback){
+		
+	}
+
+	async.waterfall({
+		getFromDB.bind(null, pipelineData),
+		updateCurrentOpportunites,
+		addNewOpportunities
+	}, function(error, result){
+		if (error)
+			throw error
+		process.nextTick(function() {callback(result)})
+	})
+}
+
+module.exports.applyDB = applyDB
