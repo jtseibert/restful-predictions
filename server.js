@@ -35,7 +35,7 @@ var port = process.env.PORT || 5000,
 // Helper function to query any table in database
 function query(query, callback) {
 	q = query
-	pg.connect(process.env.DATABASE_URL, function(err, client) {
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		console.log("query is: " + q)
 		var query = client.query(q)
 		query.on("row", function (row, result) {
