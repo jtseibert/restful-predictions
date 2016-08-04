@@ -66,7 +66,7 @@ function applyDB(pipelineData, callback){
 
 
 	// Sets omittedOpportunities, addedOpportunities, and defaultProjectSizes to the values stored in their respective tables in the DB
-	function getFromDB(pipelineData, callback){
+	function getFromDB(callback){
 		var DB = {}
 
 		async.parallel({
@@ -77,7 +77,7 @@ function applyDB(pipelineData, callback){
 			DB.defaultProjectSizes	= results.one
 			DB.omittedOpportunities	= results.two
 			DB.addedOpportunities	= results.three
-			process.nextTick(function(){ null, callback(pipelineData, DB) })
+			process.nextTick(function(){ callback(pipelineData, DB) })
 		})		
 	}
 
