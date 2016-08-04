@@ -280,9 +280,10 @@ router.route('/importProjectSize')
   		var colStart = 28
   		var dateRow = 17
   		var projectSizeData = {}
-  		while(checkCell(sheet, rowStart, 1, 'v') != 'Subtotal') {
+  		var infloopcounter = 0
+  		while(checkCell(sheet, rowStart, 1, 'v') != 'Subtotal' && infloopcounter < 10) {
   			var cellValue = checkCell(sheet, rowStart, 1, 'v')
-  			console.log("cell val is " + cellValue)
+  			//console.log("cell val is " + cellValue)
   			if(cellValue != '') {
   				projectSizeData[cellValue] = {}
   				var date
@@ -294,6 +295,7 @@ router.route('/importProjectSize')
   				}
   			}
   			rowStart++
+  			infloopcounter++
   		}
   		console.log(projectSizeData)
 		
@@ -310,6 +312,7 @@ router.route('/importProjectSize')
 
 function checkCell(sheet, row, col, type) {
 	if(sheet[xlsx.utils.encode_cell({r:row,c:col})] != undefined) {
+		console.log("inner val is " + sheet[xlsx.utils.encode_cell({r:row,c:col})].type)
 		return sheet[xlsx.utils.encode_cell({r:row,c:col})].type
 	} else {
 		return ''
