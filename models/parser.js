@@ -57,6 +57,7 @@ var parseExcelSheet = function(b64String, callback) {
 								sheetData[role][indexes.dataRowStart][date] = hours
 							}
 						}
+					}
 				} else {
 					sheetData[role] = {}
 					for(var i = indexes.dataColStart; i < colEnd; i++) {
