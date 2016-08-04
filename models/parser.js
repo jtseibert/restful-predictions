@@ -28,7 +28,7 @@ var parseExcelSheet = function(b64String, callback) {
 	if(!sheetIsValidFormat) {
 		console.log('invalid format')
 		callback(undefined)
-	}
+	} else {
 
 	var sheetData = {}
 	var colEnd = getColumnLimit(sheet, indexes.subTotalRow, indexes.colStart, 3)
@@ -54,6 +54,7 @@ var parseExcelSheet = function(b64String, callback) {
 		indexes.rowStart += 1
 	}
 	callback(sheetData)
+}
 }
 
 /**
