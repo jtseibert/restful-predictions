@@ -57,7 +57,7 @@ function getColumnLimit(sheet, subTotalRow, colStart, n) {
 	while(!done && inf < 10) {
 		for(var i = currentCol; i < currentCol + n; i++) {
 			console.log(getCellValue(sheet, subTotalRow, i, 'v'))
-			continue_ = continue_ && (getCellValue(sheet, subTotalRow, i, 'v') == 0.00)
+			continue_ = continue_ && (getCellValue(sheet, subTotalRow, i, 'v') != 0.00)
 		}
 		if(continue_) {
 			currentCol += n
