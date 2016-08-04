@@ -1,14 +1,23 @@
 /**
-* parser.js
-* @desc parse a xls sheet from sf
-
+* @module Parser
+* @desc Scrapes estimated forecasted hours for each role and week from
+ESTIMATE xlsx file.
 */
 var xlsx = require('xlsx')
 var moment = require('moment')
 
+/**
+* @function parseExcelSheet
+* @desc Returns a JSON formatted object of estimated forecasted hours for role/
+week combinations from a base64 encoded string. The base64 string is converted into a 
+xlsx workbook object for parsing using the xlsx library.
+* @param {string} - b64String - base64 encoded string from SalesForce
+*/
 var parseExcelSheet = function(b64String) {
 	var workbook = xlsx.read(b64String, {type: 'base64'})
+	console.log(JSON.stringify(workbook.Props))
 	var sheet 	 = workbook.Sheets[workbook.SheetNames[2]]
+	// Template indexes are hardcoded here
 	var indexes = {
 		rowStart: 18,
 		colStart: 28,
@@ -38,9 +47,17 @@ var parseExcelSheet = function(b64String) {
 		}
 		indexes.rowStart += 1
 	}
-	console.log(sheetData)
+	return sheetData
 }
 
+/**
+* @function getCellValue
+* @desc Return the value of cell (row, col) in the sheet.
+* @param {worksheet} sheet - xlsx sheet object
+* @param {int} row - row of cell
+* @param {int} col - column of cell
+* @param {string} type - type of data returned E.G v (raw) or w (formatted)
+*/
 function getCellValue(sheet, row, col, type) {
 	if(sheet[xlsx.utils.encode_cell({r:row,c:col})] != undefined) {
 		return sheet[xlsx.utils.encode_cell({r:row,c:col})][type]
@@ -49,7 +66,15 @@ function getCellValue(sheet, row, col, type) {
 	}
 }
 
-// Search for n consecutive 0.00's in the 'Subtotal' row
+/**
+* @function getColumnLimit
+* @desc Determines the stop point for each row iteration by scanning for
+n consecutive 0.00 values in the subtotal row.
+* @param {worksheet} sheet - xlsx sheet object
+* @param {int} subTotalRow - numeric index of the row for subtotals
+* @param {int} colStart - numeric index of column where subtotal data begins
+* @param {int} n - number of consecutive 0.00 values before stop
+*/
 function getColumnLimit(sheet, subTotalRow, colStart, n) {
 	// Verify correct row
 	if(getCellValue(sheet, subTotalRow, 1, 'v') != 'Subtotal') {
