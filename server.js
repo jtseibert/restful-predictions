@@ -284,6 +284,7 @@ router.route('/importProjectSize')
   		var rowStart = 18
   		var colStart = 28
   		var projectSizeData = {}
+  		// change to async.whilst(test, function(){}, callback)
   		while(sheet[xlsx.utils.encode_cell({r:rowStart,c:1})].v != 'Subtotal') {
   			var cell = {}
   			cell[r] = rowStart
