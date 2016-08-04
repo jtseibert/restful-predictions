@@ -23,7 +23,8 @@ var parseExcelSheet = function(b64String, callback) {
 		dataRowStart: 18,
 		dataColStart: 28,
 		headerRow: 17,
-		headerCol: 1
+		headerCol: 1,
+		subTotalIndex: 0
 	}
 	indexes.subTotalRow = getSubTotalIndex(sheet, indexes)
 	console.log(indexes.subTotalIndex)
@@ -142,7 +143,11 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 	if(workbook.Props.SheetNames[2] != 'Estimate') 
 		valid = false
 
-	// Verify Roles* column
+	// Verify Role* column
+	if(getCellValue(sheet, indexes.headerRow, indexes.headerCol, 'v') != 'Role*')
+		valid = false
+
+	// Verify Responsibilities column
 	if(getCellValue(sheet, indexes.headerRow, indexes.headerCol + 1, 'v') != 'Responsibilities')
 		valid = false
 
