@@ -123,7 +123,7 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 	//	valid = false
 
 	// Verify Roles* column
-	if(getCellValue(sheet, indexes.headerRow, 1, 'v') != 'Roles*')
+	if(getCellValue(sheet, indexes.headerRow, 1, 'v') != 'Role*')
 		valid = false
 
 	/*Verify label cells "Total Cost" and "Total Billable"
