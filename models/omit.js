@@ -25,16 +25,8 @@ Omit.prototype.add = function(pg, callback) {
 	objInstance = this
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		for (var entry in objInstance.data){
-			client.query('INSERT INTO omit(opportunity) values($1)', [entry])
+			client.query('INSERT INTO omit(opportunity) values($1)', [entry], function(){ done() })
 		}
-		//testing
-		var query = client.query("SELECT * from omit")
-		query.on("row", function (row, result) {
-			result.addRow(row)
-		})
-		query.on("end", function (result) {
-			console.log(JSON.stringify(result.rows, null, "    "))
-		})
 		process.nextTick(callback)
 	})
 }
@@ -50,16 +42,8 @@ Omit.prototype.remove = function(pg, callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		for (var entry in objInstance.data){
 			console.log('should be deleting: ' + entry)
-			client.query('DELETE FROM omit WHERE opportunity = $1', [entry])
+			client.query('DELETE FROM omit WHERE opportunity = $1', [entry], function(){ done() })
 		}
-		//testing
-		var query = client.query("SELECT * from omit")
-		query.on("row", function (row, result) {
-			result.addRow(row)
-		})
-		query.on("end", function (result) {
-			console.log(JSON.stringify(result.rows, null, "    "))
-		})
 		process.nextTick(callback)
 	})
 }

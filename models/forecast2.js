@@ -48,6 +48,7 @@ function Forecast2(pg, data, callback) {
 				roleCapacities[row.role] = row.capacity
 			})
 			query.on("end", function (result) {
+				done()
 				process.nextTick(function(){callback(null, roleCapacities)})
 			})
 		})

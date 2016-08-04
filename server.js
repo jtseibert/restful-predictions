@@ -25,7 +25,9 @@ var router = express.Router()
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
 app.use('/api', router)
+
 pg.defaults.ssl = true
+pg.defaults.poolSize = 10
 
 var port = process.env.PORT || 5000,
 	cache = new Cache()
@@ -41,6 +43,7 @@ function query(query, callback) {
 			result.addRow(row)
 		})
 		query.on("end", function (result) {
+			done()
 			process.nextTick(function() {callback(result.rows)})
 		})
 	})

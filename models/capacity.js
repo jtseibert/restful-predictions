@@ -69,7 +69,7 @@ Capacity.prototype.updateDB = function(pg, callback){
 			if (rowNumber != 0) {
 				client.query('INSERT INTO capacity(contact_id, name, title, available_hours) VALUES($3,$1,'
 								+'(SELECT role FROM roles WHERE role=$2),$4) ON CONFLICT (contact_id) DO UPDATE SET title=(SELECT role FROM roles WHERE role=$2)',
-								[row[0],row[1],row[2],40])
+								[row[0],row[1],row[2],40], function(){ done() })
 			}
 		}, function(){
 			process.nextTick(callback)
