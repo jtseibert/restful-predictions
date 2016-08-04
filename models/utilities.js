@@ -51,19 +51,19 @@ function getOmittedOpportunities(callback){
 	})
 }
 
-function getAddedOpportunities(callback){
+function getOpportunities(callback){
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		if (err) return process.nextTick(function(){callback(err)})
-		var addedOpportunities,
-			addedOpportunitiesQuery = client.query("SELECT * from sales_pipeline")
-		addedOpportunitiesQuery.on("row", function (row, result) {
+		var opportunities,
+			opportunitiesQuery = client.query("SELECT * from sales_pipeline")
+		opportunitiesQuery.on("row", function (row, result) {
 			result.addRow(row)
 		})
-		addedOpportunitiesQuery.on("end", function (result) {
+		opportunitiesQuery.on("end", function (result) {
 			done()
-			addedOpportunities = {}
+			opportunities = {}
 			async.each(result.rows, function(row, callback){
-				addedOpportunities[row.opportunity] = {
+				opportunities[row.opportunity] = {
 					"STAGE": row.stage,
 					"AMOUNT": row.amount,
 					"EXPECTED_AMOUNT": row.expected_amount,
@@ -77,13 +77,13 @@ function getAddedOpportunities(callback){
 				}
 				process.nextTick(callback)
 			}, function(){
-				process.nextTick(function(){callback(null, addedOpportunities)})
+				process.nextTick(function(){callback(null, opportunities)})
 			})
 		})
 	})
 }
 
 
-module.exports.getAddedOpportunities 	= getAddedOpportunities
+module.exports.getOpportunities 		= getOpportunities
 module.exports.getOmittedOpportunities 	= getOmittedOpportunities
 module.exports.getDefaultProjectSizes 	= getDefaultProjectSizes
