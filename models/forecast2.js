@@ -90,7 +90,6 @@ Forecast2.prototype.create = function(callback) {
 			capacity = capacity
 		console.log('outerCap: '+capacity+'\touterRole: '+role)
 		async.each(objInstance.weeks, function(week,callback){
-			console.log('innerCap: '+capacity+'\tinnerRole: '+role)
 			var tempRow = []
 
 			tempRow.push(role)
@@ -108,7 +107,7 @@ Forecast2.prototype.create = function(callback) {
 				} else { tempRow.push(0) }
 			} else { tempRow.push(0) }
 
-			tempRow.push(objInstance.capacity)
+			tempRow.push(capacity)
 			objInstance.returnData.push(tempRow)
 			process.nextTick(callback)
 		}, function(){
