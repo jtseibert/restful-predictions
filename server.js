@@ -284,7 +284,7 @@ router.route('/importProjectSize')
   		var rowStart = 18
   		var colStart = 28
   		var projectSizeData = {}
-  		/*(while(sheet[xlsx.utils.encode_cell({r:rowStart,c:1})].v != 'Subtotal') {
+  		while(sheet[xlsx.utils.encode_cell({r:rowStart,c:1})].v != 'Subtotal') {
   			var cellValue = sheet[xlsx.utils.encode_cell({r:rowStart,c:1})].v
   			if(cellValue != '') {
   				projectSizeData[cellValue] = {}
@@ -297,7 +297,7 @@ router.route('/importProjectSize')
   			rowStart++
   		}
   		console.log(projectSizeData)
-		*/
+		
 
 
 		//var json = xlsx.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[2]])
