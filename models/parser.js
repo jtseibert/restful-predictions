@@ -26,6 +26,7 @@ var parseExcelSheet = function(b64String, callback) {
 		headerCol: 1
 	}
 	indexes.subTotalRow = getSubTotalIndex(sheet, indexes)
+	console.log(indexes.subTotalIndex)
 
 	// Parse the sheet if valid
 	if(!sheetIsValidFormat(workbook, sheet, indexes)) {
@@ -119,7 +120,6 @@ function getSubTotalIndex(sheet, indexes) {
 		max = 75
 	while(subTotalIndex < max) {
 		if(getCellValue(sheet, subTotalIndex, indexes.headerCol, 'v') == 'Subtotal') {
-			console.log('subtotal index is ' + subTotalIndex)
 			return subTotalIndex
 		} else {
 			subTotalIndex++
@@ -143,16 +143,17 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 		valid = false
 
 	// Verify Roles* column
-	if(getCellValue(sheet, indexes.headerRow, indexes.headerCol, 'v') != 'Role*')
+	if(getCellValue(sheet, indexes.headerRow, indexes.headerCol + 1, 'v') != 'Responsibilities')
 		valid = false
 
-	//Verify label cells "Total Cost" and "Total Billable"
+	// Verify label cells "Total Cost" and "Total Billable"
 	if(getCellValue(sheet, indexes.subTotalRow + 1, indexes.dataColStart - 1, 'v') != 'Total Cost')
 		valid = false
 
 	if(getCellValue(sheet, indexes.subTotalRow + 2, indexes.dataColStart - 2, 'v') != 'Total Billable')
 		valid = false
 
+	// Verify subtotal row
 	if(getCellValue(sheet, indexes.subTotalRow, indexes.headerCol, 'v') != 'Subtotal')
 		valid = false
 
