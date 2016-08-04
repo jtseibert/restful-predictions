@@ -25,7 +25,7 @@ var parseExcelSheet = function(b64String, callback) {
 		headerRow: 17,
 		headerCol: 1
 	}
-	indexes[subTotalRow] = getSubTotalIndex(sheet, indexes)
+	indexes.subTotalRow = getSubTotalIndex(sheet, indexes)
 
 	// Parse the sheet if valid
 	if(!sheetIsValidFormat(workbook, sheet, indexes)) {
