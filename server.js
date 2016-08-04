@@ -83,6 +83,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 		var accessToken = req.params.accessToken,
 			instance    = req.params.instance
 		pipeline.queryPipeline(accessToken, instance, function(pipelineData) {
+			pipeline.applyDB(pipelineData,function(){})
 			res.json(pipelineData)
 		})
 		// var pipeline = new Pipeline(async, req.params.instance, req.params.accessToken, pg, function() {
