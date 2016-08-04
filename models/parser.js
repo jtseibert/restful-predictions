@@ -15,9 +15,9 @@ var parseExcelSheet = function(b64String) {
 		subTotalRow: 60
 	}
 	var projectSizeData = {}
-	var stopIndex = getColumnLimit(sheet, indexes.subTotalRow, 3)
-	console.log(stopIndex)
-	while(checkCell(sheet, rowStart, 1, 'v') != 'Subtotal') {
+	var lastCol = getColumnLimit(sheet, indexes.subTotalRow, indexes.rowStart, 3)
+	console.log(lastCol)
+	/*while(checkCell(sheet, rowStart, 1, 'v') != 'Subtotal') {
 		var cellValue = checkCell(sheet, rowStart, 1, 'v')
 		//console.log("cell val is " + cellValue)
 		if(cellValue != '') {
@@ -31,7 +31,7 @@ var parseExcelSheet = function(b64String) {
 			}
 		}
 		rowStart++
-	}
+	}*/
 	//console.log(projectSizeData)
 }
 
@@ -44,13 +44,13 @@ function getCellValue(sheet, row, col, type) {
 }
 
 // Search for n consecutive 0.00's in the 'Subtotal' row
-function getColumnLimit(sheet, subTotalRow, n) {
+function getColumnLimit(sheet, subTotalRow, startRow, n) {
 	// Verify correct row
 	if(getCellValue(sheet, subTotalRow, 1, 'v') != 'Subtotal') {
 		return 0
 	}
-	var stopIndex
-	var currentCol = 1
+	var lastCol
+	var currentCol = startRow
 	var done = false
 	var continue_ = true
 	while(!done) {
@@ -61,10 +61,10 @@ function getColumnLimit(sheet, subTotalRow, n) {
 			currentCol += n
 		} else {
 			done = true
-			stopIndex = currentCol
+			lastCol = currentCol
 		}
 	}
-	return stopIndex
+	return lastCol
 }
 
 module.exports.parseExcelSheet = parseExcelSheet
