@@ -16,6 +16,8 @@ var parseExcelSheet = function(b64String) {
 	}
 	var projectSizeData = {}
 	var lastCol = getColumnLimit(sheet, indexes.subTotalRow, indexes.colStart, 3)
+	var initialDate = getCellValue(sheet, indexes.dateRow, indexes.colStart, 'w')
+	console.log(initialDate)
 	console.log(lastCol)
 	/*while(checkCell(sheet, rowStart, 1, 'v') != 'Subtotal') {
 		var cellValue = checkCell(sheet, rowStart, 1, 'v')
@@ -37,6 +39,7 @@ var parseExcelSheet = function(b64String) {
 
 function getCellValue(sheet, row, col, type) {
 	if(sheet[xlsx.utils.encode_cell({r:row,c:col})] != undefined) {
+		console.log(JSON.stringify(sheet[xlsx.utils.encode_cell({r:row,c:col})]))
 		return sheet[xlsx.utils.encode_cell({r:row,c:col})][type]
 	} else {
 		return ''
