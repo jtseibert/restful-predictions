@@ -3,34 +3,36 @@
 * @desc Scrapes estimated forecasted hours for each role and week from
 ESTIMATE xlsx file.
 */
+
 var xlsx = require('xlsx')
 var moment = require('moment')
-
 /**
 * @function parseExcelSheet
 * @desc Returns a JSON formatted object of estimated forecasted hours for role/
 week combinations from a base64 encoded string. The base64 string is converted into a 
 xlsx workbook object for parsing using the xlsx library.
 * @param {string} - b64String - base64 encoded string from SalesForce
+* @returns JSON format object of estimated forecasted hours for each role/week
 */
-var parseExcelSheet = function(b64String) {
-	var workbook = xlsx.read(b64String, {type: 'base64'})
-	console.log(JSON.stringify(workbook.Props))
-	// Validate sheet at index 2 is 'Estimate'
-	if(workbook.Props.SheetNames[2] != 'Estimate') {
-		return undefined
-	}
+var parseExcelSheet = function(b64String, callback) {
+	var workbook = xlsx.read(b64String, {type: 'base64'})	
 	var sheet 	 = workbook.Sheets[workbook.SheetNames[2]]
 	// Template indexes are hardcoded here
 	var indexes = {
 		rowStart: 18,
 		colStart: 28,
-		dateRow: 17,
+		headerRow: 17,
 		subTotalRow: 60
 	}
+
+	if(!sheetIsValidFormat) {
+		console.log('invalid format')
+		callback(undefined)
+	}
+
 	var sheetData = {}
 	var colEnd = getColumnLimit(sheet, indexes.subTotalRow, indexes.colStart, 3)
-	//var initialDate = getCellValue(sheet, indexes.dateRow, indexes.colStart, 'w')
+	//var initialDate = getCellValue(sheet, indexes.headerRow, indexes.colStart, 'w')
 	// Iterate over the roles column until subtotal is reached
 	//	* For each role, grab each estimated hour for each week date
 	//  * If a role, date, or hour is empty, do nothing
@@ -39,7 +41,7 @@ var parseExcelSheet = function(b64String) {
 		if(role != '') {
 			sheetData[role] = {}
 			for(var i = indexes.colStart; i < colEnd; i++) {
-				var date = moment(new Date(getCellValue(sheet, indexes.dateRow, i, 'w')))
+				var date = moment(new Date(getCellValue(sheet, indexes.headerRow, i, 'w')))
 						   .format('MM/DD/YYYY')
 				if(date != '') {
 					var hours = getCellValue(sheet, indexes.rowStart, i, 'v')
@@ -51,7 +53,7 @@ var parseExcelSheet = function(b64String) {
 		}
 		indexes.rowStart += 1
 	}
-	return sheetData
+	callback(sheetData)
 }
 
 /**
@@ -61,6 +63,7 @@ var parseExcelSheet = function(b64String) {
 * @param {int} row - row of cell
 * @param {int} col - column of cell
 * @param {string} type - type of data returned E.G v (raw) or w (formatted)
+* @returns Value of cell of (row, col)
 */
 function getCellValue(sheet, row, col, type) {
 	if(sheet[xlsx.utils.encode_cell({r:row,c:col})] != undefined) {
@@ -78,12 +81,9 @@ n consecutive 0.00 values in the subtotal row.
 * @param {int} subTotalRow - numeric index of the row for subtotals
 * @param {int} colStart - numeric index of column where subtotal data begins
 * @param {int} n - number of consecutive 0.00 values before stop
+* @returns {int} colEnd - numeric index of last column of row data
 */
-function getColumnLimit(sheet, subTotalRow, colStart, n) {
-	// Verify correct row
-	if(getCellValue(sheet, subTotalRow, 1, 'v') != 'Subtotal') {
-		return 0
-	}
+function getColumnLimit(sheet, subTotalRow, colStart, n) {	
 	var colEnd
 	var currentCol = colStart
 	var done = false
@@ -102,6 +102,38 @@ function getColumnLimit(sheet, subTotalRow, colStart, n) {
 		}
 	}
 	return colEnd
+}
+
+/**
+* @function sheetIsValidFormat
+* @desc Validates the sheet format.
+* @param {workbook} - xlsx workbook object
+* @param {worksheet} - xlsx worksheet object
+* @param indexes - JSON formatted object of numeric indexes of key rows/cols
+* @returns true/false sheet valid status
+*/
+function sheetIsValidFormat(workbook, sheet, indexes) {
+	var valid = true
+	// Validate sheet at index 2 is 'Estimate'
+	if(workbook.Props.SheetNames[2] != 'Estimate') 
+		valid = false
+	
+	// Verify correct subtotal row
+	if(getCellValue(sheet, indexes.subTotalRow, 1, 'v') != 'Subtotal') 
+		valid = false
+
+	// Verify Roles* column
+	if(getCellValue(sheet, indexes.headerRow, 1, 'v') != 'Roles*')
+		valid = false
+
+	// Verify label cells "Total Cost" and "Total Billable"
+	if(getCellValue(sheet, 61, 27, 'v') != 'Total Cost')
+		valid = false
+
+	if(getCellValue(sheet, 62, 27, 'v') != 'Total Billable')
+		valid = false
+
+	return valid
 }
 
 module.exports.parseExcelSheet = parseExcelSheet

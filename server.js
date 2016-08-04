@@ -278,8 +278,10 @@ router.route('/clearDB')
 // Updates project sizes database with data from SF opportunity attachment
 router.route('/importProjectSize')
 	.post(function(req, res) {
-		parser.parseExcelSheet(req.body.b64, function() {
+		parser.parseExcelSheet(req.body.b64, function(sheetData) {
 			//check if undefned
+			if(sheetData != undefined)
+				console.log(sheetData)
 			res.send({message: "Success!"})
 		})
 	})
