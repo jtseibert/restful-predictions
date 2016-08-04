@@ -16,6 +16,8 @@ var parseExcelSheet = function(b64String) {
 	}
 	var projectSizeData = {}
 	var lastCol = getColumnLimit(sheet, indexes.subTotalRow, indexes.colStart, 3)
+	var initialDate = getCellValue(sheet, dateRow, colStart, 'w')
+	console.log(initialDate)
 	console.log(lastCol)
 	/*while(checkCell(sheet, rowStart, 1, 'v') != 'Subtotal') {
 		var cellValue = checkCell(sheet, rowStart, 1, 'v')
