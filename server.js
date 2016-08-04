@@ -43,7 +43,7 @@ function query(query, callback) {
 			result.addRow(row)
 		})
 		query.on("end", function (result) {
-			//done()
+			done()
 			process.nextTick(function() {callback(result.rows)})
 		})
 	})
