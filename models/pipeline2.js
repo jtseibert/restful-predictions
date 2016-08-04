@@ -91,11 +91,11 @@ function applyDB(pipelineData, callback){
 
 	}
 
-	async.waterfall({
+	async.waterfall({[
 		getFromDB,
 		updateCurrentOpportunites,
 		addNewOpportunities
-	}, function(error, result){
+	]}, function(error, result){
 		if (error)
 			throw error
 		process.nextTick(function() {callback(result)})
