@@ -5,76 +5,82 @@ var moment 	= require('moment'),
 pg.defaults.ssl = true
 
 function getDefaultProjectSizes(callback){
-				pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-	      			if (err) return process.nextTick(function(){callback(err)})
-					var defaultProjectSizes,
-						defaultProjectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations, numweeks FROM project_size ORDER BY pricehigh ASC")
-					defaultProjectSizesQuery.on("row", function (row, result) {
-						result.addRow(row)
-					})
-					defaultProjectSizesQuery.on("end", function (result) {
-						defaultProjectSizes = {}
-						//for (var entry in result.rows){
-						async.each(result.rows, function(row, callback){
-							defaultProjectSizes[row.sizeid] = {
-								"priceHigh": 			row.pricehigh,
-								"roles_allocations": 	row.roles_allocations,
-								"numWeeks": 			row.numweeks
-							}
-							process.nextTick(callback)
-						}, function(){
-							process.nextTick(function(){callback(null, defaultProjectSizes)})
-						})
-					})
-				})
-			}
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+			if (err) return process.nextTick(function(){callback(err)})
+		var defaultProjectSizes,
+			defaultProjectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations, numweeks FROM project_size ORDER BY pricehigh ASC")
+		defaultProjectSizesQuery.on("row", function (row, result) {
+			result.addRow(row)
+		})
+		defaultProjectSizesQuery.on("end", function (result) {
+			defaultProjectSizes = {}
+			//for (var entry in result.rows){
+			async.each(result.rows, function(row, callback){
+				defaultProjectSizes[row.sizeid] = {
+					"priceHigh": 			row.pricehigh,
+					"roles_allocations": 	row.roles_allocations,
+					"numWeeks": 			row.numweeks
+				}
+				process.nextTick(callback)
+			}, function(){
+				process.nextTick(function(){callback(null, defaultProjectSizes)})
+			})
+		})
+	})
+}
 
 function getOmittedOpportunities(callback){
-				pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-					if (err) return process.nextTick(function(){callback(err)})
-					var omitData,
-						omitQuery = client.query("SELECT * from omit")
-					omitQuery.on("row", function (row, result) {
-						result.addRow(row)
-					})
-					omitQuery.on("end", function (result) {
-						omitData = {}
-						for (var entry in result.rows){
-							omitData[result.rows[entry].opportunity] = {}
-						}
-						process.nextTick(function(){callback(null, omitData)})
-					})
-				})
-			}
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		if (err) return process.nextTick(function(){callback(err)})
+		var omittedOpportunities,
+			omittedOpportunitiesQuery = client.query("SELECT * from omit")
+		omittedOpportunitiesQuery.on("row", function (row, result) {
+			result.addRow(row)
+		})
+		omittedOpportunitiesQuery.on("end", function (result) {
+			omittedOpportunities = {}
+			//for (var entry in result.rows){
+			async.each(result.rows, function(row, callback){
+				omittedOpportunities[row.opportunity] = {}
+				process.nextTick(callback)
+			}, function(){
+				process.nextTick(function(){callback(null, omittedOpportunities)})
+			})
+		})
+	})
+}
 
 function getAddedOpportunities(callback){
-				pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-					if (err) return process.nextTick(function(){callback(err)})
-					var addedOpportunities,
-						opportunitiesQuery = client.query("SELECT * from sales_pipeline")
-					opportunitiesQuery.on("row", function (row, result) {
-						result.addRow(row)
-					})
-					opportunitiesQuery.on("end", function (result) {
-						addedOpportunities = {}
-						for (var entry in result.rows){
-							addedOpportunities[result.rows[entry].opportunity] = {
-								"STAGE": result.rows[entry].stage,
-								"AMOUNT": result.rows[entry].amount,
-								"EXPECTED_AMOUNT": result.rows[entry].expected_amount,
-								"CLOSE_DATE": result.rows[entry].close_date,
-								"START_DATE": result.rows[entry].start_date,
-								"PROBABILITY": result.rows[entry].probability,
-								"AGE": result.rows[entry].age,
-								"CREATED_DATE": result.rows[entry].create_date,
-								"ACCOUNT_NAME": result.rows[entry].account_name,
-								"PROJECT_SIZE": result.rows[entry].project_size
-							}
-						}
-						process.nextTick(function(){callback(null, addedOpportunities)})
-					})
-				})
-			}
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		if (err) return process.nextTick(function(){callback(err)})
+		var addedOpportunities,
+			addedOpportunitiesQuery = client.query("SELECT * from sales_pipeline")
+		addedOpportunitiesQuery.on("row", function (row, result) {
+			result.addRow(row)
+		})
+		addedOpportunitiesQuery.on("end", function (result) {
+			addedOpportunities = {}
+			//for (var entry in result.rows){
+			async.each(result.rows, function(row, callback){
+				addedOpportunities[row.opportunity] = {
+					"STAGE": row.stage,
+					"AMOUNT": row.amount,
+					"EXPECTED_AMOUNT": row.expected_amount,
+					"CLOSE_DATE": row.close_date,
+					"START_DATE": row.start_date,
+					"PROBABILITY": row.probability,
+					"AGE": row.age,
+					"CREATED_DATE": row.create_date,
+					"ACCOUNT_NAME": row.account_name,
+					"PROJECT_SIZE": row.project_size
+				}
+				process.nextTick(callback)
+			}, function(){
+				process.nextTick(function(){callback(null, addedOpportunities)})
+			})
+		})
+	})
+}
 
 
 module.exports.getAddedOpportunities 	= getAddedOpportunities
