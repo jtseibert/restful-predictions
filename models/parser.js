@@ -28,11 +28,9 @@ var parseExcelSheet = function(b64String, callback) {
 	}
 	var temp = getSubTotalIndex(sheet, indexes)
 	indexes.subTotalIndex = temp
-	console.log(indexes.subTotalIndex)
 
 	// Parse the sheet if valid
 	if(!sheetIsValidFormat(workbook, sheet, indexes)) {
-		console.log('invalid format')
 		callback(undefined)
 	} else {
 		var sheetData = {}
@@ -141,27 +139,39 @@ function getSubTotalIndex(sheet, indexes) {
 function sheetIsValidFormat(workbook, sheet, indexes) {
 	var valid = true
 	// Validate sheet at index 2 is 'Estimate'
-	if(workbook.Props.SheetNames[2] != 'Estimate') 
+	if(workbook.Props.SheetNames[2] != 'Estimate') {
+		console.log('invalid tab check')
 		valid = false
+	}
 
 	// Verify Role* column
-	if(getCellValue(sheet, indexes.headerRow, indexes.headerCol, 'v') != 'Role*')
+	if(getCellValue(sheet, indexes.headerRow, indexes.headerCol, 'v') != 'Role*') {
+		console.log('invalid role check')
 		valid = false
+	}
 
 	// Verify Responsibilities column
-	if(getCellValue(sheet, indexes.headerRow, indexes.headerCol + 1, 'v') != 'Responsibilities')
+	if(getCellValue(sheet, indexes.headerRow, indexes.headerCol + 1, 'v') != 'Responsibilities') {
+		console.log('invalid responsibilities check')
 		valid = false
+	}
 
 	// Verify label cells "Total Cost" and "Total Billable"
-	if(getCellValue(sheet, indexes.subTotalRow + 1, indexes.dataColStart - 1, 'v') != 'Total Cost')
+	if(getCellValue(sheet, indexes.subTotalRow + 1, indexes.dataColStart - 1, 'v') != 'Total Cost') {
+		console.log('invalid total cost check')
 		valid = false
+	}
 
-	if(getCellValue(sheet, indexes.subTotalRow + 2, indexes.dataColStart - 2, 'v') != 'Total Billable')
+	if(getCellValue(sheet, indexes.subTotalRow + 2, indexes.dataColStart - 2, 'v') != 'Total Billable') {
+		console.log('invalid total billable check')
 		valid = false
+	}
 
 	// Verify subtotal row
-	if(getCellValue(sheet, indexes.subTotalRow, indexes.headerCol, 'v') != 'Subtotal')
+	if(getCellValue(sheet, indexes.subTotalRow, indexes.headerCol, 'v') != 'Subtotal') {
+		console.log('invalid subtotal check')
 		valid = false
+	}
 
 	return valid
 }
