@@ -37,6 +37,7 @@ function Forecast2(pg, data, callback) {
 
 	objInstance = this
 
+	// Creates a JSON of all roles and their capacities from the DB
 	var one = function(callback){
 		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 			roleCapacities = {}
@@ -50,8 +51,10 @@ function Forecast2(pg, data, callback) {
 				process.nextTick(function(){callback(null, roleCapacities)})
 			})
 		})
-	},
-	two = function(callback){
+	}
+	
+	// Creates an array of weeks to iterate over when creating the Forecast data
+	var two = function(callback){
 		var today = moment(new Date()).day(-1),
 			forecastedWeeks = 26,
 			weeks = []
@@ -94,12 +97,14 @@ Forecast2.prototype.create = function(callback) {
 			tempRow.push(role)
 			tempRow.push(week)
 
+			// If there are allocated hours for this role for this week, push those hours, else push 0 hours
 			if (objInstance.allocatedHours[role]){
 				if (objInstance.allocatedHours[role][week]){
 					tempRow.push(objInstance.allocatedHours[role][week])
 				} else { tempRow.push(0) }
 			} else { tempRow.push(0) }
 
+			// If there are allocated hours for this role for this week, push those hours, else push 0 hours
 			if (objInstance.forecastedHours[role]){
 				if (objInstance.forecastedHours[role][week]){
 					tempRow.push(objInstance.forecastedHours[role][week])
@@ -108,6 +113,7 @@ Forecast2.prototype.create = function(callback) {
 
 			tempRow.push(capacity)
 			objInstance.returnData.push(tempRow)
+
 			process.nextTick(callback)
 		}, function(){
 			process.nextTick(callback)
