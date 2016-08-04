@@ -117,13 +117,10 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 
 router.route('/:instance/DATA_Capacity/:accessToken')
 	.get(function(req, res) {
-		var capacity = new Capacity(req.params.instance, req.params.accessToken)
-		capacity.get(oauth2, function(result) {
-			capacity.updateDB(pg, function() {
-				console.log('deleting capacity obj')
-				delete capacity
-			})
-			res.json(capacity.returnData)
+		var accessToken = req.params.accessToken,
+			instance    = req.params.instance
+		capacity.queryCapacity(accessToken, instance, function(capacityData) {
+			res.json(capacityData)
 		})
 	})
 

@@ -5,75 +5,44 @@
 */
 module.exports = Capacity
 
-// module level variables
-async = require('../node_modules/async')
+var queryCapacity = function(accessToken, path, callback) {
+	var sf = require('node-salesforce')
+	var moment = require('moment')
+	var async = require('async')
+	// Set up the sheet headers
+	var capacityData = [[
+			'Role',
+			'Name',
+			'Utilization Target'
+		]]
 
-/**
-* Creates a Capacity object with the optional parameter of input capacity data for update the data table in the database.
-* @function Capacity
-* @param instance - the user's SalesForce instance
-* @param accessToken - the user's SalesForce access token
-* @param data - (optional) user input changes to the capacity database table
-*/
-function Capacity(instance, accessToken, data) {
-	this.accessToken = accessToken
-	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093ued'
-	this.returnData = []
-	if (data)
-		this.returnData = data
-} 
-
-Capacity.prototype.get = function(oauth2, callback) {
-	var returnData = [],
-		objInstance = this,
-		parameters = {
-			access_token: objInstance.accessToken
-		}
-
-	oauth2.api('GET', objInstance.path, parameters, function (err, data) {
-	    if (err)
-	        console.log('GET Error: ', JSON.stringify(err))
-
-	    var rows 		= data.factMap['T!T'].rows,
-	    	columnInfo	= data.reportExtendedMetadata.detailColumnInfo,
-	    	headers 	= [],
-	    	tempRow
-
-	    async.eachSeries(columnInfo, function(header, callback){
-	    	headers.push(header.label)
-	    	process.nextTick(callback)
-	    }, function(err){
-	    	if (err)
-	    		console.log(err)
-			objInstance.returnData.push(headers)
-			async.each(rows, function(row, callback){
-				var tempRow = []
-				async.eachSeries(row.dataCells, function(dataCell, callback){
-					tempRow.push(dataCell.label)
-					process.nextTick(callback)
-				}, function(){
-					objInstance.returnData.push(tempRow)
-					process.nextTick(callback)
-				})
-			}, function(){
-				process.nextTick(callback)
-			})
-	    })
+	// Connect to SF
+	var conn = new sf.Connection({
+	  instanceUrl: "https://" + path,
+	  accessToken: accessToken
 	})
-}
 
-Capacity.prototype.updateDB = function(pg, callback){
-	objInstance = this
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		async.eachOf(objInstance.returnData, function(row, rowNumber, callback){
-			if (rowNumber != 0) {
-				client.query('INSERT INTO capacity(contact_id, name, title, available_hours) VALUES($3,$1,'
-								+'(SELECT role FROM roles WHERE role=$2),$4) ON CONFLICT (contact_id) DO UPDATE SET title=(SELECT role FROM roles WHERE role=$2)',
-								[row[0],row[1],row[2],40], function(){ done() })
-			}
-		}, function(){
-			process.nextTick(callback)
+	// Execute SOQL query to populate allocationData
+	conn.query("SELECT pse__Resource_Role__c, Name, pse__Utilization_Target__c FROM Contact WHERE pse__Resource_Role__c!='' AND pse__Utilization_Target__c>=0 ORDER BY pse__Resource_Role__c")
+  	.on("record", function(record) {
+  		var recordData = []
+  		// Format the date with Moment library for sheet consistency
+    	recordData.push(
+    		record.pse__Resource_Role__c,
+			record.Name,
+			record.pse__Utilization_Target__c
+		)
+    	capacityData.push(recordData)
 		})
-	})
+	.on("end", function(query) {
+		console.log("total in database : " + query.totalSize);
+		console.log("total fetched : " + query.totalFetched);
+		process.nextTick(function() {callback(capacityData)})
+		})
+	.on("error", function(err) {
+		console.error(err);
+		})
+	.run({ autoFetch : true, maxFetch : 8000 });
 }
 
+module.exports.queryCapacity = queryCapacity
