@@ -56,7 +56,7 @@ function getColumnLimit(sheet, subTotalRow, colStart, n) {
 	var consecutive = true
 	while(!done) {
 		for(var i = currentCol; i < currentCol + n; i++) {
-			consecutive = consecutive && (getCellValue(sheet, subTotalRow, i, 'v') == '0.00')
+			consecutive = consecutive && (getCellValue(sheet, subTotalRow, i, 'v') == 0.00)
 		}
 		if(!consecutive) {
 			currentCol += n
