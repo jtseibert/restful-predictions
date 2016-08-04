@@ -28,32 +28,32 @@ var parseExcelSheet = function(b64String, callback) {
 	if(!sheetIsValidFormat(workbook, sheet, indexes)) {
 		console.log('invalid format')
 		callback(undefined)
-	}
-
-	var sheetData = {}
-	var colEnd = getColumnLimit(sheet, indexes.subTotalRow, indexes.colStart, 3)
-	//var initialDate = getCellValue(sheet, indexes.headerRow, indexes.colStart, 'w')
-	// Iterate over the roles column until subtotal is reached
-	//	* For each role, grab each estimated hour for each week date
-	//  * If a role, date, or hour is empty, do nothing
-	while(getCellValue(sheet, indexes.rowStart, 1, 'v') != 'Subtotal') {
-		var role = getCellValue(sheet, indexes.rowStart, 1, 'v')
-		if(role != '') {
-			sheetData[role] = {}
-			for(var i = indexes.colStart; i < colEnd; i++) {
-				var date = moment(new Date(getCellValue(sheet, indexes.headerRow, i, 'w')))
-						   .format('MM/DD/YYYY')
-				if(date != '') {
-					var hours = getCellValue(sheet, indexes.rowStart, i, 'v')
-					if(hours != '') {
-						sheetData[role][date] = hours
+	} else {
+		var sheetData = {}
+		var colEnd = getColumnLimit(sheet, indexes.subTotalRow, indexes.colStart, 3)
+		//var initialDate = getCellValue(sheet, indexes.headerRow, indexes.colStart, 'w')
+		// Iterate over the roles column until subtotal is reached
+		//	* For each role, grab each estimated hour for each week date
+		//  * If a role, date, or hour is empty, do nothing
+		while(getCellValue(sheet, indexes.rowStart, 1, 'v') != 'Subtotal') {
+			var role = getCellValue(sheet, indexes.rowStart, 1, 'v')
+			if(role != '') {
+				sheetData[role] = {}
+				for(var i = indexes.colStart; i < colEnd; i++) {
+					var date = moment(new Date(getCellValue(sheet, indexes.headerRow, i, 'w')))
+							   .format('MM/DD/YYYY')
+					if(date != '') {
+						var hours = getCellValue(sheet, indexes.rowStart, i, 'v')
+						if(hours != '') {
+							sheetData[role][date] = hours
+						}
 					}
 				}
 			}
+			indexes.rowStart += 1
 		}
-		indexes.rowStart += 1
+		callback(sheetData)
 	}
-	callback(sheetData)
 }
 
 /**
@@ -119,20 +119,20 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 		valid = false
 	
 	// Verify correct subtotal row
-	if(getCellValue(sheet, indexes.subTotalRow, 1, 'v') != 'Subtotal') 
-		valid = false
+	//if(getCellValue(sheet, indexes.subTotalRow, 1, 'v') != 'Subtotal') 
+	//	valid = false
 
 	// Verify Roles* column
 	if(getCellValue(sheet, indexes.headerRow, 1, 'v') != 'Roles*')
 		valid = false
 
-	// Verify label cells "Total Cost" and "Total Billable"
+	/*Verify label cells "Total Cost" and "Total Billable"
 	if(getCellValue(sheet, 61, 27, 'v') != 'Total Cost')
 		valid = false
 
 	if(getCellValue(sheet, 62, 27, 'v') != 'Total Billable')
 		valid = false
-
+*/
 	return valid
 }
 
