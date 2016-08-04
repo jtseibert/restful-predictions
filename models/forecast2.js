@@ -85,13 +85,9 @@ Forecast2.prototype.create = function(callback) {
 
 	var objInstance = this
 
-	console.log('Allocated Hours: '+JSON.stringify(objInstance.allocatedHours))
-	console.log('Forecasted Hours: '+JSON.stringify(objInstance.forecastedHours))
-
 	async.eachOf(objInstance.roleCapacities, function(capacity, role, callback){
 		var role = role,
 			capacity = capacity
-		console.log('outerCap: '+capacity+'\touterRole: '+role)
 		async.each(objInstance.weeks, function(week,callback){
 			var tempRow = []
 
