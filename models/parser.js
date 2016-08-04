@@ -36,7 +36,7 @@ var parseExcelSheet = function(b64String) {
 				}
 			}
 		}
-		indexes[rowStart] += 1
+		indexes.rowStart += 1
 	}
 	console.log(sheetData)
 }
