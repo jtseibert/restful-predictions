@@ -15,7 +15,7 @@ var	allocation 		= require('./models/allocation3'),
 	Opportunity 	= require('./models/opportunity'),
 	parser          = require('./models/parser'),
 	pg 				= require('pg'),
-	Pipeline 		= require('./models/pipeline'),
+	pipeline 		= require('./models/pipeline2'),
 	ProjectSize 	= require('./models/projectSize')
 require('colors')
 
@@ -80,30 +80,35 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 	   
 router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
-		var pipeline = new Pipeline(async, req.params.instance, req.params.accessToken, pg, function() {
-			cache.get("sales_pipeline", function(err, value) {
-				if(!err) {
-					if(value == undefined) {
-			    		console.log('sales_pipeline data not cached')
-						pipeline.get(oauth2, async, cache, function(result) {
-							pipeline.applyDB(async, result, function(){
-								res.json(pipeline.returnData)
-								delete pipeline
-							})
-						})
-					} else { 
-						console.log('sales_pipeline cached, returning')
-						pipeline.applyDB(async, value, function() {
-							res.json(pipeline.returnData)
-							delete pipeline
-						})
-					}
-				} else {
-					res.json({message: err})
-					delete pipeline
-				}
-			})
+		var accessToken = req.params.accessToken,
+			instance    = req.params.instance
+		pipeline.queryPipeline(accessToken, instance, function(pipelineData) {
+			res.json(pipelineData)
 		})
+		// var pipeline = new Pipeline(async, req.params.instance, req.params.accessToken, pg, function() {
+		// 	cache.get("sales_pipeline", function(err, value) {
+		// 		if(!err) {
+		// 			if(value == undefined) {
+		// 	    		console.log('sales_pipeline data not cached')
+		// 				pipeline.get(oauth2, async, cache, function(result) {
+		// 					pipeline.applyDB(async, result, function(){
+		// 						res.json(pipeline.returnData)
+		// 						delete pipeline
+		// 					})
+		// 				})
+		// 			} else { 
+		// 				console.log('sales_pipeline cached, returning')
+		// 				pipeline.applyDB(async, value, function() {
+		// 					res.json(pipeline.returnData)
+		// 					delete pipeline
+		// 				})
+		// 			}
+		// 		} else {
+		// 			res.json({message: err})
+		// 			delete pipeline
+		// 		}
+		// 	})
+		// })
 	})
 
 router.route('/:instance/DATA_Capacity/:accessToken')
