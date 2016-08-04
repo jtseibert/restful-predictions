@@ -15,7 +15,7 @@ var parseExcelSheet = function(b64String) {
 		subTotalRow: 60
 	}
 	var projectSizeData = {}
-	var lastCol = getColumnLimit(sheet, indexes.subTotalRow, indexes.rowStart, 3)
+	var lastCol = getColumnLimit(sheet, indexes.subTotalRow, indexes.colStart, 3)
 	console.log(lastCol)
 	/*while(checkCell(sheet, rowStart, 1, 'v') != 'Subtotal') {
 		var cellValue = checkCell(sheet, rowStart, 1, 'v')
@@ -44,13 +44,13 @@ function getCellValue(sheet, row, col, type) {
 }
 
 // Search for n consecutive 0.00's in the 'Subtotal' row
-function getColumnLimit(sheet, subTotalRow, startRow, n) {
+function getColumnLimit(sheet, subTotalRow, colStart, n) {
 	// Verify correct row
 	if(getCellValue(sheet, subTotalRow, 1, 'v') != 'Subtotal') {
 		return 0
 	}
 	var lastCol
-	var currentCol = startRow
+	var currentCol = colStart
 	console.log("initially " + currentCol)
 	var done = false
 	var consecutive = true
