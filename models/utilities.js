@@ -12,7 +12,7 @@ var moment 	= require('moment'),
 
 var pool = new pg.Pool(config);
 
-pg.defaults.ssl = true
+//pg.defaults.ssl = true
 
 function getDefaultProjectSizes(callback){
 	pool.connect(function(err, client, done) {
