@@ -16,7 +16,7 @@ var parseExcelSheet = function(b64String) {
 		subTotalRow: 60
 	}
 	var sheetData = {}
-	var lastCol = getColumnLimit(sheet, indexes.subTotalRow, indexes.colStart, 3)
+	var colEnd = getColumnLimit(sheet, indexes.subTotalRow, indexes.colStart, 3)
 	//var initialDate = getCellValue(sheet, indexes.dateRow, indexes.colStart, 'w')
 	// Iterate over the roles column until subtotal is reached
 	//	* For each role, grab each estimated hour for each week date
@@ -25,18 +25,18 @@ var parseExcelSheet = function(b64String) {
 		var role = getCellValue(sheet, indexes.rowStart, 1, 'v')
 		if(role != '') {
 			sheetData[role] = {}
-			for(var i = 0; i < lastCol; i++) {
-				var date = moment(new Date(getCellValue(sheet, indexes.dateRow, indexes.colStart + i, 'w')))
+			for(var i = indexes.colStart; i < colEnd; i++) {
+				var date = moment(new Date(getCellValue(sheet, indexes.dateRow, i, 'w')))
 						   .format('MM/DD/YYYY')
 				if(date != '') {
-					var hours = getCellValue(sheet, rowStart, colStart+i, 'v')
+					var hours = getCellValue(sheet, indexes.rowStart, i, 'v')
 					if(hours != '') {
 						sheetData[role][date] = hours
 					}
 				}
 			}
 		}
-		rowStart++
+		indexes[rowStart] += 1
 	}
 	console.log(sheetData)
 }
@@ -55,7 +55,7 @@ function getColumnLimit(sheet, subTotalRow, colStart, n) {
 	if(getCellValue(sheet, subTotalRow, 1, 'v') != 'Subtotal') {
 		return 0
 	}
-	var lastCol
+	var colEnd
 	var currentCol = colStart
 	var done = false
 	var consecutiveCheck = true
@@ -69,10 +69,10 @@ function getColumnLimit(sheet, subTotalRow, colStart, n) {
 			consecutiveCheck = true
 		} else {
 			done = true
-			lastCol = currentCol
+			colEnd = currentCol
 		}
 	}
-	return lastCol
+	return colEnd
 }
 
 module.exports.parseExcelSheet = parseExcelSheet
