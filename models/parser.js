@@ -3,9 +3,9 @@
 * @desc parse a xls sheet from sf
 
 */
+var xlsx = require('xlsx')
 
 var parseExcelSheet = function(b64String) {
-	var xlsx = require('xlsx')
 	var workbook = xlsx.read(b64String, {type: 'base64'})
 	var sheet 	 = workbook.Sheets[workbook.SheetNames[2]]
 	

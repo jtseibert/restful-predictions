@@ -16,8 +16,7 @@ var	allocation 		= require('./models/allocation3'),
 	parser          = require('./models/parser'),
 	pg 				= require('pg'),
 	Pipeline 		= require('./models/pipeline'),
-	ProjectSize 	= require('./models/projectSize'),
-	xlsx            = require('xlsx')
+	ProjectSize 	= require('./models/projectSize')
 require('colors')
 
 var app = express()
