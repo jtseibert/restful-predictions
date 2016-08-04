@@ -285,12 +285,18 @@ router.route('/importProjectSize')
   		var colStart = 28
   		var projectSizeData = {}
   		while(sheet[xlsx.utils.encode_cell({r:rowStart,c:1})].v != 'Subtotal') {
-  			var cellValue = sheet[xlsx.utils.encode_cell({r:rowStart,c:1})].v
+  			var cell = {}
+  			cell[r] = rowStart
+  			cell[c] = 1
+  			var cellValue = sheet[xlsx.utils.encode_cell(cell)].v
   			if(cellValue != '') {
   				projectSizeData[cellValue] = {}
   				var date
   				for(var i = 0; i < 19; i++) {//temp 
-  					date = sheet[xlsx.utils.encode_cell({r:28,c:(colStart+i)})].v
+  					cell[r] = 28
+  					cell[c] = colStart + i
+  					date = sheet[xlsx.utils.encode_cell(cell)].v
+  					cell[r] = rowStart
   					projectSizeData[cellValue][date] = sheet[xlsx.utils.encode_cell({r:rowStart,c:(colStart+i)})].v
   				}
   			}
