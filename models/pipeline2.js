@@ -34,7 +34,7 @@ function queryPipeline(accessToken, path, callback) {
     		record.StageName,
 			record.Name,
 			record.Amount,
-			record.ExpetedRevenue,
+			record.ExpectedRevenue,
 			moment(new Date(record.CloseDate)).format("MM/DD/YYYY"),
 			record.Probability,
 			moment(new Date(record.CreatedDate)).format("MM/DD/YYYY"),
