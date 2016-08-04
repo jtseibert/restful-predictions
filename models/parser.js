@@ -51,6 +51,7 @@ function getColumnLimit(sheet, subTotalRow, startRow, n) {
 	}
 	var lastCol
 	var currentCol = startRow
+	console.log("initially " + currentCol)
 	var done = false
 	var consecutive = true
 	while(!done) {
@@ -62,6 +63,7 @@ function getColumnLimit(sheet, subTotalRow, startRow, n) {
 		} else {
 			done = true
 			lastCol = currentCol
+			console.log("change from " + (currentCol - n) + " to " + currentCol)
 		}
 	}
 	return lastCol
