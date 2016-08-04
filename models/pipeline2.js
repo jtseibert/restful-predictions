@@ -26,19 +26,19 @@ function queryPipeline(accessToken, path, callback) {
 	})
 
 	// Execute SOQL query to populate allocationData
-	conn.query("SELECT StageName, Name, Amount, ExpectedRevenue, CloseDate, Probability, CreatedDate, Account.Name from Opportunity")
+	conn.query("SELECT StageName, Name, Amount, ExpectedRevenue, CloseDate, Probability, CreatedDate, Account.Name FROM Opportunity WHERE CloseDate>=2016-08-03")
   	.on("record", function(record) {
   		var recordData = []
   		// Format the date with Moment library for sheet consistency
     	recordData.push(
-    		record.stageName,
-			record.name,
-			record.amount,
-			record.expetedRevenue,
-			moment(new Date(record.closeDate)).format("MM/DD/YYYY"),
-			record.probability,
-			moment(new Date(record.createdDate)).format("MM/DD/YYYY"),
-			record.accountName
+    		record.StageName,
+			record.Name,
+			record.Amount,
+			record.ExpetedRevenue,
+			moment(new Date(record.CloseDate)).format("MM/DD/YYYY"),
+			record.Probability,
+			moment(new Date(record.CreatedDate)).format("MM/DD/YYYY"),
+			record.Account.Name
 		)
     	pipelineData.push(recordData)
 		})
