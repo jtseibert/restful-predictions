@@ -52,14 +52,15 @@ function getColumnLimit(sheet, subTotalRow, colStart, n) {
 	var currentCol = colStart
 	console.log("initially " + currentCol)
 	var done = false
-	var continue_ = true
+	var consecutive = true
 	var inf = 0
 	while(!done && inf < 10) {
 		for(var i = currentCol; i < currentCol + n; i++) {
 			console.log(getCellValue(sheet, subTotalRow, i, 'v'))
-			continue_ = continue_ && (getCellValue(sheet, subTotalRow, i, 'v') != 0.00)
+			console.log("bool is " + (getCellValue(sheet, subTotalRow, i, 'v') == 0.00))
+			consecutive = consecutive && (getCellValue(sheet, subTotalRow, i, 'v') == 0.00)
 		}
-		if(continue_) {
+		if(!consecutive) {
 			currentCol += n
 			console.log("change from " + (currentCol - n) + " to " + currentCol)
 		} else {
