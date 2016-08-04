@@ -293,8 +293,8 @@ router.route('/importProjectSize')
   				var date
   				for(var i = 0; i < 19; i++) {//temp 
   					date = sheet[xlsx.utils.encode_cell({r:dateRow,c:(colStart+i)})].w
-  					if(sheet[xlsx.utils.encode_cell({r:rowStart,c:(colStart+i)})].v != undefined)
-  						projectSizeData[cellValue][date] = sheet[xlsx.utils.encode_cell({r:rowStart,c:(colStart+i)})].v
+  					console.log(JSON.stringify(sheet[xlsx.utils.encode_cell({r:rowStart,c:(colStart+i)})]))
+  					projectSizeData[cellValue][date] = sheet[xlsx.utils.encode_cell({r:rowStart,c:(colStart+i)})].v
   				}
   			}
   			rowStart++
