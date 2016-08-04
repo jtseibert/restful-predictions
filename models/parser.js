@@ -16,6 +16,7 @@ var parseExcelSheet = function(b64String) {
 	}
 	var projectSizeData = {}
 	var lastCol = getColumnLimit(sheet, indexes.subTotalRow, indexes.colStart, 3)
+	console.log(lastCol)
 	/*while(checkCell(sheet, rowStart, 1, 'v') != 'Subtotal') {
 		var cellValue = checkCell(sheet, rowStart, 1, 'v')
 		//console.log("cell val is " + cellValue)
@@ -50,26 +51,20 @@ function getColumnLimit(sheet, subTotalRow, colStart, n) {
 	}
 	var lastCol
 	var currentCol = colStart
-	console.log("initially " + currentCol)
 	var done = false
 	var consecutiveCheck = true
-	var inf = 0
-	while(!done && inf < 10) {
+	while(!done) {
 		for(var i = currentCol; i < currentCol + n; i++) {
-			console.log(getCellValue(sheet, subTotalRow, i, 'v'))
-			console.log("bool is " + (getCellValue(sheet, subTotalRow, i, 'v') == 0.00))
 			consecutiveCheck = consecutiveCheck && (getCellValue(sheet, subTotalRow, i, 'v') == 0.00)
 		}
+		// When consecutiveCheck == false, there exists at least 1 nonzero value
 		if(!consecutiveCheck) {
 			currentCol += n
-			console.log("change from " + (currentCol - n) + " to " + currentCol)
 			consecutiveCheck = true
 		} else {
 			done = true
 			lastCol = currentCol
-			console.log('done with val ' + lastCol)
 		}
-		inf++
 	}
 	return lastCol
 }
