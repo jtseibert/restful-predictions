@@ -77,13 +77,14 @@ function applyDB(pipelineData, callback){
 			DB.defaultProjectSizes	= results.one
 			DB.omittedOpportunities	= results.two
 			DB.addedOpportunities	= results.three
-			process.nextTick(function(){ callback(null, pipelineData, DB) })
+			process.nextTick(function(){ callback(null, DB) })
 		})		
 	}
 
 	// Looks at all opportunities in pipelineData and updates them if we have any persisted data for that opportunity in the DB
-	function updateCurrentOpportunites(pipelineData, DB, callback){
+	function updateCurrentOpportunites(DB, callback){
 		console.log(pipelineData)
+		console.log(DB)
 	}
 
 	// Adds any user added opportunities to pipelineData
@@ -92,7 +93,7 @@ function applyDB(pipelineData, callback){
 	}
 
 	async.waterfall([
-		getFromDB(pipelineData),
+		getFromDB,
 		updateCurrentOpportunites,
 		addNewOpportunities
 	], function(error, result){
