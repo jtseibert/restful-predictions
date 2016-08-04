@@ -284,20 +284,14 @@ router.route('/importProjectSize')
   		var rowStart = 18
   		var colStart = 28
   		var projectSizeData = {}
-  		// change to async.whilst(test, function(){}, callback)
   		while(sheet[xlsx.utils.encode_cell({r:rowStart,c:1})].v != 'Subtotal') {
-  			var cell = {}
-  			cell[r] = rowStart
-  			cell[c] = 1
-  			var cellValue = sheet[xlsx.utils.encode_cell(cell)].v
+  			var cellValue = sheet[xlsx.utils.encode_cell({r:rowStart,c:1})]
+  			console.log('cell is ' + cellValue)
   			if(cellValue != '') {
   				projectSizeData[cellValue] = {}
   				var date
   				for(var i = 0; i < 19; i++) {//temp 
-  					cell[r] = 28
-  					cell[c] = colStart + i
-  					date = sheet[xlsx.utils.encode_cell(cell)].v
-  					cell[r] = rowStart
+  					date = sheet[xlsx.utils.encode_cell({r:28,c:(colStart+i)})].v
   					projectSizeData[cellValue][date] = sheet[xlsx.utils.encode_cell({r:rowStart,c:(colStart+i)})].v
   				}
   			}
