@@ -60,7 +60,7 @@ Opportunity.prototype.add = function(async, pg, callback) {
 
 Opportunity.prototype.update = function(pg, callback) {
 	var objInstance = this
-	pg.connect(process.env.DATABASE_URL, function(err, client) {
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		client.query('UPDATE sales_pipeline SET ' +
   						'start_date = COALESCE($1, start_date),' +
   						'probability = COALESCE($2, probability),' + 
