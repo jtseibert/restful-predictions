@@ -77,7 +77,7 @@ function applyDB(pipelineData, callback){
 			DB.defaultProjectSizes	= results.one
 			DB.omittedOpportunities	= results.two
 			DB.addedOpportunities	= results.three
-			process.nextTick(function(){ callback(pipelineData, DB) })
+			process.nextTick(function(){ callback(null, pipelineData, DB) })
 		})		
 	}
 
