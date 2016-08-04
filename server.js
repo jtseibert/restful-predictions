@@ -285,23 +285,23 @@ router.route('/importProjectSize')
   		var colStart = 28
   		var dateRow = 17
   		var projectSizeData = {}
-  		while(sheet[xlsx.utils.encode_cell({r:rowStart,c:1})].v != 'Subtotal') {
-  			var cellValue = sheet[xlsx.utils.encode_cell({r:rowStart,c:1})].v
+  		while(checkCell(sheet, rowStart, 1, 'v') != 'Subtotal') {
+  			var cellValue = checkCell(sheet, rowStart, 1, 'v')
   			console.log("cell val is " + cellValue)
   			if(cellValue != '') {
   				projectSizeData[cellValue] = {}
   				var date
   				for(var i = 0; i < 19; i++) {//temp 
-  					date = sheet[xlsx.utils.encode_cell({r:dateRow,c:(colStart+i)})].w
-  					console.log(JSON.stringify(sheet[xlsx.utils.encode_cell({r:rowStart,c:(colStart+i)})]))
-  					projectSizeData[cellValue][date] = sheet[xlsx.utils.encode_cell({r:rowStart,c:(colStart+i)})].v
+  					date = checkCell(sheet, dateRow, colStart+i, 'w')
+  					if(date != '')
+  						projectSizeData[cellValue][date] = checkCell(sheet, rowStart, colStart+i, 'v')
   				}
   			}
   			rowStart++
   		}
   		console.log(projectSizeData)
 		
-
+  		}
 
 		//var json = xlsx.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[2]])
 		//console.log("9is: " + sheet[xlsx.utils.encode_cell({r:19,c:7})].v)
@@ -311,6 +311,13 @@ router.route('/importProjectSize')
 		res.send({message: "Success!"})
 	})
 
+function checkCell(sheet, row, col, type) {
+	if(sheet[xlsx.utils.encode_cell({r:row,c:col})]) {
+		return sheet[xlsx.utils.encode_cell({r:row,c:col})].type
+	} else {
+		return ''
+	}
+}
 // Catch timeouts
 // app.use(function(req, res, next) {
 //     res.setTimeout(5000, function() {
