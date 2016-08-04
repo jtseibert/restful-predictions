@@ -157,12 +157,12 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 	}
 
 	// Verify label cells "Total Cost" and "Total Billable"
-	if(getCellValue(sheet, indexes.subTotalIndex + 1, indexes.dataColStart - 1, 'v') != 'Total Cost') {
+	if(getCellValue(sheet, indexes.subTotalIndex + 1, 7, 'v') != 'Total Cost') {
 		console.log('invalid total cost check')
 		valid = false
 	}
 
-	if(getCellValue(sheet, indexes.subTotalIndex + 2, indexes.dataColStart - 2, 'v') != 'Total Billable') {
+	if(getCellValue(sheet, indexes.subTotalIndex + 2, 7, 'v') != 'Total Billable') {
 		console.log('invalid total billable check')
 		valid = false
 	}
