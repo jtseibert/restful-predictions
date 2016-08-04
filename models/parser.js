@@ -16,7 +16,6 @@ var parseExcelSheet = function(b64String) {
 	}
 	var projectSizeData = {}
 	var lastCol = getColumnLimit(sheet, indexes.subTotalRow, indexes.colStart, 3)
-	console.log(lastCol)
 	/*while(checkCell(sheet, rowStart, 1, 'v') != 'Subtotal') {
 		var cellValue = checkCell(sheet, rowStart, 1, 'v')
 		//console.log("cell val is " + cellValue)
@@ -66,6 +65,7 @@ function getColumnLimit(sheet, subTotalRow, colStart, n) {
 		} else {
 			done = true
 			lastCol = currentCol
+			console.log('done with val ' + lastCol)
 		}
 		inf++
 	}
