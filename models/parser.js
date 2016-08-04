@@ -4,6 +4,7 @@
 
 */
 var xlsx = require('xlsx')
+var moment = require('moment')
 
 var parseExcelSheet = function(b64String) {
 	var workbook = xlsx.read(b64String, {type: 'base64'})
@@ -14,32 +15,34 @@ var parseExcelSheet = function(b64String) {
 		dateRow: 17,
 		subTotalRow: 60
 	}
-	var projectSizeData = {}
+	var sheetData = {}
 	var lastCol = getColumnLimit(sheet, indexes.subTotalRow, indexes.colStart, 3)
-	var initialDate = getCellValue(sheet, indexes.dateRow, indexes.colStart, 'w')
-	console.log(initialDate)
-	console.log(lastCol)
-	/*while(checkCell(sheet, rowStart, 1, 'v') != 'Subtotal') {
-		var cellValue = checkCell(sheet, rowStart, 1, 'v')
-		//console.log("cell val is " + cellValue)
-		if(cellValue != '') {
-			projectSizeData[cellValue] = {}
-			var date
-			for(var i = 0; i < 19; i++) {//temp 
-				date = checkCell(sheet, dateRow, colStart+i, 'w')
+	//var initialDate = getCellValue(sheet, indexes.dateRow, indexes.colStart, 'w')
+	// Iterate over the roles column until subtotal is reached
+	//	* For each role, grab each estimated hour for each week date
+	//  * If a role, date, or hour is empty, do nothing
+	while(getCellValue(sheet, indexes.rowStart, 1, 'v') != 'Subtotal') {
+		var role = getCellValue(sheet, indexes.rowStart, 1, 'v')
+		if(role != '') {
+			sheetData[role] = {}
+			for(var i = 0; i < lastCol; i++) {
+				var date = moment(new Date(getCellValue(sheet, indexes.dateRow, indexes.colStart + i, 'w')))
+						   .format('MM/DD/YYYY')
 				if(date != '') {
-					projectSizeData[cellValue][date] = checkCell(sheet, rowStart, colStart+i, 'v')
+					var hours = getCellValue(sheet, rowStart, colStart+i, 'v')
+					if(hours != '') {
+						sheetData[role][date] = hours
+					}
 				}
 			}
 		}
 		rowStart++
-	}*/
-	//console.log(projectSizeData)
+	}
+	console.log(sheetData)
 }
 
 function getCellValue(sheet, row, col, type) {
 	if(sheet[xlsx.utils.encode_cell({r:row,c:col})] != undefined) {
-		console.log(JSON.stringify(sheet[xlsx.utils.encode_cell({r:row,c:col})]))
 		return sheet[xlsx.utils.encode_cell({r:row,c:col})][type]
 	} else {
 		return ''
