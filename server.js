@@ -13,6 +13,7 @@ var	allocation 		= require('./models/allocation3'),
 	jsdiff 			= require('diff'),
 	Omit 			= require('./models/omit'),
 	Opportunity 	= require('./models/opportunity'),
+	parser          = require('./models/parser'),
 	pg 				= require('pg'),
 	Pipeline 		= require('./models/pipeline'),
 	ProjectSize 	= require('./models/projectSize'),
@@ -270,54 +271,15 @@ router.route('/clearDB')
 	})
 
 // Updates project sizes database with data from SF opportunity attachment
-//WIP
 router.route('/importProjectSize')
 	.post(function(req, res) {
-		var workbook = xlsx.read(req.body.b64, {type: 'base64'})
-		var sheet = workbook.Sheets[workbook.SheetNames[2]]
-
-  		var rowStart = 18
-  		var colStart = 28
-  		var dateRow = 17
-  		var projectSizeData = {}
-  		var infloopcounter = 0
-  		while(checkCell(sheet, rowStart, 1, 'v') != 'Subtotal' && infloopcounter < 10) {
-  			var cellValue = checkCell(sheet, rowStart, 1, 'v')
-  			//console.log("cell val is " + cellValue)
-  			if(cellValue != '') {
-  				projectSizeData[cellValue] = {}
-  				var date
-  				for(var i = 0; i < 19; i++) {//temp 
-  					date = checkCell(sheet, dateRow, colStart+i, 'w')
-  					if(date != '') {
-  						projectSizeData[cellValue][date] = checkCell(sheet, rowStart, colStart+i, 'v')
-  					}
-  				}
-  			}
-  			rowStart++
-  			infloopcounter++
-  		}
-  		console.log(projectSizeData)
-		
-
-
-		//var json = xlsx.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[2]])
-		//console.log("9is: " + sheet[xlsx.utils.encode_cell({r:19,c:7})].v)
-		//		console.log("29is: " + sheet[xlsx.utils.encode_cell({r:19,c:28})].v)
-
-
-		res.send({message: "Success!"})
+		parser.parseExcelSheet(req.body.b64, function() {
+			res.send({message: "Success!"})
+		})
 	})
 
 
-function checkCell(sheet, row, col, type) {
-	if(sheet[xlsx.utils.encode_cell({r:row,c:col})] != undefined) {
-		console.log("inner val is " + sheet[xlsx.utils.encode_cell({r:row,c:col})][type])
-		return sheet[xlsx.utils.encode_cell({r:row,c:col})][type]
-	} else {
-		return ''
-	}
-}
+
 // Catch timeouts
 // app.use(function(req, res, next) {
 //     res.setTimeout(5000, function() {
