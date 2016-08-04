@@ -52,17 +52,18 @@ function getColumnLimit(sheet, subTotalRow, colStart, n) {
 	var currentCol = colStart
 	console.log("initially " + currentCol)
 	var done = false
-	var consecutive = true
+	var consecutiveCheck = true
 	var inf = 0
 	while(!done && inf < 10) {
 		for(var i = currentCol; i < currentCol + n; i++) {
 			console.log(getCellValue(sheet, subTotalRow, i, 'v'))
 			console.log("bool is " + (getCellValue(sheet, subTotalRow, i, 'v') == 0.00))
-			consecutive = consecutive && (getCellValue(sheet, subTotalRow, i, 'v') == 0.00)
+			consecutiveCheck = consecutiveCheck && (getCellValue(sheet, subTotalRow, i, 'v') == 0.00)
 		}
 		if(!consecutive) {
 			currentCol += n
 			console.log("change from " + (currentCol - n) + " to " + currentCol)
+			consecutiveCheck = true
 		} else {
 			done = true
 			lastCol = currentCol
