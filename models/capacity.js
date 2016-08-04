@@ -29,7 +29,7 @@ var queryCapacity = function(accessToken, path, callback) {
     	recordData.push(
     		record.pse__Resource_Role__c,
 			record.Name,
-			record.pse__Utilization_Target__c
+			record.pse__Utilization_Target__c/100
 		)
     	capacityData.push(recordData)
 		})
