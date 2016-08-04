@@ -7,20 +7,24 @@ pg.defaults.ssl = true
 function getDefaultProjectSizes(callback){
 				pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 	      			if (err) return process.nextTick(function(){callback(err)})
-					var projectSizes,
-						projectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations FROM project_size ORDER BY pricehigh ASC")
-					projectSizesQuery.on("row", function (row, result) {
+					var defaultProjectSizes,
+						defaultProjectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations, numweeks FROM project_size ORDER BY pricehigh ASC")
+					defaultProjectSizesQuery.on("row", function (row, result) {
 						result.addRow(row)
 					})
-					projectSizesQuery.on("end", function (result) {
-						projectSizes = {}
-						for (var entry in result.rows){
-							projectSizes[result.rows[entry].sizeid] = {
-								"priceHigh": result.rows[entry].pricehigh,
-								"roles_allocations": result.rows[entry].roles_allocations
+					defaultProjectSizesQuery.on("end", function (result) {
+						defaultProjectSizes = {}
+						//for (var entry in result.rows){
+						async.each(result.rows, function(row, callback){
+							defaultProjectSizes[row.sizeid] = {
+								"priceHigh": 			row.pricehigh,
+								"roles_allocations": 	row.roles_allocations,
+								"numWeeks": 			row.numweeks
 							}
-						}
-						process.nextTick(function(){callback(null, projectSizes)})
+							process.nextTick(callback)
+						}, function(){
+							process.nextTick(function(){callback(null, defaultProjectSizes)})
+						})
 					})
 				})
 			}

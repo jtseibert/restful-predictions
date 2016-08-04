@@ -88,11 +88,11 @@ function applyDB(pipelineData, callback){
 
 	// Adds any user added opportunities to pipelineData
 	function addNewOpportunities(pipelineData, DB, callback){
-		
+
 	}
 
 	async.waterfall({
-		getFromDB.bind(null, pipelineData),
+		getFromDB,
 		updateCurrentOpportunites,
 		addNewOpportunities
 	}, function(error, result){
