@@ -46,6 +46,7 @@ var parseExcelSheet = function(b64String, callback) {
 		while(getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal') {
 			var role = getCellValue(sheet, indexes.dataRowStart, 1, 'v')
 			if(role != '') {
+				sheetData[role] = {}
 				sheetData[role][indexes.dataRowStart] = {}
 				for(var i = indexes.dataColStart; i < colEnd; i++) {
 					var date = moment(new Date(getCellValue(sheet, indexes.topRow, i, 'w')))
@@ -56,7 +57,6 @@ var parseExcelSheet = function(b64String, callback) {
 							sheetData[role][indexes.dataRowStart][date] = hours
 						}
 					}
-				
 				}
 			}
 			indexes.dataRowStart += 1
