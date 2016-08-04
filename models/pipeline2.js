@@ -83,7 +83,7 @@ function applyDB(pipelineData, callback){
 
 	// Looks at all opportunities in pipelineData and updates them if we have any persisted data for that opportunity in the DB
 	function updateCurrentOpportunites(pipelineData, DB, callback){
-		console.log(DB)
+		console.log(pipelineData)
 	}
 
 	// Adds any user added opportunities to pipelineData
@@ -92,7 +92,7 @@ function applyDB(pipelineData, callback){
 	}
 
 	async.waterfall([
-		getFromDB,
+		getFromDB(pipelineData),
 		updateCurrentOpportunites,
 		addNewOpportunities
 	], function(error, result){
