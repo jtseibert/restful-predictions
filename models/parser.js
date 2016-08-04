@@ -16,6 +16,10 @@ xlsx workbook object for parsing using the xlsx library.
 var parseExcelSheet = function(b64String) {
 	var workbook = xlsx.read(b64String, {type: 'base64'})
 	console.log(JSON.stringify(workbook.Props))
+	// Validate sheet at index 2 is 'Estimate'
+	if(workbook.Props.SheetNames[2] != 'Estimate') {
+		return undefined
+	}
 	var sheet 	 = workbook.Sheets[workbook.SheetNames[2]]
 	// Template indexes are hardcoded here
 	var indexes = {
