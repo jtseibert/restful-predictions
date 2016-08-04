@@ -60,10 +60,10 @@ function getColumnLimit(sheet, subTotalRow, colStart, n) {
 		}
 		if(!consecutive) {
 			currentCol += n
+			console.log("change from " + (currentCol - n) + " to " + currentCol)
 		} else {
 			done = true
 			lastCol = currentCol
-			console.log("change from " + (currentCol - n) + " to " + currentCol)
 		}
 	}
 	return lastCol
