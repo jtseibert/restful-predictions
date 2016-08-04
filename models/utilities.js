@@ -1,12 +1,24 @@
 var moment 	= require('moment'),
 	async 	= require('async'),
-	pg 		= require('pg')
+	pg 		= require('pg'),
+	config 	= {
+  				user: 'xbpryclwbfnfai',
+  				database: 'dfsg9e1bp9k04n',
+  				password: 'ukM2hdXDV3wMx6J0_2ue3yj1fJ',
+  				port: 5432, 
+  				max: 10,
+  				idleTimeoutMillis: 30000,
+	}
+
+var pool = new pg.Pool(config);
 
 pg.defaults.ssl = true
 
 function getDefaultProjectSizes(callback){
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-			if (err) return process.nextTick(function(){callback(err)})
+	pool.connect(function(err, client, done) {
+  		if(err) {
+    		return console.error('error fetching client from pool', err);
+  		}
 		var defaultProjectSizes,
 			defaultProjectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations, numweeks FROM project_size ORDER BY pricehigh ASC")
 		defaultProjectSizesQuery.on("row", function (row, result) {
@@ -23,6 +35,7 @@ function getDefaultProjectSizes(callback){
 				}
 				process.nextTick(callback)
 			}, function(){
+				done();
 				process.nextTick(function(){callback(null, defaultProjectSizes)})
 			})
 		})
@@ -30,8 +43,10 @@ function getDefaultProjectSizes(callback){
 }
 
 function getOmittedOpportunities(callback){
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		if (err) return process.nextTick(function(){callback(err)})
+	pool.connect(function(err, client, done) {
+  		if(err) {
+    		return console.error('error fetching client from pool', err);
+  		}
 		var omittedOpportunities,
 			omittedOpportunitiesQuery = client.query("SELECT * from omit")
 		omittedOpportunitiesQuery.on("row", function (row, result) {
@@ -44,6 +59,7 @@ function getOmittedOpportunities(callback){
 				omittedOpportunities[row.opportunity] = {}
 				process.nextTick(callback)
 			}, function(){
+				done();
 				process.nextTick(function(){callback(null, omittedOpportunities)})
 			})
 		})
@@ -51,8 +67,10 @@ function getOmittedOpportunities(callback){
 }
 
 function getAddedOpportunities(callback){
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		if (err) return process.nextTick(function(){callback(err)})
+	pool.connect(function(err, client, done) {
+  		if(err) {
+    		return console.error('error fetching client from pool', err);
+  		}
 		var addedOpportunities,
 			addedOpportunitiesQuery = client.query("SELECT * from sales_pipeline")
 		addedOpportunitiesQuery.on("row", function (row, result) {
@@ -76,6 +94,7 @@ function getAddedOpportunities(callback){
 				}
 				process.nextTick(callback)
 			}, function(){
+				done();
 				process.nextTick(function(){callback(null, addedOpportunities)})
 			})
 		})
