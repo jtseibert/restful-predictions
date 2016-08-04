@@ -146,10 +146,10 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 		valid = false
 
 	//Verify label cells "Total Cost" and "Total Billable"
-	if(getCellValue(sheet, indexes.subTotalRow + 1, dataColStart - 1, 'v') != 'Total Cost')
+	if(getCellValue(sheet, indexes.subTotalRow + 1, indexes.dataColStart - 1, 'v') != 'Total Cost')
 		valid = false
 
-	if(getCellValue(sheet, indexes.subTotalRow + 2, dataColStart - 2, 'v') != 'Total Billable')
+	if(getCellValue(sheet, indexes.subTotalRow + 2, indexes.dataColStart - 2, 'v') != 'Total Billable')
 		valid = false
 
 	if(getCellValue(sheet, indexes.subTotalRow, indexes.headerCol, 'v') != 'Subtotal')
