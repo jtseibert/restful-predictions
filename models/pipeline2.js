@@ -38,7 +38,7 @@ function queryPipeline(accessToken, path, callback) {
 			moment(new Date(record.closeDate)).format("MM/DD/YYYY"),
 			record.probability,
 			moment(new Date(record.createdDate)).format("MM/DD/YYYY"),
-			record.accountName,
+			record.accountName
 		)
     	pipelineData.push(recordData)
 		})
