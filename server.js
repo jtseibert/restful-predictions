@@ -279,6 +279,7 @@ router.route('/clearDB')
 router.route('/importProjectSize')
 	.post(function(req, res) {
 		parser.parseExcelSheet(req.body.b64, function() {
+			//check if undefned
 			res.send({message: "Success!"})
 		})
 	})
