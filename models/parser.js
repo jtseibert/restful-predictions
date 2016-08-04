@@ -27,7 +27,7 @@ var parseExcelSheet = function(b64String, callback) {
 		subTotalIndex: 0
 	}
 	var temp = getSubTotalIndex(sheet, indexes)
-	indexes[subTotalIndex] = temp
+	indexes.subTotalIndex = temp
 	console.log(indexes.subTotalIndex)
 
 	// Parse the sheet if valid
