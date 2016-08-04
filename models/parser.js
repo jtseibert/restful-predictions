@@ -46,30 +46,17 @@ var parseExcelSheet = function(b64String, callback) {
 		while(getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal') {
 			var role = getCellValue(sheet, indexes.dataRowStart, 1, 'v')
 			if(role != '') {
-				if(sheetData[role]) {
-					sheetData[role][indexes.dataRowStart] = {}
-					for(var i = indexes.dataColStart; i < colEnd; i++) {
-						var date = moment(new Date(getCellValue(sheet, indexes.topRow, i, 'w')))
-								   .format('MM/DD/YYYY')
-						if(date != '') {
-							var hours = getCellValue(sheet, indexes.dataRowStart, i, 'v')
-							if(hours != '') {
-								sheetData[role][indexes.dataRowStart][date] = hours
-							}
+				sheetData[role][indexes.dataRowStart] = {}
+				for(var i = indexes.dataColStart; i < colEnd; i++) {
+					var date = moment(new Date(getCellValue(sheet, indexes.topRow, i, 'w')))
+							   .format('MM/DD/YYYY')
+					if(date != '') {
+						var hours = getCellValue(sheet, indexes.dataRowStart, i, 'v')
+						if(hours != '') {
+							sheetData[role][indexes.dataRowStart][date] = hours
 						}
 					}
-				} else {
-					sheetData[role] = {}
-					for(var i = indexes.dataColStart; i < colEnd; i++) {
-						var date = moment(new Date(getCellValue(sheet, indexes.topRow, i, 'w')))
-								   .format('MM/DD/YYYY')
-						if(date != '') {
-							var hours = getCellValue(sheet, indexes.dataRowStart, i, 'v')
-							if(hours != '') {
-								sheetData[role][date] = hours
-							}
-						}
-					}
+				
 				}
 			}
 			indexes.dataRowStart += 1
