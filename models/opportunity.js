@@ -39,7 +39,7 @@ Opportunity.prototype.add = function(async, pg, callback) {
 								opportunity.account_name,
 								opportunity.project_size
 							]
-						)
+						, function(){ done() })
 			process.nextTick(callback)
 		})
 	}, function(){
@@ -50,6 +50,7 @@ Opportunity.prototype.add = function(async, pg, callback) {
 				result.addRow(row)
 			})
 			query.on("end", function (result) {
+				done()
 				console.log(JSON.stringify(result.rows, null, "    "))
 			})
 		})
@@ -65,7 +66,7 @@ Opportunity.prototype.update = function(pg, callback) {
   						'probability = COALESCE($2, probability),' + 
   						'project_size = COALESCE($3, project_size)' +
 						'WHERE opportunity = $4',
-			[objInstance.data.start_date, objInstance.data.probability/100, objInstance.data.project_size, objInstance.data.opportunity])
+			[objInstance.data.start_date, objInstance.data.probability/100, objInstance.data.project_size, objInstance.data.opportunity], function(){ done() })
 	})
 	process.nextTick(callback)
 }
@@ -74,7 +75,7 @@ Opportunity.prototype.remove = function(async, pg, callback) {
 	var data = this.data
 	async.eachOf(data, function(opportunity, opportunityKey, callback){
 		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-			client.query('DELETE FROM sales_pipeline WHERE opportunity = $1',[opportunityKey])
+			client.query('DELETE FROM sales_pipeline WHERE opportunity = $1',[opportunityKey], function(){ done() })
 			process.nextTick(callback)
 		})
 	})

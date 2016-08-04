@@ -27,7 +27,8 @@ ProjectSize.prototype.add = function(pg, callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		for (var entry in objInstance.data){
 			client.query('INSERT INTO project_size(sizeId,pricehigh,roles_allocations,numweeks) values($1,$2,$3,$4)',
-				[objInstance.data[entry].sizeid,objInstance.data[entry].pricehigh,objInstance.data[entry].roles_allocations,objInstance.data[entry].numweeks])
+				[objInstance.data[entry].sizeid,objInstance.data[entry].pricehigh,objInstance.data[entry].roles_allocations,objInstance.data[entry].numweeks],
+				function(){ done() })
 		}
 		//testing
 		var query = client.query("SELECT * from project_size")
@@ -35,6 +36,7 @@ ProjectSize.prototype.add = function(pg, callback) {
 			result.addRow(row)
 		})
 		query.on("end", function (result) {
+			done()
 			console.log(JSON.stringify(result.rows, null, "    "))
 		})
 		process.nextTick(callback)
@@ -56,7 +58,8 @@ ProjectSize.prototype.update = function(pg, callback) {
 	  						'roles_allocations = COALESCE($3, roles_allocations),' 	+
 	  						'numweeks = COALESCE($4, numweeks)' 					+
 							'WHERE sizeId = $1',
-				[objInstance.data[entry].sizeid,objInstance.data[entry].pricehigh,objInstance.data[entry].roles_allocations,objInstance.data[entry].numweeks])
+				[objInstance.data[entry].sizeid,objInstance.data[entry].pricehigh,objInstance.data[entry].roles_allocations,objInstance.data[entry].numweeks],
+				function(){ done() })
 		}
 		//testing
 		var query = client.query("SELECT * from project_size")
@@ -64,6 +67,7 @@ ProjectSize.prototype.update = function(pg, callback) {
 			result.addRow(row)
 		})
 		query.on("end", function (result) {
+			done()
 			console.log(JSON.stringify(result.rows, null, "    "))
 		})
 		process.nextTick(callback)
@@ -80,11 +84,12 @@ ProjectSize.prototype.edit = function(pg, callback) {
 	objInstance = this
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		console.log(objInstance.data)
-		var query = client.query('SELECT * FROM project_size WHERE sizeId = $1', [objInstance.data.project])
+		var query = client.query('SELECT * FROM project_size WHERE sizeId = $1', [objInstance.data.project], function(){ done() })
 		query.on("row", function (row, result) {
 			result.addRow(row)
 		})
 		query.on("end", function (result) {
+			done()
 			console.log(JSON.stringify(result.rows, null, "    "))
 			process.nextTick(function(){callback(result.rows)})
 		})
@@ -102,7 +107,7 @@ ProjectSize.prototype.remove = function(pg, callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		for (var entry in objInstance.data){
 			console.log('should be deleting: ' + entry)
-			client.query('DELETE FROM project_size WHERE sizeId = $1', [entry])
+			client.query('DELETE FROM project_size WHERE sizeId = $1', [entry], function(){ done() })
 		}
 		//testing
 		var query = client.query("SELECT * from project_size")
@@ -110,6 +115,7 @@ ProjectSize.prototype.remove = function(pg, callback) {
 			result.addRow(row)
 		})
 		query.on("end", function (result) {
+			done()
 			console.log(JSON.stringify(result.rows, null, "    "))
 		})
 		process.nextTick(callback)

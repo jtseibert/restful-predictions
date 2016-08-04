@@ -14,7 +14,7 @@ function getDefaultProjectSizes(callback){
 			result.addRow(row)
 		})
 		defaultProjectSizesQuery.on("end", function (result) {
-			done();
+			done()
 			defaultProjectSizes = {}
 			async.each(result.rows, function(row, callback){
 				defaultProjectSizes[row.sizeid] = {
@@ -39,7 +39,7 @@ function getOmittedOpportunities(callback){
 			result.addRow(row)
 		})
 		omittedOpportunitiesQuery.on("end", function (result) {
-			done();
+			done()
 			omittedOpportunities = {}
 			async.each(result.rows, function(row, callback){
 				omittedOpportunities[row.opportunity] = {}
@@ -60,7 +60,7 @@ function getAddedOpportunities(callback){
 			result.addRow(row)
 		})
 		addedOpportunitiesQuery.on("end", function (result) {
-			done();
+			done()
 			addedOpportunities = {}
 			async.each(result.rows, function(row, callback){
 				addedOpportunities[row.opportunity] = {
