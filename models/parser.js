@@ -52,12 +52,12 @@ function getColumnLimit(sheet, subTotalRow, startRow, n) {
 	var lastCol
 	var currentCol = startRow
 	var done = false
-	var continue_ = true
+	var consecutive = true
 	while(!done) {
 		for(var i = currentCol; i < currentCol + n; i++) {
-			continue_ = continue_ && (getCellValue(sheet, subTotalRow, i, 'v') == '0.00')
+			consecutive = consecutive && (getCellValue(sheet, subTotalRow, i, 'v') == '0.00')
 		}
-		if(continue_) {
+		if(!consecutive) {
 			currentCol += n
 		} else {
 			done = true
