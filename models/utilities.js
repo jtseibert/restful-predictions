@@ -88,11 +88,7 @@ function purgeSalesPipeline_DB(callback){
 		if (err) return process.nextTick(function(){callback(err)})
 		var today = moment().format("L")
 		today = today.toString()
-		client.query("DELETE FROM sales_pipeline WHERE protected=FALSE OR start_date<'"+today+"'", function(err, success){
-			if(err)
-				console.log(err)
-			if(success)
-				console.log(success)
+		client.query("DELETE FROM sales_pipeline WHERE protected=FALSE OR start_date<'"+today+"'", function(){
 			done() 
 			process.nextTick(callback)
 		})
