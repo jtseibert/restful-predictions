@@ -42,7 +42,7 @@ function updateOpportunity(opportunityData, callback) {
 			utilities.query(
 				"INSERT INTO sales_pipeline(opportunity, role, week_allocations, protected) values($1, $2, $3, $4)",
 				[opportunityName, roleKey, weekAllocations, true],
-				function(results) { process.nextTick(callback) }
+				function() { process.nextTick(callback) }
 			)
 		}, function(){ process.nextTick(callback) })
 	}, function() { process.nextTick(function(){ callback('Update Finished')}) })
