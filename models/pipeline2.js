@@ -153,12 +153,13 @@ function applyDB(pipelineData, callback){
 							'EstimatedHours'
 						]]
 		
-		var salesPipeline_DB = utils.query("SELECT opportunity,stage,amount,expected_revenue,close_date,start_date,probability,created_date,account_name,role,week_allocations FROM sales_pipeline",null,function(){})
-		async.each(salesPipeline_DB, function(opportunity, callback){
-			var rowsToPush = []
-			rowsToPush = utils.applyWeekAllocations(opportunity, rowsToPush)
-		}, function(){
-			process.nextTick(function(){ callback(null, returnData) })
+		utils.query("SELECT opportunity,stage,amount,expected_revenue,close_date,start_date,probability,created_date,account_name,role,week_allocations FROM sales_pipeline",null,function(results){
+				async.each(results, function(opportunity, callback){
+				var rowsToPush = []
+				rowsToPush = utils.applyWeekAllocations(opportunity, rowsToPush)
+			}, function(){
+				process.nextTick(function(){ callback(null, returnData) })
+			})
 		})
 	}
 
