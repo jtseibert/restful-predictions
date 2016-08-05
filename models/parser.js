@@ -48,6 +48,7 @@ var parseExcelSheet = function(body, callback) {
 		while(getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal') {
 			var role = getCellValue(sheet, indexes.dataRowStart, 1, 'v')
 			if(role != '') {
+				role = mapRole(role)
 				if(!sheetData[role]) {
 					sheetData[role] = {}
 				}
@@ -112,6 +113,23 @@ function getYear(sheet, indexes) {
 		opportunityYear = currentYear + 1
 	}
 	return opportunityYear
+}
+
+/**
+* @function mapRole
+* @desc Maps any conflict roles to match the Heroku database list of roles.
+* @param {string} role - role to be mapped
+* @returns {string} mappedRole - new or same role
+*/
+function mapRole(role) {
+	var splitRole = role.split(' ')
+	var mappedRole
+	if(splitRole[0] == 'Senior' || splitRole[0] == 'Associate') {
+		mappedRole = splitRole.slice(1, splitRole.length) + ', ' + splitRole[0] 
+	} else {
+		mappedRole = role
+	}
+	return mappedRole
 }
 
 /**
