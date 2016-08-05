@@ -33,7 +33,7 @@ var updateOpportunity = function(opportunityData, callback) {
 * @returns true or false
 */
 function isInDatabase(opportunityName) {
-	return utilities.query("SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1", [opportunityName])
+	return utilities.query("SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)", [opportunityName])
 }
 
 module.exports.updateOpportunity = updateOpportunity
