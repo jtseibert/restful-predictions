@@ -111,7 +111,7 @@ function applyDB(pipelineData, callback){
 									row[indexes.AccountName],
 									row[indexes.Role],
 									row[indexes.weekAllocations]
-								]
+								], function(){}
 							)
 					process.nextTick(callback)
 				}, function(){ process.nextTick(callback) })
@@ -152,7 +152,7 @@ function applyDB(pipelineData, callback){
 							'EstimatedHours'
 						]]
 		
-		var salesPipeline_DB = utils.query("SELECT opportunity,stage,amount,expected_revenue,close_date,start_date,probability,created_date,account_name,role,week_allocations FROM sales_pipeline")
+		var salesPipeline_DB = utils.query("SELECT opportunity,stage,amount,expected_revenue,close_date,start_date,probability,created_date,account_name,role,week_allocations FROM sales_pipeline",null,function(){})
 		async.each(salesPipeline_DB, function(opportunity, callback){
 			var rowsToPush = []
 			rowsToPush = utils.applyWeekAllocations(opportunity, rowsToPush)
