@@ -94,6 +94,7 @@ function purgeSalesPipeline_DB(callback){
 			if(success)
 				console.log(success)
 			done() 
+			process.nextTick(callback)
 		})
 	})
 }

@@ -10,15 +10,17 @@ function queryPipeline(accessToken, path, callback) {
 	var sf = require('node-salesforce')
 	var moment = require('moment')
 	// Set up the sheet headers
-	var pipelineData = [['Stage',
-							'Name',
-							'Amount',
-							'Expected Revenue',
-							'Close Date',
-							'Start Date',
-							'Probability',
-							'Created Date',
-							'Account Name']]
+	var pipelineData = [[]]
+
+	// 'Stage',
+	// 'Name',
+	// 'Amount',
+	// 'Expected Revenue',
+	// 'Close Date',
+	// 'Start Date',
+	// 'Probability',
+	// 'Created Date',
+	// 'Account Name'
 
 	// Connect to SF
 	var conn = new sf.Connection({
@@ -71,26 +73,57 @@ function applyDB(pipelineData, callback){
 	function prepareDB(callback){
 		var DB = {}
 
-		// Add query to get SalesPipeline from SF
-
-		// Delete all non flagged from SP in DB
-		// Delete old flagged from SP in DB
-
 		async.parallel({
 			'one': 		utils.getDefaultProjectSizes_DB,
 			'two': 		utils.getOmittedOpportunities_DB,
 			'three': 	utils.purgeSalesPipeline_DB
 		}, function(err, results){
-			// DB.defaultProjectSizes	= results.one
-			// DB.omittedOpportunities	= results.two
-			// DB.opportunities	= results.three
+			DB.defaultProjectSizes	= results.one
+			DB.omittedOpportunities	= results.two
 			process.nextTick(function(){ callback(null, DB) })
 		})		
 	}
 
 	// Insert query from SF into DB, on conflict do nothing
 	function updateDBTables(DB, callback){
+		var indexes = {'Stage':				0,
+						'Name':				1,
+						'Amount':			2,
+						'ExpectedRevenue':	3,
+						'CloseDate':		4,
+						'StartDate':		5,
+						'Probability':		6,
+						'CreatedDate':		7,
+						'AccountName':		8,
+						'ProjectSize':		9,
+						'Role':				10,
+						'WeekAllocations':	11
+					}
 
+		async.each(pipelineData, function(opportunity, callback){
+			if(!DB.omittedOpportunities[opportunity[indexes.Name]]){
+				var tempRow = opportunity
+				tempRow = utils.asignRoleAllocations(tempRow,DB.defaultProjectSizes)
+				utils.query("INSERT INTO sales_pipeline(opportunity, stage, amount, expected_revenue, close_date, start_date, probability, created_date, account_name, role, week_allocations),"+
+								"values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) ON CONFLICT DO UPDATE SET stage=$2, amount=$3, expected_revenue=$4, close_date=$5, probability=$7",
+								[ tempRow[indexes.Name],
+									tempRow[indexes.Stage],
+									tempRow[indexes.Amount],
+									tempRow[indexes.ExpectedRevenue],
+									tempRow[indexes.CloseDate],
+									tempRow[indexes.StartDate],
+									tempRow[indexes.Probability],
+									tempRow[indexes.CreatedDate],
+									tempRow[indexes.AccountName],
+									tempRow[indexes.Role],
+									tempRow[indexes.weekAllocations]
+								]
+							)
+				process.nextTick(callback)
+			} else { process.nextTick(callback) }
+		}, function(){
+			process.nextTick(function(){ callback(null, DB) })
+		})
 	}
 
 	// Get all data from SalesPipeline in DB and put into 2D array
@@ -106,9 +139,24 @@ function applyDB(pipelineData, callback){
 						'AccountName':		8,
 						'ProjectSize':		9,
 						'Role':				10,
-						'WeekDate':			11
-					}
-
+						'WeekDate':			11,
+						'EstimatedHours':	12
+					},
+			returnData = []
+		
+		var salesPipeline_DB = utils.query("SELECT * FROM sales_pipeline")
+		async.each(salesPipeline_DB, function(opportunity, callback){
+			var tempRow = []
+			async.eachSeries(opportunity, function(field, callback){
+				tempRow.push(field)
+				process.nextTick(callback)
+			}, function(){
+				returnData.push(tempRow)
+				process.nextTick(callback)
+			})
+		}, function(){
+			process.nextTick(function(){ callback(null, returnData) })
+		})
 	}
 
 	async.waterfall([
