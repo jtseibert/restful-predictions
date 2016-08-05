@@ -71,33 +71,10 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 		var accessToken = req.params.accessToken,
 			instance    = req.params.instance
 		pipeline.queryPipeline(accessToken, instance, function(pipelineData) {
-			pipeline.applyDB(pipelineData,function(){})
-			res.json(pipelineData)
+			pipeline.applyDB(pipelineData,function(result){
+				res.json(result)
+			})
 		})
-		// var pipeline = new Pipeline(async, req.params.instance, req.params.accessToken, pg, function() {
-		// 	cache.get("sales_pipeline", function(err, value) {
-		// 		if(!err) {
-		// 			if(value == undefined) {
-		// 	    		console.log('sales_pipeline data not cached')
-		// 				pipeline.get(oauth2, async, cache, function(result) {
-		// 					pipeline.applyDB(async, result, function(){
-		// 						res.json(pipeline.returnData)
-		// 						delete pipeline
-		// 					})
-		// 				})
-		// 			} else { 
-		// 				console.log('sales_pipeline cached, returning')
-		// 				pipeline.applyDB(async, value, function() {
-		// 					res.json(pipeline.returnData)
-		// 					delete pipeline
-		// 				})
-		// 			}
-		// 		} else {
-		// 			res.json({message: err})
-		// 			delete pipeline
-		// 		}
-		// 	})
-		// })
 	})
 
 router.route('/:instance/DATA_Capacity/:accessToken')
