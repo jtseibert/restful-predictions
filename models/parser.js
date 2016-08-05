@@ -68,6 +68,8 @@ var parseExcelSheet = function(body, callback) {
 		var opportunityData = {}
 		opportunityData[sheetData] = sheetData
 		opportunityData[opportunityName] = body.opportunityName
+		console.log(opportunityData.sheetData)
+		console.log(opportunityData.opportunityName)
 		callback(opportunityData)
 	}
 }
