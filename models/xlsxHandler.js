@@ -19,7 +19,7 @@ var updateOpportunity = function(opportunityData, callback) {
 			function(results) {console.log(results)}
 			)
 		}
-	}
+	})
 
 
 
