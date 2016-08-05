@@ -11,34 +11,49 @@ var utilities = require('./utilities')
 * @param callback - callback to handle status
 */
 var updateOpportunity = function(opportunityData, callback) {
-	isInDatabase(opportunityData.opportunityName, function(inDatabase) {
+	databaseCheck(opportunityData.opportunityName, function(inDatabase) {
 		if(inDatabase) {
-			utilities.query(
-			"select stage from sales_pipeline where opportunity=$1", 
-			[opportunityData.opportunityName],
-			function(results) {console.log(results)}
-			)
+			deleteOpportunity(opportunityData.opportunityName, function() {
+				updateDatabase(opportunityData, function() {
+					callback({message: 'db delete success'})
+				})
+			})
+		} else {
+			updateDatabase(opportunityData, function() {
+				callback({message: 'db no delete success'})
+			})
+			//not in db, ping SF and populate the sales_pipeline
 		}
 	})
-
-
-
-
-
-
-
-
-
-	callback("wip")
 }
+
+
+function updateDatabase(opportunityData) {
+	var sheetData = opportunityData.sheetData
+	var opportunityName = opportunityData.opportunityName
+
+	console.log('got into updateDatabase')
+	callback()
+}
+
+function deleteOpportunity(opportunityName) {
+	console.log('deleting stuff!')
+	utilities.query(
+		"DELETE FROM sales_pipeline WHERE opportunity=$1",
+		[opportunityName],
+		function() {callback()}
+	)
+}
+
 
 /**
 * @function isInDatabase
 * @desc Checks if the opportunity is already in the Heroku database
 * @param {string} opportunityName - name of opportunity to check
+* @param callback - callback function to handle result
 * @returns true or false
 */
-function isInDatabase(opportunityName, callback) {
+function databaseCheck(opportunityName, callback) {
 	utilities.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[opportunityName],
