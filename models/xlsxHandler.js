@@ -6,7 +6,7 @@
 var utilities = require('./utilities')
 var async     = require('async')
 /**
-* @function updateOpportunity
+* @function updateDatabase
 * @desc Update the opportunity stored in Heroku database.
 * @param opportunityData - JSON format object of opportunity name and xlsx data
 * @param callback - callback to handle status
