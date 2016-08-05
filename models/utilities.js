@@ -144,7 +144,7 @@ function applyWeekAllocations(opportunity, rowsToPush){
 	return rowsToPush
 }
 
-function getProjectSize(amount, projectSizes){
+function getProjectSize(amount, defaultProjectSizes){
 	//amount = amount.replace('USD ', '').replace(/,/g,'')
 	var projectSizeFound = false,
 		projectSize
