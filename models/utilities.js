@@ -133,6 +133,8 @@ function assignRoleAllocations(row, defaultProjectSizes, indexes){
 	var amount = row[indexes.Amount],
 		projectSize
 
+	console.log(amount)
+
 	projectSize = getProjectSize(amount, defaultProjectSizes)
 	return assignRoles(row, projectSize, defaultProjectSizes, indexes)
 }

@@ -39,7 +39,6 @@ function queryPipeline(accessToken, path, callback) {
 	.on("end", function(query) {
 		console.log("total in database : " + query.totalSize);
 		console.log("total fetched : " + query.totalFetched);
-		console.log('Pipeline: '+pipelineData)
 		process.nextTick(function() {callback(pipelineData)})
 		})
 	.on("error", function(err) {
@@ -92,8 +91,6 @@ function applyDB(pipelineData, callback){
 						'Role':				10,
 						'WeekAllocations':	11
 					}
-
-		//console.log('pipelineData: '+pipelineData)
 
 		async.each(pipelineData, function(opportunity, callback){
 			if(!DB.omittedOpportunities[opportunity[indexes.Name]]){
