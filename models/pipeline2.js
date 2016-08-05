@@ -111,9 +111,10 @@ function applyDB(pipelineData, callback){
 										row[indexes.AccountName],
 										row[indexes.Role],
 										row[indexes.weekAllocations]
-									], function(){}
+									], function(){
+										process.nextTick(callback)
+									}
 								)
-						process.nextTick(callback)
 					}, function(){ process.nextTick(callback) })
 				})
 			} else { process.nextTick(callback) }
