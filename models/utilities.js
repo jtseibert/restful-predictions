@@ -122,12 +122,70 @@ var query = function query(query, values, callback) {
 	})
 }
 
-module.exports.query = query
+function asignRoleAllocations(row, defaultProjectSizes, indexes){
+	var amount = row[indexes.Amount],
+		projectSize
 
+	projectSize = getProjectSize(amount, defaultProjectSizes)
+	return assignRoles(row, projectSize, defaultProjectSizes, indexes)
+}
+
+function applyWeekAllocations(opportunity, rowsToPush){
+
+	return rowsToPush
+}
+
+function getProjectSize(amount, projectSizes){
+	amount = amount.replace('USD ', '').replace(/,/g,'')
+	var projectSizeFound = false,
+		projectSize
+
+	async.eachOfSeries(defaultProjectSizes, function(projectSize, key, callback){
+		if(projectSize.priceHigh > amount && projectSizeFound == false){
+			projectSize = key
+			projectSizeFound = true
+			process.nextTick(callback)
+		} else { process.nextTick(callback) }
+	}, function(){
+		return projectSize
+	})
+}
+
+function assignRoles(row, projectSize, projectSizes, indexes){
+	var returnArray = [],
+	tempRow 		= [],
+	roles 			= projectSizes[projectSize].roles_allocations,
+	daysInWeek 		= 7
+
+	// for (var role in roles) {
+	async.each(roles, function(role, callback){
+		for(var i=0; i<roles[role].duration; i++) {
+			tempRow = []
+			for (var col in row) {
+				tempRow.push(row[col])
+			}
+			tempRow.push(role,roles[role].allocation,calculateStartDate(row[indexes.StartDate],(parseInt(roles[role].offset)+i)*daysInWeek))
+			returnArray.push(tempRow)
+		}
+	})
+	return returnArray
+}
+
+// Should eventually turn this into moment
+function calculateStartDate(closeDate, dateIncrement){
+	var date = new Date(closeDate)
+	var returnDate = getSaturday(new Date(date.setDate(date.getDate() + dateIncrement)))
+	returnDate = JSON.stringify(returnDate).split('T')[0].split('-')
+	return returnDate[1]+'/'+returnDate[2]+'/'+returnDate[0].replace('"','')
+}
+
+module.exports.query						= query
 module.exports.getOpportunities_DB 			= getOpportunities_DB
 module.exports.getOmittedOpportunities_DB 	= getOmittedOpportunities_DB
 module.exports.getDefaultProjectSizes_DB 	= getDefaultProjectSizes_DB
 module.exports.purgeSalesPipeline_DB		= purgeSalesPipeline_DB
+module.exports.applyWeekAllocations			= applyWeekAllocations
+module.exports.asignRoleAllocations			= asignRoleAllocations
 
 
 

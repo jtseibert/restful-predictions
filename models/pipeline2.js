@@ -92,24 +92,26 @@ function applyDB(pipelineData, callback){
 
 		async.each(pipelineData, function(opportunity, callback){
 			if(!DB.omittedOpportunities[opportunity[indexes.Name]]){
-				var tempRow = opportunity
-				tempRow = utils.asignRoleAllocations(tempRow,DB.defaultProjectSizes)
-				utils.query("INSERT INTO sales_pipeline(opportunity, stage, amount, expected_revenue, close_date, start_date, probability, created_date, account_name, role, week_allocations),"+
+				var rowsToInsert = [[]]
+				rowsToInsert = utils.asignRoleAllocations(row,opportunity,DB.defaultProjectSizes,indexes)
+				async.each(rowsToInsert, function(row, callback){
+					utils.query("INSERT INTO sales_pipeline(opportunity, stage, amount, expected_revenue, close_date, start_date, probability, created_date, account_name, role, week_allocations),"+
 								"values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) ON CONFLICT DO UPDATE SET stage=$2, amount=$3, expected_revenue=$4, close_date=$5, probability=$7",
-								[ tempRow[indexes.Name],
-									tempRow[indexes.Stage],
-									tempRow[indexes.Amount],
-									tempRow[indexes.ExpectedRevenue],
-									tempRow[indexes.CloseDate],
-									tempRow[indexes.StartDate],
-									tempRow[indexes.Probability],
-									tempRow[indexes.CreatedDate],
-									tempRow[indexes.AccountName],
-									tempRow[indexes.Role],
-									tempRow[indexes.weekAllocations]
+								[ row[indexes.Name],
+									row[indexes.Stage],
+									row[indexes.Amount],
+									row[indexes.ExpectedRevenue],
+									row[indexes.CloseDate],
+									row[indexes.StartDate],
+									row[indexes.Probability],
+									row[indexes.CreatedDate],
+									row[indexes.AccountName],
+									row[indexes.Role],
+									row[indexes.weekAllocations]
 								]
 							)
-				process.nextTick(callback)
+					process.nextTick(callback)
+				}, function(){ process.nextTick(callback) })
 			} else { process.nextTick(callback) }
 		}, function(){
 			process.nextTick(function(){ callback(null, DB) })
