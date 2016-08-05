@@ -128,14 +128,14 @@ var query = function query(query, values, callback) {
 	})
 }
 
-function assignRoleAllocations(row, defaultProjectSizes, indexes){
+function assignRoleAllocations(row, defaultProjectSizes, indexes, callback){
 	console.log('assignRoleAllocations: '+row)
 	var amount = row[indexes.Amount],
 		projectSize
 
 	getProjectSize(amount, defaultProjectSizes, function(projectSize){
-		assignRoles(row, projectSize, defaultProjectSizes, indexes, function(){
-
+		assignRoles(row, projectSize, defaultProjectSizes, indexes, function(result){
+			process.nextTick(function() {callback(result)})
 		})
 	})
 }
@@ -155,7 +155,7 @@ function getProjectSize(amount, defaultProjectSizes, callback){
 	})
 }
 
-function assignRoles(row, projectSize, projectSizes, indexes){
+function assignRoles(row, projectSize, projectSizes, indexes, callback){
 	
 	var returnArray = [],
 	tempRow 		= [],
