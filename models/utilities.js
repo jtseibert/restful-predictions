@@ -107,9 +107,9 @@ var query = function query(query, values, callback) {
 		console.log("query is: " + q + 'with values' + values)
 		var query
 		if(v != null) {
-			query = client.query(q, v)
+			query = client.query(q, v, function(error) {if(error) callback()})
 		} else {
-			query = client.query(q)
+			query = client.query(q, function(error) {if(error) callback()})
 		}
 		query.on("row", function (row, result) {
 			console.log(row)
