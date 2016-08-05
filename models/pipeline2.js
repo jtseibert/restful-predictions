@@ -95,7 +95,6 @@ function applyDB(pipelineData, callback){
 		async.each(pipelineData, function(opportunity, callback){
 			if(!DB.omittedOpportunities[opportunity[indexes.Name]]){
 				var rowsToInsert
-				console.log('opportunity: '+opportunity)
 				utils.assignRoleAllocations(opportunity,DB.defaultProjectSizes,indexes, function(result){
 					rowstoInsert = result
 					async.each(rowsToInsert, function(row, callback){
