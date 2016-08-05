@@ -3,9 +3,9 @@
 * @desc Handles forecasted opportunity data from xlsx parser.
 */
 
-var updateOpportunity = function(sheetData, callback) {
-
-	console.log(sheetData)
+var updateOpportunity = function(opportunityData, callback) {
+	console.log(opportunity.opportunityName)
+	//console.log(sheetData)
 
 
 	callback("wip")

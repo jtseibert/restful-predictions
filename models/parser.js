@@ -11,11 +11,11 @@ var moment = require('moment')
 * @desc Returns a JSON formatted object of estimated forecasted hours for role/
 week combinations from a base64 encoded string. The base64 string is converted into a 
 xlsx workbook object for parsing using the xlsx library.
-* @param {string} - b64String - base64 encoded string from SalesForce
-* @returns JSON format object of estimated forecasted hours for each role/week
+* @param {string} - body - https body from SalesForce
+* @returns JSON format object of estimated forecasted hours for each role/week, and opportunity name
 */
-var parseExcelSheet = function(b64String, callback) {
-	var workbook = xlsx.read(b64String, {type: 'base64'})	
+var parseExcelSheet = function(body, callback) {
+	var workbook = xlsx.read(body.b64String, {type: 'base64'})	
 	var sheet 	 = workbook.Sheets[workbook.SheetNames[2]]
 	// Template indexes are hardcoded here
 	// Top row/col refers to upper left cell B18
@@ -64,7 +64,10 @@ var parseExcelSheet = function(b64String, callback) {
 			}
 			indexes.dataRowStart += 1
 		}
-		callback(sheetData)
+		var opportunityData = {sheetData: sheetData,
+				   opportunityName: body.opportunityName
+		}
+		callback(opportunityData)
 	}
 }
 
