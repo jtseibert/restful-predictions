@@ -17,6 +17,7 @@ var	allocation 		= require('./models/allocation3'),
 	pg 				= require('pg'),
 	pipeline 		= require('./models/pipeline2'),
 	ProjectSize 	= require('./models/projectSize')
+	xlsxHandler   	= require('./models/xlsxHandler')
 require('colors')
 
 var app = express()
@@ -279,12 +280,11 @@ router.route('/clearDB')
 router.route('/importProjectSize')
 	.post(function(req, res) {
 		parser.parseExcelSheet(req.body.b64, function(sheetData) {
-			//check if undefned
-			if(sheetData != undefined)
-				console.log(sheetData)
-			else 
-				console.log('not valid sheet')
-			res.send({message: "Success!"})
+			if(sheetData != undefined) {
+				xlsxHandler.updateOpportunity(sheetData, function(status) {
+					res.json({message: status})
+				})
+			}		
 		})
 	})
 
