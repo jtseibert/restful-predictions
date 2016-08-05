@@ -12,6 +12,7 @@ var moment = require('moment')
 week combinations from a base64 encoded string. The base64 string is converted into a 
 xlsx workbook object for parsing using the xlsx library.
 * @param {string} - body - https body from SalesForce
+* @param callback - callback function to handle xlsx data
 * @returns JSON format object of estimated forecasted hours for each role/week, and opportunity name
 */
 var parseExcelSheet = function(body, callback) {
