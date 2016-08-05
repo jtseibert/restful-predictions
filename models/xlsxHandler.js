@@ -43,7 +43,7 @@ function updateOpportunity(opportunityData, callback) {
 		//for every number of role
 			//insert into db opportunity, role, {week1: number, week2: number}
 
-	async.eachOf(sheetData, function insertRow(role, roleKey) {
+	async.eachOf(sheetData, function insertRole(role, roleKey) {
 		console.log('role ' + roleKey)
 
 
@@ -60,7 +60,7 @@ function updateOpportunity(opportunityData, callback) {
 	
 
 	}, 
-	function() {callback('update successful')})		
+	callback('update successful'))	
 }
 
 /*
