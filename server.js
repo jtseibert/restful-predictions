@@ -279,7 +279,6 @@ router.route('/clearDB')
 // Updates project sizes database with data from SF opportunity attachment
 router.route('/importProjectSize')
 	.post(function(req, res) {
-		console.log(JSON.stringify(req.body))
 		parser.parseExcelSheet(req.body, function(opportunityData) {
 			if(opportunityData != undefined) {
 				xlsxHandler.updateOpportunity(opportunityData, function(status) {
