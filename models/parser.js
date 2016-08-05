@@ -33,6 +33,7 @@ var parseExcelSheet = function(b64String, callback) {
 	var temp = getBottomRow(sheet, indexes)
 	indexes.bottomRow = temp
 
+	console.log(JSON.stringify(workbook.Props))
 	// Parse the sheet if valid
 	if(!sheetIsValidFormat(workbook, sheet, indexes)) {
 		callback(undefined)
