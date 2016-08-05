@@ -123,11 +123,11 @@ function getYear(sheet, indexes) {
 */
 function mapRole(role) {
 	var splitRole = role.split(' ')
-	var mappedRole = ''
+	var mappedRole
 	if(splitRole[0] == 'Senior' || splitRole[0] == 'Associate') {
 		var temp = splitRole[0]
-		splitRole = splitRole.shift()
-		splitRole = Array.prototype.join.call(splitRole, ' ')
+		splitRole.shift()
+		splitRole = Array.prototype.join.call(splitRole, '')
 		mappedRole = splitRole + ', ' + temp
 	} else {
 		mappedRole = role
