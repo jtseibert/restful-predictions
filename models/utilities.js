@@ -92,7 +92,7 @@ function purgeSalesPipeline_DB(callback){
 				console.log(err)
 			if(success)
 				console.log(success)
-			console.log(today)
+			console.log(today.format("MM/DD/YYYY"))
 			done() 
 		})
 	})
