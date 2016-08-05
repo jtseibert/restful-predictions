@@ -39,6 +39,7 @@ var parseExcelSheet = function(b64String, callback) {
 	} else {
 		var sheetData = {}
 		var colEnd = getColumnLimit(sheet, indexes.bottomRow, indexes.dataColStart, 3)
+		var year = getYear(sheet, indexes)
 		//var initialDate = getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w')
 		// Iterate over the roles column until subtotal is reached
 		//	* For each role, grab each estimated hour for each week date
@@ -51,7 +52,7 @@ var parseExcelSheet = function(b64String, callback) {
 				}
 				sheetData[role][indexes.dataRowStart] = {}
 				for(var i = indexes.dataColStart; i < colEnd; i++) {
-					var date = moment(new Date(getCellValue(sheet, indexes.topRow, i, 'w')))
+					var date = moment(new Date(getCellValue(sheet, indexes.topRow, i, 'w') + '/' + year))
 							   .format('MM/DD/YYYY')
 					if(date != '') {
 						var hours = getCellValue(sheet, indexes.dataRowStart, i, 'v')
@@ -82,6 +83,30 @@ function getCellValue(sheet, row, col, type) {
 	} else {
 		return ''
 	}
+}
+
+/**
+* @function getYear
+* @desc Determines year from current month and opportunity start month.
+Assumes forecast will not be more than 1 year out.
+* @param {worksheet} sheet - xlsx sheet object
+* @param indexes - JSON formatted object of numeric indexes of key rows/cols
+*/
+function getYear(sheet, indexes) {
+	var opportunityDate = getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w')
+	var opportunityMonth = startDate.split('/')[0]
+	var opportunityYear
+
+	var today = new Date()
+	var currentMonth = today.getMonth()
+	var currentYear = today.getYear()
+	if(currentMonth - startMonth < 0) {
+		opportunityYear = currentYear
+	} else {
+		opportunityYear = currentYear + 1
+	}
+
+	return opportunityYear
 }
 
 /**
