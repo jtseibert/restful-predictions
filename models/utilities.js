@@ -86,17 +86,17 @@ function getOpportunities_DB(callback){
 function purgeSalesPipeline_DB(callback){
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		if (err) return process.nextTick(function(){callback(err)})
-		var today = moment()
-		client.query("DELETE FROM sales_pipeline WHERE protected=FALSE OR start_date<"+today.format("MM/DD/YYYY"), function(err, success){
+		var today = moment().format("MM/DD/YYYY")
+		client.query("DELETE FROM sales_pipeline WHERE protected=FALSE OR start_date<"+today, function(err, success){
 			if(err)
 				console.log(err)
 			if(success)
 				console.log(success)
-			console.log(today.format("MM/DD/YYYY"))
+			console.log(today instanceof String)
 			done() 
 		})
 	})
-}
+
 
 
 module.exports.getOpportunities_DB 			= getOpportunities_DB
