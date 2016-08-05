@@ -45,24 +45,15 @@ function updateOpportunity(opportunityData, callback) {
 
 	async.eachOf(sheetData, function insertRole(role, roleKey) {
 		for(var number in role) {
-			for(var week in role[number]) {
-				console.log(roleKey + ' ' + number + ' : ' + week + ' : ' + role[number][week])
-			}
+			//for(var week in role[number]) {
+			//	console.log(roleKey + ' ' + number + ' : ' + week + ' : ' + role[number][week])
+			//}
+			utilities.query(
+				"INSERT INTO sales_pipeline(opportunity, role, week_allocations) values($1, $2, $3)",
+				[opportunityName, roleKey, role[number]],
+				function(results) {}
+			)
 		}
-
-
-
-
-
-		
-
-
-
-
-
-
-	
-
 	}, 
 	callback('update successful'))	
 }
