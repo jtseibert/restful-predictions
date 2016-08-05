@@ -282,6 +282,8 @@ router.route('/importProjectSize')
 			//check if undefned
 			if(sheetData != undefined)
 				console.log(sheetData)
+			else 
+				console.log('not valid sheet')
 			res.send({message: "Success!"})
 		})
 	})

@@ -40,7 +40,7 @@ var parseExcelSheet = function(b64String, callback) {
 		var sheetData = {}
 		var colEnd = getColumnLimit(sheet, indexes.bottomRow, indexes.dataColStart, 3)
 		var year = getYear(sheet, indexes)
-		
+
 		// Iterate over the roles column until subtotal is reached
 		//	* For each role, grab each estimated hour for each week date
 		//  * If a role, date, or hour is empty, do nothing
@@ -183,7 +183,7 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 	for(var test in tests) {
 		isValid = isValid && tests[test]
 	}
-
+	console.log(isValid)
 	return isValid
 }
 
