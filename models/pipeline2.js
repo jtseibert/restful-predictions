@@ -29,7 +29,7 @@ function queryPipeline(accessToken, path, callback) {
 			record.Amount,
 			record.ExpectedRevenue,
 			moment(new Date(record.CloseDate)).format("MM/DD/YYYY"),
-			moment(new Date(record.closeDate)).get(6).format("MM/DD/YYYY"),
+			moment(new Date(record.closeDate)).day(6).format("MM/DD/YYYY"),
 			record.Probability,
 			moment(new Date(record.CreatedDate)).format("MM/DD/YYYY"),
 			record.Account.Name

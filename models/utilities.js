@@ -186,7 +186,7 @@ function assignRoles(row, projectSize, projectSizes, indexes){
 // Should eventually turn this into moment
 function calculateStartDate(closeDate, dateIncrement){
 	var date = new Date(closeDate)
-	var returnDate = getSaturday(new Date(date.setDate(date.getDate() + dateIncrement)))
+	var returnDate = moment(new Date(date.setDate(date.getDate() + dateIncrement))).day(6).format("MM/DD/YYYY")
 	returnDate = JSON.stringify(returnDate).split('T')[0].split('-')
 	return returnDate[1]+'/'+returnDate[2]+'/'+returnDate[0].replace('"','')
 }
