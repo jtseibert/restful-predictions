@@ -98,9 +98,32 @@ function purgeSalesPipeline_DB(callback){
 	})
 }
 
+// Helper function to query any table in database
+var query = function query(query, callback) {
+	q = query
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		console.log("query is: " + q)
+		var query = client.query(q)
+		query.on("row", function (row, result) {
+			console.log(row)
+			result.addRow(row)
+		})
+		query.on("end", function (result) {
+			done()
+			process.nextTick(function() {callback(result.rows)})
+		})
+	})
+}
 
+module.exports.query = query
 
 module.exports.getOpportunities_DB 			= getOpportunities_DB
 module.exports.getOmittedOpportunities_DB 	= getOmittedOpportunities_DB
 module.exports.getDefaultProjectSizes_DB 	= getDefaultProjectSizes_DB
 module.exports.purgeSalesPipeline_DB		= purgeSalesPipeline_DB
+
+
+
+
+
+

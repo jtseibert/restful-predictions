@@ -16,7 +16,8 @@ var	allocation 		= require('./models/allocation3'),
 	parser          = require('./models/parser'),
 	pg 				= require('pg'),
 	pipeline 		= require('./models/pipeline2'),
-	ProjectSize 	= require('./models/projectSize')
+	ProjectSize 	= require('./models/projectSize'),
+	utilities		= require('./models/utilities'),
 	xlsxHandler   	= require('./models/xlsxHandler')
 require('colors')
 
@@ -32,23 +33,6 @@ pg.defaults.poolSize = 10
 
 var port = process.env.PORT || 5000,
 	cache = new Cache()
-
-// Helper function to query any table in database
-function query(query, callback) {
-	q = query
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		console.log("query is: " + q)
-		var query = client.query(q)
-		query.on("row", function (row, result) {
-			console.log(row)
-			result.addRow(row)
-		})
-		query.on("end", function (result) {
-			done()
-			process.nextTick(function() {callback(result.rows)})
-		})
-	})
-}
 
 // Setup oauth2 with connected app credentials
 var oauth2 = require('simple-oauth2'),
@@ -67,7 +51,7 @@ var oauth2 = oauth2(credentials)
 // Define routes
 router.route('/query')
 	.post(function(req, res) {
-		query(req.body.query, function(results) {
+		utilities.query(req.body.query, function(results) {
 			res.json(results)
 		})
 	})
