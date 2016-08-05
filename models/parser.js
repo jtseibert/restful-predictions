@@ -15,7 +15,6 @@ xlsx workbook object for parsing using the xlsx library.
 * @returns JSON format object of estimated forecasted hours for each role/week
 */
 var parseExcelSheet = function(b64String, callback) {
-	// Create xlsx objects and determine indexes
 	var workbook = xlsx.read(b64String, {type: 'base64'})	
 	var sheet 	 = workbook.Sheets[workbook.SheetNames[2]]
 	// Template indexes are hardcoded here
@@ -28,8 +27,8 @@ var parseExcelSheet = function(b64String, callback) {
 		topCol: 1,
 		bottomRow: 0,
 		bottomCol: 8,
-		flagRow: 3,
-		flagCol: 0
+		flagRow: 0,
+		flagCol: 4
 	}
 	var temp = getBottomRow(sheet, indexes)
 	indexes.bottomRow = temp
@@ -40,6 +39,7 @@ var parseExcelSheet = function(b64String, callback) {
 	} else {
 		var sheetData = {}
 		var colEnd = getColumnLimit(sheet, indexes.bottomRow, indexes.dataColStart, 3)
+		var year = getYear(sheet, indexes)
 		//var initialDate = getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w')
 		// Iterate over the roles column until subtotal is reached
 		//	* For each role, grab each estimated hour for each week date
@@ -47,14 +47,17 @@ var parseExcelSheet = function(b64String, callback) {
 		while(getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal') {
 			var role = getCellValue(sheet, indexes.dataRowStart, 1, 'v')
 			if(role != '') {
-				sheetData[role] = {}
+				if(!sheetData[role]) {
+					sheetData[role] = {}
+				}
+				sheetData[role][indexes.dataRowStart] = {}
 				for(var i = indexes.dataColStart; i < colEnd; i++) {
-					var date = moment(new Date(getCellValue(sheet, indexes.topRow, i, 'w')))
+					var date = moment(new Date(getCellValue(sheet, indexes.topRow, i, 'w') + '/' + year))
 							   .format('MM/DD/YYYY')
 					if(date != '') {
 						var hours = getCellValue(sheet, indexes.dataRowStart, i, 'v')
 						if(hours != '') {
-							sheetData[role][date] = hours
+							sheetData[role][indexes.dataRowStart][date] = hours
 						}
 					}
 				}
@@ -80,6 +83,33 @@ function getCellValue(sheet, row, col, type) {
 	} else {
 		return ''
 	}
+}
+
+/**
+* @function getYear
+* @desc Determines year from current month and opportunity start month.
+Assumes forecast will not be more than 1 year out.
+* @param {worksheet} sheet - xlsx sheet object
+* @param indexes - JSON formatted object of numeric indexes of key rows/cols
+*/
+function getYear(sheet, indexes) {
+	var opportunityDate = getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w')
+	var opportunityMonth = opportunityDate.split('/')[0]
+	var opportunityYear
+
+	var today = new Date()
+	var currentMonth = today.getMonth()
+	var currentYear = today.getFullYear()
+	console.log('cur yr is ' + currentYear)
+	console.log('cur month is ' + currentMonth)
+	console.log('op motnh is ' + opportunityMonth)
+	if(currentMonth - opportunityMonth < 0) {
+		opportunityYear = currentYear
+	} else {
+		opportunityYear = currentYear + 1
+	}
+	console.log('op year is ' + opportunityYear)
+	return opportunityYear
 }
 
 /**
@@ -114,7 +144,7 @@ function getColumnLimit(sheet, bottomRow, dataColStart, n) {
 }
 
 /**
-* @function getbottomRow
+* @function getBottomRow
 * @desc Finds numeric row index of cell with value 'Subtotal'.
 * @param {worksheet} sheet - xlsx worksheet object
 * @param indexes - JSON formatted object of numeric indexes of key rows/cols
