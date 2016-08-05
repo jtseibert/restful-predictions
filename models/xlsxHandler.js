@@ -4,6 +4,7 @@
 */
 
 var utilities = require('./utilities')
+var async     = require('async')
 /**
 * @function updateOpportunity
 * @desc Update the opportunity stored in Heroku database.
@@ -22,22 +23,44 @@ var updateDatabase = function(opportunityData, callback) {
 			updateOpportunity(opportunityData, function(status) {
 				callback({message: status})
 			})
-			//not in db, ping SF and populate the sales_pipeline
+			//not in db, and populate the sales_pipeline
 		}
 	})
 }
 
 /**
 * @function updateOpportunity
-* @desc Updates sales_pipeline database with opportunity data from SF and xlsx.
+* @desc Updates sales_pipeline database with opportunity xlsx data.
 * @param opportunityData - JSON format object of xlsx data and opportunity name
 * @param callback - callback function to handle status
 */
 function updateOpportunity(opportunityData, callback) {
 	var sheetData = opportunityData.sheetData
 	var opportunityName = opportunityData.opportunityName
+	
 
-	callback('updateopp sucess')
+	//for every role
+		//for every number of role
+			//insert into db opportunity, role, {week1: number, week2: number}
+
+	async.eachOf(sheetData, function insertRow(role, roleKey) {
+		console.log('role ' + roleKey)
+
+
+
+
+
+		
+
+
+
+
+
+
+	
+
+	}, 
+	function() {callback('update successful')})		
 }
 
 /*
