@@ -40,7 +40,7 @@ function isInDatabase(opportunityName) {
 	utilities.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[opportunityName],
-		function(results) {return results}
+		function(results) {return results.exists}
 	)
 }
 
