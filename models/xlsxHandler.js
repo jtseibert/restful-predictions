@@ -37,25 +37,16 @@ var updateDatabase = function(opportunityData, callback) {
 function updateOpportunity(opportunityData, callback) {
 	var sheetData = opportunityData.sheetData
 	var opportunityName = opportunityData.opportunityName
-	
-
-	//for every role
-		//for every number of role
-			//insert into db opportunity, role, {week1: number, week2: number}
-
 	async.eachOf(sheetData, function insertRole(role, roleKey) {
 		for(var number in role) {
-			//for(var week in role[number]) {
-			//	console.log(roleKey + ' ' + number + ' : ' + week + ' : ' + role[number][week])
-			//}
 			utilities.query(
-				"INSERT INTO sales_pipeline(opportunity, role, week_allocations) values($1, $2, $3)",
-				[opportunityName, roleKey, role[number]],
+				"INSERT INTO sales_pipeline(opportunity, role, week_allocations, protected) values($1, $2, $3, $4)",
+				[opportunityName, roleKey, role[number], true],
 				function(results) {}
 			)
 		}
 	}, 
-	callback('update successful'))	
+	callback('Update Finished'))	
 }
 
 /*
