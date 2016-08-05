@@ -266,7 +266,7 @@ router.route('/importProjectSize')
 		parser.parseExcelSheet(req.body, function(opportunityData) {
 			if(opportunityData != undefined) {
 				xlsxHandler.updateDatabase(opportunityData, function(status) {
-					console.log("outermost status is " + JSON.stringify(status))
+					console.log("Status is: " + JSON.stringify(status))
 					res.json({message: status})
 				})
 			}		

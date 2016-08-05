@@ -23,7 +23,6 @@ var updateDatabase = function(opportunityData, callback) {
 			updateOpportunity(opportunityData, function(status) {
 				callback({message: status})
 			})
-			//not in db, and populate the sales_pipeline
 		}
 	})
 }
@@ -45,7 +44,7 @@ function updateOpportunity(opportunityData, callback) {
 				function(results) {}
 			)
 		}
-	}, 
+	},
 	callback('Update Finished'))	
 }
 
