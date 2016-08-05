@@ -161,20 +161,12 @@ function assignRoles(row, projectSize, projectSizes, indexes, callback){
 	roles 			= projectSizes[projectSize].roles_allocations,
 	daysInWeek 		= 7
 
-	// for (var role in roles) {
 	async.eachOf(roles, function(role, roleKey, callback){
-		//for(var i=0; i<roles[role].duration; i++) {
 		async.times(role.duration, function(n, next){
-			tempRow = []
-			//for (var col in row) {
-			async.eachSeries(row, function(field, callback){
-				tempRow.push(field)
-				process.nextTick(callback)
-			}, function(){
-				tempRow.push(roleKey,role.allocation,calculateStartDate(row[indexes.StartDate],(parseInt(role.offset)+n)*daysInWeek))
-				returnArray.push(tempRow)
-				next()
-			})
+			tempRow = row
+			tempRow.push(roleKey,role.allocation,calculateStartDate(row[indexes.StartDate],(parseInt(role.offset)+n)*daysInWeek))
+			returnArray.push(tempRow)
+			next()
 		}, function(){ process.nextTick(callback) })
 	}, function(){
 			process.nextTick(function() {callback(returnArray)})
