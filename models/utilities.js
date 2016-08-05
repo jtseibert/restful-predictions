@@ -135,8 +135,11 @@ function assignRoleAllocations(row, defaultProjectSizes, indexes){
 
 	console.log(amount)
 
-	projectSize = getProjectSize(amount, defaultProjectSizes)
-	return assignRoles(row, projectSize, defaultProjectSizes, indexes)
+	getProjectSize(amount, defaultProjectSizes, function(projectSize){
+		assignRoles(row, projectSize, defaultProjectSizes, indexes, function(){
+
+		})
+	})
 }
 
 function applyWeekAllocations(opportunity, rowsToPush){
@@ -144,7 +147,7 @@ function applyWeekAllocations(opportunity, rowsToPush){
 	return rowsToPush
 }
 
-function getProjectSize(amount, defaultProjectSizes){
+function getProjectSize(amount, defaultProjectSizes, callback){
 	//amount = amount.replace('USD ', '').replace(/,/g,'')
 	var projectSizeFound = false,
 		projectSize
@@ -156,14 +159,12 @@ function getProjectSize(amount, defaultProjectSizes){
 			process.nextTick(callback)
 		} else { process.nextTick(callback) }
 	}, function(){
-		return projectSize
+		process.nextTick(function() {callback(projectSize)})
 	})
 }
 
 function assignRoles(row, projectSize, projectSizes, indexes){
 	
-	console.log('projectSize: '+projectSize+'\tprojectSizes: '+JSON.stringify(projectSizes))
-
 	var returnArray = [],
 	tempRow 		= [],
 	roles 			= projectSizes[projectSize].roles_allocations,
@@ -171,7 +172,9 @@ function assignRoles(row, projectSize, projectSizes, indexes){
 
 	// for (var role in roles) {
 	async.each(roles, function(role, callback){
-		for(var i=0; i<roles[role].duration; i++) {
+		//for(var i=0; i<roles[role].duration; i++) {
+		async.times()
+			async.times()
 			tempRow = []
 			for (var col in row) {
 				tempRow.push(row[col])
@@ -179,9 +182,11 @@ function assignRoles(row, projectSize, projectSizes, indexes){
 			tempRow.push(role,roles[role].allocation,calculateStartDate(row[indexes.StartDate],(parseInt(roles[role].offset)+i)*daysInWeek))
 			returnArray.push(tempRow)
 		}
+	}, function(){
+			process.nextTick(function() {callback(returnArray)})
 	})
-	return returnArray
 }
+
 
 // Should eventually turn this into moment
 function calculateStartDate(closeDate, dateIncrement){
