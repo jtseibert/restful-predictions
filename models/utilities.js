@@ -139,9 +139,19 @@ function assignRoleAllocations(row, defaultProjectSizes, indexes, callback){
 	})
 }
 
-function applyWeekAllocations(opportunity, rowsToPush){
+// Needs to take info from sales_pipeline table in DB and put into arrays for sheets
+function applyWeekAllocations(opportunity,indexes,callback){
+	var returnData = []
 
-	return rowsToPush
+	async.eachOf(opportunity[indexes.WeekAllocations], function(hours, week, callback){
+		var tempRow = opportunity
+		tempRow[indexes.WeekAllocations] = week
+		tempRow.push(hours)
+		returnData.push(tempRow)
+		process.nextTick(callback)
+	}, function(){ 
+		process.nextTick(function() {callback(returnData)})
+	})
 }
 
 function getProjectSize(amount, defaultProjectSizes, callback){
@@ -154,20 +164,24 @@ function getProjectSize(amount, defaultProjectSizes, callback){
 	})
 }
 
+// Needs to put info from project_sizes table in DB into info for sales_pipeline table in DB
 function assignRoles(row, projectSize, projectSizes, indexes, callback){
-	
 	var returnArray = [],
-	tempRow 		= [],
-	roles 			= projectSizes[projectSize].roles_allocations,
-	daysInWeek 		= 7
+		roles 		= projectSizes[projectSize].roles_allocations,
+		daysInWeek 	= 7
 
 	async.eachOf(roles, function(role, roleKey, callback){
+		var tempRow = row,
+				week_allocations = {}
 		async.times(role.duration, function(n, next){
-			tempRow = row
-			tempRow.push(roleKey,role.allocation,calculateStartDate(row[indexes.StartDate],(parseInt(role.offset)+n)*daysInWeek))
-			returnArray.push(tempRow)
+			var curWeek = calculateStartDate(row[indexes.StartDate],(parseInt(role.offset)+n)*daysInWeek)
+			week_allocations[curWeek] = role.allocation
 			next()
-		}, function(){ process.nextTick(callback) })
+		}, function(){ 
+			tempRow.push(roleKey,week_allocations)
+			returnArray.push(tempRow)
+			process.nextTick(callback)
+		})
 	}, function(){
 			process.nextTick(function() {callback(returnArray)})
 	})
