@@ -37,8 +37,8 @@ function queryPipeline(accessToken, path, callback) {
     	pipelineData.push(recordData)
 		})
 	.on("end", function(query) {
-		console.log("total in database : " + query.totalSize);
-		console.log("total fetched : " + query.totalFetched);
+		//console.log("total in database : " + query.totalSize);
+		//console.log("total fetched : " + query.totalFetched);
 		process.nextTick(function() {callback(pipelineData)})
 		})
 	.on("error", function(err) {

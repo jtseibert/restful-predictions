@@ -100,7 +100,7 @@ var query = function query(query, values, callback) {
 	q = query
 	v = values
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		console.log("query is: " + q + 'with values' + values)
+		//console.log("query is: " + q + 'with values' + values)
 		var query
 		if(v != null) {
 			query = client.query(q, v, function(error) {
@@ -118,7 +118,7 @@ var query = function query(query, values, callback) {
 			})
 		}
 		query.on("row", function (row, result) {
-			console.log(row)
+			//console.log(row)
 			result.addRow(row)
 		})
 		query.on("end", function (result) {
