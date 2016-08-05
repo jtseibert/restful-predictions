@@ -39,7 +39,7 @@ function updateOpportunity(opportunityData, callback) {
 	async.eachOf(sheetData, function insertRole(role, roleKey) {
 		for(var number in role) {
 			utilities.query(
-				"INSERT INTO sales_pipeline(opportunity, role, week_allocations, protected) values($1, $2, $3, $4)",
+				"INSERT INTO sales_pipeline(opportunity, role, week_allocations, protected) values($1, $2, $3, $4) ON CONFLICT (role) DO NOTHING",
 				[opportunityName, roleKey, role[number], true],
 				function(results) {}
 			)
