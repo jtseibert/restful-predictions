@@ -196,7 +196,7 @@ module.exports.getOmittedOpportunities_DB 	= getOmittedOpportunities_DB
 module.exports.getDefaultProjectSizes_DB 	= getDefaultProjectSizes_DB
 module.exports.purgeSalesPipeline_DB		= purgeSalesPipeline_DB
 module.exports.applyWeekAllocations			= applyWeekAllocations
-module.exports.asignRoleAllocations			= asignRoleAllocations
+module.exports.assignRoleAllocations		= assignRoleAllocations
 
 
 
