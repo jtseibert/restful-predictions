@@ -44,9 +44,10 @@ function updateOpportunity(opportunityData, callback) {
 			//insert into db opportunity, role, {week1: number, week2: number}
 
 	async.eachOf(sheetData, function insertRole(role, roleKey) {
-		var roleData = role[roleKey]
-		for(var week in roleData) {
-			console.log(roleKey + ' ' + week + ' : ' + roleData[week])
+		for(var number in role) {
+			for(var week in role[number]) {
+				console.log(roleKey + ' ' + number + ' : ' + week + ' : ' + role[number][week])
+			}
 		}
 
 
