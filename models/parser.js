@@ -64,8 +64,9 @@ var parseExcelSheet = function(body, callback) {
 			}
 			indexes.dataRowStart += 1
 		}
-		var opportunityData = {sheetData: sheetData,
-				   opportunityName: body.opportunityName
+		var opportunityData = {
+			sheetData: sheetData,
+			opportunityName: body.opportunityName
 		}
 		callback(opportunityData)
 	}
