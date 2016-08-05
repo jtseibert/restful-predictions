@@ -148,11 +148,9 @@ function applyWeekAllocations(opportunity, rowsToPush){
 function getProjectSize(amount, defaultProjectSizes, callback){
 	async.eachOfSeries(defaultProjectSizes, function(projectSize, key, callback){
 		if(projectSize.priceHigh > amount){
-			console.log('assigning key: '+key)
 			process.nextTick(function() {callback(key)})
 		} else { process.nextTick(callback) }
 	}, function(result){
-		console.log('projectSize returned: '+result+'\tamount: '+amount)
 		process.nextTick(function() {callback(result)})
 	})
 }
