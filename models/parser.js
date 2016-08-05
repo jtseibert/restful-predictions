@@ -99,8 +99,10 @@ function getYear(sheet, indexes) {
 
 	var today = new Date()
 	var currentMonth = today.getMonth()
-	var currentYear = today.getYear()
+	var currentYear = today.getFullYear()
 	console.log('cur yr is ' + currentYear)
+	console.log('cur month is ' + currentMonth)
+	console.log('op motnh is ' + opportunityMonth)
 	if(currentMonth - opportunityMonth < 0) {
 		opportunityYear = currentYear
 	} else {
@@ -142,7 +144,7 @@ function getColumnLimit(sheet, bottomRow, dataColStart, n) {
 }
 
 /**
-* @function getbottomRow
+* @function getBottomRow
 * @desc Finds numeric row index of cell with value 'Subtotal'.
 * @param {worksheet} sheet - xlsx worksheet object
 * @param indexes - JSON formatted object of numeric indexes of key rows/cols
