@@ -122,15 +122,29 @@ function getYear(sheet, indexes) {
 * @returns {string} mappedRole - new or same role
 */
 function mapRole(role) {
-	var splitRole = role.split(' ')
-	var mappedRole
+	// Check for trailing and leading whitespace
+	var mappedRole = role.trim()
+	// Check for * in the last character
+	if(mappedRole.slice(-1) == '*') {
+		mappedRole = mappedRole.substring(0, mappedRole.length - 1)
+	}
+
+	// Check for Senior or Associate prefix
+	var splitRole = mappedRole.split(' ')
 	if(splitRole[0] == 'Senior' || splitRole[0] == 'Associate') {
 		var temp = splitRole[0]
 		splitRole.shift()
 		splitRole = Array.prototype.join.call(splitRole, ' ')
 		mappedRole = splitRole + ', ' + temp
-	} else {
-		mappedRole = role
+	}
+
+	// Check for QA
+	splitRole = mappedRole.split(' ')
+	if(splitRole[0] == 'QA') {
+		splitRole.shift()
+		splitRole = Array.prototype.join.call(splitRole, ' ')
+		mappedRole = 'Quality Assurance ' + splitRole
+
 	}
 	return mappedRole
 }
