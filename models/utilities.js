@@ -151,6 +151,7 @@ function getProjectSize(amount, defaultProjectSizes, callback){
 		projectSize
 
 	async.eachOfSeries(defaultProjectSizes, function(projectSize, key, callback){
+		console.log(projectSize.priceHigh)
 		if(projectSize.priceHigh > amount && projectSizeFound == false){
 			projectSize = key
 			projectSizeFound = true
