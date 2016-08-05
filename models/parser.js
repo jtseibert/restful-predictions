@@ -40,7 +40,7 @@ var parseExcelSheet = function(b64String, callback) {
 		var sheetData = {}
 		var colEnd = getColumnLimit(sheet, indexes.bottomRow, indexes.dataColStart, 3)
 		var year = getYear(sheet, indexes)
-		//var initialDate = getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w')
+		
 		// Iterate over the roles column until subtotal is reached
 		//	* For each role, grab each estimated hour for each week date
 		//  * If a role, date, or hour is empty, do nothing
@@ -100,15 +100,12 @@ function getYear(sheet, indexes) {
 	var today = new Date()
 	var currentMonth = today.getMonth()
 	var currentYear = today.getFullYear()
-	console.log('cur yr is ' + currentYear)
-	console.log('cur month is ' + currentMonth)
-	console.log('op motnh is ' + opportunityMonth)
+
 	if(currentMonth - opportunityMonth < 0) {
 		opportunityYear = currentYear
 	} else {
 		opportunityYear = currentYear + 1
 	}
-	console.log('op year is ' + opportunityYear)
 	return opportunityYear
 }
 
@@ -172,8 +169,26 @@ function getBottomRow(sheet, indexes) {
 * @returns true/false sheet valid status
 */
 function sheetIsValidFormat(workbook, sheet, indexes) {
-	var valid = true
-	// Validate sheet at index 2 is 'Estimate'
+	var isValid = true
+	var tests = {
+		0: (workbook.Props.SheetNames[2] == 'Estimate'),
+		1: (getCellValue(sheet, indexes.topRow, indexes.topCol, 'v') == 'Role*'),
+		2: (getCellValue(sheet, indexes.topRow, indexes.topCol + 1, 'v') == 'Responsibilities'),
+		3: (getCellValue(sheet, indexes.topRow, indexes.dataColStart - 1, 'v') == 'Projected Non-Billable Revenue'),
+		4: (getCellValue(sheet, indexes.bottomRow + 1, indexes.bottomCol, 'v') == 'Total Cost'),
+		5: (getCellValue(sheet, indexes.bottomRow, indexes.topCol, 'v') == 'Subtotal'),
+		6: (getCellValue(sheet, indexes.flagRow, indexes.flagCol, 'v').toUpperCase() != 'DO NOT UPDATE')
+	}
+
+	for(var test in tests) {
+		isValid = isValid && tests[test]
+	}
+
+	return isValid
+}
+
+
+	/* Validate sheet at index 2 is 'Estimate'
 	if(workbook.Props.SheetNames[2] != 'Estimate') {
 		console.log('invalid tab check')
 		valid = false
@@ -188,6 +203,11 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 		console.log('invalid responsibilities check')
 		valid = false
 	}
+	if(getCellValue(sheet, indexes.topRow, indexes.dataColStart - 1, 'v') != 'Projected Non-Billable Revenue') {
+
+	}
+
+
 
 	// Check bottom row label
 	if(getCellValue(sheet, indexes.bottomRow + 1, indexes.bottomCol, 'v') != 'Total Cost') {
@@ -205,9 +225,7 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 	if(getCellValue(sheet, indexes.flagRow, indexes.flagCol, 'v').toUpperCase() == 'DO NOT UPDATE') {
 		console.log('flag set do no update')
 		valid = false
-	}
-	return valid
-}
+	}*/
 
 module.exports.parseExcelSheet = parseExcelSheet
 
