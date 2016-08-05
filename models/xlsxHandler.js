@@ -14,13 +14,13 @@ var updateDatabase = function(opportunityData, callback) {
 	databaseCheck(opportunityData.opportunityName, function(inDatabase) {
 		if(inDatabase) {
 			deleteOpportunity(opportunityData.opportunityName, function() {
-				updateOpportunity(opportunityData, function() {
-					callback({message: 'db delete success'})
+				updateOpportunity(opportunityData, function(status) {
+					callback({message: status})
 				})
 			})
 		} else {
-			updateOpportunity(opportunityData, function() {
-				callback({message: 'db no delete success'})
+			updateOpportunity(opportunityData, function(status) {
+				callback({message: status})
 			})
 			//not in db, ping SF and populate the sales_pipeline
 		}
@@ -28,17 +28,16 @@ var updateDatabase = function(opportunityData, callback) {
 }
 
 /**
-
-
-
-
+* @function updateOpportunity
+* @desc Updates sales_pipeline database with opportunity data from SF and xlsx.
+* @param opportunityData - JSON format object of xlsx data and opportunity name
+* @param callback - callback function to handle status
 */
 function updateOpportunity(opportunityData, callback) {
 	var sheetData = opportunityData.sheetData
 	var opportunityName = opportunityData.opportunityName
 
-	console.log('got into updateDatabase')
-	callback()
+	callback('updateopp sucess')
 }
 
 /*
