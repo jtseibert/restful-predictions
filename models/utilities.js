@@ -161,6 +161,9 @@ function getProjectSize(amount, defaultProjectSizes){
 }
 
 function assignRoles(row, projectSize, projectSizes, indexes){
+	
+	console.log('projectSize: '+projectSize+'\tprojectSizes: '+JSON.stringify(projectSizes))
+
 	var returnArray = [],
 	tempRow 		= [],
 	roles 			= projectSizes[projectSize].roles_allocations,
