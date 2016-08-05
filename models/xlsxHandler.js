@@ -11,13 +11,15 @@ var utilities = require('./utilities')
 * @param callback - callback to handle status
 */
 var updateOpportunity = function(opportunityData, callback) {
-	if(isInDatabase(opportunityData.opportunityName)) {
-		utilities.query(
+	isInDatabase(opportunityData.opportunityName, function(inDatabase) {
+		if(inDatabase) {
+			utilities.query(
 			"select stage from sales_pipeline where opportunity=$1", 
 			[opportunityData.opportunityName],
 			function(results) {console.log(results)}
-		)
-	}
+			)
+		}
+	})
 
 
 
@@ -36,12 +38,11 @@ var updateOpportunity = function(opportunityData, callback) {
 * @param {string} opportunityName - name of opportunity to check
 * @returns true or false
 */
-function isInDatabase(opportunityName) {
+function isInDatabase(opportunityName, callback) {
 	utilities.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[opportunityName],
-		function(results) {console.log( results)
-			return results.exists}
+		function(results) {callback(results[0].exists)}
 	)
 }
 
