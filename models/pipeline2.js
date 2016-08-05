@@ -12,16 +12,6 @@ function queryPipeline(accessToken, path, callback) {
 	// Set up the sheet headers
 	var pipelineData = [[]]
 
-	// 'Stage',
-	// 'Name',
-	// 'Amount',
-	// 'Expected Revenue',
-	// 'Close Date',
-	// 'Start Date',
-	// 'Probability',
-	// 'Created Date',
-	// 'Account Name'
-
 	// Connect to SF
 	var conn = new sf.Connection({
 	  instanceUrl: "https://" + path,
@@ -142,18 +132,25 @@ function applyDB(pipelineData, callback){
 						'WeekDate':			11,
 						'EstimatedHours':	12
 					},
-			returnData = []
+			returnData = [[
+							'Opportunity',
+							'Stage',
+							'Amount',
+							'Expected Revenue',
+							'Close Date',
+							'Start Date',
+							'Probability',
+							'Created Date',
+							'Account Name',
+							'Role',
+							'Week',
+							'EstimatedHours'
+						]]
 		
-		var salesPipeline_DB = utils.query("SELECT * FROM sales_pipeline")
+		var salesPipeline_DB = utils.query("SELECT opportunity,stage,amount,expected_revenue,close_date,start_date,probability,created_date,account_name,role,week_allocations FROM sales_pipeline")
 		async.each(salesPipeline_DB, function(opportunity, callback){
-			var tempRow = []
-			async.eachSeries(opportunity, function(field, callback){
-				tempRow.push(field)
-				process.nextTick(callback)
-			}, function(){
-				returnData.push(tempRow)
-				process.nextTick(callback)
-			})
+			var rowsToPush = [[]]
+			rowsToPush = utils.applyWeekAllocations(opportunity, rowsToPush)
 		}, function(){
 			process.nextTick(function(){ callback(null, returnData) })
 		})
