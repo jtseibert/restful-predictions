@@ -94,13 +94,13 @@ Assumes forecast will not be more than 1 year out.
 */
 function getYear(sheet, indexes) {
 	var opportunityDate = getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w')
-	var opportunityMonth = startDate.split('/')[0]
+	var opportunityMonth = opportunityDate.split('/')[0]
 	var opportunityYear
 
 	var today = new Date()
 	var currentMonth = today.getMonth()
 	var currentYear = today.getYear()
-	if(currentMonth - startMonth < 0) {
+	if(currentMonth - opportunityMonth < 0) {
 		opportunityYear = currentYear
 	} else {
 		opportunityYear = currentYear + 1
