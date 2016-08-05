@@ -5,7 +5,7 @@ var moment 	= require('moment'),
 pg.defaults.ssl = true
 pg.defaults.poolSize = 10
 
-function getDefaultProjectSizes(callback){
+function getDefaultProjectSizes_DB(callback){
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 			if (err) return process.nextTick(function(){callback(err)})
 		var defaultProjectSizes,
@@ -30,7 +30,7 @@ function getDefaultProjectSizes(callback){
 	})
 }
 
-function getOmittedOpportunities(callback){
+function getOmittedOpportunities_DB(callback){
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		if (err) return process.nextTick(function(){callback(err)})
 		var omittedOpportunities,
@@ -51,7 +51,7 @@ function getOmittedOpportunities(callback){
 	})
 }
 
-function getOpportunities(callback){
+function getOpportunities_DB(callback){
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		if (err) return process.nextTick(function(){callback(err)})
 		var opportunities,
@@ -83,7 +83,17 @@ function getOpportunities(callback){
 	})
 }
 
+function purgeSalesPipeline_DB(callback){
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		if (err) return process.nextTick(function(){callback(err)})
+		var today = moment(new Date()).format("L")
+		console.log(today)
+		//client.query("DELETE FROM sales_pipeline WHERE protected=false OR start_date<"+today, function(){ done() })
+	})
+}
 
-module.exports.getOpportunities 		= getOpportunities
-module.exports.getOmittedOpportunities 	= getOmittedOpportunities
-module.exports.getDefaultProjectSizes 	= getDefaultProjectSizes
+
+module.exports.getOpportunities_DB 			= getOpportunities_DB
+module.exports.getOmittedOpportunities_DB 	= getOmittedOpportunities_DB
+module.exports.getDefaultProjectSizes_DB 	= getDefaultProjectSizes_DB
+module.exports.purgeSalesPipeline_DB		= purgeSalesPipeline_DB

@@ -68,23 +68,33 @@ function applyDB(pipelineData, callback){
 
 
 	// Sets omittedOpportunities, opportunities, and defaultProjectSizes to the values stored in their respective tables in the DB
-	function getFromDB(callback){
+	function prepareDB(callback){
 		var DB = {}
 
+		// Add query to get SalesPipeline from SF
+
+		// Delete all non flagged from SP in DB
+		// Delete old flagged from SP in DB
+
 		async.parallel({
-			'one': 		utils.getDefaultProjectSizes,
-			'two': 		utils.getOmittedOpportunities,
-			'three': 	utils.getOpportunities
+			'one': 		utils.getDefaultProjectSizes_DB,
+			'two': 		utils.getOmittedOpportunities_DB,
+			'three': 	utils.purgeSalesPipeline_DB
 		}, function(err, results){
-			DB.defaultProjectSizes	= results.one
-			DB.omittedOpportunities	= results.two
-			DB.opportunities	= results.three
+			// DB.defaultProjectSizes	= results.one
+			// DB.omittedOpportunities	= results.two
+			// DB.opportunities	= results.three
 			process.nextTick(function(){ callback(null, DB) })
 		})		
 	}
 
-	// Looks at all opportunities in pipelineData and updates them if we have any persisted data for that opportunity in the DB
-	function updateCurrentOpportunites(DB, callback){
+	// Insert query from SF into DB, on conflict do nothing
+	function updateDBTables(DB, callback){
+
+	}
+
+	// Get all data from SalesPipeline in DB and put into 2D array
+	function prepareReturnData(DB, callback){
 		var indexes = {'Stage':				0,
 						'Name':				1,
 						'Amount':			2,
@@ -97,40 +107,14 @@ function applyDB(pipelineData, callback){
 						'ProjectSize':		9,
 						'Role':				10,
 						'WeekDate':			11
-					},
-			updatedData = []
-
-		// async.each(pipelineData, function(opportunity, callback){
-		// 	currentOpportunity = opportunity[indexes.Name]
-
-		// 	if (!DB.omittedOpportunities[currentOpportunity]){ 
-		// 		if(!DB.opportunities[currentOpportunity]) {
-				
-		// 		} else{
-		// 			opportunity[indexes.Stage] = DB.opportunities[currentOpportunity].STAGE || opportunity[indexes.Stage]
-		// 			opportunity[indexes.Amount] = DB.opportunities[currentOpportunity].AMOUNT || opportunity[indexes.Amount]
-		// 			opportunity[indexes.ExpectedRevenue] = DB.opportunities[currentOpportunity].EXPECTED_AMOUNT || opportunity[ExpectedRevenue]
-		// 			opportunity[indexes.CloseDate] = moment(new Date(DB.opportunities[currentOpportunity].CLOSE_DATE)).format("MM/DD/YYYY") || opportunity[indexes.CloseDate]
-		// 			opportunity[indexes.StartDate] = moment(new Date(DB.opportunities[currentOpportunity].START_DATE)).format("MM/DD/YYYY") || opportunity[indexes.StartDate]
-		// 			opportunity[indexes.Probability] = DB.opportunities[currentOpportunity].PROBABILITY*100+"%" || opportunity[indexes.Probability]
-		// 			opportunity[indexes.CreatedDate] = moment(new Date(DB.opportunities[currentOpportunity].CREATED_DATE)).format("MM/DD/YYYY") || opportunity[indexes.CreatedDate]
-		// 			opportunity[indexes.AccountName] = DB.opportunities[currentOpportunity].ACCOUNT_NAME || opportunity[indexes.AccountName]
-		// 			opportunity[indexes.ProjectSize] = DB.opportunities[currentOpportunity].PROJECT_SIZE || generateDefaultProjectSize()
-		// 			delete DB.opportunities[currentOpportunity]
-		// 		}
-		// 	}
-		// })
-	}
-
-	// Adds any user added opportunities to pipelineData
-	function addNewOpportunities(pipelineData, DB, callback){
+					}
 
 	}
 
 	async.waterfall([
-		getFromDB,
-		updateCurrentOpportunites,
-		addNewOpportunities
+		prepareDB,
+		updateDBTables,
+		prepareReturnData
 	], function(error, result){
 		if (error)
 			throw error
