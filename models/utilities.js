@@ -166,7 +166,6 @@ function assignRoles(row, projectSize, projectSizes, indexes){
 	async.eachOf(roles, function(role, roleKey, callback){
 		//for(var i=0; i<roles[role].duration; i++) {
 		async.times(role.duration, function(n, next){
-			async.times()
 			tempRow = []
 			//for (var col in row) {
 			async.eachSeries(row, function(field, callback){
