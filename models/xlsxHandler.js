@@ -46,7 +46,6 @@ function updateOpportunity(opportunityData, callback) {
 			)
 		}, function(){ process.nextTick(callback) })
 	}, function() { 
-		console.log('Final callback')
 		process.nextTick(function(){ callback('Update Finished')})
 	})
 }
