@@ -100,12 +100,13 @@ function getYear(sheet, indexes) {
 	var today = new Date()
 	var currentMonth = today.getMonth()
 	var currentYear = today.getYear()
+	console.log('cur yr is ' + currentYear)
 	if(currentMonth - opportunityMonth < 0) {
 		opportunityYear = currentYear
 	} else {
 		opportunityYear = currentYear + 1
 	}
-
+	console.log('op year is ' + opportunityYear)
 	return opportunityYear
 }
 
