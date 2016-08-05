@@ -12,7 +12,11 @@ var utilities = require('./utilities')
 */
 var updateOpportunity = function(opportunityData, callback) {
 	if(isInDatabase(opportunityData.opportunityName)) {
-		console.log(utilities.query("select stage from sales_pipeline where opportunity=$1", [opportunityData.opportunityName]))
+		utilities.query(
+			"select stage from sales_pipeline where opportunity=$1", 
+			[opportunityData.opportunityName],
+			function(results) {console.log(results)}
+		)
 	}
 
 
@@ -33,7 +37,11 @@ var updateOpportunity = function(opportunityData, callback) {
 * @returns true or false
 */
 function isInDatabase(opportunityName) {
-	return utilities.query("SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)", [opportunityName])
+	utilities.query(
+		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
+		[opportunityName],
+		function(results) {return results}
+	)
 }
 
 module.exports.updateOpportunity = updateOpportunity
