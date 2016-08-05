@@ -87,7 +87,13 @@ function purgeSalesPipeline_DB(callback){
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		if (err) return process.nextTick(function(){callback(err)})
 		var today = moment(new Date()).format("L")
-		client.query("DELETE FROM sales_pipeline WHERE protected=FALSE OR start_date<"+today, function(){ done() })
+		client.query("DELETE FROM sales_pipeline WHERE protected=FALSE OR start_date<"+today, function(err, success){
+			if(err)
+				console.log(err)
+			if(success)
+				console.log(success)
+			done() 
+		})
 	})
 }
 
