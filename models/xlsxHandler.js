@@ -46,7 +46,7 @@ function updateOpportunity(opportunityData, callback) {
 		}
 		callback()
 	},
-	function() {callback('Update Finished')}
+	function() {callback('Update Finished')})
 }
 
 /*
