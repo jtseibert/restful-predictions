@@ -174,7 +174,7 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 		0: (workbook.Props.SheetNames[2] == 'Estimate'),
 		1: (getCellValue(sheet, indexes.topRow, indexes.topCol, 'v') == 'Role*'),
 		2: (getCellValue(sheet, indexes.topRow, indexes.topCol + 1, 'v') == 'Responsibilities'),
-		3: (getCellValue(sheet, indexes.topRow, indexes.dataColStart - 1, 'v') == 'Projected Non-Billable Revenue'),
+		3: (getCellValue(sheet, indexes.topRow, indexes.bottomCol, 'v') == 'Projected Non-Billable Revenue'),
 		4: (getCellValue(sheet, indexes.bottomRow + 1, indexes.bottomCol, 'v') == 'Total Cost'),
 		5: (getCellValue(sheet, indexes.bottomRow, indexes.topCol, 'v') == 'Subtotal'),
 		6: (getCellValue(sheet, indexes.flagRow, indexes.flagCol, 'v').toUpperCase() != 'DO NOT UPDATE')
@@ -183,49 +183,8 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 	for(var test in tests) {
 		isValid = isValid && tests[test]
 	}
-	console.log(isValid)
 	return isValid
 }
-
-
-	/* Validate sheet at index 2 is 'Estimate'
-	if(workbook.Props.SheetNames[2] != 'Estimate') {
-		console.log('invalid tab check')
-		valid = false
-	}
-
-	// Check top row headers
-	if(getCellValue(sheet, indexes.topRow, indexes.topCol, 'v') != 'Role*') {
-		console.log('invalid role check')
-		valid = false
-	}
-	if(getCellValue(sheet, indexes.topRow, indexes.topCol + 1, 'v') != 'Responsibilities') {
-		console.log('invalid responsibilities check')
-		valid = false
-	}
-	if(getCellValue(sheet, indexes.topRow, indexes.dataColStart - 1, 'v') != 'Projected Non-Billable Revenue') {
-
-	}
-
-
-
-	// Check bottom row label
-	if(getCellValue(sheet, indexes.bottomRow + 1, indexes.bottomCol, 'v') != 'Total Cost') {
-		console.log('invalid total cost check')
-		valid = false
-	}
-
-	// Verify subtotal cell
-	if(getCellValue(sheet, indexes.bottomRow, indexes.topCol, 'v') != 'Subtotal') {
-		console.log('invalid subtotal check')
-		valid = false
-	}
-
-	// Check if DO NOT UPDATE flag
-	if(getCellValue(sheet, indexes.flagRow, indexes.flagCol, 'v').toUpperCase() == 'DO NOT UPDATE') {
-		console.log('flag set do no update')
-		valid = false
-	}*/
 
 module.exports.parseExcelSheet = parseExcelSheet
 
