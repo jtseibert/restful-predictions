@@ -28,7 +28,7 @@ var updateOpportunity = function(opportunityData, callback) {
 }
 
 
-function updateDatabase(opportunityData) {
+function updateDatabase(opportunityData, callback) {
 	var sheetData = opportunityData.sheetData
 	var opportunityName = opportunityData.opportunityName
 
@@ -36,7 +36,7 @@ function updateDatabase(opportunityData) {
 	callback()
 }
 
-function deleteOpportunity(opportunityName) {
+function deleteOpportunity(opportunityName, callback) {
 	console.log('deleting stuff!')
 	utilities.query(
 		"DELETE FROM sales_pipeline WHERE opportunity=$1",
