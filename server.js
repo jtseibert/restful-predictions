@@ -72,6 +72,10 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 			instance    = req.params.instance
 		pipeline.queryPipeline(accessToken, instance, function(pipelineData) {
 			pipeline.applyDB(pipelineData,function(result){
+				async.each(result, function(row){
+					if (row.length != 12)
+						console.log(row)
+				})
 				res.json(result)
 			})
 		})
