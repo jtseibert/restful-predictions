@@ -96,6 +96,7 @@ function purgeSalesPipeline_DB(callback){
 			done() 
 		})
 	})
+}
 
 
 
