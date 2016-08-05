@@ -11,7 +11,7 @@ var pg = require('pg')
 * @param callback - callback to handle status
 */
 var updateOpportunity = function(opportunityData, callback) {
-	//console.log(opportunityData)	//console.log(sheetData)
+	console.log(opportunityData.opportunityName)
 
 
 	callback("wip")

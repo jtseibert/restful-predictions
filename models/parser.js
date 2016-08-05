@@ -16,7 +16,7 @@ xlsx workbook object for parsing using the xlsx library.
 * @returns JSON format object of estimated forecasted hours for each role/week, and opportunity name
 */
 var parseExcelSheet = function(body, callback) {
-	var workbook = xlsx.read(body.b64String, {type: 'base64'})	
+	var workbook = xlsx.read(body.b64, {type: 'base64'})	
 	var sheet 	 = workbook.Sheets[workbook.SheetNames[2]]
 	// Template indexes are hardcoded here
 	// Top row/col refers to upper left cell B18
@@ -65,11 +65,10 @@ var parseExcelSheet = function(body, callback) {
 			}
 			indexes.dataRowStart += 1
 		}
-		var opportunityData = {}
-		opportunityData[sheetData] = sheetData
-		opportunityData[opportunityName] = body.opportunityName
-		console.log(opportunityData.sheetData)
-		console.log(opportunityData.opportunityName)
+		var opportunityData = {
+			sheetData: sheetData
+			opportunityName: body.opportunityName
+		}
 		callback(opportunityData)
 	}
 }
