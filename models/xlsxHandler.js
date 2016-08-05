@@ -10,16 +10,16 @@ var utilities = require('./utilities')
 * @param opportunityData - JSON format object of opportunity name and xlsx data
 * @param callback - callback to handle status
 */
-var updateOpportunity = function(opportunityData, callback) {
+var updateDatabase = function(opportunityData, callback) {
 	databaseCheck(opportunityData.opportunityName, function(inDatabase) {
 		if(inDatabase) {
 			deleteOpportunity(opportunityData.opportunityName, function() {
-				updateDatabase(opportunityData, function() {
+				updateOpportunity(opportunityData, function() {
 					callback({message: 'db delete success'})
 				})
 			})
 		} else {
-			updateDatabase(opportunityData, function() {
+			updateOpportunity(opportunityData, function() {
 				callback({message: 'db no delete success'})
 			})
 			//not in db, ping SF and populate the sales_pipeline
@@ -27,8 +27,13 @@ var updateOpportunity = function(opportunityData, callback) {
 	})
 }
 
+/**
 
-function updateDatabase(opportunityData, callback) {
+
+
+
+*/
+function updateOpportunity(opportunityData, callback) {
 	var sheetData = opportunityData.sheetData
 	var opportunityName = opportunityData.opportunityName
 
@@ -36,15 +41,19 @@ function updateDatabase(opportunityData, callback) {
 	callback()
 }
 
+/*
+* @function deleteOpportunity
+* @desc Deletes all rows in sales_pipeline with of a opportunity.
+* @param {string} opportunityName - opportunity to be deleted
+* @param callback - callback to handle updating
+*/
 function deleteOpportunity(opportunityName, callback) {
-	console.log('deleting stuff!')
 	utilities.query(
 		"DELETE FROM sales_pipeline WHERE opportunity=$1",
 		[opportunityName],
 		function() {callback()}
 	)
 }
-
 
 /**
 * @function isInDatabase
@@ -61,4 +70,9 @@ function databaseCheck(opportunityName, callback) {
 	)
 }
 
-module.exports.updateOpportunity = updateOpportunity
+module.exports.updateDatabase = updateDatabase
+
+
+
+
+
