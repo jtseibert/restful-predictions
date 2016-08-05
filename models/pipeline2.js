@@ -118,6 +118,7 @@ function applyDB(pipelineData, callback){
 				})
 			} else { process.nextTick(callback) }
 		}, function(){
+			console.log('finished updateDBTables')
 			process.nextTick(function(){ callback(null, DB) })
 		})
 	}
