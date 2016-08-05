@@ -10,7 +10,7 @@ function queryPipeline(accessToken, path, callback) {
 	var sf = require('node-salesforce')
 	var moment = require('moment')
 	// Set up the sheet headers
-	var pipelineData = [[]]
+	var pipelineData = []
 
 	// Connect to SF
 	var conn = new sf.Connection({
@@ -97,7 +97,7 @@ function applyDB(pipelineData, callback){
 
 		async.each(pipelineData, function(opportunity, callback){
 			if(!DB.omittedOpportunities[opportunity[indexes.Name]]){
-				var rowsToInsert = [[]]
+				var rowsToInsert = []
 				console.log('opportunity: '+opportunity)
 				rowsToInsert = utils.assignRoleAllocations(opportunity,DB.defaultProjectSizes,indexes)
 				async.each(rowsToInsert, function(row, callback){
@@ -157,7 +157,7 @@ function applyDB(pipelineData, callback){
 		
 		var salesPipeline_DB = utils.query("SELECT opportunity,stage,amount,expected_revenue,close_date,start_date,probability,created_date,account_name,role,week_allocations FROM sales_pipeline")
 		async.each(salesPipeline_DB, function(opportunity, callback){
-			var rowsToPush = [[]]
+			var rowsToPush = []
 			rowsToPush = utils.applyWeekAllocations(opportunity, rowsToPush)
 		}, function(){
 			process.nextTick(function(){ callback(null, returnData) })
