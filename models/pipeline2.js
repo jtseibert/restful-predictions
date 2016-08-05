@@ -96,6 +96,7 @@ function applyDB(pipelineData, callback){
 			if(!DB.omittedOpportunities[opportunity[indexes.Name]]){
 				var rowsToInsert
 				utils.assignRoleAllocations(opportunity,DB.defaultProjectSizes,indexes, function(result){
+					console.log(result)
 					rowstoInsert = result
 					async.each(rowsToInsert, function(row, callback){
 						utils.query("INSERT INTO sales_pipeline(opportunity, stage, amount, expected_revenue, close_date, start_date, probability, created_date, account_name, role, week_allocations),"+
