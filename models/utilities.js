@@ -9,7 +9,7 @@ function getDefaultProjectSizes_DB(callback){
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 			if (err) return process.nextTick(function(){callback(err)})
 		var defaultProjectSizes,
-			defaultProjectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations, numweeks FROM project_size ORDER BY pricehigh ASC")
+			defaultProjectSizesQuery = client.query("SELECT sizeid, pricehigh, roles_allocations, numweeks FROM project_size ORDER BY pricehigh DESC")
 		defaultProjectSizesQuery.on("row", function (row, result) {
 			result.addRow(row)
 		})
@@ -147,14 +147,11 @@ function applyWeekAllocations(opportunity, rowsToPush){
 
 function getProjectSize(amount, defaultProjectSizes, callback){
 	//amount = amount.replace('USD ', '').replace(/,/g,'')
-	var projectSizeFound = false,
-		projectSize
+	var projectSize
 
 	async.eachOfSeries(defaultProjectSizes, function(projectSize, key, callback){
-		console.log(projectSize.priceHigh)
-		if(projectSize.priceHigh > amount && projectSizeFound == false){
+		if(projectSize.priceHigh > amount){
 			projectSize = key
-			projectSizeFound = true
 			process.nextTick(callback)
 		} else { process.nextTick(callback) }
 	}, function(){
