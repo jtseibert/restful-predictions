@@ -58,6 +58,7 @@ function applyDB(pipelineData, callback){
 		async 	= require('async'),
 		utils 	= require('./utilities')
 
+	pipelineData = pipelineData
 
 	// Sets omittedOpportunities, opportunities, and defaultProjectSizes to the values stored in their respective tables in the DB
 	function prepareDB(callback){
@@ -76,6 +77,7 @@ function applyDB(pipelineData, callback){
 
 	// Insert query from SF into DB, on conflict do nothing
 	function updateDBTables(DB, callback){
+
 		var indexes = {'Stage':				0,
 						'Name':				1,
 						'Amount':			2,
@@ -89,6 +91,8 @@ function applyDB(pipelineData, callback){
 						'Role':				10,
 						'WeekAllocations':	11
 					}
+
+		console.log('pipelineData: '+pipelineData)
 
 		async.each(pipelineData, function(opportunity, callback){
 			if(!DB.omittedOpportunities[opportunity[indexes.Name]]){
