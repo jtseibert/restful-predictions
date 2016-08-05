@@ -51,7 +51,7 @@ var oauth2 = oauth2(credentials)
 // Define routes
 router.route('/query')
 	.post(function(req, res) {
-		utilities.query(req.body.query, function(results) {
+		utilities.query(req.body.query, null, function(results) {
 			res.json(results)
 		})
 	})
