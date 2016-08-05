@@ -146,18 +146,14 @@ function applyWeekAllocations(opportunity, rowsToPush){
 }
 
 function getProjectSize(amount, defaultProjectSizes, callback){
-	//amount = amount.replace('USD ', '').replace(/,/g,'')
-	var projectSize
-
 	async.eachOfSeries(defaultProjectSizes, function(projectSize, key, callback){
 		if(projectSize.priceHigh > amount){
 			console.log('assigning key: '+key)
-			projectSize = key
-			process.nextTick(callback)
+			process.nextTick(function() {callback(key)})
 		} else { process.nextTick(callback) }
-	}, function(){
-		console.log('projectSize returned: '+projectSize+'\tamount: '+amount)
-		process.nextTick(function() {callback(projectSize)})
+	}, function(result){
+		console.log('projectSize returned: '+result+'\tamount: '+amount)
+		process.nextTick(function() {callback(result)})
 	})
 }
 
