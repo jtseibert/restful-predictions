@@ -133,6 +133,7 @@ var query = function query(query, values, callback) {
 }
 
 function asignRoleAllocations(row, defaultProjectSizes, indexes){
+	console.log(row)
 	var amount = row[indexes.Amount],
 		projectSize
 
