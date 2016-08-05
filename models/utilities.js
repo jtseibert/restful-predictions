@@ -151,6 +151,7 @@ function getProjectSize(amount, defaultProjectSizes, callback){
 
 	async.eachOfSeries(defaultProjectSizes, function(projectSize, key, callback){
 		if(projectSize.priceHigh > amount){
+			console.log('assigning key: '+key)
 			projectSize = key
 			process.nextTick(callback)
 		} else { process.nextTick(callback) }
