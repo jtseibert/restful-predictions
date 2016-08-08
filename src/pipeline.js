@@ -75,23 +75,22 @@ function applyDB(pipelineData, callback){
 		})		
 	}
 
+	var indexes = {'STAGE':				0,
+							'NAME':				1,
+							'ACCOUNT':			2,
+							'EXP_AMOUNT':	3,
+							'CLOSE_DATE':		4,
+							'START_DATE':		5,
+							'PROBABILITY':		6,
+							'CREATED_DATE':		7,
+							'ACCOUNT_NAME':		8,
+							'PROJECT_SIZE':		9,
+							'ROLE':				10,
+							'WEEK_ALLOCATIONS':	11
+						}	
+
 	// Insert query from SF into DB, on conflict do nothing
 	function updateDBTables(DB, callback){
-
-		var indexes = {'Stage':				0,
-						'Name':				1,
-						'Amount':			2,
-						'ExpectedRevenue':	3,
-						'CloseDate':		4,
-						'StartDate':		5,
-						'Probability':		6,
-						'CreatedDate':		7,
-						'AccountName':		8,
-						'ProjectSize':		9,
-						'Role':				10,
-						'WeekAllocations':	11
-					}
-
 		async.each(pipelineData, function(opportunity, callback){
 			if(!DB.omittedOpportunities[opportunity[indexes.Name]]){
 				var rowsToInsert
@@ -99,17 +98,17 @@ function applyDB(pipelineData, callback){
 					async.each(result, function(row, callback){
 						utils.query("INSERT INTO sales_pipeline(opportunity, stage, amount, expected_revenue, close_date, start_date, probability, created_date, account_name, role, week_allocations),"+
 									"values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) ON CONFLICT DO UPDATE SET stage=$2, amount=$3, expected_revenue=$4, close_date=$5, probability=$7",
-									[ row[indexes.Name],
-										row[indexes.Stage],
-										row[indexes.Amount],
-										row[indexes.ExpectedRevenue],
-										row[indexes.CloseDate],
-										row[indexes.StartDate],
-										row[indexes.Probability],
-										row[indexes.CreatedDate],
-										row[indexes.AccountName],
-										row[indexes.Role],
-										row[indexes.weekAllocations]
+									[ row[indexes.NAME],
+										row[indexes.STAGE],
+										row[indexes.AMOUNT],
+										row[indexes.EXP_AMOUNT],
+										row[indexes.CLOSE_DATE],
+										row[indexes.START_DATE],
+										row[indexes.PROBABILITY],
+										row[indexes.CREATED_DATE],
+										row[indexes.ACCOUNT_NAME],
+										row[indexes.ROLE],
+										row[indexes.WEEK_ALLOCATIONS]
 									], function(){
 										process.nextTick(callback)
 									}
@@ -125,32 +124,19 @@ function applyDB(pipelineData, callback){
 
 	// Get all data from SalesPipeline in DB and put into 2D array
 	function prepareReturnData(DB, callback){
-		var indexes = {'Stage':				0,
-						'Name':				1,
-						'Amount':			2,
-						'ExpectedRevenue':	3,
-						'CloseDate':		4,
-						'StartDate':		5,
-						'Probability':		6,
-						'CreatedDate':		7,
-						'AccountName':		8,
-						'ProjectSize':		9,
-						'Role':				10,
-						'WeekAllocations':	11
-					},
 			returnData = [[
-							'Opportunity',
-							'Stage',
-							'Amount',
-							'Expected Revenue',
-							'Close Date',
-							'Start Date',
-							'Probability',
-							'Created Date',
-							'Account Name',
-							'Role',
-							'Week',
-							'EstimatedHours'
+							'OPPORTUNITY',
+							'STAGE',
+							'AMOUNT',
+							'EXP_AMOUNT',
+							'CLOSE_DATE',
+							'START_DATE',
+							'PROBABILITY',
+							'CREATED_DATE',
+							'ACCOUNT_NAME',
+							'ROLE',
+							'WEEK',
+							'ESTIMATED_HOURS'
 						]]
 		
 		utils.query("SELECT opportunity,stage,amount,expected_revenue,close_date,start_date,probability,created_date,account_name,role,week_allocations FROM sales_pipeline",null,function(results){
