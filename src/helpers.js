@@ -38,6 +38,7 @@ var query = function query(query, values, callback) {
 			})
 		}
 		query.on("row", function (row, result) {
+			console.log('row is ' + row)
 			result.addRow(row)
 		})
 		query.on("end", function (result) {
