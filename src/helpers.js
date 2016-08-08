@@ -42,6 +42,7 @@ var query = function query(query, values, callback) {
 		})
 		query.on("end", function (result) {
 			done()
+			console.log('results.rows is ' + JSON.stringify(results.rows))
 			callback(result.rows)
 		})	
 	})
