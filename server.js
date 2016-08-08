@@ -38,7 +38,7 @@ router.route('/query')
 		})
 	})
 
-// Import allocation/sales_pipeline/capacity/forecast
+// Import allocation|sales_pipeline|capacity|forecast
 router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req, res) {
 		var accessToken = req.params.accessToken,
@@ -82,7 +82,7 @@ router.route('/DATA_Forecast')
 			})
 		})
 	})
-
+//********
 // Add/update opportunities
 router.route('/addOpportunity')
 	.post(function(req,res) {
@@ -108,26 +108,13 @@ router.route('/updateOpportunity')
 			delete opportunity
 		})
 	})
+//*********
 
-// Update capacity
-router.route('/updateCapacity')
-	.post(function(req, res) {
-		var capacity = new Capacity(null, null, req.body)
-		capacity.updateDB(pg, function() {
-			console.log('deleting capacity obj')
-			delete capacity
-		})
-		res.json({message: 'Success!'})
-	})
-
-// Updates project sizes database with data from SF opportunity attachment
 router.route('/importProjectSize')
 	.post(function(req, res) {
 		parser.parseExcelSheet(req.body, function(opportunityData) {
 			if(opportunityData != undefined) {
-				//console.log(opportunityData.sheetData)
 				xlsxHandler.updateDatabase(opportunityData, function(status) {
-					//console.log("Status is: " + JSON.stringify(status))
 					res.json({message: status})
 				})
 			}		

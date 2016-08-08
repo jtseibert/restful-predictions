@@ -1,18 +1,24 @@
 /**
-* Capacity
 * @module Capacity
-* @desc The Capacity module is responsible for persisting all employees and thier roles if they are in the roles database table
+* @desc Persists all employees and thier roles if they are in the roles database table.
 */
 
+/**
+* @function queryCapacity
+* @desc SOQL query name, utilization, and role.
+* @param {string} accessToken - oauth2 access token
+* @param {string} path - path to SF server
+* @param callback - callback to handle capacity data
+*/
 var queryCapacity = function(accessToken, path, callback) {
 	var sf = require('node-salesforce')
 	var moment = require('moment')
 	var async = require('async')
 	// Set up the sheet headers
 	var capacityData = [[
-			'Role',
-			'Name',
-			'Utilization Target'
+			'ROLE',
+			'NAME',
+			'UTILIZATION_TARGET'
 		]]
 
 	// Connect to SF
@@ -25,7 +31,6 @@ var queryCapacity = function(accessToken, path, callback) {
 	conn.query("SELECT pse__Resource_Role__c, Name, pse__Utilization_Target__c FROM Contact WHERE pse__Resource_Role__c!='' AND pse__Utilization_Target__c>=0 ORDER BY pse__Resource_Role__c")
   	.on("record", function(record) {
   		var recordData = []
-  		// Format the date with Moment library for sheet consistency
     	recordData.push(
     		record.pse__Resource_Role__c,
 			record.Name,
