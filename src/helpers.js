@@ -24,7 +24,7 @@ var query = function query(query, values, callback) {
 			query = client.query(q, v, function(error) {
 				if(error) {
 					done()
-					process.nextTick(callback)
+					callback(error)
 				}
 			})
 		} else {
@@ -32,7 +32,7 @@ var query = function query(query, values, callback) {
 			query = client.query(q, function(error) {
 				if(error) {
 					done()
-					process.nextTick(callback)
+					callback(error)
 				} 
 			})
 		}
