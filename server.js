@@ -6,11 +6,9 @@ var	newRelic		= require('newrelic')
 var	allocation 		= require('./src/allocation'),
 	async			= require('async'),
 	bodyParser 		= require('body-parser'),
-	Cache           = require('node-cache'),
 	capacity        = require('./src/capacity'),
 	express			= require('express'),
 	Forecast 		= require('./src/forecast'),
-	jsdiff 			= require('diff'),
 	Omit 			= require('./src/omit'),
 	Opportunity 	= require('./src/opportunity'),
 	parser          = require('./src/parser'),
@@ -19,7 +17,6 @@ var	allocation 		= require('./src/allocation'),
 	ProjectSize 	= require('./src/projectSize'),
 	utilities		= require('./src/utilities'),
 	xlsxHandler   	= require('./src/xlsxHandler')
-require('colors')
 
 var app = express()
 var router = express.Router()
@@ -32,7 +29,6 @@ pg.defaults.ssl = true
 pg.defaults.poolSize = 10
 
 var port = process.env.PORT || 5000,
-	cache = new Cache()
 
 // Setup oauth2 with connected app credentials
 var oauth2 = require('simple-oauth2'),
