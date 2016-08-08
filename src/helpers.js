@@ -21,7 +21,6 @@ var query = function query(query, values, callback) {
 		console.log("query is: " + q + ' with values ' + v)
 		var query
 		if(v != null) {
-			console.log('in if')
 			query = client.query(q, v, function(error) {
 				if(error) {
 					done()
@@ -42,8 +41,8 @@ var query = function query(query, values, callback) {
 			result.addRow(row)
 		})
 		query.on("end", function (result) {
-			done()
 			process.nextTick(function() {callback(result.rows)})
+			done()
 		})	
 	})
 }
