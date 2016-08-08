@@ -3,22 +3,22 @@
 // Initialize dependencies
 var	newRelic		= require('newrelic')
 
-var	allocation 		= require('./models/allocation3'),
+var	allocation 		= require('./src/allocation3'),
 	async			= require('async'),
 	bodyParser 		= require('body-parser'),
 	Cache           = require('node-cache'),
-	capacity        = require('./models/capacity'),
+	capacity        = require('./src/capacity'),
 	express			= require('express'),
-	Forecast 		= require('./models/forecast2'),
+	Forecast 		= require('./src/forecast2'),
 	jsdiff 			= require('diff'),
-	Omit 			= require('./models/omit'),
-	Opportunity 	= require('./models/opportunity'),
-	parser          = require('./models/parser'),
+	Omit 			= require('./src/omit'),
+	Opportunity 	= require('./src/opportunity'),
+	parser          = require('./src/parser'),
 	pg 				= require('pg'),
-	pipeline 		= require('./models/pipeline2'),
-	ProjectSize 	= require('./models/projectSize'),
-	utilities		= require('./models/utilities'),
-	xlsxHandler   	= require('./models/xlsxHandler')
+	pipeline 		= require('./src/pipeline2'),
+	ProjectSize 	= require('./src/projectSize'),
+	utilities		= require('./src/utilities'),
+	xlsxHandler   	= require('./src/xlsxHandler')
 require('colors')
 
 var app = express()
