@@ -13,10 +13,11 @@ module.exports = Forecast
 
 // module level variables
 async = require('../node_modules/async')
+moment = require('../node_modules/moment')
 
 /**
 * Creates an Forecast object with the allocation data as sheetsData, the Sum of Sales Pipeline data as sumSalesPipeline,
-* the Sum of Capacity Estimated Hours as sumCapacity, and the 2D array to be returned as returnData
+* the Sum of Capacity Estimated Hours as capacity, and the 2D array to be returned as returnData
 * @function Forecast
 * @param pg - the PostgreSQL database object
 * @param data - the 2 part JSON received from Google Sheets containing Allocations and sum of Sales Pipeline Estimated Hours
@@ -24,39 +25,56 @@ async = require('../node_modules/async')
 */
 function Forecast(pg, data, callback) {
 
-	this.sheetsData 		= data[0]
-	this.sumSalesPipeline 	= data[1]
-	this.returnData 		= [['ROLE',
-								'WEEK_DATE',
-								'NAME',
-								'CONTACT_ID',
-								'PROJECT',
-								'ESTIMATED_HOURS',
-								'ALLOCATED',
-								'FORECASTED',
-								'CAPACITY']]
-	this.sumCapacity
+	this.allocatedHours			= data[0]
+	this.forecastedHours 		= data[1]
+	this.returnData 			= [['ROLE',
+									'WEEK_DATE',
+									'ALLOCATED_HOURS',
+									'FORECASTED_HOURS',
+									'CAPACITY']]
+	this.roleCapacities
+	this.weeks
+
 	objInstance = this
 
+	// Creates a JSON of all roles and their capacities from the DB
 	var one = function(callback){
 		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-			roles_hours = {}
+			roleCapacities = {}
 			if (err)
 				console.log(err)
-			var query = client.query('SELECT * FROM roles_hours')
+			var query = client.query('SELECT * FROM roles_capacities')
 			query.on("row", function (row, result) {
-				roles_hours[row.role] = {'reports_to': row.reports_to, 'sum': row.sum}
+				roleCapacities[row.role] = row.capacity
 			})
 			query.on("end", function (result) {
-				process.nextTick(function(){callback(null, roles_hours)})
+				done()
+				process.nextTick(function(){callback(null, roleCapacities)})
 			})
+		})
+	}
+	
+	// Creates an array of weeks to iterate over when creating the Forecast data
+	var two = function(callback){
+		var today = moment(new Date()).day(-1),
+			forecastedWeeks = 26,
+			weeks = []
+
+		async.times(forecastedWeeks, function(n,next){
+			weeks.push(today.format('L'))
+			today = today.add(7,'d')
+			process.nextTick(function(){next()})
+		}, function(){
+			process.nextTick(function(){callback(null, weeks)})
 		})
 	}
 
 	async.parallel({
-	 	'one': one
+	 	'one': one,
+	 	'two': two
 	}, function(err, results){
-	 	objInstance.sumCapacity = roles_hours
+	 	objInstance.roleCapacities = results.one
+	 	objInstance.weeks = results.two
 	 	process.nextTick(callback)
 	})
 } 
@@ -68,33 +86,40 @@ to the same 2D array to send to Google Sheets. Create is executed asyncronously 
 * @param callback - callback function to return final array
 */
 Forecast.prototype.create = function(callback) {
-	objInstance = this
 
-	async.each(objInstance.sheetsData, function(row, callback){
-		var tempRow = []
-		var newData = []
-		async.eachOfSeries(row, function(value, valueKey, callback){
-			if (valueKey == 5 || valueKey == 6)
-				tempRow.push(value)
-			else
-				tempRow.push(value)
+	var objInstance = this
+
+	async.eachOf(objInstance.roleCapacities, function(capacity, role, callback){
+		var role = role,
+			capacity = capacity
+		async.each(objInstance.weeks, function(week,callback){
+			var tempRow = []
+
+			tempRow.push(role)
+			tempRow.push(week)
+
+			// If there are allocated hours for this role for this week, push those hours, else push 0 hours
+			if (objInstance.allocatedHours[role]){
+				if (objInstance.allocatedHours[role][week]){
+					tempRow.push(objInstance.allocatedHours[role][week])
+				} else { tempRow.push(0) }
+			} else { tempRow.push(0) }
+
+			// If there are allocated hours for this role for this week, push those hours, else push 0 hours
+			if (objInstance.forecastedHours[role]){
+				if (objInstance.forecastedHours[role][week]){
+					tempRow.push(objInstance.forecastedHours[role][week])
+				} else { tempRow.push(0) }
+			} else { tempRow.push(0) }
+
+			tempRow.push(capacity)
+			objInstance.returnData.push(tempRow)
+
 			process.nextTick(callback)
 		}, function(){
-			if(objInstance.sumSalesPipeline[row[0]]){
-				if(objInstance.sumSalesPipeline[row[0]][row[1]])
-					tempRow.push((objInstance.sumSalesPipeline[row[0]][row[1]]))
-				else
-					tempRow.push(0)
-			} else {
-				tempRow.push(0)
-			}
-			tempRow.push(objInstance.sumCapacity[row[0]].sum)
-			objInstance.returnData.push(tempRow)
 			process.nextTick(callback)
 		})
-	}, function(err){
-		if (err)
-			console.log(err)
+	}, function(){
 		process.nextTick(callback)
 	})
 }

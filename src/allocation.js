@@ -1,74 +1,70 @@
-//data.js
-//input: 
-	//json object: token
-	//String: id
-//output:
-	//json object data
-	
-module.exports = Allocation
+/**
+* Allocation
+* @module Allocation
+* @desc The Allocation module contains function(s) to perform SOQL queries via the 
+node-salesforce library to return allocation data to Google Sheets.
+*/
 
-function Allocation(instance, accessToken) {
-	this.accessToken = accessToken
-	this.path = 'https://' + instance + '/services/data/v35.0/analytics/reports/00Oa00000093smp'
-	this.returnData = [["Project",
-						"Resource: Resource Role",
-						"Start Date",
-						"Estimated Hours"
-						]]
-} 
+/**
+* @function queryAllocation
+* @params {string} accessToken - oauth2 access token
+* @params {string} path - salesforce server url
+* @params callback - callback function to return allocation data
+*/
+var queryAllocation = function(accessToken, path, callback) {
+	var sf = require('node-salesforce')
+	var moment = require('moment')
+	// Set up the sheet headers
+	var allocationData = [[
+		"CONTACT_ID", "NAME",
+		"ROLE", "PROJECT",
+		"ESTIMATED_HOURS", "START_DATE"
+		]]
 
-Allocation.prototype.getstuff = function(oauth2, async, cache, callback) {
-	var objInstance = this
-	var parameters = {
-		access_token: objInstance.accessToken
-	}
+	// Connect to SF
+	var conn = new sf.Connection({
+	  instanceUrl: "https://" + path,
+	  accessToken: accessToken
+	})
 
-	oauth2.api('GET', objInstance.path, parameters, function (err, data) {
-	    if (err)
-	        console.log('GET Error: ', JSON.stringify(err)) 
-	    
-	    var factMap 				= data.factMap,
-	    	groupingsDown 			= data.groupingsDown.groupings,
-	    	groupingsAcross 		= data.groupingsAcross.groupings,
-	    	returnData				= [],
-	    	employeeKey,
-	        projectKey,
-	        weekKey,
-	        valueKey
-
-	    async.eachOf(factMap, function(field, key, callback) {
-		    valueKey = key
-			splitKey = key.split('!')
-			weekKey = splitKey[1]
-			splitKey = splitKey[0].split('_')
-			employeeKey = splitKey[0]
-			if (splitKey.length > 1){
-				projectKey = splitKey[1]
-			} else {
-				projectKey = "T"
-			}
-
-			if (!(weekKey == "T" || employeeKey == "T" || projectKey == "T") && field.aggregates[0].value != 0){
-				objInstance.returnData.push([groupingsDown[employeeKey].label, 
-									groupingsDown[employeeKey].groupings[projectKey].label, 
-									groupingsAcross[weekKey].label, 
-									field.aggregates[0].value])
-			}
-			process.nextTick(callback)
-		}, function(err) {
-			if(err) {
-				console.log(err)
-			} else {
-				cache.set("allocation", objInstance.returnData, function(err, success) {
-					if(!err && success) {
-						console.log('allocation data cached')
-					}
-				}) 
-			}
+	// Execute SOQL query to populate allocationData
+	conn.query("SELECT pse__Resource__r.ContactID_18__c, pse__Resource__r.Name, pse__Project__r.Name, pse__Resource__r.pse__Resource_Role__c, pse__Estimated_Hours__c, pse__Start_Date__c FROM pse__Est_Vs_Actuals__c WHERE pse__Estimated_Hours__c>0 AND pse__Resource__r.pse__Exclude_from_Resource_Planner__c=False AND pse__End_Date__c>=2016-08-03 AND pse__End_Date__c<2017-02-03 AND pse__Resource__r.ContactID_18__c!=null")
+  	.on("record", function(record) {
+  		var recordData = []
+  		// Format the date with Moment library for sheet consistency
+    	recordData.push(
+    		record.pse__Resource__r.ContactID_18__c,
+			record.pse__Resource__r.Name,
+			record.pse__Resource__r.pse__Resource_Role__c,
+			record.pse__Project__r.Name,
+			record.pse__Estimated_Hours__c,
+			moment(new Date(record.pse__Start_Date__c)).format("MM/DD/YYYY")
+		)
+    	allocationData.push(recordData)
 		})
-		process.nextTick(callback)
-	})  
+	.on("end", function(query) {
+		console.log("total in database : " + query.totalSize);
+		console.log("total fetched : " + query.totalFetched);
+		process.nextTick(function() {callback(allocationData)})
+		})
+	.on("error", function(err) {
+		console.error(err);
+		})
+	.run({ autoFetch : true, maxFetch : 8000 });
 }
+
+module.exports.queryAllocation = queryAllocation
+
+
+
+
+
+
+
+
+
+
+
 
 
 
