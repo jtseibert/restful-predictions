@@ -1,4 +1,7 @@
-// server.js
+/** 
+* @file server.js
+* @desc Initiates Heroku app, defines express middleware routes.
+*/
 
 // Initialize dependencies
 var	newRelic		= require('newrelic')
