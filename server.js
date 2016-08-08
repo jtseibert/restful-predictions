@@ -10,7 +10,6 @@ var	allocation 		= require('./src/allocation'),
 	express			= require('express'),
 	forecast 		= require('./src/forecast'),
 	helpers			= require('./src/helpers'),
-	omit 			= require('./src/omit'),
 	Opportunity 	= require('./src/opportunity'),
 	parser          = require('./src/parser'),
 	pg 				= require('pg'),
@@ -124,33 +123,6 @@ router.route('/removeOpportunity')
 		})
 	})
 
-// Add/remove ommited opportunities
-router.route('/addOmit')
-	.post(function(req,res) {
-		omit = new omit(req.body)
-		omit.add(pg,function(err) {
-			if (err)
-				res.send(err)
-			else
-				res.json({message: 'Success!'})
-			delete omit
-		})
-	})
-
-router.route('/removeOmit')
-	.post(function(req,res){
-		omit = new omit(req.body)
-		omit.remove(pg,function(err) {
-			if (err)
-				res.send(err)
-			else
-				res.json({message: 'Success!'})
-			delete omit
-		})
-	})
-
-
-
 router.route('/addProjectSize')
 	.post(function(req,res){
 		projectSize = new ProjectSize(req.body, function() {
@@ -215,16 +187,6 @@ router.route('/updateCapacity')
 		res.json({message: 'Success!'})
 	})
 
-// Debug routes
-router.route('/clearDB')
-	.post(function(req,res) {
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			client.query('delete from sales_pipeline *')
-			client.query('delete from omit *')
-		})
-		res.json({message: 'Success!'})
-	})
-
 // Updates project sizes database with data from SF opportunity attachment
 router.route('/importProjectSize')
 	.post(function(req, res) {
@@ -238,16 +200,6 @@ router.route('/importProjectSize')
 			}		
 		})
 	})
-
-
-
-// Catch timeouts
-// app.use(function(req, res, next) {
-//     res.setTimeout(5000, function() {
-//             res.sendStatus(408);
-//         });
-//     next();
-// });
 
 // Start server
 app.listen(port)
