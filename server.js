@@ -34,6 +34,7 @@ var port = process.env.PORT || 5000
 router.route('/query')
 	.post(function(req, res) {
 		helpers.query(req.body.query, req.body.values, function(results) {
+			console.log(JSON.stringify(results))
 			res.json(results)
 		})
 	})

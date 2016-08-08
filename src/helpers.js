@@ -27,12 +27,10 @@ var query = function query(query, values, callback) {
 					callback(error)
 				} else {
 					query.on("row", function (row, result) {
-					console.log('row is ' + JSON.stringify(row))
 					result.addRow(row)
 					})
 					query.on("end", function (result) {
 					done()
-					console.log('results.rows is ' + JSON.stringify(result.rows) + " coutn is " + result.rowCount)
 					callback(result.rows)
 					})	
 				}
@@ -45,12 +43,10 @@ var query = function query(query, values, callback) {
 					callback(error)
 				} else {
 					query.on("row", function (row, result) {
-					console.log('row is ' + JSON.stringify(row))
 					result.addRow(row)
 					})
 					query.on("end", function (result) {
 					done()
-					console.log('results.rows is ' + JSON.stringify(result.rows) + " coutn is " + result.rowCount)
 					callback(result.rows)
 					})	
 				} 

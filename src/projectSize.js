@@ -17,33 +17,6 @@ function ProjectSize(data, callback) {
 } 
 
 /**
-* Inserts the projectSize in data to the projectSize database table
-* @function add
-* @param pg - pg module object
-* @param callback - callback function
-*/
-ProjectSize.prototype.add = function(pg, callback) {
-	objInstance = this
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		for (var entry in objInstance.data){
-			client.query('INSERT INTO project_size(sizeId,pricehigh,roles_allocations,numweeks) values($1,$2,$3,$4)',
-				[objInstance.data[entry].sizeid,objInstance.data[entry].pricehigh,objInstance.data[entry].roles_allocations,objInstance.data[entry].numweeks],
-				function(){ done() })
-		}
-		//testing
-		var query = client.query("SELECT * from project_size")
-		query.on("row", function (row, result) {
-			result.addRow(row)
-		})
-		query.on("end", function (result) {
-			done()
-			console.log(JSON.stringify(result.rows, null, "    "))
-		})
-		process.nextTick(callback)
-	})
-}
-
-/**
 * Updates the projectSize in data to the projectSize database table
 * @function update
 * @param pg - pg module object
@@ -93,32 +66,6 @@ ProjectSize.prototype.edit = function(pg, callback) {
 			console.log(JSON.stringify(result.rows, null, "    "))
 			process.nextTick(function(){callback(result.rows)})
 		})
-	})
-}
-
-/**
-* Removes the projectSize in data from the projectSize database table
-* @function remove
-* @param pg - pg module object
-* @param callback - callback function
-*/
-ProjectSize.prototype.remove = function(pg, callback) {
-	objInstance = this
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		for (var entry in objInstance.data){
-			console.log('should be deleting: ' + entry)
-			client.query('DELETE FROM project_size WHERE sizeId = $1', [entry], function(){ done() })
-		}
-		//testing
-		var query = client.query("SELECT * from project_size")
-		query.on("row", function (row, result) {
-			result.addRow(row)
-		})
-		query.on("end", function (result) {
-			done()
-			console.log(JSON.stringify(result.rows, null, "    "))
-		})
-		process.nextTick(callback)
 	})
 }
 
