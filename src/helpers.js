@@ -41,8 +41,8 @@ var query = function query(query, values, callback) {
 			result.addRow(row)
 		})
 		query.on("end", function (result) {
-			process.nextTick(function() {callback(result.rows)})
 			done()
+			callback(result.rows)
 		})	
 	})
 }
