@@ -110,18 +110,6 @@ router.route('/updateOpportunity')
 		})
 	})
 
-router.route('/addProjectSize')
-	.post(function(req,res){
-		projectSize = new ProjectSize(req.body, function() {
-			projectSize.add(pg,function(err) {
-				if (err)
-					res.send(err)
-				else
-					res.json({message: 'Success!'})
-				delete projectSize
-			})
-		})
-	})
 
 router.route('/updateProjectSize')
 .post(function(req,res) {
@@ -148,19 +136,6 @@ router.route('/editProjectSize')
 				delete projectSize
 			})
 		})	
-	})
-
-router.route('/removeProjectSize')
-	.post(function(req,res){
-		projectSize = new ProjectSize(req.body, function() {
-			projectSize.remove(pg,function(err) {
-				if (err)
-					res.send(err)
-				else
-					res.json({message: 'Success!'})
-				delete projectSize
-			})
-		})
 	})
 
 // Update capacity
