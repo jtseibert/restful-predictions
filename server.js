@@ -30,20 +30,6 @@ pg.defaults.poolSize = 10
 
 var port = process.env.PORT || 5000
 
-// Setup oauth2 with connected app credentials
-var oauth2 = require('simple-oauth2'),
-	credentials = {
-        clientID: '3MVG9uudbyLbNPZMn2emQiwwmoqmcudnURvLui8uICaepT6Egs.LFsHRMAnD00FSog.OXsLKpODzE.jxi.Ffu',
-        clientSecret: '625133588109438640',
-        site: 'https://login.salesforce.com',
-        authorizationPath: '/services/oauth2/authorize',
-        tokenPath: '/services/oauth2/token',
-        revokePath: '/services/oauth2/revoke'
-    }
-
-// Initialize the OAuth2 Library
-var oauth2 = oauth2(credentials)
-
 // Define routes
 router.route('/query')
 	.post(function(req, res) {
