@@ -3,7 +3,7 @@
 * @desc Handles forecasted opportunity data from xlsx parser.
 */
 
-var utilities = require('./utilities')
+var helpers = require('./helpers')
 var async     = require('async')
 /**
 * @function updateDatabase
@@ -39,7 +39,7 @@ function updateOpportunity(opportunityData, callback) {
 	async.eachOfSeries(sheetData, function insertRole(role, roleKey, callback) {
 		//for(var number in role) {
 		async.eachSeries(role, function(weekAllocations, callback){
-			utilities.query(
+			helpers.query(
 				"INSERT INTO sales_pipeline(opportunity, role, week_allocations, protected) values($1, $2, $3, $4)",
 				[opportunityName, roleKey, weekAllocations, true],
 				function() { process.nextTick(callback) }
@@ -57,7 +57,7 @@ function updateOpportunity(opportunityData, callback) {
 * @param callback - callback to handle updating
 */
 function deleteOpportunity(opportunityName, callback) {
-	utilities.query(
+	helpers.query(
 		"DELETE FROM sales_pipeline WHERE opportunity=$1",
 		[opportunityName],
 		function() {callback()}
@@ -72,7 +72,7 @@ function deleteOpportunity(opportunityName, callback) {
 * @returns true or false
 */
 function databaseCheck(opportunityName, callback) {
-	utilities.query(
+	helpers.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[opportunityName],
 		function(results) {callback(results[0].exists)}
