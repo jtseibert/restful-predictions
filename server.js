@@ -34,6 +34,7 @@ var port = process.env.PORT || 5000
 router.route('/query')
 	.post(function(req, res) {
 		helpers.query(req.body.query, req.body.values, function(results) {
+			console.log(JSON.stringify(results))
 			res.json(results)
 		})
 	})
@@ -78,14 +79,12 @@ router.route('/DATA_Forecast')
 		forecast = new forecast(pg, req.body, function() {
 			forecast.create(function() {
 				res.json(forecast.returnData)
-				// async.each(forecast.returnData, function(row){
-				// })
 				delete forecast
 			})
 		})
 	})
 
-// Add/update/remove opportunities
+// Add/update opportunities
 router.route('/addOpportunity')
 	.post(function(req,res) {
 		console.log('addOpportunity')
@@ -104,18 +103,6 @@ router.route('/updateOpportunity')
 		opportunity = new Opportunity(req.body)
 		opportunity.update(pg, function(err) {
 			if(err) 
-				res.send(err)
-			else
-				res.json({message: 'Success!'})
-			delete opportunity
-		})
-	})
-
-router.route('/removeOpportunity')
-	.post(function(req,res) {
-		opportunity = new Opportunity(req.body)
-		opportunity.remove(async, pg,function(err) {
-			if (err)
 				res.send(err)
 			else
 				res.json({message: 'Success!'})
