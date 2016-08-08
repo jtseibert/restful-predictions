@@ -36,7 +36,6 @@ var query = function query(query, values, callback) {
 				}
 			})
 		} else {
-			console.log('in else')
 			query = client.query(q, function(error) {
 				if(error) {
 					done()

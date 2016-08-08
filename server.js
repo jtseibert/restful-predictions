@@ -14,7 +14,6 @@ var	allocation 		= require('./src/allocation'),
 	parser          = require('./src/parser'),
 	pg 				= require('pg'),
 	pipeline 		= require('./src/pipeline'),
-	ProjectSize 	= require('./src/projectSize'),
 	utilities		= require('./src/utilities'),
 	xlsxHandler   	= require('./src/xlsxHandler')
 
@@ -108,34 +107,6 @@ router.route('/updateOpportunity')
 				res.json({message: 'Success!'})
 			delete opportunity
 		})
-	})
-
-
-router.route('/updateProjectSize')
-.post(function(req,res) {
-	projectSize = new ProjectSize(req.body, function() { 
-		projectSize.update(pg,function(err) {
-			if (err)
-				res.send(err)
-			else
-				res.json({message: 'Success!'})
-			delete projectSize
-		})
-	})
-})
-
-router.route('/editProjectSize')
-	.post(function(req,res) {
-		projectSize = new ProjectSize(req.body, function() {
-			console.log(projectSize.data)
-			projectSize.edit(pg,function(err,response) {
-				if (err)
-					res.send(err)
-				else
-					res.json(response)
-				delete projectSize
-			})
-		})	
 	})
 
 // Update capacity
