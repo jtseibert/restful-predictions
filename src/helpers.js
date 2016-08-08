@@ -17,11 +17,11 @@ pg.defaults.poolSize = 10
 var query = function query(query, values, callback) {
 	q = query
 	v = values
-	console.log(values)
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		console.log("query is: " + q + ' with values ' + v)
 		var query
 		if(v != null) {
+			console.log('in if')
 			query = client.query(q, v, function(error) {
 				if(error) {
 					done()
@@ -29,6 +29,7 @@ var query = function query(query, values, callback) {
 				}
 			})
 		} else {
+			console.log('in else')
 			query = client.query(q, function(error) {
 				if(error) {
 					done()
