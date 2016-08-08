@@ -27,8 +27,10 @@ var queryAllocation = function(accessToken, path, callback) {
 	  accessToken: accessToken
 	})
 
+	// Determine date range from the current date
+	var queryString = getQueryString()
 	// Execute SOQL query to populate allocationData
-	conn.query("SELECT pse__Resource__r.ContactID_18__c, pse__Resource__r.Name, pse__Project__r.Name, pse__Resource__r.pse__Resource_Role__c, pse__Estimated_Hours__c, pse__Start_Date__c FROM pse__Est_Vs_Actuals__c WHERE pse__Estimated_Hours__c>0 AND pse__Resource__r.pse__Exclude_from_Resource_Planner__c=False AND pse__End_Date__c>=2016-08-03 AND pse__End_Date__c<2017-02-03 AND pse__Resource__r.ContactID_18__c!=null")
+	conn.query(queryString)
   	.on("record", function(record) {
   		var recordData = []
   		// Format the date with Moment library for sheet consistency
@@ -51,6 +53,22 @@ var queryAllocation = function(accessToken, path, callback) {
 		console.error(err);
 		})
 	.run({ autoFetch : true, maxFetch : 8000 });
+}
+
+/**
+* @function getQueryString
+* @desc Constructs a query with variable start and end dates for allocations.
+* @returns {string} queryString - SOQL query string
+*/
+function getQueryString() {
+	var queryString
+	var startDate = moment(new Date).format("YYYY-MM-DD")
+	var closeDate = moment(new Date).add(26, 'weeks').format("YYYY-MM-DD")
+	console.log(startDate)
+	console.log(closeDate)
+	queryString = "SELECT pse__Resource__r.ContactID_18__c, pse__Resource__r.Name, pse__Project__r.Name, pse__Resource__r.pse__Resource_Role__c, pse__Estimated_Hours__c, pse__Start_Date__c FROM pse__Est_Vs_Actuals__c WHERE pse__Estimated_Hours__c>0 AND pse__Resource__r.pse__Exclude_from_Resource_Planner__c=False AND pse__End_Date__c>=" +
+	startDate + "AND pse__End_Date__c<" + closeDate + "AND pse__Resource__r.ContactID_18__c!=null"
+	return queryString
 }
 
 module.exports.queryAllocation = queryAllocation
