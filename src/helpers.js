@@ -17,6 +17,7 @@ pg.defaults.poolSize = 10
 var query = function query(query, values, callback) {
 	q = query
 	v = values
+	console.log(values)
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		console.log("query is: " + q + ' with values ' + v)
 		var query
