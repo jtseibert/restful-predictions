@@ -8,8 +8,9 @@ var	allocation 		= require('./src/allocation'),
 	bodyParser 		= require('body-parser'),
 	capacity        = require('./src/capacity'),
 	express			= require('express'),
-	Forecast 		= require('./src/forecast'),
-	Omit 			= require('./src/omit'),
+	forecast 		= require('./src/forecast'),
+	helpers			= require('./src/helpers'),
+	omit 			= require('./src/omit'),
 	Opportunity 	= require('./src/opportunity'),
 	parser          = require('./src/parser'),
 	pg 				= require('pg'),
@@ -33,7 +34,7 @@ var port = process.env.PORT || 5000
 // Define routes
 router.route('/query')
 	.post(function(req, res) {
-		utilities.query(req.body.query, null, function(results) {
+		helpers.query(req.body.query, req.body.values, function(results) {
 			res.json(results)
 		})
 	})
@@ -75,7 +76,7 @@ router.route('/:instance/DATA_Capacity/:accessToken')
 
 router.route('/DATA_Forecast')
 	.post(function(req, res) {
-		forecast = new Forecast(pg, req.body, function() {
+		forecast = new forecast(pg, req.body, function() {
 			forecast.create(function() {
 				res.json(forecast.returnData)
 				// async.each(forecast.returnData, function(row){
@@ -126,7 +127,7 @@ router.route('/removeOpportunity')
 // Add/remove ommited opportunities
 router.route('/addOmit')
 	.post(function(req,res) {
-		omit = new Omit(req.body)
+		omit = new omit(req.body)
 		omit.add(pg,function(err) {
 			if (err)
 				res.send(err)
@@ -138,7 +139,7 @@ router.route('/addOmit')
 
 router.route('/removeOmit')
 	.post(function(req,res){
-		omit = new Omit(req.body)
+		omit = new omit(req.body)
 		omit.remove(pg,function(err) {
 			if (err)
 				res.send(err)
@@ -248,6 +249,6 @@ router.route('/importProjectSize')
 //     next();
 // });
 
-//Start server
+// Start server
 app.listen(port)
 console.log('Heroku station is operational on port ' + port)

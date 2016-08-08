@@ -95,39 +95,6 @@ function purgeSalesPipeline_DB(callback){
 	})
 }
 
-// Helper function to query any table in database
-var query = function query(query, values, callback) {
-	q = query
-	v = values
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-		//console.log("query is: " + q + 'with values' + values)
-		var query
-		if(v != null) {
-			query = client.query(q, v, function(error) {
-				if(error){
-					done()
-					process.nextTick(callback)
-				}
-			})
-		} else {
-			query = client.query(q, function(error) {
-				if(error){
-					done()
-					process.nextTick(callback)
-				} 
-			})
-		}
-		query.on("row", function (row, result) {
-			//console.log(row)
-			result.addRow(row)
-		})
-		query.on("end", function (result) {
-			done()
-			process.nextTick(function() {callback(result.rows)})
-		})	
-	})
-}
-
 function assignRoleAllocations(row, defaultProjectSizes, indexes, callback){
 	var amount = row[indexes.Amount],
 		projectSize
@@ -196,7 +163,6 @@ function calculateStartDate(closeDate, dateIncrement){
 	return returnDate[1]+'/'+returnDate[2]+'/'+returnDate[0].replace('"','')
 }
 
-module.exports.query						= query
 module.exports.getOpportunities_DB 			= getOpportunities_DB
 module.exports.getOmittedOpportunities_DB 	= getOmittedOpportunities_DB
 module.exports.getDefaultProjectSizes_DB 	= getDefaultProjectSizes_DB
