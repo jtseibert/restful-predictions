@@ -56,7 +56,8 @@ module.exports.queryPipeline = queryPipeline
 function applyDB(pipelineData, callback){
 	var moment 	= require('moment'),
 		async 	= require('async'),
-		utils 	= require('./utilities')
+		utils 	= require('./utilities'),
+		helpers = require('./helpers')
 
 	pipelineData = pipelineData
 
@@ -96,7 +97,7 @@ function applyDB(pipelineData, callback){
 				var rowsToInsert
 				utils.assignRoleAllocations(opportunity,DB.defaultProjectSizes,indexes, function(result){
 					async.each(result, function(row, callback){
-						utils.query("INSERT INTO sales_pipeline(opportunity, stage, amount, expected_revenue, close_date, start_date, probability, created_date, account_name, role, week_allocations),"+
+						helpers.query("INSERT INTO sales_pipeline(opportunity, stage, amount, expected_revenue, close_date, start_date, probability, created_date, account_name, role, week_allocations),"+
 									"values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) ON CONFLICT DO UPDATE SET stage=$2, amount=$3, expected_revenue=$4, close_date=$5, probability=$7",
 									[ row[indexes.NAME],
 										row[indexes.STAGE],
@@ -139,7 +140,7 @@ function applyDB(pipelineData, callback){
 							'ESTIMATED_HOURS'
 						]]
 		
-		utils.query("SELECT opportunity,stage,amount,expected_revenue,close_date,start_date,probability,created_date,account_name,role,week_allocations FROM sales_pipeline",null,function(results){
+		helpers.query("SELECT opportunity,stage,amount,expected_revenue,close_date,start_date,probability,created_date,account_name,role,week_allocations FROM sales_pipeline",null,function(results){
 			async.each(results, function(opportunity, callback){
 				utils.applyWeekAllocations(opportunity, indexes, function(result){
 					async.each(result, function(opportunity,callback){
