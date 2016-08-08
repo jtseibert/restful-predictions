@@ -28,7 +28,7 @@ app.use('/api', router)
 pg.defaults.ssl = true
 pg.defaults.poolSize = 10
 
-var port = process.env.PORT || 5000,
+var port = process.env.PORT || 5000
 
 // Setup oauth2 with connected app credentials
 var oauth2 = require('simple-oauth2'),
