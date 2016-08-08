@@ -110,7 +110,7 @@ router.route('/updateOpportunity')
 	})
 //*********
 
-router.route('/importProjectSize')
+router.route('/trigger')
 	.post(function(req, res) {
 		parser.parseExcelSheet(req.body, function(opportunityData) {
 			if(opportunityData != undefined) {
