@@ -47,7 +47,7 @@ var updateDatabase = function(accessToken, path, callback) {
 * @param row - 1D array of opportunity data
 */
 function insertRows(row, callback) {
-	databaseCheck(row[indexes.OPPORTUNITY_NAME], function(result) {
+	opportunityCheck(row[indexes.OPPORTUNITY_NAME], function(result) {
 		// If exists, the opportunity is protected, only update empty fields
 		if(result.exists) {
 			console.log(row)
@@ -73,7 +73,20 @@ function insertRows(row, callback) {
 	callback()
 }
 
-function databaseCheck(opportunity)
+/**
+* @function opportunityCheck
+* @desc Checks if the opportunity is in the sales_pipeline database.
+* @param {string} opportunity - opportunity to be checked
+* @param callback - callback function to handle result
+*/
+function opportunityCheck(opportunity, callback) {
+	var existsQuery = "SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE "
+					+ "opportunity = $1)"
+	var values = [opportunity]
+	helpers.query(existsQuery, values, function(result) {
+		callback(result)
+	})
+}
 
 /**
 * @function queryPipeline
