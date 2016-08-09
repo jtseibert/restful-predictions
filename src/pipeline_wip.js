@@ -20,7 +20,7 @@ var updateDatabase = function(accessToken, path, callback) {
 						+ "'" + today + "'"
 		helpers.query(deleteQuery, null, function insertPipelineData() {
 			// For each row in pipelineData, insert accordingly
-			async.each(pipelineData, insertRows(), function insertionCallback() {
+			async.each(pipelineData, insertRows, function insertionCallback() {
 				console.log('all rows inserted')
 				callback()
 			})
