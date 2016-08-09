@@ -32,10 +32,9 @@ var updateDatabase = function(accessToken, path, callback) {
 		var deleteQuery = "DELETE FROM sales_pipeline WHERE protected = FALSE OR start_date < " 
 						+ "'" + today + "'"
 		helpers.query(deleteQuery, null, function() {
-			console.log('in the query cb')
 			// For each row in pipelineData, insert accordingly
 			async.eachSeries(pipelineData, insertRows, function() {
-				console.log('all rows inserted or err')
+				console.log('ALL ROWS DONE')
 				callback()
 			})
 		})
@@ -50,10 +49,10 @@ var updateDatabase = function(accessToken, path, callback) {
 function insertRows(row, callback) {
 	//console.log("CURRENT ROW IS " + row + " END ROW")
 	var curRow = row
-	console.log('cur opp is ' + curRow[indexes.OPPORTUNITY_NAME])
+	//console.log('cur opp is ' + curRow[indexes.OPPORTUNITY_NAME])
 	helpers.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
-		[curRow[indexes.OPPORTUNITY_NAME].toString().trim()],
+		[curRow[indexes.OPPORTUNITY_NAME]],
 		function(results) {
 			// If exists, the opportunity is protected, only update empty fields
 			//console.log("EXISTS IS " + JSON.stringify(results) + ' for opportunity ' + curRow[indexes.OPPORTUNITY_NAME])
