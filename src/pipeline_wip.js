@@ -51,6 +51,7 @@ function insertRows(row, callback) {
 		// If exists, the opportunity is protected, only update empty fields
 		console.log("opp " + row[indexes.OPPORTUNITY_NAME] + ' is ' + result[0].exists)
 		if(result[0].exists) {
+			console.log("SOMETHING WAS TRUE")
 			var startDate = moment(new Date(row[indexes.CLOSE_DATE])).add(7, 'days').format('YYYY-MM-DD')
 			console.log(startDate)
 			var updateQuery = "UPDATE IN sales_pipeline SET stage = $1, amount = $2, "
@@ -80,7 +81,7 @@ function insertRows(row, callback) {
 */
 function opportunityCheck(opportunity, callback) {
 	var existsQuery = "SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE "
-					+ "opportunity=" + "'" + opportunity + "')"
+					+ "opportunity=" + opportunity + ")"
 	helpers.query(existsQuery, null, function(result) {
 		callback(result)
 	})
