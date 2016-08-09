@@ -48,7 +48,7 @@ var updateDatabase = function(accessToken, path, callback) {
 * @param row - 1D array of opportunity data
 */
 function insertRows(row, callback) {
-	console.log("CURRENT ROW IS " + row + " END ROW")
+	//console.log("CURRENT ROW IS " + row + " END ROW")
 	var curRow = row
 	helpers.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
