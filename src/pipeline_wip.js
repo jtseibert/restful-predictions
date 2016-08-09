@@ -28,7 +28,7 @@ var indexes = {
 */
 var updateDatabase = function(accessToken, path, callback) {
 	queryPipeline(accessToken, path, function handlePipelineData(pipelineData) {
-		var today = moment().format("YYYY-MM-DD")
+		var today = moment().format("MM/DD/YYYY")
 		var deleteQuery = "DELETE FROM sales_pipeline WHERE protected = FALSE OR start_date < " 
 						+ "'" + today + "'"
 		helpers.query(deleteQuery, null, function() {
@@ -77,9 +77,18 @@ function insertRows(row, callback) {
 					callback(null)
 				})
 			} else {
-			// The opportunity needs to be inserted for every role in the default project size
+			// The opportunity needs to be inserted for every role and week in the default project size
 				//the real work here
-				callback(null)
+				helper.query(
+					"SELECT sizeid, pricehigh, roles_allocations, numweeks " 
+				  + "FROM project_size WHERE ABS($1 - pricehigh) = "
+				  + "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)",
+				  [curRow[indexes.AMOUNT]],
+				  function(results) {
+				  	console.log(JSON.stringify(results))
+				  	callback(null)
+				  }
+				)
 			}
 		}
 	)
