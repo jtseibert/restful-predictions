@@ -20,6 +20,7 @@ var updateDatabase = function(accessToken, path, callback) {
 		var deleteQuery = "DELETE FROM sales_pipeline WHERE protected = FALSE OR start_date < " 
 						+ "'" + today + "'"
 		helpers.query(deleteQuery, null, function() {
+			console.log('in the query cb')
 			// For each row in pipelineData, insert accordingly
 			async.each(pipelineData, insertRows, function insertionCallback() {
 				console.log('all rows inserted')
