@@ -79,7 +79,7 @@ function insertRows(row, callback) {
 			} else {
 			// The opportunity needs to be inserted for every role and week in the default project size
 				//the real work here
-				helper.query(
+				helpers.query(
 					"SELECT sizeid, pricehigh, roles_allocations, numweeks " 
 				  + "FROM project_size WHERE ABS($1 - pricehigh) = "
 				  + "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)",
