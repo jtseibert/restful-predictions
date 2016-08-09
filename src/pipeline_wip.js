@@ -47,30 +47,35 @@ var updateDatabase = function(accessToken, path, callback) {
 * @param row - 1D array of opportunity data
 */
 function insertRows(row, callback) {
-	opportunityCheck(row[indexes.OPPORTUNITY_NAME], function(exists) {
-		// If exists, the opportunity is protected, only update empty fields
-		if(exists) {
-			console.log("SOMETHING WAS TRUE")
-			var startDate = moment(new Date(row[indexes.CLOSE_DATE])).add(7, 'days').format('YYYY-MM-DD')
-			console.log(startDate)
-			var updateQuery = "UPDATE IN sales_pipeline SET stage = $1, amount = $2, "
-							+ "exected_revenue = $3, close_date = $4, start_date = $5, "
-							+ "probability = $6, created_date = $7, account_name = $8 " 
-							+ "WHERE opportunity = $9"
-			var values = [
-				row[indexes.STAGE], row[indexes.AMOUNT], row[indexes.EXP_AMOUNT],
-				row[indexes.CLOSE_DATE], startDate, row[indexes.PROBABILITY],
-				row[indexes.CREATED_DATE], row[indexes.ACCOUNT_NAME], row[indexes.OPPORTUNITY_NAME]
-			]
-			helpers.query(updateQuery, values, function() {
+	// If exists, the opportunity is protected, only update empty fields
+	helpers.query(
+		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
+		[row[indexes.OPPORTUNITY_NAME]],
+		function(results) {
+			if(results[0].exists) {
+				console.log("SOMETHING WAS TRUE")
+				var startDate = moment(new Date(row[indexes.CLOSE_DATE])).add(7, 'days').format('YYYY-MM-DD')
+				console.log(startDate)
+				var updateQuery = "UPDATE IN sales_pipeline SET stage = $1, amount = $2, "
+								+ "exected_revenue = $3, close_date = $4, start_date = $5, "
+								+ "probability = $6, created_date = $7, account_name = $8 " 
+								+ "WHERE opportunity = $9"
+				var values = [
+					row[indexes.STAGE], row[indexes.AMOUNT], row[indexes.EXP_AMOUNT],
+					row[indexes.CLOSE_DATE], startDate, row[indexes.PROBABILITY],
+					row[indexes.CREATED_DATE], row[indexes.ACCOUNT_NAME], row[indexes.OPPORTUNITY_NAME]
+				]
+				helpers.query(updateQuery, values, function() {
+					process.nextTick(callback)
+				})
+			} else {
+				// The opportunity needs to be inserted for every role in the default project size
+				//the real work here
 				process.nextTick(callback)
-			})
-		} else {
-		// The opportunity needs to be inserted for every role in the default project size
-			//the real work here
-			process.nextTick(callback)
+
+			}
 		}
-	})
+	)
 }
 
 /**
@@ -80,11 +85,7 @@ function insertRows(row, callback) {
 * @param callback - callback function to handle result
 */
 function opportunityCheck(opportunity, callback) {
-	helpers.query(
-		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
-		[opportunity],
-		function(results) {callback(results[0].exists)}
-	)
+	
 }
 
 /**
