@@ -16,7 +16,7 @@ var	allocation 		= require('./src/allocation'),
 	Opportunity 	= require('./src/opportunity'),
 	parser          = require('./src/parser'),
 	pg 				= require('pg'),
-	pipeline 		= require('./src/pipeline'),
+	pipeline 		= require('./src/pipeline_wip'),
 	utilities		= require('./src/utilities'),
 	xlsxHandler   	= require('./src/xlsxHandler')
 
@@ -55,15 +55,9 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
 		var accessToken = req.params.accessToken,
 			instance    = req.params.instance
-		pipeline.queryPipeline(accessToken, instance, function(pipelineData) {
-			pipeline.applyDB(pipelineData,function(result){
-				async.each(result, function(row){
-					if (row.length != 12)
-						console.log(row)
-				})
-				console.log(result)
-				res.json(result)
-			})
+		pipeline.updateDatabase(accessToken, instance, function syncSheet() {
+			console.log('time to sync the sheet')
+			res.json({message: "temp"})
 		})
 	})
 
