@@ -62,9 +62,15 @@ function insertRows(row, callback) {
 								+ "probability = $6, created_date = $7, account_name = $8 " 
 								+ "WHERE opportunity = $9"
 				var values = [
-					row[indexes.STAGE], row[indexes.AMOUNT], row[indexes.EXP_AMOUNT],
-					row[indexes.CLOSE_DATE], startDate, row[indexes.PROBABILITY],
-					row[indexes.CREATED_DATE], row[indexes.ACCOUNT_NAME], row[indexes.OPPORTUNITY_NAME]
+					row[indexes.STAGE], 
+					row[indexes.AMOUNT], 
+					row[indexes.EXP_AMOUNT],
+					row[indexes.CLOSE_DATE], 
+					startDate, 
+					row[indexes.PROBABILITY],
+					row[indexes.CREATED_DATE], 
+					row[indexes.ACCOUNT_NAME], 
+					row[indexes.OPPORTUNITY_NAME]
 				]
 				helpers.query(updateQuery, values, function() {
 					process.nextTick(callback)
