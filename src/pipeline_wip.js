@@ -58,7 +58,7 @@ function insertRows(row, callback) {
 				var startDate = moment(new Date(row[indexes.CLOSE_DATE])).add(7, 'days').format('YYYY-MM-DD')
 				console.log(startDate)
 				var updateQuery = "UPDATE sales_pipeline SET stage = $1, amount = $2, "
-								+ "exected_revenue = $3, close_date = $4, start_date = $5, "
+								+ "expected_revenue = $3, close_date = $4, start_date = $5, "
 								+ "probability = $6, created_date = $7, account_name = $8 " 
 								+ "WHERE opportunity = $9"
 				var values = [
