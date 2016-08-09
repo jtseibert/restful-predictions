@@ -15,7 +15,6 @@ var moment = require('moment')
 */
 var updateDatabase = function(accessToken, path, callback) {
 	queryPipeline(accessToken, path, function handlePipelineData(pipelineData) {
-		rowData = pipelineData
 		var today = moment().format("YYYY-MM-DD")
 		var deleteQuery = "DELETE FROM sales_pipeline WHERE protected = FALSE OR start_date < " 
 						+ "'" + today + "'"
@@ -36,7 +35,7 @@ var updateDatabase = function(accessToken, path, callback) {
 * @param row - 1D array of opportunity data
 */
 function insertRows(row) {
-
+	callback()
 
 
 
