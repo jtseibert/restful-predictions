@@ -49,7 +49,6 @@ var updateDatabase = function(accessToken, path, callback) {
 function insertRows(row, callback) {
 	opportunityCheck(row[indexes.OPPORTUNITY_NAME], function(exists) {
 		// If exists, the opportunity is protected, only update empty fields
-		console.log(exists)
 		if(exists) {
 			console.log("SOMETHING WAS TRUE")
 			var startDate = moment(new Date(row[indexes.CLOSE_DATE])).add(7, 'days').format('YYYY-MM-DD')
@@ -67,6 +66,7 @@ function insertRows(row, callback) {
 				callback()
 			})
 		} else {
+		// The opportunity needs to be inserted for every role in the default project size
 			//the real work here
 			callback()
 		}
@@ -80,7 +80,6 @@ function insertRows(row, callback) {
 * @param callback - callback function to handle result
 */
 function opportunityCheck(opportunity, callback) {
-	console.log(opportunity)
 	var opp = opportunity.toString().trim()
 	helpers.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
