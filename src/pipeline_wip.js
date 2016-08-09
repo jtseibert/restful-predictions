@@ -72,7 +72,6 @@ function insertRows(row) {
 					row[indexes.OPPORTUNITY_NAME]
 				]
 				helpers.query(updateQuery, values, function() {
-					callback()
 				})
 			} else {
 			// The opportunity needs to be inserted for every role in the default project size
