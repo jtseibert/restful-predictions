@@ -82,7 +82,7 @@ function insertRows(row, callback) {
 */
 function opportunityCheck(opportunity, callback) {
 	var existsQuery = "SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE "
-					+ "opportunity = " + "'" + opportunity + "'"
+					+ "opportunity = " + "'" + opportunity + "')"
 	helpers.query(existsQuery, null, function(result) {
 		callback(result)
 	})
