@@ -4,6 +4,8 @@
 */
 
 var async = require('async')
+var helpers = require('./helpers')
+var moment = require('moment')
 /**
 * @function updateDatabase
 * @desc Update sales_pipeline database with SF.
@@ -12,13 +14,30 @@ var async = require('async')
 * @param callback - callback function to handle google sheet sync
 */
 var updateDatabase = function(accessToken, path, callback) {
-	queryPipeline(accessToken, path, function insertPipelineData(pipelineData) {
-		console.log(pipelineData)
-
-
-
-		callback()
+	queryPipeline(accessToken, path, function handlePipelineData(pipelineData) {
+		var today = moment().format("YYYY-MM-DD")
+		var deleteQuery = "DELETE FROM sales_pipeline WHERE protected = FALSE OR start_date < " 
+						+ "'" + today + "'"
+		helpers.query(deleteQuery, null, function insertPipelineData() {
+			// For each row in pipelineData, insert accordingly
+			async.each(pipelineData, insertRows(), function insertionCallback() {
+				console.log('all rows inserted')
+				callback()
+			})
+		})
 	})
+}
+
+/**
+* @function insertRows
+* @desc Inserts rows into sales_pipeline for a specific opportunity.
+* @param row - 1D array of opportunity data
+*/
+function insertRows(row) {
+
+
+
+
 }
 
 /**
