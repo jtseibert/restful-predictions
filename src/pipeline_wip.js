@@ -67,6 +67,7 @@ function insertRows(row, callback) {
 			})
 		} else {
 			//the real work here
+			callback()
 		}
 	})
 }
