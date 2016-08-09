@@ -82,6 +82,7 @@ function opportunityCheck(opportunity, callback) {
 	console.log(opportunity)
 	var existsQuery = "SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE "
 					+ "opportunity=" + "'" + opportunity + "')"
+	console.log(existsQuery)
 	helpers.query(existsQuery, null, function(result) {
 		callback(result)
 	})
