@@ -14,9 +14,10 @@ var indexes = {
 	AMOUNT: 2,
 	EXP_AMOUNT: 3,
 	CLOSE_DATE: 4,
-	PROBABILITY: 5,
-	CREATED_DATE: 6,
-	ACCOUNT_NAME: 7
+	START_DATE: 5,
+	PROBABILITY: 6,
+	CREATED_DATE: 7,
+	ACCOUNT_NAME: 8
 }
 /**
 * @function updateDatabase
@@ -53,21 +54,17 @@ function insertRows(row, callback) {
 		function(results) {
 			// If exists, the opportunity is protected, only update empty fields
 			if(results[0].exists) {
-				var startDate = moment(new Date(row[indexes.CLOSE_DATE])).add(7, 'days').format('YYYY-MM-DD')
-				console.log(startDate)
 				var updateQuery = "UPDATE sales_pipeline SET stage = $1, amount = $2, "
 								+ "expected_revenue = $3, close_date = $4, start_date = $5, "
 								+ "probability = $6, created_date = $7, account_name = $8 " 
 								+ "WHERE opportunity = $9"
-
-				console.log('test close date is ' + row[indexes.CLOSE_DATE])
 
 				var values = [
 					row[indexes.STAGE], 
 					row[indexes.AMOUNT], 
 					row[indexes.EXP_AMOUNT],
 					row[indexes.CLOSE_DATE], 
-					startDate, 
+					row[indexes.START_DATE], 
 					row[indexes.PROBABILITY],
 					row[indexes.CREATED_DATE], 
 					row[indexes.ACCOUNT_NAME], 
