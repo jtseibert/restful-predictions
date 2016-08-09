@@ -35,7 +35,7 @@ var updateDatabase = function(accessToken, path, callback) {
 			// For each row in pipelineData, insert accordingly
 			async.each(pipelineData, insertRows, function insertionCallback() {
 				console.log('all rows inserted or err')
-				callback()
+				process.nextTick(callback)
 			})
 		})
 	})
@@ -63,12 +63,12 @@ function insertRows(row, callback) {
 				row[indexes.CREATED_DATE], row[indexes.ACCOUNT_NAME], row[indexes.OPPORTUNITY_NAME]
 			]
 			helpers.query(updateQuery, values, function() {
-				callback()
+				process.nextTick(callback)
 			})
 		} else {
 		// The opportunity needs to be inserted for every role in the default project size
 			//the real work here
-			callback()
+			process.nextTick(callback)
 		}
 	})
 }
@@ -84,7 +84,7 @@ function opportunityCheck(opportunity, callback) {
 	helpers.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[opp],
-		function(results) {callback(results[0].exists)}
+		function(results) {process.nextTick(function() {callback(results[0].exists)})}
 	)
 }
 
