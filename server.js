@@ -4,7 +4,7 @@
 */
 
 // Initialize dependencies
-var	newRelic		= require('newrelic')
+//var	newRelic		= require('newrelic')
 
 var	allocation 		= require('./src/allocation'),
 	async			= require('async'),
