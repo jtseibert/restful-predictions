@@ -80,10 +80,9 @@ function insertRows(row, callback) {
 * @param callback - callback function to handle result
 */
 function opportunityCheck(opportunity, callback) {
-	var opp = opportunity.toString().trim()
 	helpers.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
-		[opp],
+		[opportunity],
 		function(results) {process.nextTick(function() {callback(results[0].exists)})}
 	)
 }
