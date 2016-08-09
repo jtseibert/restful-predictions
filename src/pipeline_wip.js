@@ -47,10 +47,9 @@ var updateDatabase = function(accessToken, path, callback) {
 * @param row - 1D array of opportunity data
 */
 function insertRows(row, callback) {
-	opportunityCheck(row[indexes.OPPORTUNITY_NAME], function(result) {
+	opportunityCheck(row[indexes.OPPORTUNITY_NAME], function(exists) {
 		// If exists, the opportunity is protected, only update empty fields
-		console.log("opp " + row[indexes.OPPORTUNITY_NAME] + ' is ' + result[0].exists)
-		if(result[0].exists) {
+		if(exists) {
 			console.log("SOMETHING WAS TRUE")
 			var startDate = moment(new Date(row[indexes.CLOSE_DATE])).add(7, 'days').format('YYYY-MM-DD')
 			console.log(startDate)
