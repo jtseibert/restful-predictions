@@ -34,7 +34,7 @@ var updateDatabase = function(accessToken, path, callback) {
 * @desc Inserts rows into sales_pipeline for a specific opportunity.
 * @param row - 1D array of opportunity data
 */
-function insertRows(row) {
+function insertRows(row, callback) {
 	callback()
 
 
