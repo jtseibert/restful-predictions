@@ -39,11 +39,13 @@ function updateOpportunity(opportunityData, callback) {
 	async.eachOfSeries(sheetData, function insertRole(role, roleKey, callback) {
 		//for(var number in role) {
 		async.eachSeries(role, function(weekAllocations, callback){
-			helpers.query(
-				"INSERT INTO sales_pipeline(opportunity, role, week_allocations, protected) values($1, $2, $3, $4)",
-				[opportunityName, roleKey, weekAllocations, true],
-				function() { process.nextTick(callback) }
-			)
+			async.eachOfSeries(role.weekAllocations, function(allocation, week, callback) {	
+				helpers.query(
+					"INSERT INTO sales_pipeline(opportunity, role, week, allocation, protected) values($1, $2, $3, $4, $5)",
+					[opportunityName, roleKey, week, allocation, true],
+					function() { process.nextTick(callback) }
+				)
+			})
 		}, function(){ process.nextTick(callback) })
 	}, function() { 
 		process.nextTick(function(){ callback('Update Finished')})
