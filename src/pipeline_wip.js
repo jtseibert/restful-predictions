@@ -36,7 +36,7 @@ var updateDatabase = function(accessToken, path, callback) {
 			// For each row in pipelineData, insert accordingly
 			async.each(pipelineData, insertRows, function insertionCallback() {
 				console.log('all rows inserted or err')
-				process.nextTick(callback)
+				callback()
 			})
 		})
 	})
@@ -71,12 +71,13 @@ function insertRows(row, callback) {
 					row[indexes.OPPORTUNITY_NAME]
 				]
 				helpers.query(updateQuery, values, function() {
-					process.nextTick(callback)
+					callback()
 				})
 			} else {
 			// The opportunity needs to be inserted for every role in the default project size
 				//the real work here
-				process.nextTick(callback)
+				console.log('in the else')
+				callback()
 			}
 		}
 	)
