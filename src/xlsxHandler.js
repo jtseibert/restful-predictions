@@ -13,6 +13,7 @@ var async     = require('async')
 */
 var updateDatabase = function(opportunityData, callback) {
 	databaseCheck(opportunityData.opportunityName, function(inDatabase) {
+		console.log(inDatabase)
 		if(inDatabase) {
 			deleteOpportunity(opportunityData.opportunityName, function() {
 				updateOpportunity(opportunityData, function(status) {
