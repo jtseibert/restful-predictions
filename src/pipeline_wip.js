@@ -83,7 +83,7 @@ function opportunityCheck(opportunity, callback) {
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[opportunity],
 		function(results) {callback(results[0].exists)}
-	})
+	)
 }
 
 /**
