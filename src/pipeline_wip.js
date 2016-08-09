@@ -47,20 +47,21 @@ var updateDatabase = function(accessToken, path, callback) {
 * @param row - 1D array of opportunity data
 */
 function insertRows(row, callback) {
-	// If exists, the opportunity is protected, only update empty fields
 	helpers.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[row[indexes.OPPORTUNITY_NAME]],
 		function(results) {
-			console.log(results)
+			// If exists, the opportunity is protected, only update empty fields
 			if(results[0].exists) {
-				console.log("SOMETHING WAS TRUE")
 				var startDate = moment(new Date(row[indexes.CLOSE_DATE])).add(7, 'days').format('YYYY-MM-DD')
 				console.log(startDate)
 				var updateQuery = "UPDATE sales_pipeline SET stage = $1, amount = $2, "
 								+ "expected_revenue = $3, close_date = $4, start_date = $5, "
 								+ "probability = $6, created_date = $7, account_name = $8 " 
 								+ "WHERE opportunity = $9"
+
+				console.log('test close date is ' + row[indexes.CLOSE_DATE])
+
 				var values = [
 					row[indexes.STAGE], 
 					row[indexes.AMOUNT], 
@@ -76,7 +77,7 @@ function insertRows(row, callback) {
 					process.nextTick(callback)
 				})
 			} else {
-				// The opportunity needs to be inserted for every role in the default project size
+			// The opportunity needs to be inserted for every role in the default project size
 				//the real work here
 				process.nextTick(callback)
 			}
