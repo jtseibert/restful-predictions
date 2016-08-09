@@ -34,7 +34,7 @@ var updateDatabase = function(accessToken, path, callback) {
 		helpers.query(deleteQuery, null, function() {
 			console.log('in the query cb')
 			// For each row in pipelineData, insert accordingly
-			async.map(pipelineData, insertRows, function insertionCallback() {
+			async.each(pipelineData, insertRows, function insertionCallback() {
 				console.log('all rows inserted or err')
 				callback()
 			})
@@ -74,13 +74,13 @@ function insertRows(row, callback) {
 					row[indexes.OPPORTUNITY_NAME]
 				]
 				helpers.query(updateQuery, values, function() {
-					callback(null, null)
+					callback(null)
 				})
 			} else {
 			// The opportunity needs to be inserted for every role in the default project size
 				//the real work here
 				console.log('in the else')
-				callback(null,null)
+				callback(null)
 			}
 		}
 	)
