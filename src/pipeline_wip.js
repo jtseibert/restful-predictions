@@ -34,7 +34,7 @@ var updateDatabase = function(accessToken, path, callback) {
 		helpers.query(deleteQuery, null, function() {
 			console.log('in the query cb')
 			// For each row in pipelineData, insert accordingly
-			async.each(pipelineData, insertRows, function insertionCallback() {
+			async.each(pipelineData, insertRows, function() {
 				console.log('all rows inserted or err')
 				callback()
 			})
@@ -50,6 +50,7 @@ var updateDatabase = function(accessToken, path, callback) {
 function insertRows(row, callback) {
 	//console.log("CURRENT ROW IS " + row + " END ROW")
 	var curRow = row
+	console.log('cur opp is ' + curRow[indexes.OPPORTUNITY_NAME])
 	helpers.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[curRow[indexes.OPPORTUNITY_NAME].toString().trim()],
