@@ -55,7 +55,7 @@ function insertRows(row, callback) {
 		[curRow],
 		function(results) {
 			// If exists, the opportunity is protected, only update empty fields
-			console.log("EXISTS IS " + JSON.stringify(results) + ' for opportunity ' + row[indexes.OPPORTUNITY_NAME])
+			console.log("EXISTS IS " + JSON.stringify(results) + ' for opportunity ' + curRow[indexes.OPPORTUNITY_NAME])
 			if(results[0].exists) {
 				var updateQuery = "UPDATE sales_pipeline SET stage = $1, amount = $2, "
 								+ "expected_revenue = $3, close_date = $4, start_date = $5, "
@@ -63,15 +63,15 @@ function insertRows(row, callback) {
 								+ "WHERE opportunity = $9"
 
 				var values = [
-					row[indexes.STAGE], 
-					row[indexes.AMOUNT], 
-					row[indexes.EXP_AMOUNT],
-					row[indexes.CLOSE_DATE], 
-					row[indexes.START_DATE], 
-					row[indexes.PROBABILITY],
-					row[indexes.CREATED_DATE], 
-					row[indexes.ACCOUNT_NAME], 
-					row[indexes.OPPORTUNITY_NAME]
+					curRow[indexes.STAGE], 
+					curRow[indexes.AMOUNT], 
+					curRow[indexes.EXP_AMOUNT],
+					curRow[indexes.CLOSE_DATE], 
+					curRow[indexes.START_DATE], 
+					curRow[indexes.PROBABILITY],
+					curRow[indexes.CREATED_DATE], 
+					curRow[indexes.ACCOUNT_NAME], 
+					curRow[indexes.OPPORTUNITY_NAME]
 				]
 				helpers.query(updateQuery, values, function() {
 					callback(null)
