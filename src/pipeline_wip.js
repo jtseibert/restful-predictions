@@ -55,7 +55,7 @@ function insertRows(row, callback) {
 		[curRow.toString().trim()],
 		function(results) {
 			// If exists, the opportunity is protected, only update empty fields
-			console.log("EXISTS IS " + JSON.stringify(results) + ' for opportunity ' + curRow[indexes.OPPORTUNITY_NAME])
+			//console.log("EXISTS IS " + JSON.stringify(results) + ' for opportunity ' + curRow[indexes.OPPORTUNITY_NAME])
 			if(results[0].exists) {
 				var updateQuery = "UPDATE sales_pipeline SET stage = $1, amount = $2, "
 								+ "expected_revenue = $3, close_date = $4, start_date = $5, "
@@ -79,7 +79,6 @@ function insertRows(row, callback) {
 			} else {
 			// The opportunity needs to be inserted for every role in the default project size
 				//the real work here
-				console.log('in the else')
 				callback(null)
 			}
 		}
