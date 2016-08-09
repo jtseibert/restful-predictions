@@ -15,10 +15,11 @@ var moment = require('moment')
 */
 var updateDatabase = function(accessToken, path, callback) {
 	queryPipeline(accessToken, path, function handlePipelineData(pipelineData) {
+		var pipelineData = pipelineData
 		var today = moment().format("YYYY-MM-DD")
 		var deleteQuery = "DELETE FROM sales_pipeline WHERE protected = FALSE OR start_date < " 
 						+ "'" + today + "'"
-		helpers.query(deleteQuery, null, function insertPipelineData() {
+		helpers.query(deleteQuery, null, function() {
 			// For each row in pipelineData, insert accordingly
 			async.each(pipelineData, insertRows, function insertionCallback() {
 				console.log('all rows inserted')
