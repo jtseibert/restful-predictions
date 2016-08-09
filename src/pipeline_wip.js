@@ -50,7 +50,7 @@ function insertRows(row, callback) {
 	console.log(row[indexes.OPPORTUNITY_NAME])
 	opportunityCheck(row[indexes.OPPORTUNITY_NAME], function(result) {
 		// If exists, the opportunity is protected, only update empty fields
-		console.log(result.exists)
+		console.log(result)
 		if(result.exists) {
 			console.log(row)
 			var startDate = moment(new Date(row[indexes.CLOSE_DATE])).add(7, 'days').format('YYYY-MM-DD')
