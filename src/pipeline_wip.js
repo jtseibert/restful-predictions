@@ -34,7 +34,7 @@ var updateDatabase = function(accessToken, path, callback) {
 		helpers.query(deleteQuery, null, function() {
 			console.log('in the query cb')
 			// For each row in pipelineData, insert accordingly
-			async.each(pipelineData, insertRows, function() {
+			async.eachSeries(pipelineData, insertRows, function() {
 				console.log('all rows inserted or err')
 				callback()
 			})
