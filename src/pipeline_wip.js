@@ -15,7 +15,7 @@ var moment = require('moment')
 */
 var updateDatabase = function(accessToken, path, callback) {
 	queryPipeline(accessToken, path, function handlePipelineData(pipelineData) {
-		var pipelineData = pipelineData
+		rowData = pipelineData
 		var today = moment().format("YYYY-MM-DD")
 		var deleteQuery = "DELETE FROM sales_pipeline WHERE protected = FALSE OR start_date < " 
 						+ "'" + today + "'"
