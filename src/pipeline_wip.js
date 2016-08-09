@@ -49,6 +49,7 @@ var updateDatabase = function(accessToken, path, callback) {
 function insertRows(row, callback) {
 	opportunityCheck(row[indexes.OPPORTUNITY_NAME], function(exists) {
 		// If exists, the opportunity is protected, only update empty fields
+		console.log(exists)
 		if(exists) {
 			console.log("SOMETHING WAS TRUE")
 			var startDate = moment(new Date(row[indexes.CLOSE_DATE])).add(7, 'days').format('YYYY-MM-DD')
