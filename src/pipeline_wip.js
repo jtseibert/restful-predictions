@@ -49,9 +49,10 @@ var updateDatabase = function(accessToken, path, callback) {
 */
 function insertRows(row, callback) {
 	console.log("CURRENT ROW IS " + row + " END ROW")
+	var curRow = row
 	helpers.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
-		[row[indexes.OPPORTUNITY_NAME]],
+		[curRow],
 		function(results) {
 			// If exists, the opportunity is protected, only update empty fields
 			console.log("EXISTS IS " + JSON.stringify(results) + ' for opportunity ' + row[indexes.OPPORTUNITY_NAME])
