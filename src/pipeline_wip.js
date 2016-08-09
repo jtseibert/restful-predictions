@@ -34,7 +34,6 @@ var updateDatabase = function(accessToken, path, callback) {
 		helpers.query(deleteQuery, null, function() {
 			console.log('in the query cb')
 			// For each row in pipelineData, insert accordingly
-			console.log('PIPELINEDATA IS ' + pipelineData)
 			async.map(pipelineData, insertRows, function insertionCallback() {
 				console.log('all rows inserted or err')
 				callback()
@@ -49,12 +48,13 @@ var updateDatabase = function(accessToken, path, callback) {
 * @param row - 1D array of opportunity data
 */
 function insertRows(row, callback) {
+	console.log(row)
 	helpers.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[row[indexes.OPPORTUNITY_NAME]],
 		function(results) {
 			// If exists, the opportunity is protected, only update empty fields
-			console.log("EXISTS IS " + JSON.stringify(results))
+			console.log("EXISTS IS " + JSON.stringify(results) + ' for opportunity ' + row[indexes.OPPORTUNITY_NAME])
 			if(results[0].exists) {
 				var updateQuery = "UPDATE sales_pipeline SET stage = $1, amount = $2, "
 								+ "expected_revenue = $3, close_date = $4, start_date = $5, "
