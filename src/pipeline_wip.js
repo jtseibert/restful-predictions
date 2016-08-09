@@ -52,6 +52,7 @@ function insertRows(row, callback) {
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[row[indexes.OPPORTUNITY_NAME]],
 		function(results) {
+			console.log(results)
 			if(results[0].exists) {
 				console.log("SOMETHING WAS TRUE")
 				var startDate = moment(new Date(row[indexes.CLOSE_DATE])).add(7, 'days').format('YYYY-MM-DD')
@@ -72,20 +73,9 @@ function insertRows(row, callback) {
 				// The opportunity needs to be inserted for every role in the default project size
 				//the real work here
 				process.nextTick(callback)
-
 			}
 		}
 	)
-}
-
-/**
-* @function opportunityCheck
-* @desc Checks if the opportunity is in the sales_pipeline database.
-* @param {string} opportunity - opportunity to be checked
-* @param callback - callback function to handle result
-*/
-function opportunityCheck(opportunity, callback) {
-	
 }
 
 /**
