@@ -34,10 +34,11 @@ var updateDatabase = function(accessToken, path, callback) {
 		helpers.query(deleteQuery, null, function() {
 			console.log('in the query cb')
 			// For each row in pipelineData, insert accordingly
-			async.each(pipelineData, insertRows, function insertionCallback() {
-				console.log('all rows inserted or err')
-				callback()
-			})
+			pipelineData.map(insertRows)
+			//async.each(pipelineData, insertRows, function insertionCallback() {
+		//		console.log('all rows inserted or err')
+		//		callback()
+		//	})
 		})
 	})
 }
@@ -47,7 +48,7 @@ var updateDatabase = function(accessToken, path, callback) {
 * @desc Inserts rows into sales_pipeline for a specific opportunity.
 * @param row - 1D array of opportunity data
 */
-function insertRows(row, callback) {
+function insertRows(row) {
 	helpers.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[row[indexes.OPPORTUNITY_NAME]],
@@ -77,7 +78,6 @@ function insertRows(row, callback) {
 			// The opportunity needs to be inserted for every role in the default project size
 				//the real work here
 				console.log('in the else')
-				callback()
 			}
 		}
 	)
