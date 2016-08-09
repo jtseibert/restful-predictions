@@ -47,6 +47,7 @@ var updateDatabase = function(accessToken, path, callback) {
 * @param row - 1D array of opportunity data
 */
 function insertRows(row, callback) {
+	console.log(row[indexes.OPPORTUNITY_NAME])
 	opportunityCheck(row[indexes.OPPORTUNITY_NAME], function(result) {
 		// If exists, the opportunity is protected, only update empty fields
 		if(result.exists) {
