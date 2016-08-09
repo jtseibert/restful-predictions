@@ -49,8 +49,8 @@ var updateDatabase = function(accessToken, path, callback) {
 function insertRows(row, callback) {
 	opportunityCheck(row[indexes.OPPORTUNITY_NAME], function(result) {
 		// If exists, the opportunity is protected, only update empty fields
+		console.log("opp " + row[indexes.OPPORTUNITY_NAME] + ' is ' + result[0].exists)
 		if(result[0].exists) {
-			console.log(result[0].exists + ' row is ' + row)
 			var startDate = moment(new Date(row[indexes.CLOSE_DATE])).add(7, 'days').format('YYYY-MM-DD')
 			console.log(startDate)
 			var updateQuery = "UPDATE IN sales_pipeline SET stage = $1, amount = $2, "
@@ -79,10 +79,8 @@ function insertRows(row, callback) {
 * @param callback - callback function to handle result
 */
 function opportunityCheck(opportunity, callback) {
-	console.log(opportunity)
 	var existsQuery = "SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE "
 					+ "opportunity=" + "'" + opportunity + "')"
-	console.log(existsQuery)
 	helpers.query(existsQuery, null, function(result) {
 		callback(result)
 	})
