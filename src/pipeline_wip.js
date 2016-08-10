@@ -43,7 +43,8 @@ var updateDatabase = function(accessToken, path, callback) {
 
 /**
 * @function insertRows
-* @desc Inserts rows into sales_pipeline for a specific opportunity.
+* @desc Inserts rows into sales_pipeline for a specific opportunity. The number
+of rows inserted is equal to forecast duration * roles in opportunity.
 * @param row - 1D array of opportunity data
 */
 function insertRows(row, callback) {
