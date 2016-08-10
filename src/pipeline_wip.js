@@ -100,7 +100,7 @@ function insertRows(row, callback) {
 					  				async.whilst(
 					  					function() {return durationCounter <= duration},
 					  					function(callback) {
-					  						var date = roleStartDate.add(durationCounter, 'weeks').format('MM/DD/YYYY')
+					  						var date = roleStartDate.add(durationCounter, 'w').format('MM/DD/YYYY')
 					  						var insertQuery = "INSERT INTO sales_pipeline (opportunity, stage, amount, expected_revenue, "
 					  						  + "close_date, start_date, probability, created_date, account_name, role, week, allocation) "
 					  						  + "values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)"
