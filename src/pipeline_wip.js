@@ -153,6 +153,45 @@ function insertRows(row, callback) {
 }
 
 /**
+* @function exportToSheets
+* @desc Query sales_pipeline database and return all non omitted opportunities
+for Google Sheets.
+*/
+function exportToSheets() {
+	// Set up the headers
+	var pipelineData = []
+
+	var headers = [
+		"OPPORTUNITY",
+		"STAGE",
+		"AMOUNT",
+		"EXPECTED_AMOUNT",
+		"CLOSE_DATE",
+		"START_DATE",
+		"PROBABILITY",
+		"CREATED_DATE",
+		"ACCOUNT_NAME",
+		"ROLE",
+		"WEEK",
+		"HOURS"
+	]
+
+	var sheetQuery = 
+		"SELECT opportunity, stage, amount, expected_revenue, "
+	  + "close_date, start_date, probability, created_date, account_name, "
+	  + "role, week, allocation WHERE omitted = FALSE"
+
+	helpers.query(
+		sheetQuery,
+		null,
+		function(queryData) {
+			pipelineData = headers.concat(queryData)
+			callback(pipelineData)
+		}
+	)
+}
+
+/**
 * @function queryPipeline
 * @params {string} accessToken - oauth2 access token
 * @params {string} path - salesforce server url

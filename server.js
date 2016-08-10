@@ -56,8 +56,11 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 		var accessToken = req.params.accessToken,
 			instance    = req.params.instance
 		pipeline.updateDatabase(accessToken, instance, function syncSheet() {
-			console.log('time to sync the sheet')
-			res.json({message: "temp"})
+			console.log("DATABASE UPDATE DONE")
+			pipeline.exportToSheet(function(pipelineData) {
+				console.log("EXPORT DONE")
+				res.json(pipelineData)
+			}
 		})
 	})
 
