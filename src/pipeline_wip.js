@@ -158,7 +158,7 @@ function insertRows(row, callback) {
 * @desc Query sales_pipeline database and return all non omitted opportunities
 for Google Sheets.
 */
-function exportToSheets() {
+function exportToSheets(callback) {
 	// Set up the headers
 	var pipelineData = []
 
