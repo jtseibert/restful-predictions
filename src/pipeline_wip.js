@@ -191,8 +191,14 @@ function exportToSheets(callback) {
 			async.eachOf(queryData, function(opportunity, key, callback) {
 				var temp = []
 				async.eachOfSeries(opportunity, function(opportunityData, key, callback) {
-					temp.push(opportunityData)
-					process.nextTick(callback)
+					// Convert dates for consistency
+					if(key == "close_date" || key == "start_date" || key == "created_date" || key == "week") {
+						temp.push(moment(new Date(opportunityData)).format("MM/DD/YYYY"))
+						process.nextTick(callback)
+					} else {
+						temp.push(opportunityData)
+						process.nextTick(callback)
+					}
 				},
 				 function() {
 					values.push(temp)
