@@ -88,8 +88,9 @@ function insertRows(row, callback) {
 				  	function(results) {
 				  //	console.log(JSON.stringify(results))
 				  		// For each role, insert *role duration* rows
+				  		var roleAllocations = results[0].roles_allocations
 				  		async.eachOfSeries(
-				  			results[0].roles_allocations, 
+				  			roleAllocations, 
 				  			function(roleValues, role, callback) {
 				  				console.log("role is: " + role)
 				  				console.log("role values are: " + JSON.stringify(roleValues))
