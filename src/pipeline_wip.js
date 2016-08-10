@@ -94,7 +94,7 @@ function insertRows(row, callback) {
 					  			function(roleValues, role, callback) {
 					  				// Start the counter at a role offset and iterate for duration - offset
 					  				var durationCounter = roleValues.offset
-					  				var duration = roleValues.duration - roleValues.offset
+					  				var duration = roleValues.duration
 					  				var roleStartDate = moment(new Date(curRow[indexes.START_DATE]))
 					  				var hours = roleValues.allocation
 					  				async.whilst(
