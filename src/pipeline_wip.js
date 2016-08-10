@@ -101,7 +101,7 @@ function insertRows(row, callback) {
 					  					function() {return durationCounter <= duration},
 					  					function(callback) {
 					  						// Temp so roleStartDate is not mutated
-					  						var temp = roleStartDate
+					  						var temp = roleStartDate.clone()
 					  						var date = temp.add(durationCounter, 'weeks').format('MM/DD/YYYY')
 					  						var insertQuery = "INSERT INTO sales_pipeline (opportunity, stage, amount, expected_revenue, "
 					  						  + "close_date, start_date, probability, created_date, account_name, role, week, allocation) "
