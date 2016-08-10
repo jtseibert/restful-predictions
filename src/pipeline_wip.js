@@ -162,7 +162,7 @@ function exportToSheets(callback) {
 	// Set up the headers
 	var pipelineData = []
 
-	var headers = [
+	var headers = [[
 		"OPPORTUNITY",
 		"STAGE",
 		"AMOUNT",
@@ -175,7 +175,7 @@ function exportToSheets(callback) {
 		"ROLE",
 		"WEEK",
 		"HOURS"
-	]
+	]]
 
 	var sheetQuery = 
 		"SELECT opportunity, stage, amount, expected_revenue, "
