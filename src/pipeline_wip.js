@@ -86,13 +86,13 @@ function insertRows(row, callback) {
 				  + "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)",
 				  [curRow[indexes.AMOUNT]],
 				  	function(results) {
-				  	console.log(JSON.stringify(results))
+				  //	console.log(JSON.stringify(results))
 				  		// For each role, insert *role duration* rows
 				  		async.eachOfSeries(
 				  			results[0].roles_allocations, 
 				  			function(roleValues, role, callback) {
 				  				console.log("role is: " + role)
-				  				console.log("role values are: " + roleValues)
+				  				console.log("role values are: " + JSON.stringify(roleValues))
 				  				callback(null)
 				  			},
 				  			function() {callback(null)}
