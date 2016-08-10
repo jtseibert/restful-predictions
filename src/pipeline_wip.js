@@ -84,19 +84,19 @@ function insertRows(row, callback) {
 				  + "FROM project_size WHERE ABS($1 - pricehigh) = "
 				  + "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)",
 				  [curRow[indexes.AMOUNT]],
-				  function(results) {
-				  	//console.log(JSON.stringify(results))
-				  	// For each role, insert *role duration* rows
-				  	async.eachOfSeries(
-				  		results[0].roles_allocations, 
-				  		function(roleValues, role, callback) {
-				  			console.log("role is: " + role)
-				  			console.log("role values are: " + roleValues)
-				  			callback(null)
-				  		},
-				  		function() {callback(null)}
-				  	)			  
-				  }
+				  	function(results) {
+				  	console.log(JSON.stringify(results))
+				  		// For each role, insert *role duration* rows
+				  		async.eachOfSeries(
+				  			results[0].roles_allocations, 
+				  			function(roleValues, role, callback) {
+				  				console.log("role is: " + role)
+				  				console.log("role values are: " + roleValues)
+				  				callback(null)
+				  			},
+				  			function() {callback(null)}
+				  		)			  
+				  	}
 				)
 			}
 		}
