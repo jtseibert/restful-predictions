@@ -127,7 +127,7 @@ function insertRows(row, callback) {
 					  							insertValues,
 					  							function() {
 					  								durationCounter++
-					  								callback(null, durationCounter)
+					  								callback(null)
 					  							}
 					  						)
 					  					},
