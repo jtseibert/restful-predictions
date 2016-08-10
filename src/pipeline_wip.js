@@ -41,6 +41,7 @@ var updateDatabase = function(accessToken, path, callback) {
 	})
 }
 
+module.exports.updateDatabase = updateDatabase
 /**
 * @function insertRows
 * @desc Inserts rows into sales_pipeline for a specific opportunity. The number
@@ -191,6 +192,7 @@ function exportToSheets() {
 	)
 }
 
+module.exports.exportToSheets = exportToSheets
 /**
 * @function queryPipeline
 * @params {string} accessToken - oauth2 access token
@@ -238,4 +240,3 @@ function queryPipeline(accessToken, path, callback) {
 		.run({ autoFetch : true, maxFetch : 4000 });
 }
 
-module.exports.updateDatabase = updateDatabase
