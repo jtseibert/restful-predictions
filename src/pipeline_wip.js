@@ -89,7 +89,11 @@ function insertRows(row, callback) {
 				  	// For each role, insert *role duration* rows
 				  	async.eachOfSeries(
 				  		results[0].roles_allocations, 
-				  		insertByRole,
+				  		function insertByRole(roleValues, role, callback) {
+				  			console.log("role is: " + role)
+				  			console.log("role values are: " + roleValues)
+				  			callback(null)
+				  		},
 				  		function() {callback(null)}
 				  	)			  
 				  }
@@ -97,25 +101,6 @@ function insertRows(row, callback) {
 			}
 		}
 	)
-}
-
-function insertByRole(roleData, callback) {
-var weekCount = results.numweeks
-				  	async.whilst(
-				  		function() { return weekCount > 0},
-				  		//iteree, iterate over role_allocations inserting rows,
-				  		//then decrement weekCount
-				  		insertOpportunity(results.roles)
-
-
-
-				  		,
-				  		//final callback
-				  		//call this callback(null)
-
-				  			callback(null))
-
-
 }
 
 /**
