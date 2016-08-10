@@ -102,8 +102,10 @@ function insertRows(row, callback) {
 					  				console.log("role values are: " + JSON.stringify(roleValues))
 					  				callback(null)
 					  			},
-					  			function() {callback(callback())}
+					  			function() {callback(null)}
 					  		)	
+					  	} else {
+					  		callback(null)
 					  	}		  
 				  	}
 				)
