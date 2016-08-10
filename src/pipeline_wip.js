@@ -104,7 +104,7 @@ function insertRows(row, callback) {
 					  				var roleStartDate = moment(new Date(curRow[indexes.START_DATE]))
 					  				var hours = roleValues.allocation
 					  				async.whilst(
-					  					function() {return duration > 0},
+					  					function() {return duration >= 0},
 					  					function() {
 					  						var date = roleStartDate.add(duration, 'weeks').format('MM/DD/YYYY')
 					  						var insertQuery = "INSERT INTO sales_pipeline (opportunity, stage, amount, expected_revenue, "
