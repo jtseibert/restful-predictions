@@ -186,7 +186,7 @@ function exportToSheets(callback) {
 		sheetQuery,
 		null,
 		function(queryData) {
-			pipelineData = headers.concat(queryData)
+			pipelineData = headers.concat(queryData[0])
 			console.log(pipelineData)
 			callback(pipelineData)
 		}
