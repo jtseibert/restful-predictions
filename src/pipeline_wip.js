@@ -105,7 +105,7 @@ function insertRows(row, callback) {
 					  				var hours = roleValues.allocation
 					  				async.whilst(
 					  					function() {return duration >= 0},
-					  					function() {
+					  					function(callback) {
 					  						var date = roleStartDate.add(duration, 'weeks').format('MM/DD/YYYY')
 					  						var insertQuery = "INSERT INTO sales_pipeline (opportunity, stage, amount, expected_revenue, "
 					  						  + "close_date, start_date, probability, created_date, account_name, role, week, allocation) "
@@ -129,12 +129,12 @@ function insertRows(row, callback) {
 					  							insertQuery,
 					  							insertValues,
 					  							function() {
-					  								console.log(duration)
 					  								duration--
-					  								callback(null, duration)
+					  								callback(null)
 					  							}
 					  						)
-					  					}
+					  					},
+					  					function() {callback(null)}
 					  				)
 					  			},
 					  			function() {callback(null)}
