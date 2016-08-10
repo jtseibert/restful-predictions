@@ -130,7 +130,7 @@ function insertRows(row, callback) {
 					  							insertValues,
 					  							function() {
 					  								duration--
-					  								callback(null)
+					  								callback(null, duration)
 					  							}
 					  						)
 					  					},
