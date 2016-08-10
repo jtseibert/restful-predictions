@@ -189,21 +189,19 @@ function exportToSheets(callback) {
 			var values = []
 			// Asyncronusly concert result to 2D array
 			async.eachOf(queryData, function(opportunity, key, callback) {
-				console.log("first looop val is " + JSON.stringify(opportunity))
-				console.log("first loop key is " + key)
 				var temp = []
 				async.eachOf(opportunity, function(opportunityData, key, callback) {
-					console.log('inner val is ' + opportunityData)
-					console.log('inner key is ' + key)
 					temp.push(opportunityData)
 					callback()
 				},
 				 function() {
 					values.push(temp)
+					console.log('temp is ' + temp)
 					callback()
 				})
 			},
 			function() {
+				console.log('values is ' + values)
 				pipelineData = headers.concat(values)
 				console.log(pipelineData)
 				callback(pipelineData)
