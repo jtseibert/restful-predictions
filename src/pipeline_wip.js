@@ -193,7 +193,9 @@ function exportToSheets(callback) {
 				console.log("first loop key is " + key)
 				var temp = []
 				async.eachOf(opportunity, function(opportunityData, key, callback) {
-					temp.push(opportunityData[key])
+					console.log('inner val is ' + opportunityData)
+					console.log('inner key is ' + key)
+					temp.push(opportunityData)
 					callback()
 				},
 				 function() {
