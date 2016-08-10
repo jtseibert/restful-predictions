@@ -100,39 +100,43 @@ function insertRows(row, callback) {
 					  			function(roleValues, role, callback) {
 					  				//console.log("role is: " + role)
 					  				//console.log("role values are: " + JSON.stringify(roleValues))
+					  				var durationCounter = 0
 					  				var duration = roleValues.duration
+					  				var roleOffset = roleValues.offset
 					  				var roleStartDate = moment(new Date(curRow[indexes.START_DATE]))
 					  				var hours = roleValues.allocation
 					  				async.whilst(
-					  					function() {return duration >= 0},
+					  					function() {return durationCounter <= duration},
 					  					function(callback) {
-					  						var date = roleStartDate.add(duration, 'weeks').format('MM/DD/YYYY')
-					  						var insertQuery = "INSERT INTO sales_pipeline (opportunity, stage, amount, expected_revenue, "
-					  						  + "close_date, start_date, probability, created_date, account_name, role, week, allocation) "
-					  						  + "values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)"
+					  						if(offset <= durationCounter) {
+						  						var date = roleStartDate.add(durationCounter, 'weeks').format('MM/DD/YYYY')
+						  						var insertQuery = "INSERT INTO sales_pipeline (opportunity, stage, amount, expected_revenue, "
+						  						  + "close_date, start_date, probability, created_date, account_name, role, week, allocation) "
+						  						  + "values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)"
 
-					  						 var insertValues = [
-					  						 	curRow[indexes.OPPORTUNITY_NAME],
-					  						 	curRow[indexes.STAGE],
-					  						 	curRow[indexes.AMOUNT],
-					  						 	curRow[indexes.EXP_AMOUNT],
-					  						 	curRow[indexes.CLOSE_DATE],
-					  						 	curRow[indexes.START_DATE],
-					  						 	curRow[indexes.PROBABILITY],
-					  						 	curRow[indexes.CREATED_DATE],
-					  						 	curRow[indexes.ACCOUNT_NAME],
-					  						 	role,
-					  						 	date,
-					  						 	hours
-					  						]
-					  						helpers.query(
-					  							insertQuery,
-					  							insertValues,
-					  							function() {
-					  								duration--
-					  								callback(null)
-					  							}
-					  						)
+						  						 var insertValues = [
+						  						 	curRow[indexes.OPPORTUNITY_NAME],
+						  						 	curRow[indexes.STAGE],
+						  						 	curRow[indexes.AMOUNT],
+						  						 	curRow[indexes.EXP_AMOUNT],
+						  						 	curRow[indexes.CLOSE_DATE],
+						  						 	curRow[indexes.START_DATE],
+						  						 	curRow[indexes.PROBABILITY],
+						  						 	curRow[indexes.CREATED_DATE],
+						  						 	curRow[indexes.ACCOUNT_NAME],
+						  						 	role,
+						  						 	date,
+						  						 	hours
+						  						]
+						  						helpers.query(
+						  							insertQuery,
+						  							insertValues,
+						  							function() {
+						  								durationCounter++
+						  								callback(null)
+						  							}
+						  						)
+						  					} else {callback(null)}
 					  					},
 					  					function() {callback(null)}
 					  				)
