@@ -107,6 +107,8 @@ function insertRows(row, callback) {
 					  					function() {return duration > 0},
 					  					function() {
 					  						var date = roleStartDate.add(duration, 'weeks').format('MM/DD/YYYY')
+					  						console.log("date is " + date)
+					  						console.log("duration is " + duration)
 					  						var insertQuery = "INSERT INTO sales_pipeline (opportunity, stage, amount, expected_revenue, "
 					  						  + "close_date, start_date, probability, created_date, account_name, role, week, hours) "
 					  						  + "values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)"
