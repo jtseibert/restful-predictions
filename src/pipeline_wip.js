@@ -190,7 +190,7 @@ function exportToSheets(callback) {
 			// Asyncronusly concert result to 2D array
 			async.eachOf(queryData, function(opportunity, key, callback) {
 				var temp = []
-				async.eachOf(opportunity, function(opportunityData, key, callback) {
+				async.eachOfSeries(opportunity, function(opportunityData, key, callback) {
 					temp.push(opportunityData)
 					callback()
 				},
