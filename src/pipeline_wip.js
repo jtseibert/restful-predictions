@@ -48,7 +48,7 @@ of rows inserted is equal to forecast duration * roles in opportunity.
 * @param row - 1D array of opportunity data
 */
 function insertRows(row, callback) {
-	console.log("CURRENT ROW IS " + row + " END ROW")
+	//console.log("CURRENT ROW IS " + row + " END ROW")
 	var curRow = row
 	//console.log('cur opp is ' + curRow[indexes.OPPORTUNITY_NAME])
 	helpers.query(
@@ -90,18 +90,21 @@ function insertRows(row, callback) {
 				  	function(results) {
 				  //	console.log(JSON.stringify(results))
 				  		// For each role, insert *role duration* rows
-				  		console.log('AMOUNT IS ' + curRow[indexes.AMOUNT])
-				  		console.log(results)
-				  		var roleAllocations = results[0].roles_allocations
-				  		async.eachOfSeries(
-				  			roleAllocations, 
-				  			function(roleValues, role, callback) {
-				  				console.log("role is: " + role)
-				  				console.log("role values are: " + JSON.stringify(roleValues))
-				  				callback(null)
-				  			},
-				  			function() {callback(null)}
-				  		)			  
+				  		//console.log('AMOUNT IS ' + curRow[indexes.AMOUNT])
+				  		//console.log(results)
+				  		// Check for missing amount in opportunity
+				  		if(curRow[indexes.AMOUNT] != null) {
+					  		var roleAllocations = results[0].roles_allocations
+					  		async.eachOfSeries(
+					  			roleAllocations, 
+					  			function(roleValues, role, callback) {
+					  				console.log("role is: " + role)
+					  				console.log("role values are: " + JSON.stringify(roleValues))
+					  				callback(null)
+					  			},
+					  			function() {callback(null)}
+					  		)	
+					  	}		  
 				  	}
 				)
 			}
