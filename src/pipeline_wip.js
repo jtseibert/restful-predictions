@@ -102,14 +102,11 @@ function insertRows(row, callback) {
 					  				//console.log("role values are: " + JSON.stringify(roleValues))
 					  				var duration = roleValues.duration
 					  				var roleStartDate = moment(new Date(curRow[indexes.START_DATE]))
-					  				console.log("role start date is " + roleStartDate)
 					  				var hours = roleValues.allocation
 					  				async.whilst(
 					  					function() {return duration > 0},
 					  					function() {
 					  						var date = roleStartDate.add(duration, 'weeks').format('MM/DD/YYYY')
-					  						console.log("date is " + date)
-					  						console.log("duration is " + duration)
 					  						var insertQuery = "INSERT INTO sales_pipeline (opportunity, stage, amount, expected_revenue, "
 					  						  + "close_date, start_date, probability, created_date, account_name, role, week, hours) "
 					  						  + "values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)"
@@ -128,7 +125,7 @@ function insertRows(row, callback) {
 					  						 	date,
 					  						 	hours
 					  						]
-
+					  						console.log("values are " + insertValues)
 					  						helpers.query(
 					  							insertQuery,
 					  							insertValues,
