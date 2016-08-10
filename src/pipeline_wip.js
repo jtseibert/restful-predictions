@@ -63,7 +63,7 @@ function insertRows(row, callback) {
 								+ "probability = $6, created_date = $7, account_name = $8 " 
 								+ "WHERE opportunity = $9"
 
-				var values = [
+				var updateValues = [
 					curRow[indexes.STAGE], 
 					curRow[indexes.AMOUNT], 
 					curRow[indexes.EXP_AMOUNT],
@@ -74,7 +74,7 @@ function insertRows(row, callback) {
 					curRow[indexes.ACCOUNT_NAME], 
 					curRow[indexes.OPPORTUNITY_NAME]
 				]
-				helpers.query(updateQuery, values, function() {
+				helpers.query(updateQuery, updateValues, function() {
 					callback(null)
 				})
 			} else {
@@ -98,9 +98,47 @@ function insertRows(row, callback) {
 					  		async.eachOfSeries(
 					  			roleAllocations, 
 					  			function(roleValues, role, callback) {
-					  				console.log("role is: " + role)
-					  				console.log("role values are: " + JSON.stringify(roleValues))
-					  				callback(null)
+					  				//console.log("role is: " + role)
+					  				//console.log("role values are: " + JSON.stringify(roleValues))
+					  				var duration = roleValues.duration
+					  				var roleStartDate = moment(new Date(curRow[indexes.start_date]))
+					  				var hours = roleValues.allocation
+					  				async.whilst(
+					  					function() {return duration > 0},
+					  					function() {
+					  						var date = roleStartDate.add(duration, 'weeks').format('MM/DD/YYYY')
+					  						var insertQuery = "INSERT INTO sales_pipeline (opportunity, stage, amount, expected_revenue, "
+					  						  + "close_date, start_date, probability, created_date, account_name, role, week, hours) "
+					  						  + "values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)"
+
+					  						 var insertValues = [
+					  						 	curRow[indexes.OPPORTUNITY_NAME],
+					  						 	curRow[indexes.STAGE],
+					  						 	curRow[indexes.AMOUNT],
+					  						 	curRow[indexes.EXP_AMOUNT],
+					  						 	curRow[indexes.CLOSE_DATE],
+					  						 	curRow[indexes.START_DATE],
+					  						 	curRow[indexes.PROBABILITY],
+					  						 	curRow[indexes.CREATED_DATE],
+					  						 	curRow[indexes.ACCOUNT_NAME],
+					  						 	role,
+					  						 	date,
+					  						 	hours
+					  						]
+
+					  						helpers.query(
+					  							insertQuery,
+					  							insertValues,
+					  							function() {
+					  								duration--
+					  								callback(null)
+					  							}
+					  						)
+					  					},
+					  					function() {
+					  						callback(null)
+					  					}
+					  				)
 					  			},
 					  			function() {callback(null)}
 					  		)	
