@@ -11,7 +11,7 @@ var	allocation 		= require('./src/allocation'),
 	bodyParser 		= require('body-parser'),
 	capacity        = require('./src/capacity'),
 	express			= require('express'),
-	forecast 		= require('./src/forecast'),
+	Forecast 		= require('./src/forecast'),
 	helpers			= require('./src/helpers'),
 	Opportunity 	= require('./src/opportunity'),
 	parser          = require('./src/parser'),
@@ -75,7 +75,7 @@ router.route('/:instance/DATA_Capacity/:accessToken')
 
 router.route('/DATA_Forecast')
 	.post(function(req, res) {
-		forecast = new forecast(pg, req.body, function() {
+		forecast = new Forecast(pg, req.body, function() {
 			forecast.create(function() {
 				res.json(forecast.returnData)
 				delete forecast
