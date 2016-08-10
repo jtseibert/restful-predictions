@@ -48,7 +48,7 @@ of rows inserted is equal to forecast duration * roles in opportunity.
 * @param row - 1D array of opportunity data
 */
 function insertRows(row, callback) {
-	//console.log("CURRENT ROW IS " + row + " END ROW")
+	console.log("CURRENT ROW IS " + row + " END ROW")
 	var curRow = row
 	//console.log('cur opp is ' + curRow[indexes.OPPORTUNITY_NAME])
 	helpers.query(
@@ -80,11 +80,13 @@ function insertRows(row, callback) {
 			} else {
 			// The opportunity needs to be inserted for every role and week in the default project size
 				//the real work here
-				helpers.query(
-					"SELECT sizeid, pricehigh, roles_allocations, numweeks " 
+				var getDefaultSizeQuery = "SELECT sizeid, pricehigh, roles_allocations, numweeks " 
 				  + "FROM project_size WHERE ABS($1 - pricehigh) = "
-				  + "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)",
-				  [curRow[indexes.AMOUNT]],
+				  + "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)"
+				
+				helpers.query(
+					getDefaultSizeQuery,
+				  	[curRow[indexes.AMOUNT]],
 				  	function(results) {
 				  //	console.log(JSON.stringify(results))
 				  		// For each role, insert *role duration* rows
