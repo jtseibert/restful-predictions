@@ -60,7 +60,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 			pipeline.exportToSheet(function(pipelineData) {
 				console.log("EXPORT DONE")
 				res.json(pipelineData)
-			}
+			})
 		})
 	})
 
