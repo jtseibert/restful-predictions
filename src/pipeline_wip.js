@@ -125,7 +125,6 @@ function insertRows(row, callback) {
 					  						 	date,
 					  						 	hours
 					  						]
-					  						console.log("values are " + insertValues)
 					  						helpers.query(
 					  							insertQuery,
 					  							insertValues,
