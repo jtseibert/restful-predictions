@@ -129,6 +129,7 @@ function insertRows(row, callback) {
 					  							insertQuery,
 					  							insertValues,
 					  							function() {
+					  								console.log(duration)
 					  								duration--
 					  								callback(null, duration)
 					  							}
