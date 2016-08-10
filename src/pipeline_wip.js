@@ -186,9 +186,24 @@ function exportToSheets(callback) {
 		sheetQuery,
 		null,
 		function(queryData) {
-			pipelineData = headers.concat(queryData[0])
-			console.log(pipelineData)
-			callback(pipelineData)
+			var values = []
+			// Asyncronusly concert result to 2D array
+			async.eachOf(queryData, function(opportunity, key, callback) {
+				var temp = []
+				async.eachOf(opportunity, function(opportunityData, key, callback) {
+					temp.push(opportunityData[key])
+					callback()
+				},
+				 function() {
+					values.push(temp)
+					callback()
+				})
+			},
+			function() {
+				pipelineData = headers.concat(values)
+				console.log(pipelineData)
+				callback(pipelineData)
+			})
 		}
 	)
 }
