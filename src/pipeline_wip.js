@@ -192,19 +192,19 @@ function exportToSheets(callback) {
 				var temp = []
 				async.eachOfSeries(opportunity, function(opportunityData, key, callback) {
 					temp.push(opportunityData)
-					callback()
+					process.nextTick(callback)
 				},
 				 function() {
 					values.push(temp)
 					console.log('temp is ' + temp)
-					callback()
+					process.nextTick(callback)
 				})
 			},
 			function() {
 				console.log('values is ' + values)
 				pipelineData = headers.concat(values)
 				console.log(pipelineData)
-				callback(pipelineData)
+				process.nextTick(function() {callback(pipelineData)})
 			})
 		}
 	)
