@@ -180,7 +180,7 @@ function exportToSheets(callback) {
 	var sheetQuery = 
 		"SELECT opportunity, stage, amount, expected_revenue, "
 	  + "close_date, start_date, probability, created_date, account_name, "
-	  + "role, week, allocation WHERE omitted = FALSE"
+	  + "role, week, allocation FROM sales_pipeline WHERE omitted = FALSE"
 
 	helpers.query(
 		sheetQuery,
