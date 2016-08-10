@@ -85,13 +85,37 @@ function insertRows(row, callback) {
 				  + "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)",
 				  [curRow[indexes.AMOUNT]],
 				  function(results) {
-				  	console.log(JSON.stringify(results))
-				  	callback(null)
+				  	//console.log(JSON.stringify(results))
+				  	// For each role, insert *role duration* rows
+				  	async.eachOfSeries(
+				  		results[0].roles_allocations, 
+				  		insertByRole,
+				  		function() {callback(null)}
+				  	)			  
 				  }
 				)
 			}
 		}
 	)
+}
+
+function insertByRole(roleData, callback) {
+var weekCount = results.numweeks
+				  	async.whilst(
+				  		function() { return weekCount > 0},
+				  		//iteree, iterate over role_allocations inserting rows,
+				  		//then decrement weekCount
+				  		insertOpportunity(results.roles)
+
+
+
+				  		,
+				  		//final callback
+				  		//call this callback(null)
+
+				  			callback(null)
+
+
 }
 
 /**
