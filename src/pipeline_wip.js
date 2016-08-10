@@ -101,7 +101,7 @@ function insertRows(row, callback) {
 					  				//console.log("role is: " + role)
 					  				//console.log("role values are: " + JSON.stringify(roleValues))
 					  				var duration = roleValues.duration
-					  				var roleStartDate = moment(new Date(curRow[indexes.start_date])).format('MM/DD/YYYY')
+					  				var roleStartDate = moment(new Date(curRow[indexes.START_DATE]))
 					  				console.log("role start date is " + roleStartDate)
 					  				var hours = roleValues.allocation
 					  				async.whilst(
