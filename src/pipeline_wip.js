@@ -133,9 +133,6 @@ function insertRows(row, callback) {
 					  								callback(null, duration)
 					  							}
 					  						)
-					  					},
-					  					function() {
-					  						callback(null)
 					  					}
 					  				)
 					  			},
