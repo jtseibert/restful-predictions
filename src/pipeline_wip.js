@@ -49,15 +49,12 @@ of rows inserted is equal to forecast duration * roles in opportunity.
 * @param row - 1D array of opportunity data
 */
 function insertRows(row, callback) {
-	//console.log("CURRENT ROW IS " + row + " END ROW")
 	var curRow = row
-	//console.log('cur opp is ' + curRow[indexes.OPPORTUNITY_NAME])
 	helpers.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[curRow[indexes.OPPORTUNITY_NAME]],
 		function(results) {
 			// If exists, the opportunity is protected, only update empty fields
-			//console.log("EXISTS IS " + JSON.stringify(results) + ' for opportunity ' + curRow[indexes.OPPORTUNITY_NAME])
 			if(results[0].exists) {
 				var updateQuery = "UPDATE sales_pipeline SET stage = $1, amount = $2, "
 								+ "expected_revenue = $3, close_date = $4, start_date = $5, "
@@ -79,8 +76,7 @@ function insertRows(row, callback) {
 					callback(null)
 				})
 			} else {
-			// The opportunity needs to be inserted for every role and week in the default project size
-				//the real work here
+				// The opportunity needs to be inserted for every role and week in the default project size
 				var getDefaultSizeQuery = "SELECT sizeid, pricehigh, roles_allocations, numweeks " 
 				  + "FROM project_size WHERE ABS($1 - pricehigh) = "
 				  + "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)"
@@ -89,18 +85,13 @@ function insertRows(row, callback) {
 					getDefaultSizeQuery,
 				  	[curRow[indexes.AMOUNT]],
 				  	function(results) {
-				  //	console.log(JSON.stringify(results))
 				  		// For each role, insert *role duration* rows
-				  		//console.log('AMOUNT IS ' + curRow[indexes.AMOUNT])
-				  		//console.log(results)
 				  		// Check for missing amount in opportunity
 				  		if(curRow[indexes.AMOUNT] != null) {
 					  		var roleAllocations = results[0].roles_allocations
 					  		async.eachOfSeries(
 					  			roleAllocations, 
 					  			function(roleValues, role, callback) {
-					  				//console.log("role is: " + role)
-					  				//console.log("role values are: " + JSON.stringify(roleValues))
 					  				// Start the counter at a role offset and iterate for duration - offset
 					  				var durationCounter = roleValues.offset
 					  				var duration = roleValues.duration - roleValues.offset
@@ -202,14 +193,11 @@ function exportToSheets(callback) {
 				},
 				 function() {
 					values.push(temp)
-					console.log('temp is ' + temp)
 					process.nextTick(callback)
 				})
 			},
 			function() {
-				console.log('values is ' + values)
 				pipelineData = headers.concat(values)
-				console.log(pipelineData)
 				process.nextTick(function() {callback(pipelineData)})
 			})
 		}
