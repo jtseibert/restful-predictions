@@ -176,7 +176,6 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  						 	hours,
 		  						 	results[0].sizeid
 		  						]
-		  						console.log(insertValues)
 		  						helpers.query(
 		  							insertQuery,
 		  							insertValues,
@@ -311,7 +310,7 @@ function queryPipeline(accessToken, path, callback) {
 			process.nextTick(function() {callback(pipelineData)})
 		})
 		.on("error", function(err) {
-			console.log(err);
+			process.nextTick(function() {callback(err)})
 		})
 		.run({ autoFetch : true, maxFetch : 4000 });
 }
