@@ -127,7 +127,7 @@ function insertWithDefaultSize(opportunityData, callback) {
 	 	+ "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)"
 	helpers.query(
 		getDefaultSizeQuery,
-	  	[amount],	  	
+	  	[opportunityData[indexes.AMOUNT]],	  	
 	  	function(results) {
 	  		// For each role, insert *role duration* rows
 	  		// Check for missing amount in opportunity
