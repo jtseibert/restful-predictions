@@ -91,15 +91,15 @@ var appendOpportunityData = function(opportunityData, callback) {
 		[opportunityData[3]],
 		function queryCallback(queryData) {
 			var indexFriendlyData = [
-				queryData[0],
+				queryData[0].stage,
 				opportunityData[3],
-				queryData[1],
-				queryData[2],
-				queryData[3],
+				queryData[0].amount,
+				queryData[0].expected_revenue,
+				queryData[0].close_date,
 				opportunityData[0],
 				opportunityData[1],
-				queryData[4],
-				queryData[5],
+				queryData[0].created_date,
+				queryData[0].account_name,
 				opportunityData[2]
 			]
 			console.log(indexFriendlyData)
