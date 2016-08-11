@@ -232,7 +232,7 @@ function queryPipeline(accessToken, path, callback) {
 	var pipelineQuery = 
 		"SELECT StageName, Name, Amount, ExpectedRevenue, CloseDate, Probability, "
 	  + "CreatedDate, Account.Name FROM Opportunity WHERE CloseDate>="
-	  + today
+	  + "'" + today + "'"
 
 	// Execute SOQL query to populate pipelineData
 	conn.query(pipelineQuery)
