@@ -84,14 +84,12 @@ router.route('/updatePipelineTable')
 	.post(function(req, res) {
 		switch(req.body.type) {
 			case 'add':
-				pipeline.insertWithDefaultSize(req.body.data, function callback() {
+				pipeline.insertWithDefaultSize(req.body.opportunityData, function callback() {
 					pipeline.exportToSheets(function callback(pipelineData) {
 						res.json(pipelineData)
 					})
 				})
 		}
-
-
 	})
 
 // Update a specific opportunity in the sales_pipeline table from
