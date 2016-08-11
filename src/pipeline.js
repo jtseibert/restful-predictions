@@ -122,7 +122,12 @@ function updateProtectedOpportunity(opportunityData, callback) {
 	*Set by user from google sheets when adding new opportunities.
 */
 function insertWithDefaultSize(opportunityData, callback) {
-	determineDefaultSize(opportunityData[indexes.AMOUNT],
+	var getDefaultSizeQuery = "SELECT sizeid, pricehigh, roles_allocations, numweeks " 
+	 	+ "FROM project_size WHERE ABS($1 - pricehigh) = "
+	 	+ "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)"
+	helpers.query(
+		getDefaultSizeQuery,
+	  	[amount],	  	
 	  	function(results) {
 	  		// For each role, insert *role duration* rows
 	  		// Check for missing amount in opportunity
@@ -178,20 +183,6 @@ function insertWithDefaultSize(opportunityData, callback) {
 		  	} else {
 		  		callback(null)
 		  	}		  
-	  	}
-	)
-}
-//*************************************
-function determineDefaultSize(amount, callback) {
-	var getDefaultSizeQuery = "SELECT sizeid, pricehigh, roles_allocations, numweeks " 
-	 	+ "FROM project_size WHERE ABS($1 - pricehigh) = "
-	 	+ "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)"
-	
-	helpers.query(
-		getDefaultSizeQuery,
-	  	[amount],
-	  	function callback(defaultSizeData) {
-	  		process.nextTick(function() {callback(defaultSizeData)})
 	  	}
 	)
 }
@@ -322,8 +313,13 @@ function addOpportunity(opportunityData) {
 
 }
 
+function syncWithDefaultSizes() {
 
 
+
+
+
+}
 
 
 
