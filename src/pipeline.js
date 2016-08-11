@@ -227,12 +227,12 @@ function queryPipeline(accessToken, path, callback) {
 	accessToken: accessToken
 	})
 
-	var today = moment(new Date).format("MM/DD/YYYY")
+	var today = moment(new Date).format("YYYY-MM-DD")
 	// Constraint where opportunity has not closed as of current date
 	var pipelineQuery = 
 		"SELECT StageName, Name, Amount, ExpectedRevenue, CloseDate, Probability, "
 	  + "CreatedDate, Account.Name FROM Opportunity WHERE CloseDate>="
-	  + "'" + today + "'"
+	  + today
 
 	// Execute SOQL query to populate pipelineData
 	conn.query(pipelineQuery)
