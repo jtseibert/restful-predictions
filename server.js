@@ -48,7 +48,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 			instance    = req.params.instance
 		pipeline.syncPipelineWithSalesforce(accessToken, instance, function callback() {
 			console.log("DATABASE UPDATE DONE")
-			pipeline.exportToSheets(function(pipelineData) {
+			pipeline.exportToSheets(function callback(pipelineData) {
 				console.log("EXPORT DONE")
 				res.json(pipelineData)
 			})
@@ -85,13 +85,13 @@ router.route('/updatePipelineTable')
 		switch(req.body.type) {
 			case 'add':
 				pipeline.insertWithDefaultSize(req.body.opportunityData, function callback() {
-					pipeline.setProtected(req.body.opportunityData[1], function() {
+					helpers.setProtected(req.body.opportunityData[1], function callback() {
 						pipeline.exportToSheets(function callback(pipelineData) {
-						res.json(pipelineData)
-					})			
-				})
+							res.json(pipelineData)
+						})			
+					})
 		
-			})
+				})
 		}
 	})
 

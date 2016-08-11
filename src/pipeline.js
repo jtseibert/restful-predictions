@@ -122,7 +122,7 @@ function updateProtectedOpportunity(opportunityData, callback) {
 	*Queried from salesforce (if syncing).
 	*Set by user from google sheets when adding new opportunities.
 */
-function insertWithDefaultSize(opportunityData, callback) {
+var insertWithDefaultSize = function(opportunityData, callback) {
 	var getDefaultSizeQuery
 	var defaultSizeQueryValues
 	if(opportunityData[indexes.PROJECT_SIZE] === undefined) {
@@ -204,7 +204,7 @@ module.exports.insertWithDefaultSize = insertWithDefaultSize
 * @function exportToSheets
 * @desc Query sales_pipeline database and return all non-omitted opportunities.
 */
-function exportToSheets(callback) {
+var exportToSheets = function(callback) {
 	// Set up the headers
 	var pipelineData = []
 	var headers = [[
@@ -316,13 +316,7 @@ function queryPipeline(accessToken, path, callback) {
 }
 //*************************************
 
-function setProtected(opportunityName, callback) {
-	helper.query(
-		"UPDATE sales_pipeline SET protected = true WHERE opportunity = $1",
-		[opportunityName],
-		function() {callback()}
-	)
-}
+
 
 
 function syncWithDefaultSizes() {
