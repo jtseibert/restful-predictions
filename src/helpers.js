@@ -17,34 +17,34 @@ pg.defaults.poolSize = 10
 var query = function query(query, values, callback) {
 	q = query
 	v = values
-	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+	pg.connect(process.env.DATABASE_URL, function pgConnectCallback(err, client, done) {
 		//console.log("query is: " + q + ' with values ' + v)
 		var query
 		if(v != null) {
-			query = client.query(q, v, function(error) {
+			query = client.query(q, v, function queryCallback(error) {
 				if(error) {
 					done()
 					callback(error)
 				} else {
-					query.on("row", function (row, result) {
+					query.on("row", function handleRow(row, result) {
 					result.addRow(row)
 					})
-					query.on("end", function (result) {
+					query.on("end", function returnResult(result) {
 					done()
 					callback(result.rows)
 					})	
 				}
 			})
 		} else {
-			query = client.query(q, function(error) {
+			query = client.query(q, function queryCallback(error) {
 				if(error) {
 					done()
 					callback(error)
 				} else {
-					query.on("row", function (row, result) {
+					query.on("row", function handleRow(row, result) {
 					result.addRow(row)
 					})
-					query.on("end", function (result) {
+					query.on("end", function returnResult(result) {
 					done()
 					callback(result.rows)
 					})	

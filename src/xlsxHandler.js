@@ -12,15 +12,15 @@ var async     = require('async')
 * @param callback - callback to handle status
 */
 var updateDatabase = function(opportunityData, callback) {
-	databaseCheck(opportunityData.opportunityName, function(inDatabase) {
+	databaseCheck(opportunityData.opportunityName, function databaseCheckCallback(inDatabase) {
 		if(inDatabase) {
-			deleteOpportunity(opportunityData.opportunityName, function() {
-				updateOpportunity(opportunityData, function(status) {
+			deleteOpportunity(opportunityData.opportunityName, function deleteOpportunityCallback() {
+				updateOpportunity(opportunityData, function updateOpportunityCallback(status) {
 					callback({message: status})
 				})
 			})
 		} else {
-			updateOpportunity(opportunityData, function(status) {
+			updateOpportunity(opportunityData, function updateOpportunityCallback(status) {
 				callback({message: status})
 			})
 		}
@@ -37,9 +37,7 @@ function updateOpportunity(opportunityData, callback) {
 	var sheetData = opportunityData.sheetData
 	var opportunityName = opportunityData.opportunityName
 	async.eachOfSeries(sheetData, function insertRole(role, roleKey, callback) {
-		console.log("role is " + JSON.stringify(role))
-		console.log("role Key is " + roleKey)
-		async.eachOfSeries(role, function(allocation, week, callback){
+		async.eachOfSeries(role, function insertRoleWeek(allocation, week, callback){
 			// Make a new row for every week in the weekAllocations
 			helpers.query(
 				"INSERT INTO sales_pipeline(opportunity, role, week, allocation, protected) values($1, $2, $3, $4, $5)",

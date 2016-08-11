@@ -1,11 +1,12 @@
 /**
 * @module Capacity
-* @desc Persists all employees and thier roles if they are in the roles database table.
+* @desc The Capacity module contains function(s) to perform SOQL queries via the 
+node-salesforce library to return current capacity data to Google Sheets.
 */
 
 /**
 * @function queryCapacity
-* @desc SOQL query name, utilization, and role.
+* @desc Query salesforce to obtain role, name, and utilization.
 * @param {string} accessToken - oauth2 access token
 * @param {string} path - path to SF server
 * @param callback - callback to handle capacity data
@@ -29,7 +30,7 @@ var queryCapacity = function(accessToken, path, callback) {
 
 	// Execute SOQL query to populate allocationData
 	conn.query("SELECT pse__Resource_Role__c, Name, pse__Utilization_Target__c FROM Contact WHERE pse__Resource_Role__c!='' AND pse__Utilization_Target__c>=0 ORDER BY pse__Resource_Role__c")
-  	.on("record", function(record) {
+  	.on("record", function handleRecord(record) {
   		var recordData = []
     	recordData.push(
     		record.pse__Resource_Role__c,
@@ -38,13 +39,13 @@ var queryCapacity = function(accessToken, path, callback) {
 		)
     	capacityData.push(recordData)
 		})
-	.on("end", function(query) {
+	.on("end", function returnCapacityData(query) {
 		console.log("total in database : " + query.totalSize);
 		console.log("total fetched : " + query.totalFetched);
 		process.nextTick(function() {callback(capacityData)})
 		})
-	.on("error", function(err) {
-		console.error(err);
+	.on("error", function handleError(err) {
+		process.nextTick(function() {callback(err)})
 		})
 	.run({ autoFetch : true, maxFetch : 8000 });
 }
