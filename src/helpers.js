@@ -111,6 +111,22 @@ var appendOpportunityData = function(opportunityData, callback) {
 module.exports.appendOpportunityData = appendOpportunityData
 //*************************************
 
+/*
+* @function deleteOpportunity
+* @desc Deletes all rows in sales_pipeline with of a opportunity.
+* @param {string} opportunityName - opportunity to be deleted
+* @param callback - callback to handle updating
+*/
+function deleteOpportunity(opportunityName, callback) {
+	query(
+		"DELETE FROM sales_pipeline WHERE opportunity=$1",
+		[opportunityName],
+		function() {callback()}
+	)
+}
+
+module.exports.deleteOpportunity = deleteOpportunity
+//*************************************
 
 
 

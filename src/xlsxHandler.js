@@ -14,13 +14,13 @@ var async     = require('async')
 var updateDatabase = function(opportunityData, callback) {
 	databaseCheck(opportunityData.opportunityName, function databaseCheckCallback(inDatabase) {
 		if(inDatabase) {
-			deleteOpportunity(opportunityData.opportunityName, function deleteOpportunityCallback() {
-				updateOpportunity(opportunityData, function updateOpportunityCallback(status) {
+			helpers.deleteOpportunity(opportunityData.opportunityName, function deleteOpportunityCallback() {
+				updateOpportunityFromXlsx(opportunityData, function callback(status) {
 					callback({message: status})
 				})
 			})
 		} else {
-			updateOpportunity(opportunityData, function updateOpportunityCallback(status) {
+			updateOpportunityFromXlsx(opportunityData, function callback(status) {
 				callback({message: status})
 			})
 		}
@@ -28,12 +28,12 @@ var updateDatabase = function(opportunityData, callback) {
 }
 
 /**
-* @function updateOpportunity
+* @function updateOpportunityFromXlsx
 * @desc Updates sales_pipeline database with opportunity xlsx data.
 * @param opportunityData - JSON format object of xlsx data and opportunity name
 * @param callback - callback function to handle status
 */
-function updateOpportunity(opportunityData, callback) {
+function updateOpportunityFromXlsx(opportunityData, callback) {
 	var sheetData = opportunityData.sheetData
 	var opportunityName = opportunityData.opportunityName
 	async.eachOfSeries(sheetData, function insertRole(role, roleKey, callback) {
@@ -50,22 +50,8 @@ function updateOpportunity(opportunityData, callback) {
 	})
 }
 
-/*
-* @function deleteOpportunity
-* @desc Deletes all rows in sales_pipeline with of a opportunity.
-* @param {string} opportunityName - opportunity to be deleted
-* @param callback - callback to handle updating
-*/
-function deleteOpportunity(opportunityName, callback) {
-	helpers.query(
-		"DELETE FROM sales_pipeline WHERE opportunity=$1",
-		[opportunityName],
-		function() {callback()}
-	)
-}
-
 /**
-* @function isInDatabase
+* @function databaseCheck
 * @desc Checks if the opportunity is already in the Heroku database
 * @param {string} opportunityName - name of opportunity to check
 * @param callback - callback function to handle result

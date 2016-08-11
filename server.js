@@ -94,9 +94,7 @@ router.route('/updatePipelineTable')
 				})
 			case 'update':
 				helpers.appendOpportunityData(req.body.opportunityData, function handleOpportunityData(opportunityData) {
-					helpers.query("DELETE FROM sales_pipeline WHERE opportunity = $1",
-						opportunityData[1],
-						function queryCallback() {
+					helpers.deleteOpportunity(opportunityData[1], function queryCallback() {
 							console.log('deleted')
 							pipeline.insertWithDefaultSize(opportunityData, function callback() {
 								pipeline.exportToSheets(function callback(pipelineData) {
