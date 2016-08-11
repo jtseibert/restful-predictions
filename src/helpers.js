@@ -67,7 +67,7 @@ module.exports.query = query
 * @param {boolean} status - protected or unprotected
 */
 var setProtectedStatus = function(opportunityName, status, callback) {
-	helper.query(
+	query(
 		"UPDATE sales_pipeline SET protected = $1 WHERE opportunity = $2",
 		[status, opportunityName],
 		function() {callback()}
