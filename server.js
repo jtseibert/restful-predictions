@@ -80,7 +80,7 @@ router.route('/DATA_Forecast')
 // Main route for Google Sheet buttons
 // Add, update opportunities in sales_pipeline table
 // Update opportunities in table when project sizes are changed or added
-router.route('/updateSalesPipeline')
+router.route('/updatePipelineTable')
 	.post(function(req, res) {
 		switch(req.body.type) {
 			case 'add':
@@ -89,8 +89,8 @@ router.route('/updateSalesPipeline')
 						res.json(pipelineData)
 					})
 				})
-
-
+			default:
+				res.json('hi')
 		}
 
 
