@@ -137,7 +137,7 @@ function insertWithDefaultSize(opportunityData, callback) {
 	}
 	helpers.query(
 		getDefaultSizeQuery,
-	  	[opportunityData[indexes.AMOUNT]],	  	
+	  	defaultSizeQueryValues,	  	
 	  	function(results) {
 	  		// For each role, insert *role duration* rows
 	  		// Check for missing amount in opportunity
