@@ -1,15 +1,15 @@
-/**
+/**************************************
 * @module Pipeline
 * @desc Contains methods to:
-	*sync pipeline table with salesforce:
-		*grab sales pipeline data from salesforce,
-		*update protected opportunities,
-		*insert new opportunities with default sizes,
-	*handle user adding and updating opportunities,
-	*handle user adding and updating default project sizes,
-	*export pipeline table information to Google Sheets.
+	*Sync pipeline table with salesforce:
+		*Grab sales pipeline data from salesforce,
+		*Update protected opportunities,
+		*Insert new opportunities with default sizes.
+	*Handle user adding and updating opportunities.
+	*Handle user adding and updating default project sizes.
+	*Export pipeline table information to Google Sheets.
 */
-
+//*************************************
 var async = require('async')
 var helpers = require('./helpers')
 var moment = require('moment')
@@ -26,10 +26,13 @@ var indexes = {
 	CREATED_DATE: 7,
 	ACCOUNT_NAME: 8
 }
-/**
+/*************************************
 * @function syncPipelineWithSalesforce
-* @desc Sync sales_pipeline database with SF. Deletes all non-protected opportunities and recreates
-pipeline table.
+* @desc Syncs the sales_pipeline database with salesforce.
+    *All non-protected opportunities are deleted from the database.
+    *All opportunities that are now projects are deleted from the database.
+    *Protected opportunities are updated.
+    *New opportunities are inserted with default project sizes.
 * @param {string} accessToken - oauth2 access token
 * @param {string} path - Salesforce server url
 * @param callback - callback function to handle google sheet sync
@@ -40,8 +43,8 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 		var deleteQuery = "DELETE FROM sales_pipeline WHERE protected = FALSE OR start_date < " 
 						+ "'" + today + "'"
 		helpers.query(deleteQuery, null, function deleteQueryCallback() {
-			// For each row in pipelineData, insert accordingly
-			async.eachSeries(pipelineData, insertRows, function insertRowsCallback() {
+			// For each row in pipelineData, sync accordingly
+			async.eachSeries(pipelineData, syncRows, function syncRowsCallback() {
 				console.log('ALL ROWS DONE')
 				callback()
 			})
@@ -50,19 +53,21 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 }
 
 module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
+//*************************************
+
 /**
-* @function insertRows
-* @desc Inserts rows into sales_pipeline for a specific opportunity. The number
-of rows inserted is equal to forecast duration * roles in opportunity.
+* @function syncRows
+* @desc Inserts or updates rows of sales_pipeline for a specific opportunity.
+    *Updates when opportunity exists (opportunity is protected).
+    *Inserts with default project size when opportunity does not exist.
 * @param row - 1D array of opportunity data
 */
-function insertRows(row, callback) {
+function syncRows(row, callback) {
 	var curRow = row
 	helpers.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[curRow[indexes.OPPORTUNITY_NAME]],
 		function(results) {
-			// If exists, the opportunity is protected, only update empty fields
 			if(results[0].exists) {
 				updateProtectedOpportunity(curRow, function updateProtectedOpportunityCallback() {
 					callback(null)
@@ -75,10 +80,12 @@ function insertRows(row, callback) {
 		}
 	)
 }
+//*************************************
 
 /**
 * @function updateProtectedOpportunity
-* @desc Updates opportunity without mutating role or week fields.
+* @desc Updates opportunity without mutating role or week fields set by 
+	the xlsx attachment from a opportunity object in salesforce.
 * @param opportunityData - 1D array of opportunity data queried from salesforce
 */
 function updateProtectedOpportunity(opportunityData, callback) {
@@ -102,21 +109,20 @@ function updateProtectedOpportunity(opportunityData, callback) {
 		callback(null)
 	})
 }
+//*************************************
 
 /** 
 * @function insertWithDefaultSize
-* @desc Inserts #roles * #weeks rows for an opportunity, determined from its default size.
-The default size is determined from the opportunity amount field from salesforce.
-* @param opportunityData - 1D array of opportunity data queried from salesforce
+* @desc Inserts (#roles * #weeks) rows for an opportunity determined from its default project size.
+	*The default project size is determined either:
+		*The opportunity amount field from salesforce (if syncing).
+		*Determined by the user when manually adding an opportunity from google sheets.
+* @param opportunityData - 1D array of opportunity data either:
+	*Queried from salesforce (if syncing).
+	*Set by user from google sheets when adding new opportunities.
 */
 function insertWithDefaultSize(opportunityData, callback) {
-	var getDefaultSizeQuery = "SELECT sizeid, pricehigh, roles_allocations, numweeks " 
-	  + "FROM project_size WHERE ABS($1 - pricehigh) = "
-	  + "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)"
-	
-	helpers.query(
-		getDefaultSizeQuery,
-	  	[opportunityData[indexes.AMOUNT]],
+	determineDefaultSize(opportunityData[indexes.AMOUNT],
 	  	function(results) {
 	  		// For each role, insert *role duration* rows
 	  		// Check for missing amount in opportunity
@@ -175,11 +181,23 @@ function insertWithDefaultSize(opportunityData, callback) {
 	  	}
 	)
 }
+//*************************************
+function determineDefaultSize(amount, callback) {
+	var getDefaultSizeQuery = "SELECT sizeid, pricehigh, roles_allocations, numweeks " 
+	 	+ "FROM project_size WHERE ABS($1 - pricehigh) = "
+	 	+ "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)"
+	
+	helpers.query(
+		getDefaultSizeQuery,
+	  	[amount],
+	  	callback(defaultSizeData)
+	)
+}
+//*************************************
 
 /**
 * @function exportToSheets
-* @desc Query sales_pipeline database and return all non omitted opportunities
-for Google Sheets.
+* @desc Query sales_pipeline database and return all non-omitted opportunities.
 */
 function exportToSheets(callback) {
 	// Set up the headers
@@ -235,8 +253,11 @@ function exportToSheets(callback) {
 }
 
 module.exports.exportToSheets = exportToSheets
+/*************************************
+
 /**
 * @function queryPipeline
+* @desc Query salesforce to obtain sales pipeline data.
 * @params {string} accessToken - oauth2 access token
 * @params {string} path - salesforce server url
 * @params callback - callback function to handle pipeline data
@@ -288,6 +309,7 @@ function queryPipeline(accessToken, path, callback) {
 		})
 		.run({ autoFetch : true, maxFetch : 4000 });
 }
+//*************************************
 
 function addOpportunity(opportunityData) {
 	var amount = opportunityData.amount
