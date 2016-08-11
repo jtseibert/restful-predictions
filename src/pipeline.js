@@ -1,4 +1,5 @@
-/**************************************
+//*************************************
+/**
 * @module Pipeline
 * @desc Contains methods to:
 	*Sync pipeline table with salesforce:
@@ -258,7 +259,7 @@ var exportToSheets = function(callback) {
 }
 
 module.exports.exportToSheets = exportToSheets
-/*************************************
+//*************************************
 
 /**
 * @function queryPipeline

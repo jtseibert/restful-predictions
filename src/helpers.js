@@ -115,7 +115,7 @@ module.exports.appendOpportunityData = appendOpportunityData
 * @param {string} opportunityName - opportunity to be deleted
 * @param callback - callback to handle updating
 */
-function deleteOpportunity(opportunityName, callback) {
+var deleteOpportunity = function(opportunityName, callback) {
 	query(
 		"DELETE FROM sales_pipeline WHERE opportunity=$1",
 		[opportunityName],
@@ -133,7 +133,7 @@ module.exports.deleteOpportunity = deleteOpportunity
 * @param callback - callback function to handle result
 * @returns true or false
 */
-function opportunityCheck(opportunityName, callback) {
+var opportunityCheck = function(opportunityName, callback) {
 	helpers.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[opportunityName],
