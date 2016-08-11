@@ -76,26 +76,25 @@ router.route('/DATA_Forecast')
 			})
 		})
 	})
-/*
+
 // Main route for Google Sheet buttons
 // Add, update opportunities in sales_pipeline table
 // Update opportunities in table when project sizes are changed or added
 router.route('/updateSalesPipeline')
 	.post(function(req, res) {
 		switch(req.body.type) {
-			case: 'addOpportunity'
-				pipeline.addOpportunity(req.body.data)
-			case: 'update'
-
+			case: 'add'
+				pipeline.insertWithDefaultSize(req.body.data, function callback() {
+					pipeline.exportToSheets(function callback(pipelineData) {
+						res.json(pipelineData)
+					})
+				})
 
 
 		}
 
 
-	})*/
-
-
-
+	})
 
 // Update a specific opportunity in the sales_pipeline table from
 // an xlsx sheet attached to an opportunity object in salesforce

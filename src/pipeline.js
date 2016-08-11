@@ -141,7 +141,7 @@ function insertWithDefaultSize(opportunityData, callback) {
 	  	function(results) {
 	  		// For each role, insert *role duration* rows
 	  		// Check for missing amount in opportunity
-	  		if(opportunityData[indexes.AMOUNT] != null) {
+	  		if(opportunityData[indexes.AMOUNT] != null || opportunityData[indexes.PROJECT_SIZE] != undefined) {
 		  		var roleAllocations = results[0].roles_allocations
 		  		async.eachOfSeries(
 		  			roleAllocations, 
@@ -159,7 +159,7 @@ function insertWithDefaultSize(opportunityData, callback) {
 		  						var date = temp.add(durationCounter, 'weeks').format('MM/DD/YYYY')
 		  						var insertQuery = "INSERT INTO sales_pipeline (opportunity, stage, amount, expected_revenue, "
 		  						  + "close_date, start_date, probability, created_date, account_name, role, week, allocation) "
-		  						  + "values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)"
+		  						  + "values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) ON CONFLICT DO NOTHING"
 
 		  						var insertValues = [
 		  							opportunityData[indexes.OPPORTUNITY_NAME],
@@ -196,6 +196,8 @@ function insertWithDefaultSize(opportunityData, callback) {
 	  	}
 	)
 }
+
+module.exports.insertWithDefaultSize = insertWithDefaultSize
 //*************************************
 
 /**
@@ -313,15 +315,6 @@ function queryPipeline(accessToken, path, callback) {
 		.run({ autoFetch : true, maxFetch : 4000 });
 }
 //*************************************
-
-function addOpportunity(opportunityData) {
-	var amount = opportunityData.amount
-
-
-
-
-
-}
 
 function syncWithDefaultSizes() {
 
