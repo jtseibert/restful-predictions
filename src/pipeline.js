@@ -158,8 +158,8 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  						var temp = roleStartDate.clone()
 		  						var date = temp.add(durationCounter, 'weeks').format('MM/DD/YYYY')
 		  						var insertQuery = "INSERT INTO sales_pipeline (opportunity, stage, amount, expected_revenue, "
-		  						  + "close_date, start_date, probability, created_date, account_name, role, week, allocation) "
-		  						  + "values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)"
+		  						  + "close_date, start_date, probability, created_date, account_name, role, week, allocation, project_size) "
+		  						  + "values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)"
 
 		  						var insertValues = [
 		  							opportunityData[indexes.OPPORTUNITY_NAME],
@@ -173,7 +173,8 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  						 	opportunityData[indexes.ACCOUNT_NAME],
 		  						 	role,
 		  						 	date,
-		  						 	hours
+		  						 	hours,
+		  						 	results[0].sizeid
 		  						]
 		  						console.log(insertValues)
 		  						helpers.query(
