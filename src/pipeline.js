@@ -316,6 +316,15 @@ function queryPipeline(accessToken, path, callback) {
 }
 //*************************************
 
+function setProtected(opportunityName, callback) {
+	helper.query(
+		"UPDATE sales_pipeline SET protected = true WHERE opportunity = $1",
+		[opportunityName],
+		function() {callback()}
+	)
+}
+
+
 function syncWithDefaultSizes() {
 
 
