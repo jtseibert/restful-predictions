@@ -97,6 +97,7 @@ router.route('/updatePipelineTable')
 					helpers.query("DELETE FROM sales_pipeline WHERE opportunity = $1",
 						opportunityData[1],
 						function queryCallback() {
+							console.log('deleted')
 							pipeline.insertWithDefaultSize(opportunityData, function callback() {
 								pipeline.exportToSheets(function callback(pipelineData) {
 									res.json(pipelineData)
