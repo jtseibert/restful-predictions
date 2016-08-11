@@ -103,7 +103,7 @@ var appendOpportunityData = function(opportunityData, callback) {
 				opportunityData[2]
 			]
 			console.log(indexFriendlyData)
-			callback(indexFriendlyData)
+			process.nextTick(function() {callback(indexFriendlyData)})
 		}
 	)
 }
