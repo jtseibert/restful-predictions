@@ -45,8 +45,8 @@ var parseExcelSheet = function(body, callback) {
 		// Iterate over the roles column until subtotal is reached
 		//	* For each role, grab each estimated hour for each week date
 		//  * If a role, date, or hour is empty, do nothing
-		while(getCellValue(sheet, indexes.dataRowStart, topCol, 'v') != 'Subtotal') {
-			var role = getCellValue(sheet, indexes.dataRowStart, topCol, 'v')
+		while(getCellValue(sheet, indexes.dataRowStart, indexes.topCol, 'v') != 'Subtotal') {
+			var role = getCellValue(sheet, indexes.dataRowStart, indexes.topCol, 'v')
 			if(role != '') {
 				role = mapRole(role)
 				if(!sheetData[role]) {
