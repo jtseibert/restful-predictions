@@ -102,6 +102,7 @@ var appendOpportunityData = function(opportunityData, callback) {
 				queryData[5],
 				opportunityData[2]
 			]
+			console.log(indexFriendlyData)
 			callback(indexFriendlyData)
 		}
 	)
