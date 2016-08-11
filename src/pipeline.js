@@ -191,7 +191,7 @@ function determineDefaultSize(amount, callback) {
 		getDefaultSizeQuery,
 	  	[amount],
 	  	function callback(defaultSizeData) {
-	  		callback(defaultSizeData)
+	  		process.nextTick(function() {callback(defaultSizeData)})
 	  	}
 	)
 }
