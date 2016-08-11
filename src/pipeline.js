@@ -190,7 +190,9 @@ function determineDefaultSize(amount, callback) {
 	helpers.query(
 		getDefaultSizeQuery,
 	  	[amount],
-	  	callback(defaultSizeData)
+	  	function callback(defaultSizeData) {
+	  		callback(defaultSizeData)
+	  	}
 	)
 }
 //*************************************
