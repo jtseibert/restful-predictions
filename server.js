@@ -113,7 +113,7 @@ router.route('/trigger')
 	.post(function(req, res) {
 		parser.parseExcelSheet(req.body, function handleOpportunityData(opportunityData) {
 			if(opportunityData != undefined) {
-				xlsxHandler.updateDatabase(opportunityData, function sendStatus(status) {
+				xlsxHandler.updateDatabaseFromXlsx(opportunityData, function sendStatus(status) {
 					res.json({message: status})
 				})
 			}		
