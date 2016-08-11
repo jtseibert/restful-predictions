@@ -92,6 +92,19 @@ router.route('/updatePipelineTable')
 					})
 		
 				})
+			case 'update':
+				helpers.appendOpportunityData(req.body.opportunityData, function handleOpportunityData(opportunityData) {
+					helpers.query("DELETE FROM sales_pipeline WHERE opportunity = $1",
+						opportunityData[1],
+						function queryCallback() {
+							pipeline.insertWithDefaultSize(opportunityData, function callback() {
+								pipeline.exportToSheets(function callback(pipelineData) {
+									res.json(pipelineData)
+								})
+							})
+						}
+					)
+				})
 		}
 	})
 

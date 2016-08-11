@@ -77,12 +77,37 @@ var setProtectedStatus = function(opportunityName, status, callback) {
 module.exports.setProtectedStatus = setProtectedStatus
 //*************************************
 
+/**
+* @function appendOpportunityData
+* @desc Append current opportunity data to the new opportunity data to prepare for row insertion.
+* @param opportunityData - new start_date, probability, project_size
+*/
+//TODO pass in json instead of array, define global indexes here too
+var appendOpportunityData = function(opportunityData, callback) {
+	query(
+		"SELECT stage, amount, expected_revenue, close_date, created_date, account_name" +
+		" FROM sales_pipeline WHERE opportunity = $1 LIMIT 1",
+		[opportunityData[3]],
+		function queryCallback(queryData) {
+			var indexFriendlyData = [
+				queryData[0],
+				opportunityData[3],
+				queryData[1],
+				queryData[2],
+				queryData[3],
+				opportunityData[0],
+				opportunityData[1],
+				queryData[4],
+				queryData[5],
+				opportunityData[2]
+			]
+			callback(indexFriendlyData)
+		}
+	)
+}
 
-
-
-
-
-
+module.exports.appendOpportunityData = appendOpportunityData
+//*************************************
 
 
 
