@@ -46,7 +46,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
 		var accessToken = req.params.accessToken,
 			instance    = req.params.instance
-		pipeline.updatePipelineTable(accessToken, instance, function next() {
+		pipeline.syncPipelineWithSalesforce(accessToken, instance, function callback() {
 			console.log("DATABASE UPDATE DONE")
 			pipeline.exportToSheets(function(pipelineData) {
 				console.log("EXPORT DONE")
@@ -76,6 +76,26 @@ router.route('/DATA_Forecast')
 			})
 		})
 	})
+/*
+// Main route for Google Sheet buttons
+// Add, update opportunities in sales_pipeline table
+// Update opportunities in table when project sizes are changed or added
+router.route('/updateSalesPipeline')
+	.post(function(req, res) {
+		switch(req.body.type) {
+			case: 'addOpportunity'
+				pipeline.addOpportunity(req.body.data)
+			case: 'update'
+
+
+
+		}
+
+
+	})*/
+
+
+
 
 // Update a specific opportunity in the sales_pipeline table from
 // an xlsx sheet attached to an opportunity object in salesforce
