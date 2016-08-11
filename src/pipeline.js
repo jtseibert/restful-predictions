@@ -24,7 +24,8 @@ var indexes = {
 	START_DATE: 5,
 	PROBABILITY: 6,
 	CREATED_DATE: 7,
-	ACCOUNT_NAME: 8
+	ACCOUNT_NAME: 8,
+	PROJECT_SIZE: 9
 }
 /*************************************
 * @function syncPipelineWithSalesforce
@@ -122,9 +123,18 @@ function updateProtectedOpportunity(opportunityData, callback) {
 	*Set by user from google sheets when adding new opportunities.
 */
 function insertWithDefaultSize(opportunityData, callback) {
-	var getDefaultSizeQuery = "SELECT sizeid, pricehigh, roles_allocations, numweeks " 
+	var getDefaultSizeQuery
+	var defaultSizeQueryValues
+	if(opportunityData[indexes.PROJECT_SIZE] === undefined) {
+		getDefaultSizeQuery = "SELECT sizeid, pricehigh, roles_allocations, numweeks " 
 	 	+ "FROM project_size WHERE ABS($1 - pricehigh) = "
 	 	+ "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)"
+	 	defaultSizeQueryValues = [opportunityData[indexes.AMOUNT]]
+	} else {
+	 	getDefaultSizeQuery = "SELECT sizeid, pricehigh, roles_allocations, numweeks "
+			+ "FROM project_size WHERE sizeid = $1"
+		defaultSizeQueryValues = [opportunityData[indexes.PROJECT_SIZE]]
+	}
 	helpers.query(
 		getDefaultSizeQuery,
 	  	[opportunityData[indexes.AMOUNT]],	  	
