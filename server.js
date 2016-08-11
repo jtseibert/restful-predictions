@@ -11,7 +11,7 @@ var	allocation 		= require('./src/allocation'),
 	Forecast 		= require('./src/forecast'),
 	helpers			= require('./src/helpers'),
 	parser          = require('./src/parser'),
-	pipeline 		= require('./src/pipeline_wip'),
+	pipeline 		= require('./src/pipeline'),
 	xlsxHandler   	= require('./src/xlsxHandler')
 
 var app = express()
