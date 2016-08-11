@@ -1,6 +1,8 @@
 /**
 * @module Pipeline
-* @desc 
+* @desc Contains methods to grab sales pipeline data from salesforce,
+update the pipeline table,
+and export pipeline table information to Google Sheets.
 */
 
 var async = require('async')
@@ -31,9 +33,9 @@ var updatePipelineTable = function(accessToken, path, callback) {
 		var today = moment().format("MM/DD/YYYY")
 		var deleteQuery = "DELETE FROM sales_pipeline WHERE protected = FALSE OR start_date < " 
 						+ "'" + today + "'"
-		helpers.query(deleteQuery, null, function() {
+		helpers.query(deleteQuery, null, function deleteQueryCallback() {
 			// For each row in pipelineData, insert accordingly
-			async.eachSeries(pipelineData, insertRows, function() {
+			async.eachSeries(pipelineData, insertRows, function insertRowsCallback() {
 				console.log('ALL ROWS DONE')
 				callback()
 			})
@@ -225,7 +227,7 @@ function queryPipeline(accessToken, path, callback) {
 	accessToken: accessToken
 	})
 
-	// Execute SOQL query to populate allocationData
+	// Execute SOQL query to populate pipelineData
 	conn.query("SELECT StageName, Name, Amount, ExpectedRevenue, CloseDate, Probability, CreatedDate, Account.Name FROM Opportunity WHERE CloseDate>=2016-08-03")
 		.on("record", function(record) {
 			var recordData = []
