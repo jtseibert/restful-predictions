@@ -85,7 +85,7 @@ router.route('/updatePipelineTable')
 		switch(req.body.type) {
 			case 'add':
 				pipeline.insertWithDefaultSize(req.body.opportunityData, function callback() {
-					helpers.setProtected(req.body.opportunityData[1], function callback() {
+					helpers.setProtectedStatus(req.body.opportunityData[1], true, function callback() {
 						pipeline.exportToSheets(function callback(pipelineData) {
 							res.json(pipelineData)
 						})			
