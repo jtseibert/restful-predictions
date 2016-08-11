@@ -14,6 +14,7 @@ module.exports = Forecast
 // module level variables
 async = require('../node_modules/async')
 moment = require('../node_modules/moment')
+pg = require('pg')
 
 /**
 * Creates an Forecast object with the allocation data as sheetsData, the Sum of Sales Pipeline data as sumSalesPipeline,
@@ -23,7 +24,7 @@ moment = require('../node_modules/moment')
 * @param data - the 2 part JSON received from Google Sheets containing Allocations and sum of Sales Pipeline Estimated Hours
 * @param callback - callback function to return the constructed object
 */
-function Forecast(pg, data, callback) {
+function Forecast(data, callback) {
 
 	this.allocatedHours			= data[0]
 	this.forecastedHours 		= data[1]

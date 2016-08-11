@@ -3,59 +3,50 @@
 * @desc Initiates Heroku app, defines express middleware routes.
 */
 
-// Initialize dependencies
-//var	newRelic		= require('newrelic')
-
+// Define dependencies
 var	allocation 		= require('./src/allocation'),
-	async			= require('async'),
 	bodyParser 		= require('body-parser'),
 	capacity        = require('./src/capacity'),
 	express			= require('express'),
 	Forecast 		= require('./src/forecast'),
 	helpers			= require('./src/helpers'),
-	Opportunity 	= require('./src/opportunity'),
 	parser          = require('./src/parser'),
-	pg 				= require('pg'),
 	pipeline 		= require('./src/pipeline_wip'),
-	utilities		= require('./src/utilities'),
 	xlsxHandler   	= require('./src/xlsxHandler')
 
 var app = express()
 var router = express.Router()
+var port = process.env.PORT || 5000
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
 app.use('/api', router)
 
-pg.defaults.ssl = true
-pg.defaults.poolSize = 10
-
-var port = process.env.PORT || 5000
-
-// Define routes
+// Define routes:
+// General query route for Google Sheets to pull from Heroku postgres DB
 router.route('/query')
 	.post(function(req, res) {
-		helpers.query(req.body.query, req.body.values, function(results) {
-			console.log(JSON.stringify(results))
+		helpers.query(req.body.query, req.body.values, function returnQueryResults(results) {
 			res.json(results)
 		})
 	})
 
-// Import allocation|sales_pipeline|capacity|forecast
+// Get current allocation data from salesforce and export to Google Sheets
 router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req, res) {
 		var accessToken = req.params.accessToken,
 			instance    = req.params.instance
-		allocation.queryAllocation(accessToken, instance, function(allocationData) {
+		allocation.queryAllocation(accessToken, instance, function handleAllocationData(allocationData) {
 			res.json(allocationData)
 		})
 	})
 	   
+// Get current sales pipeline data from salesforce, update pipeline table, and export to Google Sheets
 router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
 		var accessToken = req.params.accessToken,
 			instance    = req.params.instance
-		pipeline.updateDatabase(accessToken, instance, function syncSheet() {
+		pipeline.updatePipelineTable(accessToken, instance, function next() {
 			console.log("DATABASE UPDATE DONE")
 			pipeline.exportToSheets(function(pipelineData) {
 				console.log("EXPORT DONE")
@@ -64,57 +55,35 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 		})
 	})
 
+// Get current capacity data from salesforce and export to Google Sheets
 router.route('/:instance/DATA_Capacity/:accessToken')
 	.get(function(req, res) {
 		var accessToken = req.params.accessToken,
 			instance    = req.params.instance
-		capacity.queryCapacity(accessToken, instance, function(capacityData) {
+		capacity.queryCapacity(accessToken, instance, function handleCapacityData(capacityData) {
 			res.json(capacityData)
 		})
 	})
 
+// Create forecast data from allocation/pipeline data (@param req.body) and roles_capacities table,
+// and export to Google Sheets
 router.route('/DATA_Forecast')
 	.post(function(req, res) {
-		forecast = new Forecast(pg, req.body, function() {
+		forecast = new Forecast(req.body, function() {
 			forecast.create(function() {
 				res.json(forecast.returnData)
 				delete forecast
 			})
 		})
 	})
-//********
-// Add/update opportunities
-router.route('/addOpportunity')
-	.post(function(req,res) {
-		console.log('addOpportunity')
-		opportunity = new Opportunity(req.body)
-		opportunity.add(async, pg, function(err) {
-			if (err)
-				res.send(err)
-			else
-				res.json({message: 'Success!'})
-			delete opportunity
-		})
-	})
 
-router.route('/updateOpportunity')
-	.post(function(req, res) {
-		opportunity = new Opportunity(req.body)
-		opportunity.update(pg, function(err) {
-			if(err) 
-				res.send(err)
-			else
-				res.json({message: 'Success!'})
-			delete opportunity
-		})
-	})
-//*********
-
+// Update a specific opportunity in the sales_pipeline table from
+// an xlsx sheet attached to an opportunity object in salesforce
 router.route('/trigger')
 	.post(function(req, res) {
-		parser.parseExcelSheet(req.body, function(opportunityData) {
+		parser.parseExcelSheet(req.body, function handleOpportunityData(opportunityData) {
 			if(opportunityData != undefined) {
-				xlsxHandler.updateDatabase(opportunityData, function(status) {
+				xlsxHandler.updateDatabase(opportunityData, function sendStatus(status) {
 					res.json({message: status})
 				})
 			}		

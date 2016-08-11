@@ -20,13 +20,13 @@ var indexes = {
 	ACCOUNT_NAME: 8
 }
 /**
-* @function updateDatabase
+* @function updatePipelineTable
 * @desc Update sales_pipeline database with SF.
 * @param {string} accessToken - oauth2 access token
 * @param {string} path - Salesforce server url
 * @param callback - callback function to handle google sheet sync
 */
-var updateDatabase = function(accessToken, path, callback) {
+var updatePipelineTable = function(accessToken, path, callback) {
 	queryPipeline(accessToken, path, function handlePipelineData(pipelineData) {
 		var today = moment().format("MM/DD/YYYY")
 		var deleteQuery = "DELETE FROM sales_pipeline WHERE protected = FALSE OR start_date < " 
@@ -41,7 +41,7 @@ var updateDatabase = function(accessToken, path, callback) {
 	})
 }
 
-module.exports.updateDatabase = updateDatabase
+module.exports.updatePipelineTable = updatePipelineTable
 /**
 * @function insertRows
 * @desc Inserts rows into sales_pipeline for a specific opportunity. The number
