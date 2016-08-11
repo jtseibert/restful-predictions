@@ -1,9 +1,11 @@
+/**************************************
 /**
 * Allocation
 * @module Allocation
 * @desc The Allocation module contains function(s) to perform SOQL queries via the 
 node-salesforce library to return allocation data to Google Sheets.
 */
+/**************************************
 
 /**
 * @function queryAllocation
@@ -56,6 +58,9 @@ var queryAllocation = function(accessToken, path, callback) {
 	.run({ autoFetch : true, maxFetch : 8000 });
 }
 
+module.exports.queryAllocation = queryAllocation
+/**************************************
+
 /**
 * @function getQueryString
 * @desc Constructs a query with variable start and end dates for allocations.
@@ -69,9 +74,7 @@ function getQueryString() {
 	startDate + "AND pse__End_Date__c<" + closeDate + "AND pse__Resource__r.ContactID_18__c!=null"
 	return queryString
 }
-
-module.exports.queryAllocation = queryAllocation
-
+/**************************************
 
 
 

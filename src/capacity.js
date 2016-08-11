@@ -1,8 +1,10 @@
+/**************************************
 /**
 * @module Capacity
 * @desc The Capacity module contains function(s) to perform SOQL queries via the 
 node-salesforce library to return current capacity data to Google Sheets.
 */
+/**************************************
 
 /**
 * @function queryCapacity
@@ -28,7 +30,7 @@ var queryCapacity = function(accessToken, path, callback) {
 	  accessToken: accessToken
 	})
 
-	// Execute SOQL query to populate allocationData
+	// Execute SOQL query to populate capacityData
 	conn.query("SELECT pse__Resource_Role__c, Name, pse__Utilization_Target__c FROM Contact WHERE pse__Resource_Role__c!='' AND pse__Utilization_Target__c>=0 ORDER BY pse__Resource_Role__c")
   	.on("record", function handleRecord(record) {
   		var recordData = []
@@ -51,3 +53,9 @@ var queryCapacity = function(accessToken, path, callback) {
 }
 
 module.exports.queryCapacity = queryCapacity
+/**************************************
+
+
+
+
+

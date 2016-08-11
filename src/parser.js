@@ -1,11 +1,13 @@
+//*************************************
 /**
 * @module Parser
 * @desc Scrapes estimated forecasted hours for each role and week from
 ESTIMATE xlsx file.
 */
-
+//*************************************
 var xlsx = require('xlsx')
 var moment = require('moment')
+//*************************************
 /**
 * @function parseExcelSheet
 * @desc Returns a JSON formatted object of estimated forecasted hours for role/
@@ -73,6 +75,9 @@ var parseExcelSheet = function(body, callback) {
 	}
 }
 
+module.exports.parseExcelSheet = parseExcelSheet
+//*************************************
+
 /**
 * @function getCellValue
 * @desc Return the value of cell (row, col) in the sheet.
@@ -89,6 +94,7 @@ function getCellValue(sheet, row, col, type) {
 		return ''
 	}
 }
+//*************************************
 
 /**
 * @function getYear
@@ -113,6 +119,7 @@ function getYear(sheet, indexes) {
 	}
 	return opportunityYear
 }
+//*************************************
 
 /**
 * @function mapRole
@@ -147,6 +154,7 @@ function mapRole(role) {
 	}
 	return mappedRole
 }
+//*************************************
 
 /**
 * @function getColumnLimit
@@ -178,6 +186,7 @@ function getColumnLimit(sheet, bottomRow, dataColStart, n) {
 	}
 	return colEnd
 }
+//*************************************
 
 /**
 * @function getBottomRow
@@ -198,6 +207,7 @@ function getBottomRow(sheet, indexes) {
 	}
 	return 0
 }
+//*************************************
 
 /**
 * @function sheetIsValidFormat
@@ -224,8 +234,8 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 	}
 	return isValid
 }
+//*************************************
 
-module.exports.parseExcelSheet = parseExcelSheet
 
 
 

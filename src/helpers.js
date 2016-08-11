@@ -84,7 +84,6 @@ module.exports.setProtectedStatus = setProtectedStatus
 */
 //TODO pass in json instead of array, define global indexes here too
 var appendOpportunityData = function(opportunityData, callback) {
-	console.log('got to appenddata')
 	query(
 		"SELECT stage, amount, expected_revenue, close_date, created_date, account_name" +
 		" FROM sales_pipeline WHERE opportunity = $1 LIMIT 1",
@@ -102,7 +101,6 @@ var appendOpportunityData = function(opportunityData, callback) {
 				queryData[0].account_name,
 				opportunityData[2]
 			]
-			console.log(indexFriendlyData)
 			process.nextTick(function() {callback(indexFriendlyData)})
 		}
 	)
@@ -128,6 +126,22 @@ function deleteOpportunity(opportunityName, callback) {
 module.exports.deleteOpportunity = deleteOpportunity
 //*************************************
 
+/**
+* @function opportunityCheck
+* @desc Checks if the opportunity is currently in the Heroku database
+* @param {string} opportunityName - name of opportunity to check
+* @param callback - callback function to handle result
+* @returns true or false
+*/
+function opportunityCheck(opportunityName, callback) {
+	helpers.query(
+		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
+		[opportunityName],
+		function(results) {callback(results[0].exists)}
+	)
+}
 
+module.exports.opportunityCheck = opportunityCheck
+//*************************************
 
 

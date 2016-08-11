@@ -1,8 +1,9 @@
+//*************************************
 /** 
 * @file server.js
 * @desc Initiates Heroku app, defines express middleware routes.
 */
-
+//*************************************
 // Define dependencies
 var	allocation 		= require('./src/allocation'),
 	bodyParser 		= require('body-parser'),
@@ -95,7 +96,6 @@ router.route('/updatePipelineTable')
 			case 'update':
 				helpers.appendOpportunityData(req.body.opportunityData, function handleOpportunityData(opportunityData) {
 					helpers.deleteOpportunity(opportunityData[1], function queryCallback() {
-							console.log('deleted')
 							pipeline.insertWithDefaultSize(opportunityData, function callback() {
 								pipeline.exportToSheets(function callback(pipelineData) {
 									res.json(pipelineData)

@@ -1,18 +1,20 @@
+//*************************************
 /**
 * @module xlsx
 * @desc Handles forecasted opportunity data from xlsx parser.
 */
-
+//*************************************
 var helpers = require('./helpers')
 var async     = require('async')
+//*************************************
 /**
-* @function updateDatabase
+* @function updateDatabaseFromXlsx
 * @desc Update the opportunity stored in Heroku database.
 * @param opportunityData - JSON format object of opportunity name and xlsx data
 * @param callback - callback to handle status
 */
-var updateDatabase = function(opportunityData, callback) {
-	databaseCheck(opportunityData.opportunityName, function databaseCheckCallback(inDatabase) {
+var updateDatabaseFromXlsx = function(opportunityData, callback) {
+	helpers.opportunityCheck(opportunityData.opportunityName, function opportunityCheckCallback(inDatabase) {
 		if(inDatabase) {
 			helpers.deleteOpportunity(opportunityData.opportunityName, function deleteOpportunityCallback() {
 				updateOpportunityFromXlsx(opportunityData, function callback(status) {
@@ -26,6 +28,9 @@ var updateDatabase = function(opportunityData, callback) {
 		}
 	})
 }
+
+module.exports.updateDatabaseFromXlsx = updateDatabaseFromXlsx
+//*************************************
 
 /**
 * @function updateOpportunityFromXlsx
@@ -49,23 +54,8 @@ function updateOpportunityFromXlsx(opportunityData, callback) {
 		process.nextTick(function(){ callback('Update Finished')})
 	})
 }
+//*************************************
 
-/**
-* @function databaseCheck
-* @desc Checks if the opportunity is already in the Heroku database
-* @param {string} opportunityName - name of opportunity to check
-* @param callback - callback function to handle result
-* @returns true or false
-*/
-function databaseCheck(opportunityName, callback) {
-	helpers.query(
-		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
-		[opportunityName],
-		function(results) {callback(results[0].exists)}
-	)
-}
-
-module.exports.updateDatabase = updateDatabase
 
 
 
