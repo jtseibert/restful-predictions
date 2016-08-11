@@ -83,7 +83,7 @@ router.route('/DATA_Forecast')
 router.route('/updateSalesPipeline')
 	.post(function(req, res) {
 		switch(req.body.type) {
-			case: 'add'
+			case 'add':
 				pipeline.insertWithDefaultSize(req.body.data, function callback() {
 					pipeline.exportToSheets(function callback(pipelineData) {
 						res.json(pipelineData)
