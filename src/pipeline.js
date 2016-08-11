@@ -123,6 +123,7 @@ function updateProtectedOpportunity(opportunityData, callback) {
 	*Set by user from google sheets when adding new opportunities.
 */
 function insertWithDefaultSize(opportunityData, callback) {
+	console.log(opportunityData)
 	var getDefaultSizeQuery
 	var defaultSizeQueryValues
 	if(opportunityData[indexes.PROJECT_SIZE] === undefined) {
