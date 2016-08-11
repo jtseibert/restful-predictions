@@ -13,7 +13,7 @@ var async     = require('async')
 * @param opportunityData - JSON format object of opportunity name and xlsx data
 * @param callback - callback to handle status
 */
-var updateDatabaseFromXlsx = function(opportunityData, callback) {
+function updateDatabaseFromXlsx(opportunityData, callback) {
 	helpers.opportunityCheck(opportunityData.opportunityName, function opportunityCheckCallback(inDatabase) {
 		if(inDatabase) {
 			helpers.deleteOpportunity(opportunityData.opportunityName, function deleteOpportunityCallback() {

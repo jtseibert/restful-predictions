@@ -14,7 +14,7 @@ node-salesforce library to return allocation data to Google Sheets.
 * @params {string} path - salesforce server url
 * @params callback - callback function to return allocation data
 */
-var queryAllocation = function(accessToken, path, callback) {
+function queryAllocation(accessToken, path, callback) {
 	var sf = require('node-salesforce')
 	var moment = require('moment')
 	// Set up the sheet headers

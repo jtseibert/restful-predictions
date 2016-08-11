@@ -17,7 +17,7 @@ xlsx workbook object for parsing using the xlsx library.
 * @param callback - callback function to handle xlsx data
 * @returns JSON format object of estimated forecasted hours for each role/week, and opportunity name
 */
-var parseExcelSheet = function(body, callback) {
+function parseExcelSheet(body, callback) {
 	var workbook = xlsx.read(body.b64, {type: 'base64'})	
 	var sheet 	 = workbook.Sheets[workbook.SheetNames[2]]
 	// Template indexes are hardcoded here

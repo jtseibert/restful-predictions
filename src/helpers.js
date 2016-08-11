@@ -16,7 +16,7 @@ pg.defaults.poolSize = 10
 * @params callback - callback function to handle query response
 * @returns result of query
 */
-var query = function query(query, values, callback) {
+function query(query, values, callback) {
 	q = query
 	v = values
 	pg.connect(process.env.DATABASE_URL, function pgConnectCallback(err, client, done) {
@@ -66,7 +66,7 @@ module.exports.query = query
 * @param {string} opportunityName - opportunity to mutate
 * @param {boolean} status - protected or unprotected
 */
-var setProtectedStatus = function(opportunityName, status, callback) {
+function setProtectedStatus(opportunityName, status, callback) {
 	query(
 		"UPDATE sales_pipeline SET protected = $1 WHERE opportunity = $2",
 		[status, opportunityName],
@@ -83,7 +83,7 @@ module.exports.setProtectedStatus = setProtectedStatus
 * @param opportunityData - new start_date, probability, project_size
 */
 //TODO pass in json instead of array, define global indexes here too
-var appendOpportunityData = function(opportunityData, callback) {
+function appendOpportunityData(opportunityData, callback) {
 	query(
 		"SELECT stage, amount, expected_revenue, close_date, created_date, account_name" +
 		" FROM sales_pipeline WHERE opportunity = $1 LIMIT 1",
@@ -115,7 +115,7 @@ module.exports.appendOpportunityData = appendOpportunityData
 * @param {string} opportunityName - opportunity to be deleted
 * @param callback - callback to handle updating
 */
-var deleteOpportunity = function(opportunityName, callback) {
+function deleteOpportunity(opportunityName, callback) {
 	query(
 		"DELETE FROM sales_pipeline WHERE opportunity=$1",
 		[opportunityName],
@@ -133,7 +133,7 @@ module.exports.deleteOpportunity = deleteOpportunity
 * @param callback - callback function to handle result
 * @returns true or false
 */
-var opportunityCheck = function(opportunityName, callback) {
+function opportunityCheck(opportunityName, callback) {
 	query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[opportunityName],

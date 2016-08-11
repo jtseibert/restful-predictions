@@ -39,7 +39,7 @@ var indexes = {
 * @param {string} path - Salesforce server url
 * @param callback - callback function to handle google sheet sync
 */
-var syncPipelineWithSalesforce = function(accessToken, path, callback) {
+function syncPipelineWithSalesforce(accessToken, path, callback) {
 	queryPipeline(accessToken, path, function handlePipelineData(pipelineData) {
 		var today = moment().format("MM/DD/YYYY")
 		var deleteQuery = "DELETE FROM sales_pipeline WHERE protected = FALSE OR start_date < " 
@@ -123,7 +123,7 @@ function updateProtectedOpportunity(opportunityData, callback) {
 	*Queried from salesforce (if syncing).
 	*Set by user from google sheets when adding new opportunities.
 */
-var insertWithDefaultSize = function(opportunityData, callback) {
+function insertWithDefaultSize(opportunityData, callback) {
 	var getDefaultSizeQuery
 	var defaultSizeQueryValues
 	if(opportunityData[indexes.PROJECT_SIZE] === undefined) {
@@ -205,7 +205,7 @@ module.exports.insertWithDefaultSize = insertWithDefaultSize
 * @function exportToSheets
 * @desc Query sales_pipeline database and return all non-omitted opportunities.
 */
-var exportToSheets = function(callback) {
+function exportToSheets(callback) {
 	// Set up the headers
 	var pipelineData = []
 	var headers = [[

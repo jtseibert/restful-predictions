@@ -13,7 +13,7 @@ node-salesforce library to return current capacity data to Google Sheets.
 * @param {string} path - path to SF server
 * @param callback - callback to handle capacity data
 */
-var queryCapacity = function(accessToken, path, callback) {
+function queryCapacity(accessToken, path, callback) {
 	var sf = require('node-salesforce')
 	var moment = require('moment')
 	var async = require('async')
