@@ -89,8 +89,6 @@ router.route('/updatePipelineTable')
 						res.json(pipelineData)
 					})
 				})
-			default:
-				res.json('hi')
 		}
 
 
