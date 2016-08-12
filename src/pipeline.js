@@ -66,17 +66,21 @@ module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
 */
 function syncRows(row, callback) {
 	var curRow = row
-	helpers.opportunityCheck([curRow[indexes.OPPORTUNITY_NAME]], function opportunityCheckCallback(exists) {
-		if(exists) {
-			updateProtectedOpportunity(curRow, function updateProtectedOpportunityCallback() {
-				callback(null)
-			})
-		} else {
-			insertWithDefaultSize(curRow, function insertWithDefaultSizeCallback() {
-				callback(null)
-			})
-		}
-	})
+	if(curRow[indexes.OPPORTUNITY_NAME] != null) {
+		helpers.opportunityCheck([curRow[indexes.OPPORTUNITY_NAME]], function opportunityCheckCallback(exists) {
+			if(exists) {
+				updateProtectedOpportunity(curRow, function updateProtectedOpportunityCallback() {
+					callback(null)
+				})
+			} else {
+				insertWithDefaultSize(curRow, function insertWithDefaultSizeCallback() {
+					callback(null)
+				})
+			}
+		})
+	} else {
+		callback(null)
+	}
 }
 //*************************************
 
