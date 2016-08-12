@@ -16,8 +16,11 @@ var async     = require('async')
 function updateDatabaseFromXlsx(opportunityData, callback) {
 	helpers.opportunityCheck(opportunityData.opportunityName, function opportunityCheckCallback(inDatabase) {
 		if(inDatabase) {
+			console.log('finished opp check')
 			helpers.deleteOpportunity(opportunityData.opportunityName, function deleteOpportunityCallback() {
+				console.log('finished delete opp')
 				updateOpportunityFromXlsx(opportunityData, function callback(status) {
+					console.log('finished updateopp')
 					process.nextTick(function() {callback({message: status})})
 				})
 			})
