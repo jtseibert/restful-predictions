@@ -327,9 +327,18 @@ function syncWithDefaultSizes(callback) {
 		"SELECT DISTINCT opportunity FROM sales_pipeline WHERE project_size IS NOT NULL",
 		null,
 		function(queryData) {
-			console.log(JSON.stringify(queryData))
-			callback()
-			//asnyc.eachof
+			asnyc.eachOfSeries(queryData[0], function updateWithNewSize(opportunity, dummyKey, callback) {
+				console.log(opportunity)
+				callback(null)
+
+
+
+
+
+			},
+			function() {
+				callback(null)
+			})
 				//updateWithNewSize(opportunity name)
 					//get row information with opportunity = opporunity name
 					// if row info at amount index == null,
@@ -338,7 +347,8 @@ function syncWithDefaultSizes(callback) {
 						//delete from sales_pipeline where opportunity = opporuntiy nane
 							//cb for delete, insertwithdefaultsize(saved data)
 								//on cb callback(null)
-		})
+		}
+	)
 }
 
 module.exports.syncWithDefaultSizes = syncWithDefaultSizes
