@@ -67,7 +67,7 @@ module.exports.query = query
 * @param {string} opportunityName - opportunity to mutate
 * @param {boolean} status - protected or unprotected
 */
-var setProtectedStatus = function(opportunityName, protectedStatus, genericStatus, callback) {
+var setOpportunityStatus = function(opportunityName, protectedStatus, genericStatus, callback) {
 	query(
 		"UPDATE sales_pipeline SET protected = $1, generic = $2 WHERE opportunity = $3",
 		[protectedStatus, genericStatus, opportunityName],
@@ -75,7 +75,7 @@ var setProtectedStatus = function(opportunityName, protectedStatus, genericStatu
 	)
 }
 
-module.exports.setProtectedStatus = setProtectedStatus
+module.exports.setOpportunityStatus = setOpportunityStatus
 //*************************************
 
 /**
