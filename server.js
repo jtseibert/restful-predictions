@@ -89,6 +89,7 @@ router.route('/updatePipelineTable')
 					helpers.setProtectedStatus(req.body.opportunityData[1], true, function callback() {
 						pipeline.exportToSheets(function callback(pipelineData) {
 							res.json(pipelineData)
+							break
 						})			
 					})
 		
