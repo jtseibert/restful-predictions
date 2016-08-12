@@ -322,12 +322,23 @@ function queryPipeline(accessToken, path, callback) {
 
 
 
-function syncWithDefaultSizes() {
-
-
-
-
-
+function syncWithDefaultSizes(callback) {
+	helpers.query(
+		"SELECT DISTINCT opportunity FROM sales_pipeline WHERE project_size IS NOT NULL",
+		null,
+		function(queryData) {
+			console.log(JSON.stringify(queryData))
+			callback()
+			//asnyc.eachof
+				//updateWithNewSize(opportunity name)
+					//get row information with opportunity = opporunity name
+					// if row info at amount index == null,
+						//do nothing (callback null)
+					// else 
+						//delete from sales_pipeline where opportunity = opporuntiy nane
+							//cb for delete, insertwithdefaultsize(saved data)
+								//on cb callback(null)
+		})
 }
 
 

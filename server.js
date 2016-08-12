@@ -105,6 +105,15 @@ router.route('/updatePipelineTable')
 						}
 					)
 				})
+			case "project_size":
+				helpers.query(req.body.query, req.body.values, function() {
+					pipeline.syncWithDefaultSizes(function(status) {
+						res.json({message: status})
+					})
+				})
+				break
+			case default:
+				res.json({message: "No Update."})
 		}
 	})
 
