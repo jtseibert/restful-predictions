@@ -319,9 +319,12 @@ function queryPipeline(accessToken, path, callback) {
 }
 //*************************************
 
-
-
-
+/**
+* @function syncWithDefaultSizes
+* @desc Syncs every opportunity with default project sizes with the new project sizes.
+Method fires when a project size is added, removed, or updated via google sheets.
+* @param callback - callback function
+*/
 function syncWithDefaultSizes(callback) {
 	helpers.query(
 		"SELECT DISTINCT opportunity FROM sales_pipeline WHERE project_size IS NOT NULL",
@@ -330,27 +333,39 @@ function syncWithDefaultSizes(callback) {
 			async.eachSeries(queryData, function updateWithNewSize(opportunityKey, callback) {
 					//opp is oppKey.opp
 				helpers.query(
-					"SELECT stage, amount, expected_revenue, close_date, " +
+					"SELECT opportunity, stage, amount, expected_revenue, close_date, " +
 					"start_date, probability, created_date, account_name " +
 					"FROM sales_pipeline where opportunity = $1",
 					[opportunityKey.opportunity],
 					function(queryData) {
-						console.log(queryData)
-						callback(null)
+						if(queryData.amount == null) {
+							callback(null)
+						} else {
+							helpers.deleteOpportunity(queryData.opportunity, function() {
+								// Format opportunity to match index for default insertion
+								var opportunityData = [
+									queryData.stage,
+									queryData.amount,
+									queryData.expected_revenue,
+									queryData.close_date,
+									queryData.start_date,
+									queryData.probability,
+									queryData.created_date,
+									queryData.account_name,
+									queryData.opportunity
+
+								]
+								insertWithDefaultSize(opportunityData, function() {
+									callback(null)
+								})
+							})
+						}
 					}
 				)
 			},
 			function() {
 				callback(null)
 			})
-				//updateWithNewSize(opportunity name)
-					//get row information with opportunity = opporunity name
-					// if row info at amount index == null,
-						//do nothing (callback null)
-					// else 
-						//delete from sales_pipeline where opportunity = opporuntiy nane
-							//cb for delete, insertwithdefaultsize(saved data)
-								//on cb callback(null)
 		}
 	)
 }
