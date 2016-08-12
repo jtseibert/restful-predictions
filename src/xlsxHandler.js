@@ -14,8 +14,8 @@ var async     = require('async')
 * @param callback - callback function
 */
 function updateDatabaseFromXlsx(opportunityData, callback) {
-	helpers.opportunityCheck(opportunityData.opportunityName, function opportunityCheckCallback(inDatabase) {
-		if(inDatabase) {
+	helpers.opportunityCheck(opportunityData.opportunityName, function opportunityCheckCallback(exists) {
+		if(exists) {
 			helpers.deleteOpportunity(opportunityData.opportunityName, function deleteOpportunityCallback() {
 				updateOpportunityFromXlsx(opportunityData, function() {
 					callback(null)
