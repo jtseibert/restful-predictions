@@ -352,13 +352,12 @@ function syncWithDefaultSizes(callback) {
 									temp.stage,
 									temp.amount,
 									temp.expected_revenue,
-									temp.close_date,
-									temp.start_date,
+									moment(new Date(temp.close_date)).format("MM/DD/YYYY"),
+									moment(new Date(temp.start_date)).format("MM/DD/YYYY"),
 									temp.probability,
-									temp.created_date,
+									moment(new Date(temp.created_date)).format("MM/DD/YYYY"),
 									temp.account_name,
 									temp.opportunity
-
 								]
 								console.log("OPP DATA " + opportunityData)
 								insertWithDefaultSize(opportunityData, function() {
@@ -378,7 +377,6 @@ function syncWithDefaultSizes(callback) {
 }
 
 module.exports.syncWithDefaultSizes = syncWithDefaultSizes
-
 
 
 
