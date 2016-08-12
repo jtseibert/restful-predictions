@@ -1,4 +1,5 @@
-/**************************************
+//*************************************
+/**
 * @module Pipeline
 * @desc Contains methods to:
 	*Sync pipeline table with salesforce:
@@ -27,7 +28,9 @@ var indexes = {
 	ACCOUNT_NAME: 8,
 	PROJECT_SIZE: 9
 }
-/*************************************
+//*************************************
+
+/**
 * @function syncPipelineWithSalesforce
 * @desc Syncs the sales_pipeline database with salesforce.
     *All non-protected opportunities are deleted from the database.
@@ -258,7 +261,7 @@ var exportToSheets = function(callback) {
 }
 
 module.exports.exportToSheets = exportToSheets
-/*************************************
+//*************************************
 
 /**
 * @function queryPipeline

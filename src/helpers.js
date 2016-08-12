@@ -8,6 +8,7 @@ var pg = require('pg')
 pg.defaults.ssl = true
 pg.defaults.poolSize = 10
 //*************************************
+
 /**
 * @function query
 * @desc Send a query with optional values to the Heroku database.

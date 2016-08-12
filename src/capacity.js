@@ -1,10 +1,10 @@
-/**************************************
+//*************************************
 /**
 * @module Capacity
 * @desc The Capacity module contains function(s) to perform SOQL queries via the 
 node-salesforce library to return current capacity data to Google Sheets.
 */
-/**************************************
+//*************************************
 
 /**
 * @function queryCapacity
@@ -53,7 +53,7 @@ var queryCapacity = function(accessToken, path, callback) {
 }
 
 module.exports.queryCapacity = queryCapacity
-/**************************************
+//*************************************
 
 
 
