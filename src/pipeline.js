@@ -326,6 +326,7 @@ Method fires when a project size is added, removed, or updated via google sheets
 * @param callback - callback function
 */
 function syncWithDefaultSizes(callback) {
+	console.log('entering syncWithDefaultSizes?')
 	helpers.query(
 		"SELECT DISTINCT opportunity FROM sales_pipeline WHERE project_size IS NOT NULL",
 		null,
