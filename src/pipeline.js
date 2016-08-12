@@ -40,15 +40,15 @@ var indexes = {
 * @param callback - callback function to handle google sheet sync
 */
 function syncPipelineWithSalesforce(accessToken, path, callback) {
-	queryPipeline(accessToken, path, function handlePipelineData(pipelineData) {
+	queryPipeline(accessToken, path, function queryPipelineCallback(pipelineData) {
 		var today = moment().format("MM/DD/YYYY")
 		var deleteQuery = "DELETE FROM sales_pipeline WHERE protected = FALSE OR start_date < " 
 						+ "'" + today + "'"
-		helpers.query(deleteQuery, null, function deleteQueryCallback() {
+		helpers.query(deleteQuery, null, function queryCallback() {
 			// For each row in pipelineData, sync accordingly
 			async.eachSeries(pipelineData, syncRows, function syncRowsCallback() {
 				console.log('ALL ROWS DONE')
-				callback(null)
+				process.nextTick(function() {callback(null)})
 			})
 		})
 	})
@@ -69,14 +69,14 @@ function syncRows(row, callback) {
 	helpers.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[curRow[indexes.OPPORTUNITY_NAME]],
-		function(results) {
+		function queryCallback(results) {
 			if(results[0].exists) {
 				updateProtectedOpportunity(curRow, function updateProtectedOpportunityCallback() {
-					callback(null)
+					process.nextTick(function() {callback(null)})
 				})
 			} else {
 				insertWithDefaultSize(curRow, function insertWithDefaultSizeCallback() {
-					callback(null)
+					process.nextTick(function() {callback(null)})
 				})
 			}
 		}
@@ -107,8 +107,8 @@ function updateProtectedOpportunity(opportunityData, callback) {
 		opportunityData[indexes.ACCOUNT_NAME], 
 		opportunityData[indexes.OPPORTUNITY_NAME]
 	]
-	helpers.query(updateQuery, updateValues, function() {
-		callback(null)
+	helpers.query(updateQuery, updateValues, function queryCallback() {
+		process.nextTick(function() {callback(null)})
 	})
 }
 //*************************************
@@ -139,7 +139,7 @@ function insertWithDefaultSize(opportunityData, callback) {
 	helpers.query(
 		getDefaultSizeQuery,
 	  	defaultSizeQueryValues,	  	
-	  	function(results) {
+	  	function queryCallback(results) {
 	  		// For each role, insert *role duration* rows
 	  		// Check for missing amount in opportunity
 	  		if(opportunityData[indexes.AMOUNT] != null || opportunityData[indexes.PROJECT_SIZE] != undefined) {
@@ -180,19 +180,19 @@ function insertWithDefaultSize(opportunityData, callback) {
 		  						helpers.query(
 		  							insertQuery,
 		  							insertValues,
-		  							function() {
+		  							function queryCallback() {
 		  								durationCounter++
-		  								callback(null)
+		  								process.nextTick(function() {callback(null)})
 		  							}
 		  						)
 		  					},
-		  					function() {callback(null)}
+		  					function() {process.nextTick(function() {callback(null)})}
 		  				)
 		  			},
-		  			function() {callback(null)}
+		  			function() {process.nextTick(function() {callback(null)})}
 		  		)	
 		  	} else {
-		  		callback(null)
+		  		process.nextTick(function() {callback(null)})}
 		  	}		  
 	  	}
 	)
@@ -230,7 +230,7 @@ function exportToSheets(callback) {
 	helpers.query(
 		sheetQuery,
 		null,
-		function(queryData) {
+		function queryCallback(queryData) {
 			var values = []
 			// Asyncronusly convert result to 2D array
 			async.eachOf(queryData, function(opportunity, key, callback) {
@@ -239,15 +239,15 @@ function exportToSheets(callback) {
 					// Convert dates for consistency
 					if(key == "close_date" || key == "start_date" || key == "created_date" || key == "week") {
 						temp.push(moment(new Date(opportunityData)).format("MM/DD/YYYY"))
-						process.nextTick(callback)
+						process.nextTick(function() {callback(null)})
 					} else {
 						temp.push(opportunityData)
-						process.nextTick(callback)
+						process.nextTick(function() {callback(null)})
 					}
 				},
 				 function() {
 					values.push(temp)
-					process.nextTick(callback)
+					process.nextTick(function() {callback(null)})
 				})
 			},
 			function() {

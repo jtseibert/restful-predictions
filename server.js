@@ -27,7 +27,7 @@ app.use('/api', router)
 // General query route for Google Sheets to pull from Heroku postgres DB
 router.route('/query')
 	.post(function(req, res) {
-		helpers.query(req.body.query, req.body.values, function returnQueryResults(results) {
+		helpers.query(req.body.query, req.body.values, function queryCallback(results) {
 			res.json(results)
 		})
 	})
@@ -37,7 +37,7 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 	.get(function(req, res) {
 		var accessToken = req.params.accessToken,
 			instance    = req.params.instance
-		allocation.queryAllocation(accessToken, instance, function handleAllocationData(allocationData) {
+		allocation.queryAllocation(accessToken, instance, function queryAllocationCallback(allocationData) {
 			res.json(allocationData)
 		})
 	})
@@ -47,9 +47,9 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
 		var accessToken = req.params.accessToken,
 			instance    = req.params.instance
-		pipeline.syncPipelineWithSalesforce(accessToken, instance, function callback() {
+		pipeline.syncPipelineWithSalesforce(accessToken, instance, function syncPipelineWithSalesforceCallback() {
 			console.log("DATABASE UPDATE DONE")
-			pipeline.exportToSheets(function callback(pipelineData) {
+			pipeline.exportToSheets(function exportToSheetsCallback(pipelineData) {
 				console.log("EXPORT DONE")
 				res.json(pipelineData)
 			})
@@ -61,7 +61,7 @@ router.route('/:instance/DATA_Capacity/:accessToken')
 	.get(function(req, res) {
 		var accessToken = req.params.accessToken,
 			instance    = req.params.instance
-		capacity.queryCapacity(accessToken, instance, function handleCapacityData(capacityData) {
+		capacity.queryCapacity(accessToken, instance, function queryCapacityCallback(capacityData) {
 			res.json(capacityData)
 		})
 	})
@@ -85,19 +85,19 @@ router.route('/updatePipelineTable')
 	.post(function(req, res) {
 		switch(req.body.type) {
 			case 'add':
-				pipeline.insertWithDefaultSize(req.body.opportunityData, function callback() {
-					helpers.setProtectedStatus(req.body.opportunityData[1], true, function callback() {
-						pipeline.exportToSheets(function callback(pipelineData) {
+				pipeline.insertWithDefaultSize(req.body.opportunityData, function insertWithDefaultSizeCallback() {
+					helpers.setProtectedStatus(req.body.opportunityData[1], true, function setProtectedStatusCallback() {
+						pipeline.exportToSheets(function exportToSheetsCallback(pipelineData) {
 							res.json(pipelineData)
 						})			
 					})
 		
 				})
 			case 'update':
-				helpers.appendOpportunityData(req.body.opportunityData, function handleOpportunityData(opportunityData) {
+				helpers.appendOpportunityData(req.body.opportunityData, function appendOpportunityDataCallback(opportunityData) {
 					helpers.deleteOpportunity(opportunityData[1], function deleteOpportunityCallback() {
-							pipeline.insertWithDefaultSize(opportunityData, function callback() {
-								pipeline.exportToSheets(function callback(pipelineData) {
+							pipeline.insertWithDefaultSize(opportunityData, function insertWithDefaultSizeCallback() {
+								pipeline.exportToSheets(function exportToSheetsCallback(pipelineData) {
 									res.json(pipelineData)
 								})
 							})
@@ -111,10 +111,10 @@ router.route('/updatePipelineTable')
 // an xlsx sheet attached to an opportunity object in salesforce
 router.route('/trigger')
 	.post(function(req, res) {
-		parser.parseExcelSheet(req.body, function handleOpportunityData(opportunityData) {
+		parser.parseExcelSheet(req.body, function parseExcelSheetCallback(opportunityData) {
 			if(opportunityData != undefined) {
 				console.log('before updateDatabaseFromXlsx')
-				xlsxHandler.updateDatabaseFromXlsx(opportunityData, function() {
+				xlsxHandler.updateDatabaseFromXlsx(opportunityData, function updateDatabaseFromXlsxCallback() {
 					console.log('after updateDatabaseFromXlsx')
 					res.json({message: "Done."})
 				})

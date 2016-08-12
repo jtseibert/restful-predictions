@@ -16,9 +16,7 @@ var async     = require('async')
 function updateDatabaseFromXlsx(opportunityData, callback) {
 	helpers.opportunityCheck(opportunityData.opportunityName, function opportunityCheckCallback(inDatabase) {
 		if(inDatabase) {
-			console.log('finished opp check')
 			helpers.deleteOpportunity(opportunityData.opportunityName, function deleteOpportunityCallback() {
-				console.log('finished delete opp')
 				updateOpportunityFromXlsx(opportunityData, function() {
 					process.nextTick(function() {callback(null)})
 				})
@@ -49,13 +47,12 @@ function updateOpportunityFromXlsx(opportunityData, callback) {
 			helpers.query(
 				"INSERT INTO sales_pipeline(opportunity, role, week, allocation, protected) values($1, $2, $3, $4, $5)",
 				[opportunityName, roleKey, week, allocation, true],
-				function() { process.nextTick(function() {callback(null)}) }
+				function() {process.nextTick(function() {callback(null)})}
 			)
 		}, function() { 
 			process.nextTick(function() {callback(null)}) 
 		})
 	}, function() { 
-		console.log('leaving the update')
 		process.nextTick(function() {callback(null)})
 	})
 }
