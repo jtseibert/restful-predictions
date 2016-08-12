@@ -44,14 +44,14 @@ function updateOpportunityFromXlsx(opportunityData, callback) {
 	var sheetData = opportunityData.sheetData
 	var opportunityName = opportunityData.opportunityName
 	async.eachOfSeries(sheetData, function insertRole(role, roleKey, callback) {
-		async.eachOfSeries(role, function insertRoleWeek(allocation, week, callback){
+		async.eachOfSeries(role, function insertRoleWeek(allocation, week, callback) {
 			// Make a new row for every week in the weekAllocations
 			helpers.query(
 				"INSERT INTO sales_pipeline(opportunity, role, week, allocation, protected) values($1, $2, $3, $4, $5)",
 				[opportunityName, roleKey, week, allocation, true],
 				function() { callback() }
 			)
-		}, function(){ callback() }
+		}, function() { callback() })
 	}, function() { 
 		console.log('leaving the update')
 		callback(null)
