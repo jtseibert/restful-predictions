@@ -139,6 +139,7 @@ function opportunityCheck(opportunityName, callback) {
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[opportunityName],
 		function(results) {
+			console.log(opportunityName)
 			console.log(results)
 			callback(results[0].exists)}
 	)
