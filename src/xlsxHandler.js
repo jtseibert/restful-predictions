@@ -9,7 +9,7 @@ var async     = require('async')
 //*************************************
 /**
 * @function updateDatabaseFromXlsx
-* @desc Update the opportunity stored in Heroku database.
+* @desc Checks if opportunity is in sales_pipeline, and deletes if it already exists.
 * @param opportunityData - JSON format object of opportunity name and xlsx data
 * @param callback - callback function
 */
@@ -34,7 +34,7 @@ module.exports.updateDatabaseFromXlsx = updateDatabaseFromXlsx
 
 /**
 * @function updateOpportunityFromXlsx
-* @desc Updates sales_pipeline database with opportunity xlsx data.
+* @desc Update the opportunity stored in Heroku database.
 * @param opportunityData - JSON format object of xlsx data and opportunity name
 * @param callback - callback function
 */
