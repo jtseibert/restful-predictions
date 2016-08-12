@@ -121,7 +121,7 @@ var deleteOpportunities = function(opportunities, callback) {
 	console.log(opportunities)
 	async.each(
 		opportunities, 
-		function deleteOpportunity(opportunity) {
+		function deleteOpportunity(opportunity, callback) {
 			console.log(opportunity)
 			query(
 				"DELETE FROM sales_pipeline WHERE opportunity=$1",
