@@ -28,10 +28,10 @@ function query(query, values, callback) {
 					done()
 					callback(error)
 				} else {
-					query.on("row", function handleRow(row, result) {
+					query.on("row", function onRowCallback(row, result) {
 					result.addRow(row)
 					})
-					query.on("end", function returnResult(result) {
+					query.on("end", function onEndCallback(result) {
 					done()
 					callback(result.rows)
 					})	
@@ -43,10 +43,10 @@ function query(query, values, callback) {
 					done()
 					callback(error)
 				} else {
-					query.on("row", function handleRow(row, result) {
+					query.on("row", function onRowCallback(row, result) {
 					result.addRow(row)
 					})
-					query.on("end", function returnResult(result) {
+					query.on("end", function onEndCallback(result) {
 					done()
 					callback(result.rows)
 					})	
