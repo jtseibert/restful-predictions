@@ -328,13 +328,17 @@ function syncWithDefaultSizes(callback) {
 		null,
 		function(queryData) {
 			async.eachSeries(queryData, function updateWithNewSize(opportunityKey, callback) {
-				console.log(opportunityKey.opportunity)
-				callback(null)
-
-
-
-
-
+					//opp is oppKey.opp
+				helpers.query(
+					"SELECT stage, amount, expected_revenue, close_date, " +
+					"start_date, probability, created_date, account_name " +
+					"FROM sales_pipeline where opportunity = $1",
+					[opportunityKey.opportunity],
+					function(queryData) {
+						console.log(queryData)
+						callback(null)
+					}
+				)
 			},
 			function() {
 				callback(null)
