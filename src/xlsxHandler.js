@@ -21,12 +21,12 @@ function updateDatabaseFromXlsx(opportunityData, callback) {
 				console.log('finished delete opp')
 				updateOpportunityFromXlsx(opportunityData, function callback(status) {
 					console.log('finished updateopp')
-					process.nextTick(function() {callback({message: status})})
+					callback({message: status})
 				})
 			})
 		} else {
 			updateOpportunityFromXlsx(opportunityData, function callback(status) {
-				process.nextTick(function() {callback({message: status})})
+				callback({message: status})
 			})
 		}
 	})
@@ -54,7 +54,7 @@ function updateOpportunityFromXlsx(opportunityData, callback) {
 			)
 		}, function(){ process.nextTick(callback) })
 	}, function() { 
-		process.nextTick(function(){ callback('Update Finished')})
+		process.nextTick(function(){ callback("Update Finished")})
 	})
 }
 //*************************************
