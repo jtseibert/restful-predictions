@@ -91,7 +91,6 @@ function appendOpportunityData(opportunityData, callback) {
 		" FROM sales_pipeline WHERE opportunity = $1 LIMIT 1",
 		[opportunityData[3]],
 		function queryCallback(queryData) {
-			console.log(queryData)
 			var indexFriendlyData = [
 				queryData[0].stage,
 				opportunityData[3],
@@ -138,7 +137,7 @@ module.exports.deleteOpportunity = deleteOpportunity
 * @param callback - callback function to handle result
 * @returns true or false
 */
-var opportunityCheck = function(opportunityName, callback) {
+function opportunityCheck(opportunityName, callback) {
 	query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[opportunityName],

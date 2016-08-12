@@ -99,6 +99,7 @@ router.route('/updatePipelineTable')
 					helpers.deleteOpportunity(opportunityData[1], function deleteOpportunityCallback() {
 							pipeline.insertWithDefaultSize(opportunityData, function insertWithDefaultSizeCallback() {
 								pipeline.exportToSheets(function exportToSheetsCallback(pipelineData) {
+									console.log(pipelineData)
 									res.json(pipelineData)
 								})
 							})
