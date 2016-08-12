@@ -93,6 +93,7 @@ router.route('/updatePipelineTable')
 					})
 		
 				})
+				break
 			case 'update':
 				helpers.appendOpportunityData(req.body.opportunityData, function appendOpportunityDataCallback(opportunityData) {
 					helpers.deleteOpportunity(opportunityData[1], function deleteOpportunityCallback() {
@@ -104,6 +105,7 @@ router.route('/updatePipelineTable')
 						}
 					)
 				})
+				break
 		}
 	})
 
