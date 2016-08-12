@@ -322,7 +322,7 @@ function queryPipeline(accessToken, path, callback) {
 * @returns true or false
 */
 var opportunityCheck = function(opportunityName, callback) {
-	query(
+	helpers.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[opportunityName],
 		function queryCallback(results) {
