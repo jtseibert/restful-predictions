@@ -119,7 +119,7 @@ module.exports.appendOpportunityData = appendOpportunityData
 */
 var deleteOpportunities = function(opportunities, callback) {
 	console.log(opportunities)
-	async.each(
+	async.eachSeries(
 		opportunities, 
 		function deleteOpportunity(opportunity, callback) {
 			console.log(opportunity)
