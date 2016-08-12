@@ -338,6 +338,7 @@ function syncWithDefaultSizes(callback) {
 					"FROM sales_pipeline where opportunity = $1",
 					[opportunityKey.opportunity],
 					function(queryData) {
+						console.log('AMOUNT ' + queryData.amount)
 						if(queryData.amount == null) {
 							callback(null)
 						} else {
