@@ -192,7 +192,7 @@ function insertWithDefaultSize(opportunityData, callback) {
 		  			function() {process.nextTick(function() {callback(null)})}
 		  		)	
 		  	} else {
-		  		process.nextTick(function() {callback(null)})}
+		  		process.nextTick(function() {callback(null)})
 		  	}		  
 	  	}
 	)
