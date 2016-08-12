@@ -85,6 +85,7 @@ module.exports.setProtectedStatus = setProtectedStatus
 */
 //TODO pass in json instead of array, define global indexes here too
 var appendOpportunityData = function(opportunityData, callback) {
+	console.log('appendOpportunityData why')
 	query(
 		"SELECT stage, amount, expected_revenue, close_date, created_date, account_name" +
 		" FROM sales_pipeline WHERE opportunity = $1 LIMIT 1",
