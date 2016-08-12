@@ -343,6 +343,7 @@ function syncWithDefaultSizes(callback) {
 						} else {
 							helpers.deleteOpportunity(queryData.opportunity, function() {
 								// Format opportunity to match index for default insertion
+								console.log("DELETING")
 								var opportunityData = [
 									queryData.stage,
 									queryData.amount,
@@ -355,6 +356,7 @@ function syncWithDefaultSizes(callback) {
 									queryData.opportunity
 
 								]
+								console.log("OPP DATA " + opportunityData)
 								insertWithDefaultSize(opportunityData, function() {
 									callback(null)
 								})
