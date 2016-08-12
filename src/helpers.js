@@ -142,9 +142,7 @@ function opportunityCheck(opportunityName, callback) {
 	query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[opportunityName],
-		function queryCallback(results) {
-			process.nextTick(function() {callback(results[0].exists)})
-		}
+		callback(results[0].exists)
 	)
 }
 
