@@ -20,8 +20,7 @@ function updateDatabaseFromXlsx(opportunityData, callback) {
 			helpers.deleteOpportunity(opportunityData.opportunityName, function deleteOpportunityCallback() {
 				console.log('finished delete opp')
 				updateOpportunityFromXlsx(opportunityData, function callback(status) {
-					console.log('updateOpportunityFromXlsx cb')
-					process.nextTick(function() {callback(status)})
+					callback(status)
 				})
 			})
 		} else {
@@ -50,9 +49,9 @@ function updateOpportunityFromXlsx(opportunityData, callback) {
 			helpers.query(
 				"INSERT INTO sales_pipeline(opportunity, role, week, allocation, protected) values($1, $2, $3, $4, $5)",
 				[opportunityName, roleKey, week, allocation, true],
-				function() { process.nextTick(callback) }
+				function() { callback() }
 			)
-		}, function(){ process.nextTick(callback) })
+		}, function(){ callback() }
 	}, function() { 
 		console.log('leaving the update')
 		callback(null)
