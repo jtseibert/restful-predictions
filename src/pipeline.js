@@ -46,7 +46,7 @@ function syncPipelineWithSalesforce(accessToken, path, callback) {
 						+ "'" + today + "'"
 		helpers.query(deleteQuery, null, function queryCallback() {
 			// For each row in pipelineData, sync accordingly
-			async.eachSeries(pipelineData, syncRows, function syncRowsCallback() {
+			async.eachSeries(pipelineData, syncRows, function() {
 				console.log('ALL ROWS DONE')
 				callback(null)
 			})
@@ -67,21 +67,17 @@ module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
 function syncRows(row, callback) {
 	var curRow = row
 	console.log('row is ' + curRow)
-	if(curRow[indexes.OPPORTUNITY_NAME] != undefined) {
-		helpers.opportunityCheck(curRow[indexes.OPPORTUNITY_NAME], function opportunityCheckCallback(exists) {
-			if(exists) {
-				updateProtectedOpportunity(curRow, function updateProtectedOpportunityCallback() {
-					callback(null)
-				})
-			} else {
-				insertWithDefaultSize(curRow, function insertWithDefaultSizeCallback() {
-					callback(null)
-				})
-			}
-		})
-	} else {
-		callback(null)
-	}
+	helpers.opportunityCheck(curRow[indexes.OPPORTUNITY_NAME], function opportunityCheckCallback(exists) {
+		if(exists) {
+			updateProtectedOpportunity(curRow, function updateProtectedOpportunityCallback() {
+				callback(null)
+			})
+		} else {
+			insertWithDefaultSize(curRow, function insertWithDefaultSizeCallback() {
+				callback(null)
+			})
+		}
+	})
 }
 //*************************************
 
