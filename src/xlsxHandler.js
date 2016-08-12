@@ -19,7 +19,7 @@ function updateDatabaseFromXlsx(opportunityData, callback) {
 			console.log('finished opp check')
 			helpers.deleteOpportunity(opportunityData.opportunityName, function deleteOpportunityCallback() {
 				console.log('finished delete opp')
-				updateOpportunityFromXlsx(opportunityData, function callback() {
+				updateOpportunityFromXlsx(opportunityData, function() {
 					process.nextTick(function() {callback(null)})
 				})
 			})

@@ -95,7 +95,7 @@ router.route('/updatePipelineTable')
 				})
 			case 'update':
 				helpers.appendOpportunityData(req.body.opportunityData, function handleOpportunityData(opportunityData) {
-					helpers.deleteOpportunity(opportunityData[1], function queryCallback() {
+					helpers.deleteOpportunity(opportunityData[1], function deleteOpportunityCallback() {
 							pipeline.insertWithDefaultSize(opportunityData, function callback() {
 								pipeline.exportToSheets(function callback(pipelineData) {
 									res.json(pipelineData)
@@ -114,7 +114,7 @@ router.route('/trigger')
 		parser.parseExcelSheet(req.body, function handleOpportunityData(opportunityData) {
 			if(opportunityData != undefined) {
 				console.log('before updateDatabaseFromXlsx')
-				xlsxHandler.updateDatabaseFromXlsx(opportunityData, function callback() {
+				xlsxHandler.updateDatabaseFromXlsx(opportunityData, function() {
 					console.log('after updateDatabaseFromXlsx')
 					res.json({message: "Done."})
 				})
