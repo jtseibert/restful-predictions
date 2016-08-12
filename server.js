@@ -109,7 +109,7 @@ router.route('/updatePipelineTable')
 			case "remove":
 				console.log('got in route')
 				helpers.deleteOpportunities(req.body.opportunities, function deleteOpportunitiesCallback() {
-					helpers.exportToSheets(function callback(pipelineData) {
+					pipeline.exportToSheets(function callback(pipelineData) {
 						res.json(pipelineData)
 					})	
 				})

@@ -71,7 +71,7 @@ var setOpportunityStatus = function(opportunityName, protectedStatus, genericSta
 	query(
 		"UPDATE sales_pipeline SET protected = $1, generic = $2 WHERE opportunity = $3",
 		[protectedStatus, genericStatus, opportunityName],
-		function() {callback()}
+		function() {callback(null)}
 	)
 }
 
