@@ -19,34 +19,34 @@ pg.defaults.poolSize = 10
 function query(query, values, callback) {
 	q = query
 	v = values
-	pg.connect(process.env.DATABASE_URL, function pgConnectCallback(err, client, done) {
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		//console.log("query is: " + q + ' with values ' + v)
 		var query
 		if(v != null) {
-			query = client.query(q, v, function queryCallback(error) {
+			query = client.query(q, v, function(error) {
 				if(error) {
 					done()
 					callback(error)
 				} else {
-					query.on("row", function onRowCallback(row, result) {
+					query.on("row", function(row, result) {
 					result.addRow(row)
 					})
-					query.on("end", function onEndCallback(result) {
+					query.on("end", function(result) {
 					done()
 					callback(result.rows)
 					})	
 				}
 			})
 		} else {
-			query = client.query(q, function queryCallback(error) {
+			query = client.query(q, function(error) {
 				if(error) {
 					done()
 					callback(error)
 				} else {
-					query.on("row", function onRowCallback(row, result) {
+					query.on("row", function(row, result) {
 					result.addRow(row)
 					})
-					query.on("end", function onEndCallback(result) {
+					query.on("end", function(result) {
 					done()
 					callback(result.rows)
 					})	
@@ -70,7 +70,9 @@ function setProtectedStatus(opportunityName, status, callback) {
 	query(
 		"UPDATE sales_pipeline SET protected = $1 WHERE opportunity = $2",
 		[status, opportunityName],
-		callback(null)
+		function queryCallback() {
+			callback(null)
+		}
 	)
 }
 
