@@ -62,15 +62,15 @@ module.exports.query = query
 //*************************************
 
 /**
-* @function setProtectedStatus
-* @desc Set the protected field for every row of an opportunity.
+* @function setOpportunityStatus
+* @desc Set the protected and generic fields for every row of an opportunity.
 * @param {string} opportunityName - opportunity to mutate
 * @param {boolean} status - protected or unprotected
 */
-var setProtectedStatus = function(opportunityName, status, callback) {
+var setProtectedStatus = function(opportunityName, protectedStatus, genericStatus, callback) {
 	query(
-		"UPDATE sales_pipeline SET protected = $1 WHERE opportunity = $2",
-		[status, opportunityName],
+		"UPDATE sales_pipeline SET protected = $1, generic = $2 WHERE opportunity = $3",
+		[protectedStatus, genericStatus, opportunityName],
 		function() {callback()}
 	)
 }
