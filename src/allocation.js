@@ -50,10 +50,10 @@ function queryAllocation(accessToken, path, callback) {
 	.on("end", function returnAllocationData(query) {
 		console.log("total in database : " + query.totalSize);
 		console.log("total fetched : " + query.totalFetched);
-		process.nextTick(function() {callback(allocationData)})
+		callback(allocationData)
 		})
 	.on("error", function handleError(err) {
-		process.nextTick(function() {callback(err)})
+		callback(err)
 		})
 	.run({ autoFetch : true, maxFetch : 8000 });
 }

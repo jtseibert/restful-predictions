@@ -71,7 +71,7 @@ function parseExcelSheet(body, callback) {
 			sheetData: sheetData,
 			opportunityName: body.opportunityName
 		}
-		process.nextTick(function() {callback(opportunityData)})
+		callback(opportunityData)
 	}
 }
 

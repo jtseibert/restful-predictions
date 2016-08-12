@@ -48,7 +48,7 @@ function syncPipelineWithSalesforce(accessToken, path, callback) {
 			// For each row in pipelineData, sync accordingly
 			async.eachSeries(pipelineData, syncRows, function syncRowsCallback() {
 				console.log('ALL ROWS DONE')
-				process.nextTick(function() {callback(null)})
+				callback(null)
 			})
 		})
 	})
@@ -72,11 +72,11 @@ function syncRows(row, callback) {
 		function queryCallback(results) {
 			if(results[0].exists) {
 				updateProtectedOpportunity(curRow, function updateProtectedOpportunityCallback() {
-					process.nextTick(function() {callback(null)})
+					callback(null)
 				})
 			} else {
 				insertWithDefaultSize(curRow, function insertWithDefaultSizeCallback() {
-					process.nextTick(function() {callback(null)})
+					callback(null)
 				})
 			}
 		}
@@ -108,7 +108,7 @@ function updateProtectedOpportunity(opportunityData, callback) {
 		opportunityData[indexes.OPPORTUNITY_NAME]
 	]
 	helpers.query(updateQuery, updateValues, function queryCallback() {
-		process.nextTick(function() {callback(null)})
+		callback(null)
 	})
 }
 //*************************************
@@ -182,17 +182,17 @@ function insertWithDefaultSize(opportunityData, callback) {
 		  							insertValues,
 		  							function queryCallback() {
 		  								durationCounter++
-		  								process.nextTick(function() {callback(null)})
+		  								callback(null)
 		  							}
 		  						)
 		  					},
-		  					function() {process.nextTick(function() {callback(null)})}
+		  					function() {callback(null)}
 		  				)
 		  			},
-		  			function() {process.nextTick(function() {callback(null)})}
+		  			callback(null)
 		  		)	
 		  	} else {
-		  		process.nextTick(function() {callback(null)})
+		  		callback(null)
 		  	}		  
 	  	}
 	)
@@ -239,20 +239,20 @@ function exportToSheets(callback) {
 					// Convert dates for consistency
 					if(key == "close_date" || key == "start_date" || key == "created_date" || key == "week") {
 						temp.push(moment(new Date(opportunityData)).format("MM/DD/YYYY"))
-						process.nextTick(function() {callback(null)})
+						callback(null)
 					} else {
 						temp.push(opportunityData)
-						process.nextTick(function() {callback(null)})
+						callback(null)
 					}
 				},
 				 function() {
 					values.push(temp)
-					process.nextTick(function() {callback(null)})
+					callback(null)
 				})
 			},
 			function() {
 				pipelineData = headers.concat(values)
-				process.nextTick(function() {callback(pipelineData)})
+				callback(pipelineData)
 			})
 		}
 	)
@@ -308,10 +308,10 @@ function queryPipeline(accessToken, path, callback) {
 		.on("end", function(query) {
 			console.log("total in database : " + query.totalSize);
 			console.log("total fetched : " + query.totalFetched);
-			process.nextTick(function() {callback(pipelineData)})
+			callback(pipelineData)
 		})
 		.on("error", function(err) {
-			process.nextTick(function() {callback(err)})
+			callback(err)
 		})
 		.run({ autoFetch : true, maxFetch : 4000 });
 }

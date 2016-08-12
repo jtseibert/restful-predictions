@@ -70,7 +70,7 @@ function setProtectedStatus(opportunityName, status, callback) {
 	query(
 		"UPDATE sales_pipeline SET protected = $1 WHERE opportunity = $2",
 		[status, opportunityName],
-		function() {process.nextTick(function() {callback(null)})}
+		callback(null)
 	)
 }
 
@@ -101,7 +101,7 @@ function appendOpportunityData(opportunityData, callback) {
 				queryData[0].account_name,
 				opportunityData[2]
 			]
-			process.nextTick(function() {callback(indexFriendlyData)})
+			callback(indexFriendlyData)
 		}
 	)
 }
@@ -119,7 +119,7 @@ function deleteOpportunity(opportunityName, callback) {
 	query(
 		"DELETE FROM sales_pipeline WHERE opportunity=$1",
 		[opportunityName],
-		function() {process.nextTick(function() {callback(null)})}
+		callback(null)
 	)
 }
 
@@ -137,7 +137,7 @@ function opportunityCheck(opportunityName, callback) {
 	query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[opportunityName],
-		function(results) {process.nextTick(function() {callback(results[0].exists)})}
+		function(results) {callback(results[0].exists)}
 	)
 }
 
