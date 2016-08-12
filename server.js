@@ -84,7 +84,7 @@ router.route('/DATA_Forecast')
 router.route('/updatePipelineTable')
 	.post(function(req, res) {
 		switch(req.body.type) {
-			case 'add':
+			case "add":
 				pipeline.insertWithDefaultSize(req.body.opportunityData, function callback() {
 					helpers.setProtectedStatus(req.body.opportunityData[1], true, function callback() {
 						pipeline.exportToSheets(function callback(pipelineData) {
@@ -93,7 +93,7 @@ router.route('/updatePipelineTable')
 					})
 		
 				})
-			case 'update':
+			case "update":
 				helpers.appendOpportunityData(req.body.opportunityData, function handleOpportunityData(opportunityData) {
 					helpers.deleteOpportunity(opportunityData[1], function queryCallback() {
 							pipeline.insertWithDefaultSize(opportunityData, function callback() {
