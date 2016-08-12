@@ -86,7 +86,7 @@ router.route('/updatePipelineTable')
 		switch(req.body.type) {
 			case "add":
 				pipeline.insertWithDefaultSize(req.body.opportunityData, function callback() {
-					helpers.setOpportunityStatus(req.body.opportunityData[1], true, true, function callback() {
+					helpers.setOpportunityStatus([req.body.opportunityData[1]], true, true, function callback() {
 						pipeline.exportToSheets(function callback(pipelineData) {
 							res.json(pipelineData)
 						})			
@@ -107,12 +107,20 @@ router.route('/updatePipelineTable')
 				})
 				break
 			case "remove":
-				console.log('got in route')
 				helpers.deleteOpportunities(req.body.opportunities, function deleteOpportunitiesCallback() {
 					pipeline.exportToSheets(function callback(pipelineData) {
 						res.json(pipelineData)
 					})	
 				})
+				break
+			case "omit":
+				helpers.setOpportunityStatus(req.body.opportunities, req.body.protected, req.body.generic,
+					function setOpportunityStatusCallback() {
+						pipeline.exportToSheets(function callback(pipelineData) {
+							res.json(pipelineData)
+						})
+					}
+				)
 				break
 			case "project_size":
 				helpers.query(req.body.query, req.body.values, function() {
