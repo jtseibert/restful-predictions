@@ -11,7 +11,7 @@ var async     = require('async')
 * @function updateDatabaseFromXlsx
 * @desc Update the opportunity stored in Heroku database.
 * @param opportunityData - JSON format object of opportunity name and xlsx data
-* @param callback - callback to handle status
+* @param callback - callback function
 */
 function updateDatabaseFromXlsx(opportunityData, callback) {
 	helpers.opportunityCheck(opportunityData.opportunityName, function opportunityCheckCallback(inDatabase) {
@@ -19,13 +19,13 @@ function updateDatabaseFromXlsx(opportunityData, callback) {
 			console.log('finished opp check')
 			helpers.deleteOpportunity(opportunityData.opportunityName, function deleteOpportunityCallback() {
 				console.log('finished delete opp')
-				updateOpportunityFromXlsx(opportunityData, function callback(status) {
-					callback(status)
+				updateOpportunityFromXlsx(opportunityData, function callback() {
+					process.nextTick(function() {callback(null)})
 				})
 			})
 		} else {
-			updateOpportunityFromXlsx(opportunityData, function callback(status) {
-				process.nextTick(function() {callback(status)})
+			updateOpportunityFromXlsx(opportunityData, function callback() {
+				process.nextTick(function() {callback(null)})
 			})
 		}
 	})
@@ -38,7 +38,7 @@ module.exports.updateDatabaseFromXlsx = updateDatabaseFromXlsx
 * @function updateOpportunityFromXlsx
 * @desc Updates sales_pipeline database with opportunity xlsx data.
 * @param opportunityData - JSON format object of xlsx data and opportunity name
-* @param callback - callback function to handle status
+* @param callback - callback function
 */
 function updateOpportunityFromXlsx(opportunityData, callback) {
 	var sheetData = opportunityData.sheetData
@@ -49,12 +49,12 @@ function updateOpportunityFromXlsx(opportunityData, callback) {
 			helpers.query(
 				"INSERT INTO sales_pipeline(opportunity, role, week, allocation, protected) values($1, $2, $3, $4, $5)",
 				[opportunityName, roleKey, week, allocation, true],
-				function() { callback() }
+				function() { process.nextTick(function() {callback(null)}
 			)
-		}, function() { callback() })
+		}, function() { process.nextTick(function() {callback(null)}) }
 	}, function() { 
 		console.log('leaving the update')
-		callback(null)
+		process.nextTick(function() {callback(null)})
 	})
 }
 //*************************************

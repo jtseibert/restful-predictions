@@ -48,7 +48,7 @@ function syncPipelineWithSalesforce(accessToken, path, callback) {
 			// For each row in pipelineData, sync accordingly
 			async.eachSeries(pipelineData, syncRows, function syncRowsCallback() {
 				console.log('ALL ROWS DONE')
-				callback()
+				callback(null)
 			})
 		})
 	})

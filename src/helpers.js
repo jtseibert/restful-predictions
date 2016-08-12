@@ -1,7 +1,7 @@
 //*************************************
 /**
 * @module helpers
-* @desc Contains varias frequently used helper methods.
+* @desc Contains varias frequently used datbase helper methods.
 */
 //*************************************
 var pg = require('pg')
