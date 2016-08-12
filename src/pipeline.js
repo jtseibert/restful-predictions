@@ -327,8 +327,8 @@ function syncWithDefaultSizes(callback) {
 		"SELECT DISTINCT opportunity FROM sales_pipeline WHERE project_size IS NOT NULL",
 		null,
 		function(queryData) {
-			async.eachOfSeries(queryData, function updateWithNewSize(opportunity, dummyKey, callback) {
-				console.log(opportunity)
+			async.eachSeries(queryData, function updateWithNewSize(opportunityKey, callback) {
+				console.log(opportunityKey.opportunity)
 				callback(null)
 
 
