@@ -67,6 +67,7 @@ module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
 function syncRows(row, callback) {
 	var curRow = row
 	console.log('anme is ' + curRow[indexes.OPPORTUNITY_NAME])
+	if(curRow[indexes.OPPORTUNITY_NAME] != null || curRow[indexes.OPPORTUNITY_NAME != ""])
 		helpers.opportunityCheck(curRow[indexes.OPPORTUNITY_NAME], function opportunityCheckCallback(exists) {
 			if(exists) {
 				updateProtectedOpportunity(curRow, function updateProtectedOpportunityCallback() {
@@ -78,7 +79,9 @@ function syncRows(row, callback) {
 				})
 			}
 		})
-	
+	} else {
+		callback(null)
+	}
 }
 //*************************************
 
