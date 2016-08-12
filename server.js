@@ -106,7 +106,7 @@ router.route('/updatePipelineTable')
 					)
 				})
 				break
-			case "delete":
+			case "remove":
 				helpers.deleteOpportunities(req.body.opportunities, function deleteOpportunitiesCallback() {
 					res.json({message: "deleteOpportunities Done."})
 				})
