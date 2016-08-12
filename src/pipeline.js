@@ -66,10 +66,9 @@ module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
 */
 function syncRows(row, callback) {
 	var curRow = row
-	helpers.query(
-		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
-		[curRow[indexes.OPPORTUNITY_NAME]],
-		function queryCallback(results) {
+	helpers.opportunityCheck(
+\		[curRow[indexes.OPPORTUNITY_NAME]],
+		function opportunityCheckCallback(results) {
 			if(results[0].exists) {
 				updateProtectedOpportunity(curRow, function updateProtectedOpportunityCallback() {
 					callback(null)
