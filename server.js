@@ -112,7 +112,7 @@ router.route('/updatePipelineTable')
 					})
 				})
 				break
-			case default:
+			default:
 				res.json({message: "No Update."})
 		}
 	})
