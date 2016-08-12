@@ -346,7 +346,7 @@ function syncWithDefaultSizes(callback) {
 						if(temp.amount == null) {
 							callback(null)
 						} else {
-							helpers.deleteOpportunity(temp.opportunity, function() {
+							helpers.deleteOpportunities([temp.opportunity], function() {
 								// Format opportunity to match index for default insertion
 								console.log("DELETING")
 								var opportunityData = [

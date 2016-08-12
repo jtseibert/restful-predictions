@@ -96,7 +96,7 @@ router.route('/updatePipelineTable')
 				break
 			case "update":
 				helpers.appendOpportunityData(req.body.opportunityData, function handleOpportunityData(opportunityData) {
-					helpers.deleteOpportunity(opportunityData[1], function queryCallback() {
+					helpers.deleteOpportunities([opportunityData[1]], function queryCallback() {
 							pipeline.insertWithDefaultSize(opportunityData, function callback() {
 								pipeline.exportToSheets(function callback(pipelineData) {
 									res.json(pipelineData)
@@ -105,6 +105,12 @@ router.route('/updatePipelineTable')
 						}
 					)
 				})
+				break
+			case "delete":
+				helpers.deleteOpportunities(req.body.opportunities, function deleteOpportunitiesCallback() {
+					res.json({message: "deleteOpportunities Done."})
+				})
+				break
 			case "project_size":
 				helpers.query(req.body.query, req.body.values, function() {
 					pipeline.syncWithDefaultSizes(function(status) {
