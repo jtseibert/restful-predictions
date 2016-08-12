@@ -341,6 +341,7 @@ function syncWithDefaultSizes(callback) {
 		})
 }
 
+module.exports.syncWithDefaultSizes = syncWithDefaultSizes
 
 
 
