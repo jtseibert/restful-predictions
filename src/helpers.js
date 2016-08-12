@@ -26,14 +26,14 @@ function query(query, values, callback) {
 			query = client.query(q, v, function queryCallback(error) {
 				if(error) {
 					done()
-					callback(error)
+					process.nextTick(function() {callback(error)})
 				} else {
 					query.on("row", function handleRow(row, result) {
 					result.addRow(row)
 					})
 					query.on("end", function returnResult(result) {
 					done()
-					callback(result.rows)
+					process.nextTick(function() {callback(result.rows)})
 					})	
 				}
 			})
@@ -41,14 +41,14 @@ function query(query, values, callback) {
 			query = client.query(q, function queryCallback(error) {
 				if(error) {
 					done()
-					callback(error)
+					process.nextTick(function() {callback(error)})
 				} else {
 					query.on("row", function handleRow(row, result) {
 					result.addRow(row)
 					})
 					query.on("end", function returnResult(result) {
 					done()
-					callback(result.rows)
+					process.nextTick(function() {callback(result.rows)})
 					})	
 				} 
 			})
