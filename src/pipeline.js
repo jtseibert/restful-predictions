@@ -320,18 +320,6 @@ function queryPipeline(accessToken, path, callback) {
 
 
 
-function syncWithDefaultSizes() {
-
-
-
-
-
-}
-
-
-
-
-
 
 
 
