@@ -289,7 +289,7 @@ function queryPipeline(accessToken, path, callback) {
 
 	// Execute SOQL query to populate pipelineData
 	conn.query(pipelineQuery)
-		.on("record", function(record) {
+		.on("record", function onRecordCallback(record) {
 			var recordData = []
 			// Format the date with Moment library for sheet consistency
 			recordData.push(
@@ -305,12 +305,12 @@ function queryPipeline(accessToken, path, callback) {
 			)
 			pipelineData.push(recordData)
 		})
-		.on("end", function(query) {
+		.on("end", function onEndCallback(query) {
 			console.log("total in database : " + query.totalSize);
 			console.log("total fetched : " + query.totalFetched);
 			callback(pipelineData)
 		})
-		.on("error", function(err) {
+		.on("error", function onErrorCallback(err) {
 			callback(err)
 		})
 		.run({ autoFetch : true, maxFetch : 4000 });

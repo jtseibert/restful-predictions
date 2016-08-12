@@ -34,7 +34,7 @@ function queryAllocation(accessToken, path, callback) {
 	var queryString = getQueryString()
 	// Execute SOQL query to populate allocationData
 	conn.query(queryString)
-  	.on("record", function handleRecord(record) {
+  	.on("record", function onRecordCallback(record) {
   		var recordData = []
   		// Format the date with Moment library for sheet consistency
     	recordData.push(
@@ -47,12 +47,12 @@ function queryAllocation(accessToken, path, callback) {
 		)
     	allocationData.push(recordData)
 		})
-	.on("end", function returnAllocationData(query) {
+	.on("end", function onEndCallback(query) {
 		console.log("total in database : " + query.totalSize);
 		console.log("total fetched : " + query.totalFetched);
 		callback(allocationData)
 		})
-	.on("error", function handleError(err) {
+	.on("error", function onErrorCallback(err) {
 		callback(err)
 		})
 	.run({ autoFetch : true, maxFetch : 8000 });
