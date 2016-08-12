@@ -340,22 +340,24 @@ function syncWithDefaultSizes(callback) {
 					function(queryData) {
 						console.log('queryData is ' + JSON.stringify(queryData))
 						console.log('AMOUNT ' + queryData.amount)
-						if(queryData.amount == null) {
+						// Data is returned as an array of 1 element, grab said element
+						var temp = queryData[0]
+						if(temp.amount == null) {
 							callback(null)
 						} else {
-							helpers.deleteOpportunity(queryData.opportunity, function() {
+							helpers.deleteOpportunity(temp.opportunity, function() {
 								// Format opportunity to match index for default insertion
 								console.log("DELETING")
 								var opportunityData = [
-									queryData.stage,
-									queryData.amount,
-									queryData.expected_revenue,
-									queryData.close_date,
-									queryData.start_date,
-									queryData.probability,
-									queryData.created_date,
-									queryData.account_name,
-									queryData.opportunity
+									temp.stage,
+									temp.amount,
+									temp.expected_revenue,
+									temp.close_date,
+									temp.start_date,
+									temp.probability,
+									temp.created_date,
+									temp.account_name,
+									temp.opportunity
 
 								]
 								console.log("OPP DATA " + opportunityData)
