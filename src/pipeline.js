@@ -67,7 +67,7 @@ module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
 function syncRows(row, callback) {
 	var curRow = row
 	console.log('row is ' + curRow)
-	helpers.opportunityCheck(curRow[indexes.OPPORTUNITY_NAME], function opportunityCheckCallback(exists) {
+	opportunityCheck(curRow[indexes.OPPORTUNITY_NAME], function opportunityCheckCallback(exists) {
 		if(exists) {
 			updateProtectedOpportunity(curRow, function updateProtectedOpportunityCallback() {
 				callback(null)
@@ -314,7 +314,26 @@ function queryPipeline(accessToken, path, callback) {
 }
 //*************************************
 
+/**
+* @function opportunityCheck
+* @desc Checks if the opportunity is currently in the Heroku database
+* @param {string} opportunityName - name of opportunity to check
+* @param callback - callback function to handle result
+* @returns true or false
+*/
+var opportunityCheck = function(opportunityName, callback) {
+	query(
+		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
+		[opportunityName],
+		function queryCallback(results) {
+			console.log("results are " + results)
+			callback(results[0].exists)
+		}
+	)
+}
 
+module.exports.opportunityCheck = opportunityCheck
+//*************************************
 
 
 
