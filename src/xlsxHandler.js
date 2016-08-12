@@ -55,7 +55,7 @@ function updateOpportunityFromXlsx(opportunityData, callback) {
 		}, function(){ process.nextTick(callback) })
 	}, function() { 
 		console.log('leaving the update')
-		process.nextTick(function(){ callback(null)})
+		callback(null)
 	})
 }
 //*************************************
