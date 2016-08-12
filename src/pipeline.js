@@ -249,6 +249,7 @@ function exportToSheets(callback) {
 			},
 			function() {
 				pipelineData = headers.concat(values)
+				console.log(pipelineData)
 				callback(pipelineData)
 			})
 		}
