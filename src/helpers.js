@@ -6,7 +6,7 @@
 //*************************************
 var pg = require('pg')
 pg.defaults.ssl = true
-pg.defaults.poolSize = 10
+pg.defaults.poolSize = 20
 //*************************************
 /**
 * @function query
