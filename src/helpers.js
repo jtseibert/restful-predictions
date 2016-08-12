@@ -120,7 +120,9 @@ function deleteOpportunity(opportunityName, callback) {
 	query(
 		"DELETE FROM sales_pipeline WHERE opportunity=$1",
 		[opportunityName],
-		callback(null)
+		function queryCallback() {
+			callback(null)
+		}
 	)
 }
 
@@ -138,8 +140,9 @@ function opportunityCheck(opportunityName, callback) {
 	query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[opportunityName],
-		function(results) {
-			callback(results[0].exists)}
+		function queryCallback(results) {
+			callback(results[0].exists)
+		}
 	)
 }
 
