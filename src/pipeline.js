@@ -362,6 +362,7 @@ function syncWithDefaultSizes(callback) {
 								]
 								console.log("OPP DATA " + opportunityData)
 								insertWithDefaultSize(opportunityData, function() {
+									console.log('INSERT SHOULD BE DONE: IN THE CB')
 									callback(null)
 								})
 							})
