@@ -111,7 +111,7 @@ function updateProtectedOpportunity(opportunityData, callback) {
 
 /** 
 * @function insertWithDefaultSize
-* @desc Inserts (#roles * #weeks) rows for an opportunity determined from its default project size.
+* @desc Inserts (#roles) rows for an opportunity determined from its default project size.
 	*The default project size is determined either:
 		*The opportunity amount field from salesforce (if syncing).
 		*Determined by the user when manually adding an opportunity from google sheets.
@@ -241,7 +241,6 @@ var exportToSheets = function(callback) {
 						hours
 					]
 					values.push(temp)
-					console.log('temp is ' + temp)
 					process.nextTick(function() {callback(null)})
 				},
 				function() {
