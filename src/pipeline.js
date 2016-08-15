@@ -48,7 +48,7 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 						+ "'" + today + "'"
 		helpers.query(deleteQuery, null, function deleteQueryCallback() {
 			// For each row in pipelineData, sync accordingly
-			async.eachSeries(pipelineData, syncRows, function syncRowsCallback() {
+			async.each(pipelineData, syncRows, function syncRowsCallback() {
 				console.log('ALL ROWS DONE')
 				callback()
 			})
