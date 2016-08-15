@@ -224,32 +224,27 @@ var exportToSheets = function(callback) {
 		function(queryData) {
 			var values = []
 			// Asyncronusly convert result to 2D array
-			async.eachOf(queryData, function(opportunity, key, callback) {
-				var temp = []
-				async.eachOf(opportunity, function(opportunityData, key, callback) {
-					console.log('opp is ' + JSON.stringify(opportunity))
-					async.eachOf(opportunityData[10], function test(data) {
-						//console.log(JSON.stringify(data))
-						callback()
-					},
-					function() {callback()})
-
-
-
-
-
-					// // Convert dates for consistency
-					// if(key == "close_date" || key == "start_date" || key == "created_date" || key == "week") {
-					// 	temp.push(moment(new Date(opportunityData)).format("MM/DD/YYYY"))
-					// 	process.nextTick(callback)
-					// } else {
-					// 	temp.push(opportunityData)
-					// 	process.nextTick(callback)
-					// }
-				},
-				 function() {
+			async.each(queryData, function(opportunity, callback) {
+				//opportunity is {opp: name, ... , week_allocations: {...}}//role is included
+				var formattedCloseDate = moment(new Date(opportunity.close_date)).format("MM/DD/YYYY")
+				var formattedStartDate = moment(new Date(opportunity.start_date)).format("MM/DD/YYYY")
+				async.eachOf(opportunity.week_allocations, function(hours, week, callback) {
+					var temp = [
+						opportunity.opportunity,
+						opportunity.amount,
+						opportunity.expected_revenue,
+						formattedCloseDate,
+						formattedStartDate,
+						opportunity.probability,
+						opportunity.role,
+						week,
+						hours
+					]
 					values.push(temp)
-					process.nextTick(callback)
+					callback(null)
+				},
+				function() {
+\					process.nextTick(callback)
 				})
 			},
 			function() {
