@@ -339,8 +339,7 @@ function syncWithDefaultSizes(callback) {
 					"FROM sales_pipeline where opportunity = $1 LIMIT 1",
 					[opportunityKey.opportunity],
 					function(queryData) {
-						console.log('queryData is ' + JSON.stringify(queryData))
-						console.log('AMOUNT ' + queryData.amount)
+						console.log('AMOUNT ' + queryData[0].amount)
 						// Data is returned as an array of 1 element, grab said element
 						var temp = queryData[0]
 						if(temp.amount == null) {
@@ -362,6 +361,7 @@ function syncWithDefaultSizes(callback) {
 								]
 								console.log("OPP DATA " + opportunityData)
 								insertWithDefaultSize(opportunityData, function() {
+									console.log("insert should be done")
 									callback(null)
 								})
 							})
