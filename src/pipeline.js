@@ -65,7 +65,6 @@ module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
 */
 function syncRows(row, callback) {
 	var curRow = row
-	console.log('row is ' + curRow)
 	helpers.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[curRow[indexes.OPPORTUNITY_NAME]],
@@ -137,7 +136,6 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		getDefaultSizeQuery,
 	  	defaultSizeQueryValues,	  	
 	  	function(results) {
-	  		console.log(results)
 	  		// For each role, insert *role duration* rows
 	  		// Check for missing amount in opportunity
 	  		if(opportunityData[indexes.AMOUNT] != null || opportunityData[indexes.PROJECT_SIZE] != undefined) {
@@ -229,7 +227,7 @@ var exportToSheets = function(callback) {
 			async.eachOf(queryData, function(opportunity, key, callback) {
 				var temp = []
 				async.eachOf(opportunity, function(opportunityData, key, callback) {
-					console.log(opportunity)
+					console.log('opp is ' + opportunity)
 					async.eachOf(opportunityData[10], function test(data) {
 						//console.log(JSON.stringify(data))
 						callback()
