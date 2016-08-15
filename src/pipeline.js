@@ -162,6 +162,7 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  						var temp = roleStartDate.clone()
 		  						var date = temp.add(durationCounter, 'weeks').format('MM/DD/YYYY')
 		  						week_allocations[date] = hours
+		  						callback()
 		  					},
 		  					//async.whilst callback
 		  					function() {
