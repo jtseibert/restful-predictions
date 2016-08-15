@@ -65,6 +65,7 @@ module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
 */
 function syncRows(row, callback) {
 	var curRow = row
+	console.log('row is ' + curRow)
 	helpers.query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[curRow[indexes.OPPORTUNITY_NAME]],
