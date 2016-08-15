@@ -287,7 +287,7 @@ function queryPipeline(accessToken, path, callback) {
 	var today = moment(new Date).format("YYYY-MM-DD")
 	// Constraint where opportunity has not closed as of current date
 	var pipelineQuery = 
-		"SELECT Name, Amount, ExpectedRevenue, CloseDate, Probability, "
+		"SELECT Name, Amount, ExpectedRevenue, CloseDate, Probability "
 	  + "FROM Opportunity WHERE CloseDate>="
 	  + today
 
