@@ -227,7 +227,7 @@ var exportToSheets = function(callback) {
 			async.eachOf(queryData, function(opportunity, key, callback) {
 				var temp = []
 				async.eachOf(opportunity, function(opportunityData, key, callback) {
-					console.log('opp is ' + opportunity)
+					console.log('opp is ' + JSON.stringify(opportunity))
 					async.eachOf(opportunityData[10], function test(data) {
 						//console.log(JSON.stringify(data))
 						callback()
