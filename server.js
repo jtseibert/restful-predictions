@@ -115,9 +115,8 @@ router.route('/updatePipelineTable')
 				break
 			case "omit":
 				console.log("opportunities " + req.body.opportunities)
-				console.log("protected " + req.body.protected)
-				console.log("generic " + req.body.generic)
-				helpers.setOpportunityStatus(req.body.opportunities, req.body.protected, req.body.generic, req.body.omitted,
+				console.log(req.body.status.protected)
+				helpers.setOpportunityStatus(req.body.opportunities, req.body.status,
 					function setOpportunityStatusCallback() {
 						console.log('in the setOpStat callback')
 						pipeline.exportToSheets(function callback(pipelineData) {
