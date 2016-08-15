@@ -78,7 +78,6 @@ var setOpportunityStatus = function(opportunities, status, callback) {
 		},
 		function() {callback(null)}
 	)
-	console.log('in setOpportunityStatus')
 }
 
 module.exports.setOpportunityStatus = setOpportunityStatus

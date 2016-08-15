@@ -114,13 +114,9 @@ router.route('/updatePipelineTable')
 				})
 				break
 			case "omit":
-				console.log("opportunities " + req.body.opportunities)
-				console.log(req.body.status.protected)
 				helpers.setOpportunityStatus(req.body.opportunities, req.body.status,
 					function setOpportunityStatusCallback() {
-						console.log('in the setOpStat callback')
 						pipeline.exportToSheets(function callback(pipelineData) {
-							console.log('in the export cb')
 							res.json(pipelineData)
 						})
 					}
