@@ -177,14 +177,15 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  						 	opportunityData[indexes.PROBABILITY],
 		  						 	opportunityData[indexes.CREATED_DATE],
 		  						 	opportunityData[indexes.ACCOUNT_NAME],
+		  						 	role,
 		  						 	week_allocations,
 		  						 	results[0].sizeid
 		  						]
 		  						helpers.query("INSERT INTO sales_pipeline "
 		  							+ "(opportunity, stage, amount, expected_revenue, "
 		  							+ "close_date, start_date, probability, created_date, "
-		  							+ "account_name, week_allocations, project_size) VALUES "
-		  							+ "($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)",
+		  							+ "account_name, role, week_allocations, project_size) VALUES "
+		  							+ "($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
 		  							insertValues,
 		  							function() {callback(null)}
 		  						)
