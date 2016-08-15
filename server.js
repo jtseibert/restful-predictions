@@ -123,9 +123,11 @@ router.route('/updatePipelineTable')
 				)
 				break
 			case "project_size":
-				helpers.query(req.body.query, req.body.values, function() {
-					pipeline.syncWithDefaultSizes(function(status) {
-						res.json({message: status})
+				helpers.query(req.body.query, req.body.values, function callback() {
+					pipeline.syncWithDefaultSizes(function callback() {
+						pipeline.exportToSheets(function(pipelineData) {
+							res.json(pipelineData)
+						})
 					})
 				})
 				break
