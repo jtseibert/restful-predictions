@@ -86,7 +86,7 @@ router.route('/updatePipelineTable')
 		switch(req.body.type) {
 			case "add":
 				pipeline.insertWithDefaultSize(req.body.opportunityData, function callback() {
-					helpers.setOpportunityStatus([req.body.opportunityData[1]], true, true, function callback() {
+					helpers.setOpportunityStatus([req.body.opportunityData[1]], true, true, false, function callback() {
 						pipeline.exportToSheets(function callback(pipelineData) {
 							res.json(pipelineData)
 						})			
@@ -117,9 +117,11 @@ router.route('/updatePipelineTable')
 				console.log("opportunities " + req.body.opportunities)
 				console.log("protected " + req.body.protected)
 				console.log("generic " + req.body.generic)
-				helpers.setOpportunityStatus(req.body.opportunities, req.body.protected, req.body.generic,
+				helpers.setOpportunityStatus(req.body.opportunities, req.body.protected, req.body.generic, req.body.omitted,
 					function setOpportunityStatusCallback() {
+						console.log('in the setOpStat callback')
 						pipeline.exportToSheets(function callback(pipelineData) {
+							console.log('in the export cb')
 							res.json(pipelineData)
 						})
 					}

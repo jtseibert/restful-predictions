@@ -67,12 +67,12 @@ module.exports.query = query
 * @param {string} opportunityName - opportunity to mutate
 * @param {boolean} status - protected or unprotected
 */
-var setOpportunityStatus = function(opportunities, protectedStatus, genericStatus, callback) {
+var setOpportunityStatus = function(opportunities, protectedStatus, genericStatus, omitStatus, callback) {
 	async.eachSeries(opportunities,
 		function updateStatus(opportunity, callback) {
 			query(
-				"UPDATE sales_pipeline SET protected = $1, generic = $2 WHERE opportunity = $3",
-				[protectedStatus, genericStatus, opportunity],
+				"UPDATE sales_pipeline SET protected = $1, generic = $2, omitted = $3 WHERE opportunity = $4",
+				[protectedStatus, genericStatus, omitStatus, opportunity],
 				function() {callback(null)}
 			)
 		}
