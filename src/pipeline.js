@@ -17,16 +17,13 @@ var moment = require('moment')
 
 // Define global indexes dictated by query to SF
 var indexes = {
-	STAGE: 0,
-	OPPORTUNITY_NAME: 1,
-	AMOUNT: 2,
-	EXP_AMOUNT: 3,
-	CLOSE_DATE: 4,
-	START_DATE: 5,
-	PROBABILITY: 6,
-	CREATED_DATE: 7,
-	ACCOUNT_NAME: 8,
-	PROJECT_SIZE: 9
+	OPPORTUNITY_NAME: 0,
+	AMOUNT: 1,
+	EXP_AMOUNT: 2,
+	CLOSE_DATE: 3,
+	START_DATE: 4,
+	PROBABILITY: 5,
+	PROJECT_SIZE: 6
 }
 //*************************************
 
@@ -93,20 +90,17 @@ function syncRows(row, callback) {
 * @param opportunityData - 1D array of opportunity data queried from salesforce
 */
 function updateProtectedOpportunity(opportunityData, callback) {
-	var updateQuery = "UPDATE sales_pipeline SET stage = $1, amount = $2, "
-		+ "expected_revenue = $3, close_date = $4, start_date = $5, "
-		+ "probability = $6, created_date = $7, account_name = $8 " 
-		+ "WHERE opportunity = $9"
+	var updateQuery = "UPDATE sales_pipeline SET amount = $1, "
+		+ "expected_revenue = $2, close_date = $3, start_date = $4, "
+		+ "probability = $5 " 
+		+ "WHERE opportunity = $6"
 
 	var updateValues = [
-		opportunityData[indexes.STAGE], 
 		opportunityData[indexes.AMOUNT], 
 		opportunityData[indexes.EXP_AMOUNT],
 		opportunityData[indexes.CLOSE_DATE], 
 		opportunityData[indexes.START_DATE], 
 		opportunityData[indexes.PROBABILITY],
-		opportunityData[indexes.CREATED_DATE], 
-		opportunityData[indexes.ACCOUNT_NAME], 
 		opportunityData[indexes.OPPORTUNITY_NAME]
 	]
 	helpers.query(updateQuery, updateValues, function() {
@@ -169,23 +163,20 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  					function() {
 								var insertValues = [
 		  							opportunityData[indexes.OPPORTUNITY_NAME],
-		  						 	opportunityData[indexes.STAGE],
 		  						 	opportunityData[indexes.AMOUNT],
 		  						 	opportunityData[indexes.EXP_AMOUNT],
 		  						 	opportunityData[indexes.CLOSE_DATE],
 		  						 	opportunityData[indexes.START_DATE],
 		  						 	opportunityData[indexes.PROBABILITY],
-		  						 	opportunityData[indexes.CREATED_DATE],
-		  						 	opportunityData[indexes.ACCOUNT_NAME],
 		  						 	role,
 		  						 	week_allocations,
 		  						 	results[0].sizeid
 		  						]
 		  						helpers.query("INSERT INTO sales_pipeline "
-		  							+ "(opportunity, stage, amount, expected_revenue, "
-		  							+ "close_date, start_date, probability, created_date, "
-		  							+ "account_name, role, week_allocations, project_size) VALUES "
-		  							+ "($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
+		  							+ "(opportunity, amount, expected_revenue, "
+		  							+ "close_date, start_date, probability, "
+		  							+ "role, week_allocations, project_size) VALUES "
+		  							+ "($1, $2, $3, $4, $5, $6, $7, $8, $9)",
 		  							insertValues,
 		  							function() {callback(null)}
 		  						)
@@ -213,21 +204,18 @@ var exportToSheets = function(callback) {
 	var pipelineData = []
 	var headers = [[
 		"OPPORTUNITY",
-		"STAGE",
 		"AMOUNT",
 		"EXPECTED_AMOUNT",
 		"CLOSE_DATE",
 		"START_DATE",
 		"PROBABILITY",
-		"CREATED_DATE",
-		"ACCOUNT_NAME",
 		"ROLE",
 		"WEEK",
 		"HOURS"
 	]]
 	var sheetQuery = 
-		"SELECT opportunity, stage, amount, expected_revenue, "
-	  + "close_date, start_date, probability, created_date, account_name, "
+		"SELECT opportunity, amount, expected_revenue, "
+	  + "close_date, start_date, probability, "
 	  + "role, week_allocations FROM sales_pipeline WHERE omitted = FALSE"
 
 	helpers.query(
@@ -297,8 +285,8 @@ function queryPipeline(accessToken, path, callback) {
 	var today = moment(new Date).format("YYYY-MM-DD")
 	// Constraint where opportunity has not closed as of current date
 	var pipelineQuery = 
-		"SELECT StageName, Name, Amount, ExpectedRevenue, CloseDate, Probability, "
-	  + "CreatedDate, Account.Name FROM Opportunity WHERE CloseDate>="
+		"SELECT Name, Amount, ExpectedRevenue, CloseDate, Probability, "
+	  + "FROM Opportunity WHERE CloseDate>="
 	  + today
 
 	// Execute SOQL query to populate pipelineData
@@ -307,15 +295,12 @@ function queryPipeline(accessToken, path, callback) {
 			var recordData = []
 			// Format the date with Moment library for sheet consistency
 			recordData.push(
-			record.StageName,
 			record.Name,
 			record.Amount,
 			record.ExpectedRevenue,
 			moment(new Date(record.CloseDate)).format("MM/DD/YYYY"),
 			moment(new Date(record.CloseDate)).day(6).format("MM/DD/YYYY"),
 			record.Probability/100,
-			moment(new Date(record.CreatedDate)).format("MM/DD/YYYY"),
-			record.Account.Name
 			)
 			pipelineData.push(recordData)
 		})
