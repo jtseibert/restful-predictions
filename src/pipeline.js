@@ -312,11 +312,11 @@ function queryPipeline(accessToken, path, callback) {
 /**
 * @function syncWithDefaultSizes
 * @desc Syncs every opportunity with default project sizes with the new project sizes.
-Method fires when a project size is added, removed, or updated via google sheets.
+Method fires when a project size is added, removed, or updated via google sheets,
+or when a pipeline opportunity start date / probability is changed.
 * @param callback - callback function
 */
 function syncWithDefaultSizes(callback) {
-	console.log('entering syncWithDefaultSizes?')
 	helpers.query(
 		"SELECT DISTINCT opportunity FROM sales_pipeline WHERE project_size IS NOT NULL",
 		null,
@@ -328,7 +328,6 @@ function syncWithDefaultSizes(callback) {
 					"FROM sales_pipeline where opportunity = $1 LIMIT 1",
 					[opportunityKey.opportunity],
 					function(queryData) {
-						console.log('AMOUNT ' + queryData[0].amount)
 						// Data is returned as an array of 1 element, grab said element
 						var temp = queryData[0]
 						if(temp.amount == null) {
@@ -336,7 +335,6 @@ function syncWithDefaultSizes(callback) {
 						} else {
 							helpers.deleteOpportunities([temp.opportunity], function() {
 								// Format opportunity to match index for default insertion
-								console.log("DELETING")
 								var opportunityData = [
 									temp.opportunity,
 									temp.amount,
@@ -345,9 +343,7 @@ function syncWithDefaultSizes(callback) {
 									moment(new Date(temp.start_date)).format("MM/DD/YYYY"),
 									temp.probability
 								]
-								console.log("OPP DATA " + opportunityData)
 								insertWithDefaultSize(opportunityData, function() {
-									console.log("insert should be done")
 									callback(null)
 								})
 							})
