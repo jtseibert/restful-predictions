@@ -336,7 +336,7 @@ function syncWithDefaultSizes(callback) {
 				helpers.query(
 					"SELECT opportunity, stage, amount, expected_revenue, close_date, " +
 					"start_date, probability, created_date, account_name " +
-					"FROM sales_pipeline where opportunity = $1",
+					"FROM sales_pipeline where opportunity = $1 LIMIT 1",
 					[opportunityKey.opportunity],
 					function(queryData) {
 						console.log('queryData is ' + JSON.stringify(queryData))
