@@ -47,7 +47,7 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 			// For each row in pipelineData, sync accordingly
 			async.eachSeries(pipelineData, syncRows, function syncRowsCallback() {
 				console.log('ALL ROWS DONE')
-				callback()
+				callback(null)
 			})
 		})
 	})
@@ -322,10 +322,9 @@ function syncWithDefaultSizes(callback) {
 		null,
 		function(queryData) {
 			async.eachSeries(queryData, function updateWithNewSize(opportunityKey, callback) {
-					//opp is oppKey.opp
 				helpers.query(
-					"SELECT opportunity, stage, amount, expected_revenue, close_date, " +
-					"start_date, probability, created_date, account_name " +
+					"SELECT opportunity, amount, expected_revenue, close_date, " +
+					"start_date, probability " +
 					"FROM sales_pipeline where opportunity = $1 LIMIT 1",
 					[opportunityKey.opportunity],
 					function(queryData) {
@@ -339,15 +338,12 @@ function syncWithDefaultSizes(callback) {
 								// Format opportunity to match index for default insertion
 								console.log("DELETING")
 								var opportunityData = [
-									temp.stage,
+									temp.opportunity,
 									temp.amount,
 									temp.expected_revenue,
 									moment(new Date(temp.close_date)).format("MM/DD/YYYY"),
 									moment(new Date(temp.start_date)).format("MM/DD/YYYY"),
-									temp.probability,
-									moment(new Date(temp.created_date)).format("MM/DD/YYYY"),
-									temp.account_name,
-									temp.opportunity
+									temp.probability
 								]
 								console.log("OPP DATA " + opportunityData)
 								insertWithDefaultSize(opportunityData, function() {
