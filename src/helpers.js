@@ -77,7 +77,7 @@ var setOpportunityStatus = function(opportunities, protectedStatus, genericStatu
 			)
 		}
 	)
-	
+	console.log('in setOpportunityStatus')
 }
 
 module.exports.setOpportunityStatus = setOpportunityStatus
