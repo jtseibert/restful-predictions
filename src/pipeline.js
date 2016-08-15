@@ -228,7 +228,7 @@ var exportToSheets = function(callback) {
 	var sheetQuery = 
 		"SELECT opportunity, stage, amount, expected_revenue, "
 	  + "close_date, start_date, probability, created_date, account_name, "
-	  + "role, week, allocation FROM sales_pipeline WHERE omitted = FALSE"
+	  + "role, week_allocations FROM sales_pipeline WHERE omitted = FALSE"
 
 	helpers.query(
 		sheetQuery,
@@ -238,15 +238,24 @@ var exportToSheets = function(callback) {
 			// Asyncronusly convert result to 2D array
 			async.eachOf(queryData, function(opportunity, key, callback) {
 				var temp = []
-				async.eachOfSeries(opportunity, function(opportunityData, key, callback) {
-					// Convert dates for consistency
-					if(key == "close_date" || key == "start_date" || key == "created_date" || key == "week") {
-						temp.push(moment(new Date(opportunityData)).format("MM/DD/YYYY"))
-						process.nextTick(callback)
-					} else {
-						temp.push(opportunityData)
-						process.nextTick(callback)
+				async.eachOf(opportunity, function(opportunityData, key, callback) {
+					async.eachOf(opportunityData[10], function test(data, callback) {
+						console.log(JSON.stringify(data))
+						callback()
 					}
+
+
+
+
+
+					// // Convert dates for consistency
+					// if(key == "close_date" || key == "start_date" || key == "created_date" || key == "week") {
+					// 	temp.push(moment(new Date(opportunityData)).format("MM/DD/YYYY"))
+					// 	process.nextTick(callback)
+					// } else {
+					// 	temp.push(opportunityData)
+					// 	process.nextTick(callback)
+					// }
 				},
 				 function() {
 					values.push(temp)
