@@ -241,15 +241,15 @@ var exportToSheets = function(callback) {
 						hours
 					]
 					values.push(temp)
-					callback(null)
+					process.nextTick(function() {callback(null)})
 				},
 				function() {
-					callback(null)
+					process.nextTick(callback)
 				})
 			},
 			function() {
 				pipelineData = headers.concat(values)
-				callback(pipelineData)
+				process.nextTick(function() {callback(pipelineData)})
 			})
 		}
 	)
@@ -300,10 +300,10 @@ function queryPipeline(accessToken, path, callback) {
 		.on("end", function(query) {
 			console.log("total in database : " + query.totalSize);
 			console.log("total fetched : " + query.totalFetched);
-			callback(pipelineData)
+			process.nextTick(function() {callback(pipelineData)})
 		})
 		.on("error", function(err) {
-			callback(err)
+			process.nextTick(function() {callback(err)})
 		})
 		.run({ autoFetch : true, maxFetch : 4000 });
 }
