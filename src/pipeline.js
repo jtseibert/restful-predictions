@@ -244,7 +244,7 @@ var exportToSheets = function(callback) {
 					callback(null)
 				},
 				function() {
-\					process.nextTick(callback)
+					process.nextTick(callback)
 				})
 			},
 			function() {
