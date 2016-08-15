@@ -241,6 +241,7 @@ var exportToSheets = function(callback) {
 						hours
 					]
 					values.push(temp)
+					console.log('temp is ' + temp)
 					process.nextTick(function() {callback(null)})
 				},
 				function() {
