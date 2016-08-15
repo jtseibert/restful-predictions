@@ -154,17 +154,18 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  				var duration = roleValues.duration
 		  				var roleStartDate = moment(new Date(opportunityData[indexes.START_DATE]))
 		  				var hours = roleValues.allocation
+		  				var week_allocations = {}
 		  				async.whilst(
 		  					function() {return durationCounter <= duration},
 		  					function(callback) {
 		  						// Temp so roleStartDate is not mutated
 		  						var temp = roleStartDate.clone()
 		  						var date = temp.add(durationCounter, 'weeks').format('MM/DD/YYYY')
-		  						var insertQuery = "INSERT INTO sales_pipeline (opportunity, stage, amount, expected_revenue, "
-		  						  + "close_date, start_date, probability, created_date, account_name, role, week, allocation, project_size) "
-		  						  + "values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)"
-
-		  						var insertValues = [
+		  						week_allocations[date] = hours
+		  					},
+		  					//async.whilst callback
+		  					function() {
+								var insertValues = [
 		  							opportunityData[indexes.OPPORTUNITY_NAME],
 		  						 	opportunityData[indexes.STAGE],
 		  						 	opportunityData[indexes.AMOUNT],
@@ -174,21 +175,18 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  						 	opportunityData[indexes.PROBABILITY],
 		  						 	opportunityData[indexes.CREATED_DATE],
 		  						 	opportunityData[indexes.ACCOUNT_NAME],
-		  						 	role,
-		  						 	date,
-		  						 	hours,
+		  						 	week_allocations
 		  						 	results[0].sizeid
 		  						]
-		  						helpers.query(
-		  							insertQuery,
+		  						helpers.query("INSERT INTO sales_pipeline "
+		  							+ "(opportunity, stage, amount, expected_revenue "
+		  							+ "close_date, start_date, probability, created_date "
+		  							+ "account_name, week_allocations, project_size) VALUES "
+		  							+ "($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)",
 		  							insertValues,
-		  							function() {
-		  								durationCounter++
-		  								callback(null)
-		  							}
+		  							function() {callback(null)}
 		  						)
-		  					},
-		  					function() {callback(null)}
+		  					}
 		  				)
 		  			},
 		  			function() {callback(null)}
