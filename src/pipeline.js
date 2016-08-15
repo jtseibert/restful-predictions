@@ -225,7 +225,7 @@ var exportToSheets = function(callback) {
 			var values = []
 			// Asyncronusly convert result to 2D array
 			async.each(queryData, function(opportunity, callback) {
-				//opportunity is {opp: name, ... , week_allocations: {...}}//role is included
+				// Opportunity is {opp: name, ... , role: role, week_allocations: {...}}
 				var formattedCloseDate = moment(new Date(opportunity.close_date)).format("MM/DD/YYYY")
 				var formattedStartDate = moment(new Date(opportunity.start_date)).format("MM/DD/YYYY")
 				async.eachOf(opportunity.week_allocations, function(hours, week, callback) {
@@ -235,21 +235,21 @@ var exportToSheets = function(callback) {
 						opportunity.expected_revenue,
 						formattedCloseDate,
 						formattedStartDate,
-						opportunity.probability,
+						opportunity.probability*100,
 						opportunity.role,
 						moment(new Date(week)).format("MM/DD/YYYY"),
 						hours
 					]
 					values.push(temp)
-					process.nextTick(function() {callback(null)})
+					callback(null)
 				},
 				function() {
-					process.nextTick(callback)
+					callback(null)
 				})
 			},
 			function() {
 				pipelineData = headers.concat(values)
-				process.nextTick(function() {callback(pipelineData)})
+				callback(pipelineData)
 			})
 		}
 	)
@@ -267,7 +267,6 @@ module.exports.exportToSheets = exportToSheets
 */
 function queryPipeline(accessToken, path, callback) {
 	var sf = require('node-salesforce')
-	var moment = require('moment')
 	// Set up the sheet headers
 	var pipelineData = []
 
@@ -281,8 +280,7 @@ function queryPipeline(accessToken, path, callback) {
 	// Constraint where opportunity has not closed as of current date
 	var pipelineQuery = 
 		"SELECT Name, Amount, ExpectedRevenue, CloseDate, Probability "
-	  + "FROM Opportunity WHERE CloseDate>="
-	  + today
+	  + "FROM Opportunity WHERE CloseDate>=" + today
 
 	// Execute SOQL query to populate pipelineData
 	conn.query(pipelineQuery)
@@ -302,10 +300,10 @@ function queryPipeline(accessToken, path, callback) {
 		.on("end", function(query) {
 			console.log("total in database : " + query.totalSize);
 			console.log("total fetched : " + query.totalFetched);
-			process.nextTick(function() {callback(pipelineData)})
+			callback(pipelineData)
 		})
 		.on("error", function(err) {
-			process.nextTick(function() {callback(err)})
+			callback(err)
 		})
 		.run({ autoFetch : true, maxFetch : 4000 });
 }
