@@ -51,7 +51,7 @@ function updateOpportunityFromXlsx(opportunityData, callback) {
 	}, 
 	function() {
 		console.log('in the cb')
-		callback()
+		process.nextTick(callback)
 	})
 }
 //*************************************
