@@ -49,7 +49,7 @@ function updateOpportunityFromXlsx(opportunityData, callback) {
 			function() {process.nextTick(callback)}
 		)
 	}, 
-	function() {process.nextTick(callback)})
+	process.nextTick(callback)
 }
 //*************************************
 
