@@ -48,7 +48,7 @@ function updateOpportunityFromXlsx(opportunityData, callback) {
 			[opportunityName, roleKey, week_allocations, true],
 			process.nextTick(function() {callback(null)})
 		)
-	}, 
+	}), 
 	process.nextTick(function() {callback(null)})
 }
 //*************************************
