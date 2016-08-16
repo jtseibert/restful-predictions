@@ -5,7 +5,7 @@
 node-salesforce library to return current capacity data to Google Sheets.
 */
 //*************************************
-
+var helpers = require('./helpers')
 /**
 * @function queryCapacity
 * @desc Query salesforce to obtain role, name, and utilization.
@@ -17,13 +17,7 @@ var queryCapacity = function(accessToken, path, callback) {
 	var sf = require('node-salesforce')
 	var moment = require('moment')
 	var async = require('async')
-	// Set up the sheet headers
-	var capacityData = [[
-			'ROLE',
-			'NAME',
-			'UTILIZATION_TARGET'
-		]]
-
+	
 	// Connect to SF
 	var conn = new sf.Connection({
 	  instanceUrl: "https://" + path,
@@ -33,18 +27,29 @@ var queryCapacity = function(accessToken, path, callback) {
 	// Execute SOQL query to populate capacityData
 	conn.query("SELECT pse__Resource_Role__c, Name, pse__Utilization_Target__c FROM Contact WHERE pse__Resource_Role__c!='' AND pse__Utilization_Target__c>=0 ORDER BY pse__Resource_Role__c")
   	.on("record", function handleRecord(record) {
-  		var recordData = []
+  		/*var recordData = []
     	recordData.push(
     		record.pse__Resource_Role__c,
 			record.Name,
 			record.pse__Utilization_Target__c/100
+			pse__Utilization_Target__c*40
 		)
     	capacityData.push(recordData)
-		})
+		})*/
+		helpers.query("INSERT INTO (capacity role, name, utililzation, hours) "
+			+ "values ($1, $2, $3, $4)",
+			[
+				record.pse__Resource_Role__c,
+				record.Name,
+				record.pse__Utilization_Target__c/100
+				pse__Utilization_Target__c*40
+			],
+			function() {callback()}
+		)
 	.on("end", function returnCapacityData(query) {
 		console.log("total in database : " + query.totalSize);
 		console.log("total fetched : " + query.totalFetched);
-		process.nextTick(function() {callback(capacityData)})
+		process.nextTick(function() {callback(null)})
 		})
 	.on("error", function handleError(err) {
 		process.nextTick(function() {callback(err)})
@@ -55,7 +60,16 @@ var queryCapacity = function(accessToken, path, callback) {
 module.exports.queryCapacity = queryCapacity
 //*************************************
 
+var exportCapacity = function() {
+	var capacityData = [[
+			'ROLE',
+			'NAME',
+			'UTILIZATION_TARGET',
+			'HOURS'
+		]]
 
+
+}
 
 
 

@@ -61,8 +61,8 @@ router.route('/:instance/DATA_Capacity/:accessToken')
 	.get(function(req, res) {
 		var accessToken = req.params.accessToken,
 			instance    = req.params.instance
-		capacity.queryCapacity(accessToken, instance, function handleCapacityData(capacityData) {
-			res.json(capacityData)
+		capacity.queryCapacity(accessToken, instance, function handleCapacityData() {
+			res.json(null)
 		})
 	})
 
