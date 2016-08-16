@@ -17,13 +17,13 @@ var updateDatabaseFromXlsx = function(opportunityData, callback) {
 	helpers.opportunityCheck(opportunityData.opportunityName, function callback(inDatabase) {
 		if(inDatabase) {
 			helpers.deleteOpportunities([opportunityData.opportunityName], function callback() {
-				updateOpportunityFromXlsx(opportunityData, function callback(status) {
-					callback({message: status})
+				updateOpportunityFromXlsx(opportunityData, function callback() {
+					callback(null)
 				})
 			})
 		} else {
-			updateOpportunityFromXlsx(opportunityData, function callback(status) {
-				callback({message: status})
+			updateOpportunityFromXlsx(opportunityData, function callback() {
+				callback(null)
 			})
 		}
 	})

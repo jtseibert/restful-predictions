@@ -159,9 +159,9 @@ router.route('/trigger')
 	.post(function(req, res) {
 		parser.parseExcelSheet(req.body, function callback(opportunityData) {
 			if(opportunityData != undefined) {
-				xlsxHandler.updateDatabaseFromXlsx(opportunityData, function callback(status) {
+				xlsxHandler.updateDatabaseFromXlsx(opportunityData, function callback() {
 					console.log('in the final cb')
-					res.json({message: status})
+					res.json({message: 'Trigger Done.'})
 				})
 			}		
 		})
