@@ -160,6 +160,7 @@ router.route('/trigger')
 		parser.parseExcelSheet(req.body, function callback(opportunityData) {
 			if(opportunityData != undefined) {
 				xlsxHandler.updateDatabaseFromXlsx(opportunityData, function callback(status) {
+					console.log('in the final cb')
 					res.json({message: status})
 				})
 			}		
