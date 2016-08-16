@@ -23,7 +23,7 @@ var updateDatabaseFromXlsx = function(opportunityData, callback) {
 			})
 		} else {
 			updateOpportunityFromXlsx(opportunityData, function callback() {
-				prcoess.nextTick(callback)
+				process.nextTick(callback)
 			})
 		}
 	})
