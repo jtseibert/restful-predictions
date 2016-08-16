@@ -83,39 +83,6 @@ var setOpportunityStatus = function(opportunities, status, callback) {
 module.exports.setOpportunityStatus = setOpportunityStatus
 //*************************************
 
-/**
-* @function appendOpportunityData
-* @desc Append current opportunity data to the new opportunity data to prepare for row insertion.
-* @param opportunityData - new start_date, probability, project_size
-*/
-//TODO pass in json instead of array, define global indexes here too
-var appendOpportunityData = function(opportunityData, callback) {
-	console.log('appendOpportunityData why')
-	query(
-		"SELECT stage, amount, expected_revenue, close_date, created_date, account_name" +
-		" FROM sales_pipeline WHERE opportunity = $1 LIMIT 1",
-		[opportunityData[3]],
-		function queryCallback(queryData) {
-			var indexFriendlyData = [
-				queryData[0].stage,
-				opportunityData[3],
-				queryData[0].amount,
-				queryData[0].expected_revenue,
-				queryData[0].close_date,
-				opportunityData[0],
-				opportunityData[1],
-				queryData[0].created_date,
-				queryData[0].account_name,
-				opportunityData[2]
-			]
-			process.nextTick(function() {callback(indexFriendlyData)})
-		}
-	)
-}
-
-module.exports.appendOpportunityData = appendOpportunityData
-//*************************************
-
 /*
 * @function deleteOpportunities
 * @desc Deletes all rows in sales_pipeline of each opportunity.

@@ -95,12 +95,18 @@ router.route('/updatePipelineTable')
 				})
 				break
 			case "update_generic":
-				helpers.appendOpportunityData(req.body.opportunityData, function handleOpportunityData(opportunityData) {
-					helpers.deleteOpportunities([opportunityData[1]], function queryCallback() {
-							pipeline.insertWithDefaultSize(opportunityData, function callback() {
-								pipeline.exportToSheets(function callback(pipelineData) {
-									res.json(pipelineData)
-								})
+				helpers.query(req.body.query, req.body.values, function callback() {
+					helpers.syncWithDefaultSizes(function callback() {
+							pipeline.query("SELECT opportunity FROM sales_pipeline WHERE "
+								+ "project_size IS NOT NULL",
+								null,
+								function callback(opportunities) {
+									setOpportunityStatus(opportunities, {protected: true, generic: true, omitted: false}, function callback() {
+										exportToSheets(function callback(pipelineData) {
+											res.json(pipelineData)
+										})
+									})
+								}
 							})
 						}
 					)
