@@ -17,12 +17,12 @@ var updateDatabaseFromXlsx = function(opportunityData, callback) {
 	helpers.opportunityCheck(opportunityData.opportunityName, function callback(exists) {
 		if(exists) {
 			helpers.deleteOpportunities([opportunityData.opportunityName], function callback() {
-				updateOpportunityFromXlsx(opportunityData, function callback() {
+				updateOpportunityFromXlsx(opportunityData, function() {
 					process.nextTick(callback)
 				})
 			})
 		} else {
-			updateOpportunityFromXlsx(opportunityData, function callback() {
+			updateOpportunityFromXlsx(opportunityData, function() {
 				process.nextTick(callback)
 			})
 		}
@@ -51,7 +51,7 @@ function updateOpportunityFromXlsx(opportunityData, callback) {
 	}, 
 	function() {
 		console.log('in the cb')
-		callback()
+		process.nextTick(callback)
 	})
 }
 //*************************************
