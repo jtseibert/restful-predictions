@@ -41,6 +41,8 @@ module.exports.updateDatabaseFromXlsx = updateDatabaseFromXlsx
 function updateOpportunityFromXlsx(opportunityData, callback) {
 	var sheetData = opportunityData.sheetData
 	var opportunityName = opportunityData.opportunityName
+	console.log(sheetData)
+	console.log(opportunityData)
 	async.eachOfSeries(sheetData, function insertRole(week_allocations, roleKey, callback) {
 		// Insert a new row for every role with the week_allocations JSON object
 		helpers.query(
