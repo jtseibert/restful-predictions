@@ -107,7 +107,7 @@ router.route('/updatePipelineTable')
 										})
 									})
 								}
-							})
+							)
 						}
 					)
 				})
@@ -149,7 +149,7 @@ router.route('/updatePipelineTable')
 				})
 				break
 			default:
-				res.json({message: "No Update."})
+				res.json({message: "Default case, No Update."})
 		}
 	})
 
