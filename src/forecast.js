@@ -44,7 +44,7 @@ function Forecast(data, callback) {
 			roleCapacities = {}
 			if (err)
 				console.log(err)
-			var query = client.query('SELECT * FROM roles_capacities')
+			var query = client.query('SELECT role, SUM(hours) FROM capacity GROUP BY role')
 			query.on("row", function (row, result) {
 				roleCapacities[row.role] = row.capacity
 			})
