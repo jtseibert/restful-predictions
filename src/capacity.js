@@ -62,7 +62,9 @@ function insertCapacity(capacityData, callback) {
 					function() {callback()}
 				)
 			},
-			function() {callback()}
+			function() {
+				console.log('final cb')
+				callback()}
 			)
 		}
 	)
