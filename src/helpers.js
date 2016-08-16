@@ -68,6 +68,7 @@ module.exports.query = query
 * @param {boolean} status - protected or unprotected
 */
 var setOpportunityStatus = function(opportunities, status, callback) {
+	console.log("setting opp status")
 	async.eachSeries(opportunities,
 		function updateStatus(opportunity, callback) {
 			query(
