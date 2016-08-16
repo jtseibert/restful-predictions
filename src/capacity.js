@@ -90,7 +90,14 @@ var exportCapacity = function(callback) {
 	var capacityData = []
 
 	helpers.query("SELECT * FROM capacity", null, function callback(capacityData) {
-		console.log(capacityData)
+		async.eachOf(capacityData, function pushRow(row) {
+			var temp = []
+			temp.push(row.role, row.name, row.utilization, row.hours)
+			capacityData.push(temp)
+		},
+		function() {
+			callback(headers.concat(capacityData))
+		})
 	})	
 }
 
