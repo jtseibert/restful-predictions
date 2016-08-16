@@ -93,7 +93,7 @@ var exportCapacity = function(callback) {
 			var temp = []
 			temp.push(row.role, row.name, row.utilization, row.hours)
 			capacityData.push(temp)
-			callback()
+			process.nextTick(callback)
 		},
 		function() {
 			console.log('should be at final cb')
