@@ -59,13 +59,13 @@ function insertCapacity(capacityData, callback) {
 				helpers.query("INSERT INTO capacity (role, name, utilization, hours) "
 					+ "VALUES ($1, $2, $3, $4)",
 					row,
-					process.nextTick(function() {callback})
+					function() {process.nextTick(callback)}
 				)
 			},
 			function() {
 				console.log('final cb')
-				process.nextTick(function() {callback})}
-			)
+				process.nextTick(callback)
+			})
 		}
 	)
 }
