@@ -99,17 +99,9 @@ router.route('/updatePipelineTable')
 				console.log('vals is ' + req.body.values)
 				helpers.query(req.body.query, req.body.values, function callback() {
 					pipeline.syncWithDefaultSizes(function callback() {
-							pipeline.query("SELECT opportunity FROM sales_pipeline WHERE "
-								+ "project_size IS NOT NULL",
-								null,
-								function callback(opportunities) {
-									setOpportunityStatus(opportunities, {protected: true, generic: true, omitted: false}, function callback() {
-										exportToSheets(function callback(pipelineData) {
-											res.json(pipelineData)
-										})
-									})
-								}
-							)
+							pipeline.exportToSheets(function callback(pipelineData) {
+								res.json(pipelineData)
+							})			
 						}
 					)
 				})
