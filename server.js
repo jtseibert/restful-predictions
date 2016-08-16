@@ -95,6 +95,8 @@ router.route('/updatePipelineTable')
 				})
 				break
 			case "update_generic":
+				console.log('query is ' + req.body.query)
+				console.log('vals is ' + req.body.values)
 				helpers.query(req.body.query, req.body.values, function callback() {
 					helpers.syncWithDefaultSizes(function callback() {
 							pipeline.query("SELECT opportunity FROM sales_pipeline WHERE "

@@ -68,9 +68,8 @@ module.exports.query = query
 * @param {boolean} status - protected or unprotected
 */
 var setOpportunityStatus = function(opportunities, status, callback) {
-	console.log("setting opp status")
-	console.log('statis ' + JSON.stringify(status))
-	console.log('opps ' + opportunities)
+	console.log('status ' + JSON.stringify(status))
+	console.log('opportunities ' + opportunities)
 	async.eachSeries(opportunities,
 		function updateStatus(opportunity, callback) {
 			query(
@@ -93,6 +92,7 @@ module.exports.setOpportunityStatus = setOpportunityStatus
 * @param callback - callback function
 */
 var deleteOpportunities = function(opportunities, callback) {
+	console.log('opportunities to be deleted ' + opportunities)
 	async.eachSeries(
 		opportunities, 
 		function deleteOpportunity(opportunity, callback) {
