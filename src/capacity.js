@@ -106,7 +106,7 @@ var clearCapacityTable = function(callback) {
 	helpers.query("DELETE FROM capacity *", null, function() {callback()})
 }
 
-module.exports.clearCapacity = clearCapacity
+module.exports.clearCapacityTable = clearCapacityTable
 
 
 
