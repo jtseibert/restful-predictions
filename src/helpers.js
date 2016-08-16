@@ -115,7 +115,7 @@ module.exports.deleteOpportunities = deleteOpportunities
 * @returns true or false
 */
 var opportunityCheck = function(opportunityName, callback) {
-	helpers.query(
+	query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[opportunityName],
 		function(results) {callback(results[0].exists)}
