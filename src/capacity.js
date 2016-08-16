@@ -94,7 +94,7 @@ var exportCapacity = function(callback) {
 			var temp = []
 			temp.push(row.role, row.name, row.utilization, row.hours)
 			capacityData.push(temp)
-			callback()
+			process.nextTick(function() {callback(null)})
 		},
 		function() {
 			callback(headers.concat(capacityData))
