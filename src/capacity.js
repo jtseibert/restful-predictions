@@ -17,9 +17,8 @@ var async = require('async')
 var queryCapacity = function(accessToken, path, callback) {
 	var sf = require('node-salesforce')
 	var moment = require('moment')
-	var async = require('async')
 	var capacityData = []
-	
+
 	// Connect to SF
 	var conn = new sf.Connection({
 	  instanceUrl: "https://" + path,
@@ -34,7 +33,7 @@ var queryCapacity = function(accessToken, path, callback) {
     		record.pse__Resource_Role__c,
 			record.Name,
 			record.pse__Utilization_Target__c/100,
-			pse__Utilization_Target__c*40
+			record.pse__Utilization_Target__c*40
 		)
     	capacityData.push(recordData)
 		})	
