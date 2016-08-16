@@ -51,12 +51,12 @@ var queryCapacity = function(accessToken, path, callback) {
 module.exports.queryCapacity = queryCapacity
 //*************************************
 
-function insertCapacity(capacityData) {
+function insertCapacity(capacityData, callback) {
 	//TODO add dlete capacity
 	console.log('in insertcapacity')
 	console.log(capacityData)
 	async.eachSeries(capacityData, function insertRow(row, callback) {
-		helpers.query("INSERT INTO roles_capacities (role, name, utilization, hours) "
+		helpers.query("INSERT INTO capacity (role, name, utilization, hours) "
 			+ "VALUES ($1, $2, $3, $4)",
 			row,
 			function() {callback()}
