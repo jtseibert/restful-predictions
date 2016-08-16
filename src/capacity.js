@@ -66,7 +66,6 @@ function insertCapacity(capacityData, callback) {
 		)
 	},
 	function() {
-		console.log('final cb')
 		process.nextTick(callback)
 	})
 }
@@ -94,9 +93,10 @@ var exportCapacity = function(callback) {
 			var temp = []
 			temp.push(row.role, row.name, row.utilization, row.hours)
 			capacityData.push(temp)
-			process.nextTick(function() {callback(null)})
+			callback()
 		},
 		function() {
+			console.log('should be at final cb')
 			callback(headers.concat(capacityData))
 		})
 	})	
