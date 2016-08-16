@@ -51,6 +51,12 @@ var queryCapacity = function(accessToken, path, callback) {
 module.exports.queryCapacity = queryCapacity
 //*************************************
 
+/**
+* @function insertCapacity
+* @desc Inserts a new row in the capacity table for every role, name, utlization, and hour combination.
+* @param capacityData - 2D array of data from salesforce SOQL query
+* @param callback - callback function
+*/
 function insertCapacity(capacityData, callback) {
 	async.eachSeries(capacityData, function insertRow(row, callback) {
 		helpers.query("INSERT INTO capacity (role, name, utilization, hours) "
@@ -68,20 +74,45 @@ function insertCapacity(capacityData, callback) {
 module.exports.insertCapacity = insertCapacity
 //*************************************
 
-var exportCapacity = function() {
-	var capacityData = [[
+/**
+* @function exportCapacity
+* @desc Query capacity table and return data for Google Sheets.
+* @params callback - callback function to handle capacity data
+* @returns 2D array of capacity information
+*/
+var exportCapacity = function(callback) {
+	var headers = [[
 			'ROLE',
 			'NAME',
 			'UTILIZATION_TARGET',
 			'HOURS'
 		]]
+	var capacityData = []
 
-
+	helpers.query("SELECT * FROM capacity", null, function callback(capacityData) {
+		console.log(capacityData)
+	}	
 }
+
+module.exports.exportCapacity = exportCapacity
 //*************************************
 
-var clearCapacity = function(callback) {
+/**
+* @function clearCapacityTable
+* @desc Delete all rows in the capacity table for fresh salesforce sync.
+* @param callback - callback function
+*/
+var clearCapacityTable = function(callback) {
 	helpers.query("DELETE FROM capacity *", null, function() {callback()})
 }
 
 module.exports.clearCapacity = clearCapacity
+
+
+
+
+
+
+
+
+
