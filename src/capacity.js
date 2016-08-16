@@ -26,7 +26,6 @@ var queryCapacity = function(accessToken, path, callback) {
 	})
 
 	// Execute SOQL query to populate capacityData
-	console.log('about to query')
 	conn.query("SELECT pse__Resource_Role__c, Name, pse__Utilization_Target__c FROM Contact WHERE pse__Resource_Role__c!='' AND pse__Utilization_Target__c>=0 ORDER BY pse__Resource_Role__c")
   	.on("record", function handleRecord(record) {
   		var recordData = []
@@ -54,6 +53,8 @@ module.exports.queryCapacity = queryCapacity
 
 function insertCapacity(capacityData) {
 	//TODO add dlete capacity
+	console.log('in insertcapacity')
+	console.log(capacityData)
 	async.eachSeries(capacityData, function insertRow(row, callback) {
 		helpers.query("INSERT INTO roles_capacities (role, name, utilization, hours) "
 			+ "VALUES ($1, $2, $3, $4)",
