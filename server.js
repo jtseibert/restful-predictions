@@ -98,7 +98,7 @@ router.route('/updatePipelineTable')
 				console.log('query is ' + req.body.query)
 				console.log('vals is ' + req.body.values)
 				helpers.query(req.body.query, req.body.values, function callback() {
-					helpers.syncWithDefaultSizes(function callback() {
+					pipeline.syncWithDefaultSizes(function callback() {
 							pipeline.query("SELECT opportunity FROM sales_pipeline WHERE "
 								+ "project_size IS NOT NULL",
 								null,
