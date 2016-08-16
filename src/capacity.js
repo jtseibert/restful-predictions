@@ -45,7 +45,7 @@ var queryCapacity = function(accessToken, path, callback) {
 				pse__Utilization_Target__c*40
 			],
 			function() {callback()}
-		)
+		)})
 	.on("end", function returnCapacityData(query) {
 		console.log("total in database : " + query.totalSize);
 		console.log("total fetched : " + query.totalFetched);
