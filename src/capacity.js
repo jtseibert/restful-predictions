@@ -53,6 +53,7 @@ module.exports.queryCapacity = queryCapacity
 //*************************************
 
 function insertCapacity(capacityData) {
+	//TODO add dlete capacity
 	async.eachSeries(capacityData, function insertRow(row, callback) {
 		helpers.query("INSERT INTO roles_capacities (role, name, utilization, hours) "
 			+ "VALUES ($1, $2, $3, $4)",
