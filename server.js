@@ -56,7 +56,7 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 		})
 	})
 
-// Get current capacity data from salesforce and export to Google Sheets
+// Get current capacity data from salesforce, update roles_capacities database, and export to Google Sheets
 router.route('/:instance/DATA_Capacity/:accessToken')
 	.get(function(req, res) {
 		var accessToken = req.params.accessToken,
