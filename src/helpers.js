@@ -27,6 +27,7 @@ var query = function query(query, values, callback) {
 			query = client.query(q, v, function queryCallback(error) {
 				if(error) {
 					done()
+					console.log(error)
 					callback(error)
 				} else {
 					query.on("row", function onRowCallback(row, result) {
@@ -42,6 +43,7 @@ var query = function query(query, values, callback) {
 			query = client.query(q, function queryCallback(error) {
 				if(error) {
 					done()
+					console.log(error)
 					callback(error)
 				} else {
 					query.on("row", function onRowCallback(row, result) {
