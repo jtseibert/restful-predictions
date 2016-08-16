@@ -25,6 +25,7 @@ var queryCapacity = function(accessToken, path, callback) {
 	})
 
 	// Execute SOQL query to populate capacityData
+	console.log('about to query')
 	conn.query("SELECT pse__Resource_Role__c, Name, pse__Utilization_Target__c FROM Contact WHERE pse__Resource_Role__c!='' AND pse__Utilization_Target__c>=0 ORDER BY pse__Resource_Role__c")
   	.on("record", function handleRecord(record) {
   		/*var recordData = []
@@ -44,7 +45,10 @@ var queryCapacity = function(accessToken, path, callback) {
 				record.pse__Utilization_Target__c/100,
 				pse__Utilization_Target__c*40
 			],
-			function() {callback()}
+			function() {
+				console.log('in the cbfor query')
+				callback(null)
+			}
 		)})
 	.on("end", function returnCapacityData(query) {
 		console.log("total in database : " + query.totalSize);
