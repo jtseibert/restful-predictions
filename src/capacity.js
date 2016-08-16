@@ -18,6 +18,7 @@ var queryCapacity = function(accessToken, path, callback) {
 	var sf = require('node-salesforce')
 	var moment = require('moment')
 	var async = require('async')
+	var capacityData = []
 	
 	// Connect to SF
 	var conn = new sf.Connection({
