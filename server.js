@@ -66,7 +66,7 @@ router.route('/:instance/DATA_Capacity/:accessToken')
 				capacity.insertCapacity(capacityData, function callback() {
 					capacity.exportCapacity(function callback(capacityDataFromDB) {
 						res.json(capacityDataFromDB)
-					}
+					})
 				})
 			})
 		})
