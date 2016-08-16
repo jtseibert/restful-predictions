@@ -36,8 +36,8 @@ var queryCapacity = function(accessToken, path, callback) {
 		)
     	capacityData.push(recordData)
 		})*/
-		helpers.query("INSERT INTO (capacity role, name, utililzation, hours) "
-			+ "values ($1, $2, $3, $4)",
+		helpers.query("INSERT INTO capacity (role, name, utililzation, hours) "
+			+ "VALUES ($1, $2, $3, $4)",
 			[
 				record.pse__Resource_Role__c,
 				record.Name,
