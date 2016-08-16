@@ -92,7 +92,6 @@ module.exports.setOpportunityStatus = setOpportunityStatus
 * @param callback - callback function
 */
 var deleteOpportunities = function(opportunities, callback) {
-	console.log('opportunities to be deleted ' + opportunities)
 	async.eachSeries(
 		opportunities, 
 		function deleteOpportunity(opportunity, callback) {
