@@ -69,6 +69,8 @@ module.exports.query = query
 */
 var setOpportunityStatus = function(opportunities, status, callback) {
 	console.log("setting opp status")
+	console.log('statis ' + JSON.stringify(status))
+	console.log('opps ' + opportunities)
 	async.eachSeries(opportunities,
 		function updateStatus(opportunity, callback) {
 			query(
