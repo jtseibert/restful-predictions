@@ -85,7 +85,7 @@ router.route('/updatePipelineTable')
 	.post(function(req, res) {
 		switch(req.body.type) {
 			case "add":
-				pipeline.insertWithDefaultSize(req.body.opportunityData, function() {
+				pipeline.insertWithDefaultSize(req.body.opportunityData, function callback() {
 					console.log('insert cb fires now')
 					console.log('status is ' + JSON.stringify(req.body.status))
 					helpers.setOpportunityStatus([req.body.opportunityData[1]], req.body.status, function callback() {
