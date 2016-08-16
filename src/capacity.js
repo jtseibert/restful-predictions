@@ -87,17 +87,18 @@ var exportCapacity = function(callback) {
 			'HOURS'
 		]]
 	var capacityData = []
-
+	var values = []
 	helpers.query("SELECT * FROM capacity", null, function callback(capacityData) {
 		async.each(capacityData, function pushRow(row, callback) {
 			var temp = []
 			temp.push(row.role, row.name, row.utilization, row.hours)
-			capacityData.push(temp)
+			values.push(temp)
 			process.nextTick(callback)
 		},
 		function() {
 			console.log('should be at final cb')
-			callback(headers.concat(capacityData))
+			capacityData = headers.concat(values)
+			process.nextTick(function() {callback(capacityData)})
 		})
 	})	
 }
