@@ -26,7 +26,7 @@ var queryCapacity = function(accessToken, path, callback) {
 	})
 
 	// Execute SOQL query to populate capacityData
-	conn.query("SELECT pse__Resource_Role__c, Name, pse__Utilization_Target__c FROM Contact WHERE pse__Resource_Role__c!='' AND pse__Utilization_Target__c>=0 ORDER BY pse__Resource_Role__c")
+	conn.query("SELECT DISTINCT pse__Resource_Role__c, Name, pse__Utilization_Target__c FROM Contact WHERE pse__Resource_Role__c!='' AND pse__Utilization_Target__c>=0 ORDER BY pse__Resource_Role__c")
   	.on("record", function handleRecord(record) {
   		var recordData = []
     	recordData.push(
