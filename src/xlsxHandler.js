@@ -46,7 +46,7 @@ function updateOpportunityFromXlsx(opportunityData, callback) {
 		helpers.query(
 			"INSERT INTO sales_pipeline(opportunity, role, week_allocations, protected) values($1, $2, $3, $4)",
 			[opportunityName, roleKey, week_allocations, true],
-			function() {process.nextTick(callback)}
+			function() {callback()}
 		)
 	}, 
 	function() {
