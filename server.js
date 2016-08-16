@@ -113,8 +113,6 @@ router.route('/updatePipelineTable')
 				})
 				break
 			case "update_pipeline":
-				console.log('q is ' + req.body.query)
-				console.log('val is ' + req.body.values)
 				helpers.query(req.body.query, req.body.values, function callback() {
 					pipeline.syncWithDefaultSizes(function callback() {
 						pipeline.exportToSheets(function callback(pipelineData) {
@@ -140,8 +138,6 @@ router.route('/updatePipelineTable')
 				)
 				break
 			case "project_size":
-				console.log('query is ' + req.body.query)
-				console.log('values is ' + req.body.values)
 				helpers.query(req.body.query, req.body.values, function callback() {
 					pipeline.syncWithDefaultSizes(function callback() {
 						pipeline.exportToSheets(function(pipelineData) {
