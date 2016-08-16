@@ -52,22 +52,17 @@ module.exports.queryCapacity = queryCapacity
 //*************************************
 
 function insertCapacity(capacityData, callback) {
-	helpers.query("DELETE FROM capacity *",
-		null,
-		function callback() {
-			async.eachSeries(capacityData, function insertRow(row, callback) {
-				helpers.query("INSERT INTO capacity (role, name, utilization, hours) "
-					+ "VALUES ($1, $2, $3, $4)",
-					row,
-					function() {process.nextTick(callback)}
-				)
-			},
-			function() {
-				console.log('final cb')
-				process.nextTick(callback)
-			})
-		}
-	)
+	async.eachSeries(capacityData, function insertRow(row, callback) {
+		helpers.query("INSERT INTO capacity (role, name, utilization, hours) "
+			+ "VALUES ($1, $2, $3, $4)",
+			row,
+			function() {process.nextTick(callback)}
+		)
+	},
+	function() {
+		console.log('final cb')
+		process.nextTick(callback)
+	})
 }
 
 module.exports.insertCapacity = insertCapacity
@@ -85,6 +80,8 @@ var exportCapacity = function() {
 }
 //*************************************
 
+var clearCapacity = function(callback) {
+	helpers.query("DELETE FROM capacity *", null, function() {callback()})
+}
 
-
-
+module.exports.clearCapacity = clearCapacity

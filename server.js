@@ -62,8 +62,10 @@ router.route('/:instance/DATA_Capacity/:accessToken')
 		var accessToken = req.params.accessToken,
 			instance    = req.params.instance
 		capacity.queryCapacity(accessToken, instance, function handleCapacityData(capacityData) {
-			capacity.insertCapacity(capacityData, function callback() {
+			capacity.clearCapacity(function callback() {
+				capacity.insertCapacity(capacityData, function callback() {
 				res.json({message: "Capacity Updated."})
+				})
 			})
 		})
 	})
