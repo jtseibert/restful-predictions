@@ -33,7 +33,7 @@ var queryCapacity = function(accessToken, path, callback) {
     		record.pse__Resource_Role__c,
 			record.Name,
 			record.pse__Utilization_Target__c/100,
-			record.pse__Utilization_Target__c*40
+			record.pse__Utilization_Target__c*40/100
 		)
     	capacityData.push(recordData)
 		})	
@@ -52,17 +52,19 @@ module.exports.queryCapacity = queryCapacity
 //*************************************
 
 function insertCapacity(capacityData, callback) {
-	//TODO add dlete capacity
-	console.log('in insertcapacity')
-	console.log(capacityData)
-	async.eachSeries(capacityData, function insertRow(row, callback) {
-		helpers.query("INSERT INTO capacity (role, name, utilization, hours) "
-			+ "VALUES ($1, $2, $3, $4)",
-			row,
+	helpers.query("DELETE FROM capacity *",
+		null,
+		function callback() {
+			async.eachSeries(capacityData, function insertRow(row, callback) {
+				helpers.query("INSERT INTO capacity (role, name, utilization, hours) "
+					+ "VALUES ($1, $2, $3, $4)",
+					row,
+					function() {callback()}
+				)
+			},
 			function() {callback()}
-		)
-	},
-	function() {callback()}
+			)
+		}
 	)
 }
 
