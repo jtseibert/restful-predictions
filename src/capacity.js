@@ -91,7 +91,7 @@ var exportCapacity = function(callback) {
 
 	helpers.query("SELECT * FROM capacity", null, function callback(capacityData) {
 		console.log(capacityData)
-	}	
+	})	
 }
 
 module.exports.exportCapacity = exportCapacity
