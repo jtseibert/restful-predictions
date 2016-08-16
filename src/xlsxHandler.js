@@ -14,9 +14,9 @@ var async     = require('async')
 * @param callback - callback to handle status
 */
 var updateDatabaseFromXlsx = function(opportunityData, callback) {
-	helpers.opportunityCheck(opportunityData.opportunityName, function opportunityCheckCallback(inDatabase) {
+	helpers.opportunityCheck(opportunityData.opportunityName, function callback(inDatabase) {
 		if(inDatabase) {
-			helpers.deleteOpportunities([opportunityData.opportunityName], function deleteOpportunitiesCallback() {
+			helpers.deleteOpportunities([opportunityData.opportunityName], function callback() {
 				updateOpportunityFromXlsx(opportunityData, function callback(status) {
 					callback({message: status})
 				})
@@ -41,18 +41,15 @@ module.exports.updateDatabaseFromXlsx = updateDatabaseFromXlsx
 function updateOpportunityFromXlsx(opportunityData, callback) {
 	var sheetData = opportunityData.sheetData
 	var opportunityName = opportunityData.opportunityName
-	async.eachOfSeries(sheetData, function insertRole(role, roleKey, callback) {
-		async.eachOfSeries(role, function insertRoleWeek(allocation, week, callback){
-			// Make a new row for every week in the weekAllocations
-			helpers.query(
-				"INSERT INTO sales_pipeline(opportunity, role, week, allocation, protected) values($1, $2, $3, $4, $5)",
-				[opportunityName, roleKey, week, allocation, true],
-				function() { process.nextTick(callback) }
-			)
-		}, function(){ process.nextTick(callback) })
-	}, function() { 
-		process.nextTick(function(){ callback('Update Finished')})
-	})
+	async.eachOfSeries(sheetData, function insertRole(week_allocations, roleKey, callback) {
+		// Insert a new row for every role with the week_allocations JSON object
+		helpers.query(
+			"INSERT INTO sales_pipeline(opportunity, role, week_allocations, protected) values($1, $2, $3, $4)",
+			[opportunityName, roleKey, week_allocations, true],
+			function callback() { process.nextTick(callback) }
+		)
+	}, 
+	function(){ process.nextTick(callback) })
 }
 //*************************************
 

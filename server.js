@@ -157,9 +157,9 @@ router.route('/updatePipelineTable')
 // an xlsx sheet attached to an opportunity object in salesforce
 router.route('/trigger')
 	.post(function(req, res) {
-		parser.parseExcelSheet(req.body, function handleOpportunityData(opportunityData) {
+		parser.parseExcelSheet(req.body, function callback(opportunityData) {
 			if(opportunityData != undefined) {
-				xlsxHandler.updateDatabase(opportunityData, function sendStatus(status) {
+				xlsxHandler.updateDatabaseFromXlsx(opportunityData, function callback(status) {
 					res.json({message: status})
 				})
 			}		
