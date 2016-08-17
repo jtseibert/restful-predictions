@@ -147,9 +147,11 @@ router.route('/updatePipelineTable')
 				})
 				break
 			case "assign_role":
-				console.log(req.body.name)
-				console.log(req.body.role)
-				res.json("test")
+				capacity.assignRole(req.body.name, req.body.role, function callback() {
+					capacity.exportCapacity(function callback(capacityData) {
+						res.json(capacityData)
+					})
+				})
 				break
 			default:
 				res.json({message: "Default case, No Update."})

@@ -116,8 +116,25 @@ var clearCapacityTable = function(callback) {
 }
 
 module.exports.clearCapacityTable = clearCapacityTable
+//*************************************
+/**
+* @function assignRole
+* @desc Assigns a new role to a person.
+* @param name - name of person of role change
+* @param role - new role
+* @param callback - callback function 
+*/
 
+function assignRole(name, role, callback) {
+	helpers.query(
+		"UPDATE capacity SET role = $1 WHERE name = $2",
+		[role, name],
+		function() {callback()}
+	)
+}
 
+module.exports.assignRole = assignRole
+//*************************************
 
 
 
