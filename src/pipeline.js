@@ -211,7 +211,7 @@ var exportToSheets = function(callback) {
 		"PROBABILITY",
 		"ROLE",
 		"WEEK",
-		"HOURS"
+		"ESTIMATED_HOURS"
 	]]
 	var sheetQuery = 
 		"SELECT opportunity, amount, expected_revenue, "
