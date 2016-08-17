@@ -28,6 +28,7 @@ function Forecast(data, callback) {
 
 	this.allocatedHours			= data[0]
 	this.forecastedHours 		= data[1]
+	console.log(forecastedHours)
 	this.returnData 			= [['ROLE',
 									'WEEK_DATE',
 									'ALLOCATED_HOURS',
