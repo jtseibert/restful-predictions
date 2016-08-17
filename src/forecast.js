@@ -89,8 +89,8 @@ to the same 2D array to send to Google Sheets. Create is executed asyncronously 
 Forecast.prototype.create = function(callback) {
 
 	var objInstance = this
-	console.log('FORECASTED IS ' + objInstance.forecastedHours)
-	console.log('ALLOCATED IS ' + objInstance.allocatedHours)
+	console.log('FORECASTED IS ' + JSON.stringify(objInstance.forecastedHours))
+	console.log('ALLOCATED IS ' + JSON.stringify(objInstance.allocatedHours))
 	async.eachOf(objInstance.roleCapacities, function(capacity, role, callback){
 		var role = role,
 			capacity = capacity
