@@ -146,6 +146,11 @@ router.route('/updatePipelineTable')
 					})
 				})
 				break
+			case "assign_role":
+				console.log(req.body.name)
+				console.log(req.body.role)
+				res.json("test")
+				break
 			default:
 				res.json({message: "Default case, No Update."})
 		}
