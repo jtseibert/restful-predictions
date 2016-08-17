@@ -153,6 +153,11 @@ router.route('/updatePipelineTable')
 					})
 				})
 				break
+			case "debug":
+				pipeline.exportToSheets(function callback(pipelineData) {
+					res.json(pipelineData)
+				})
+				break
 			default:
 				res.json({message: "Default case, No Update."})
 		}
