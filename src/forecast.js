@@ -28,7 +28,6 @@ function Forecast(data, callback) {
 
 	this.allocatedHours			= data[0]
 	this.forecastedHours 		= data[1]
-	console.log(forecastedHours)
 	this.returnData 			= [['ROLE',
 									'WEEK_DATE',
 									'ALLOCATED_HOURS',
@@ -90,7 +89,7 @@ to the same 2D array to send to Google Sheets. Create is executed asyncronously 
 Forecast.prototype.create = function(callback) {
 
 	var objInstance = this
-
+	console.log(objInstance.forecastedHours)
 	async.eachOf(objInstance.roleCapacities, function(capacity, role, callback){
 		var role = role,
 			capacity = capacity
