@@ -321,8 +321,9 @@ function syncWithDefaultSizes(callback) {
 		null,
 		function(queryData) {
 			async.eachSeries(queryData, function updateWithNewSize(opportunityKey, callback) {
-				console.log(opportunityKey)
-				callback(null)
+				syncSingleOpportunity(opportunityKey.opportunity, function() {
+					callback(null)
+				})
 			},
 			function() {
 				callback(null)
