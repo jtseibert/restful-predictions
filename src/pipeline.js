@@ -313,7 +313,6 @@ function queryPipeline(accessToken, path, callback) {
 * @function syncWithDefaultSizes
 * @desc Syncs every opportunity with default project sizes with the new project sizes.
 Method fires when a project size is added, removed, or updated via google sheets,
-or when a pipeline opportunity start date / probability is changed.
 * @param callback - callback function
 */
 function syncWithDefaultSizes(callback) {
@@ -334,6 +333,13 @@ function syncWithDefaultSizes(callback) {
 
 module.exports.syncWithDefaultSizes = syncWithDefaultSizes
 //*************************************
+
+/**
+* @function syncSingleOpportunity
+* @desc Syncs the opportunity with the current default project sizes.
+* @param {string} opportunityName - opportunity to update
+* @param callback - callback function
+*/
 
 function syncSingleOpportunity(opportunityName, callback) {
 	helpers.query(
@@ -366,8 +372,8 @@ function syncSingleOpportunity(opportunityName, callback) {
 	)
 }
 
-
-
+module.exports.syncSingleOpportunity = syncSingleOpportunity
+//*************************************
 
 
 
