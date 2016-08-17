@@ -322,34 +322,8 @@ function syncWithDefaultSizes(callback) {
 		null,
 		function(queryData) {
 			async.eachSeries(queryData, function updateWithNewSize(opportunityKey, callback) {
-				helpers.query(
-					"SELECT opportunity, amount, expected_revenue, close_date, " +
-					"start_date, probability " +
-					"FROM sales_pipeline where opportunity = $1 LIMIT 1",
-					[opportunityKey.opportunity],
-					function(queryData) {
-						// Data is returned as an array of 1 element, grab said element
-						var temp = queryData[0]
-						if(temp.amount == null) {
-							callback(null)
-						} else {
-							helpers.deleteOpportunities([temp.opportunity], function() {
-								// Format opportunity to match index for default insertion
-								var opportunityData = [
-									temp.opportunity,
-									temp.amount,
-									temp.expected_revenue,
-									moment(new Date(temp.close_date)).format("MM/DD/YYYY"),
-									moment(new Date(temp.start_date)).format("MM/DD/YYYY"),
-									temp.probability
-								]
-								insertWithDefaultSize(opportunityData, function() {
-									callback(null)
-								})
-							})
-						}
-					}
-				)
+				console.log(opportunityKey)
+				callback(null)
 			},
 			function() {
 				callback(null)
@@ -359,8 +333,38 @@ function syncWithDefaultSizes(callback) {
 }
 
 module.exports.syncWithDefaultSizes = syncWithDefaultSizes
+//*************************************
 
-
+function syncSingleOpportunity(opportunityName, callback) {
+	helpers.query(
+		"SELECT opportunity, amount, expected_revenue, close_date, " +
+		"start_date, probability " +
+		"FROM sales_pipeline where opportunity = $1 LIMIT 1",
+		[opportunityName],
+		function(queryData) {
+			// Data is returned as an array of 1 element,
+			var temp = queryData[0]
+			if(temp.amount == null) {
+				callback(null)
+			} else {
+				helpers.deleteOpportunities([temp.opportunity], function() {
+					// Format opportunity to match index for default insertion
+					var opportunityData = [
+						temp.opportunity,
+						temp.amount,
+						temp.expected_revenue,
+						moment(new Date(temp.close_date)).format("MM/DD/YYYY"),
+						moment(new Date(temp.start_date)).format("MM/DD/YYYY"),
+						temp.probability
+					]
+					insertWithDefaultSize(opportunityData, function() {
+						callback(null)
+					})
+				})
+			}
+		}
+	)
+}
 
 
 

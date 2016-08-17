@@ -104,7 +104,7 @@ router.route('/updatePipelineTable')
 				console.log('query is ' + req.body.query)
 				console.log('vals is ' + req.body.values)
 				helpers.query(req.body.query, req.body.values, function callback() {
-					pipeline.syncWithDefaultSizes(function callback() {
+					pipeline.syncSingleOpportunity(req.body.opportunityName, function callback() {
 							pipeline.exportToSheets(function callback(pipelineData) {
 								res.json(pipelineData)
 							})			
@@ -114,7 +114,7 @@ router.route('/updatePipelineTable')
 				break
 			case "update_pipeline":
 				helpers.query(req.body.query, req.body.values, function callback() {
-					pipeline.syncWithDefaultSizes(function callback() {
+					pipeline.syncSingleOpportunity(req.body.opportunityName, function callback() {
 						pipeline.exportToSheets(function callback(pipelineData) {
 							res.json(pipelineData)
 						})
