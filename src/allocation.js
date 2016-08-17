@@ -21,7 +21,7 @@ var queryAllocation = function(accessToken, path, callback) {
 	var allocationData = [[
 		"CONTACT_ID", "NAME",
 		"ROLE", "PROJECT",
-		"ESTIMATED_HOURS", "START_DATE"
+		"ESTIMATED_HOURS", "WEEK"
 		]]
 
 	// Connect to SF
