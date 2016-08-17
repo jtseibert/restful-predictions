@@ -55,14 +55,13 @@ var parseExcelSheet = function(body, callback) {
 				if(!sheetData[role]) {
 					sheetData[role] = {}
 				}
-				sheetData[role][indexes.dataRowStart] = {}
 				for(var i = indexes.dataColStart; i < colEnd; i++) {
 					var date = moment(new Date(getCellValue(sheet, indexes.topRow, i, 'w') + '/' + year))
 							   .format('MM/DD/YYYY')
 					if(date != '') {
 						var hours = getCellValue(sheet, indexes.dataRowStart, i, 'v')
 						if(hours != '') {
-							sheetData[role][indexes.dataRowStart][date] = hours
+							sheetData[role][date] = hours
 						}
 					}
 				}
