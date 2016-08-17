@@ -166,9 +166,7 @@ router.route('/trigger')
 			if(opportunityData != undefined) {
 				console.log(opportunityData)
 				xlsxHandler.updateDatabaseFromXlsx(opportunityData, function callback() {
-					pipeline.exportToSheets(function callback(pipelineData) {
-						res.json(pipelineData)
-					})
+					res.json({message: 'Trigger Done.'})
 				})
 			}		
 		})
