@@ -96,7 +96,6 @@ var exportCapacity = function(callback) {
 			process.nextTick(callback)
 		},
 		function() {
-			console.log('should be at final cb')
 			capacityData = headers.concat(values)
 			process.nextTick(function() {callback(capacityData)})
 		})
