@@ -345,7 +345,7 @@ module.exports.syncWithDefaultSizes = syncWithDefaultSizes
 function syncSingleOpportunity(opportunityName, callback) {
 	helpers.query(
 		"SELECT opportunity, amount, expected_revenue, close_date, " +
-		"start_date, probability " +
+		"start_date, probability, protected, omitted, generic " +
 		"FROM sales_pipeline where opportunity = $1 LIMIT 1",
 		[opportunityName],
 		function(queryData) {
@@ -365,7 +365,13 @@ function syncSingleOpportunity(opportunityName, callback) {
 						temp.probability
 					]
 					insertWithDefaultSize(opportunityData, function() {
-						callback(null)
+						helpers.setOpportunityStatus(
+							[opportunityName], 
+							{protected: temp.protected, omitted: temp.omitted, generic: temp.generic},
+							function() {
+								callback(null)
+							}
+						)
 					})
 				})
 			}
