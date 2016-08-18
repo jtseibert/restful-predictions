@@ -13,8 +13,7 @@ var	allocation 		= require('./src/allocation'),
 	helpers			= require('./src/helpers'),
 	parser          = require('./src/parser'),
 	pipeline 		= require('./src/pipeline'),
-	xlsxHandler   	= require('./src/xlsxHandler'),
-	debug			= require('debug')('server')
+	xlsxHandler   	= require('./src/xlsxHandler')
 
 var app = express()
 var router = express.Router()
@@ -182,5 +181,4 @@ router.route('/trigger')
 
 // Start server
 app.listen(port)
-debug('Heroku station is operational on port %s', port)
 console.log('Heroku station is operational on port ' + port)
