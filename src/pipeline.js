@@ -155,7 +155,7 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  						// Temp so roleStartDate is not mutated
 		  						var temp = roleStartDate.clone()
 		  						var date = temp.add(durationCounter, 'weeks').format('MM/DD/YYYY')
-		  						week_allocations[date] = hours
+		  						week_allocations[date] = hours * opportunityData[indexes.PROBABILITY]
 		  						durationCounter++
 		  						callback()
 		  					},
