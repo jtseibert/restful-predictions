@@ -13,11 +13,13 @@ var	allocation 		= require('./src/allocation'),
 	helpers			= require('./src/helpers'),
 	parser          = require('./src/parser'),
 	pipeline 		= require('./src/pipeline'),
-	xlsxHandler   	= require('./src/xlsxHandler')
+	xlsxHandler   	= require('./src/xlsxHandler'),
+	debug			= require('debug')('server')
 
 var app = express()
 var router = express.Router()
 var port = process.env.PORT || 5000
+var name = 'app'
 
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({limit: '1gb', extended: true }))
@@ -28,6 +30,7 @@ app.use('/api', router)
 router.route('/query')
 	.post(function(req, res) {
 		helpers.query(req.body.query, req.body.values, function returnQueryResults(results) {
+
 			res.json(results)
 		})
 	})
@@ -179,4 +182,5 @@ router.route('/trigger')
 
 // Start server
 app.listen(port)
+debug('Heroku station is operational on port %s', port)
 console.log('Heroku station is operational on port ' + port)

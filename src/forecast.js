@@ -107,7 +107,7 @@ Forecast.prototype.create = function(callback) {
 				} else { tempRow.push(0) }
 			} else { tempRow.push(0) }
 
-			// If there are allocated hours for this role for this week, push those hours, else push 0 hours
+			// If there are forecasted hours for this role for this week, push those hours, else push 0 hours
 			if (objInstance.forecastedHours[role]){
 				if (objInstance.forecastedHours[role][week]){
 					tempRow.push(objInstance.forecastedHours[role][week])
