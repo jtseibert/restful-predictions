@@ -29,7 +29,6 @@ app.use('/api', router)
 router.route('/query')
 	.post(function(req, res) {
 		helpers.query(req.body.query, req.body.values, function returnQueryResults(results) {
-
 			res.json(results)
 		})
 	})
