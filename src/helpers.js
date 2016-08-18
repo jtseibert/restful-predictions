@@ -139,7 +139,6 @@ var errorLog = function(error) {
 		[error.name, error.message, error.stack.toString(), new Date()],
 		function(results) {} 
 	)
-	console.log(error.stack)
 }
 
 module.exports.errorLog = errorLog
