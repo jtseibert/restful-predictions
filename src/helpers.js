@@ -28,6 +28,7 @@ var query = function query(query, values, callback) {
 				if(error) {
 					done()
 					console.log(error)
+					errorLog(error)
 					callback(error)
 				} else {
 					query.on("row", function onRowCallback(row, result) {
@@ -44,6 +45,7 @@ var query = function query(query, values, callback) {
 				if(error) {
 					done()
 					console.log(error)
+					errorLog(error)
 					callback(error)
 				} else {
 					query.on("row", function onRowCallback(row, result) {
