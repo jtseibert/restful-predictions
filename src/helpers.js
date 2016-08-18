@@ -135,18 +135,21 @@ module.exports.opportunityCheck = opportunityCheck
 * @desc Sends all errors to our database
 * @param {error} error - error thrown
 */
-var errorLog = function(error) {
+var errorLog = function(error, method) {
 	query(
 		"INSERT INTO errors(name,message,stack,time,routine) values($1,$2,$3,$4,$5)",
-		[error.name, error.message, error.stack.toString(), new Date(), error.routine],
+		[error.name, error.message, error.stack.toString(), new Date(), method],
 		function(results) {} 
 	)
-	console.log('method: '+arguments.callee.name)
 }
 
 module.exports.errorLog = errorLog
 //*************************************
 
+function testError() {
+	throw({error: new Error("test error"), method: arguments.callee.name})
+}
 
+module.exports.testError = testError
 
 
