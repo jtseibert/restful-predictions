@@ -136,6 +136,7 @@ module.exports.opportunityCheck = opportunityCheck
 var errorLog = function(error) {
 	console.log(error.stack)
 	console.log(error.message)
+	console.log(error.name)
 }
 
 module.exports.errorLog = errorLog
