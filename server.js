@@ -182,6 +182,3 @@ router.route('/trigger')
 // Start server
 app.listen(port)
 console.log('Heroku station is operational on port ' + port)
-
-var error = new Error('Test Error')
-helpers.errorLog(error)
