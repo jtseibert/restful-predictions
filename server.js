@@ -222,6 +222,7 @@ router.route('/testError')
 		catch(error) {
 			helpers.errorLog(error.error, error.method)
 		}
+		res.json("DONE")
 	})
 
 // Start server
