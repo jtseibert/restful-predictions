@@ -137,6 +137,7 @@ var errorLog = function(error) {
 	console.log(error.stack)
 	console.log(error.message)
 	console.log(error.name)
+	console.log(error.toString)
 }
 
 module.exports.errorLog = errorLog
