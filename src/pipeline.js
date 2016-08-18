@@ -123,6 +123,9 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 	var getDefaultSizeQuery
 	var defaultSizeQueryValues
 	if(opportunityData[indexes.PROJECT_SIZE] === undefined) {
+		if(opportunityData[indexes.AMOUNT] === null || opportunityData[indexes.AMOUNT] == undefined) {
+			opportunityData[indexes.AMOUNT] = 0
+		}
 		getDefaultSizeQuery = "SELECT sizeid, pricehigh, roles_allocations, numweeks " 
 	 	+ "FROM project_size WHERE ABS($1 - pricehigh) = "
 	 	+ "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)"
