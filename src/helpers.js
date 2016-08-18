@@ -146,13 +146,6 @@ var errorLog = function(error) {
 module.exports.errorLog = errorLog
 //*************************************
 
-var testError = function() {
-	throw(new Error("blah blah blah"))
-}
-
-module.exports.testError = testError
-
-
 
 
 
