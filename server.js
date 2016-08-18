@@ -214,7 +214,7 @@ router.route('/trigger')
 		}
 	})
 
-router.route('testError')
+router.route('/testError')
 	.post(function(req, res) {
 		try {
 			helpers.testError()
