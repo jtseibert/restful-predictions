@@ -180,7 +180,12 @@ router.route('/trigger')
 
 router.route('testError')
 	.post(function(req, res) {
-		helpers.testError()
+		try {
+			helpers.testError()
+		}
+		catch(error) {	
+			helpers.errorLog(error)
+		}
 		res.json("DONE")
 	})
 

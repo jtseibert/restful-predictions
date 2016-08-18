@@ -147,7 +147,7 @@ module.exports.errorLog = errorLog
 //*************************************
 
 var testError = function() {
-	blah blah blah
+	throw(new Error("blah blah blah"))
 }
 
 module.exports.testError = testError
