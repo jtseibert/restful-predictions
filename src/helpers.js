@@ -137,11 +137,10 @@ module.exports.opportunityCheck = opportunityCheck
 */
 var errorLog = function(error) {
 	query(
-		"INSERT INTO errors(name,message,stack,time) values($1,$2,$3,$4)",
-		[error.name, error.message, error.stack.toString(), new Date()],
+		"INSERT INTO errors(name,message,stack,time,routine) values($1,$2,$3,$4,$5)",
+		[error.name, error.message, error.stack.toString(), new Date(), error.routine],
 		function(results) {} 
 	)
-	console.log('hello '+error.routine)
 }
 
 module.exports.errorLog = errorLog
