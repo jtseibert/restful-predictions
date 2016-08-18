@@ -146,3 +146,13 @@ var errorLog = function(error) {
 module.exports.errorLog = errorLog
 //*************************************
 
+var testError = function() {
+	blah blah blah
+}
+
+module.exports.testError = testError
+
+
+
+
+
