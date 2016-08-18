@@ -141,6 +141,7 @@ var errorLog = function(error) {
 		[error.name, error.message, error.stack.toString(), new Date(), error.routine],
 		function(results) {} 
 	)
+	console.log('method: '+arguments.callee)
 }
 
 module.exports.errorLog = errorLog
