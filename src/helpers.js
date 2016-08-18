@@ -128,4 +128,15 @@ var opportunityCheck = function(opportunityName, callback) {
 module.exports.opportunityCheck = opportunityCheck
 //*************************************
 
+/**
+* @function errorLog
+* @desc Sends all errors to our database
+* @param {error} error - error thrown
+*/
+var errorLog = function(error) {
+	console.log(error.stack)
+}
+
+module.exports.errorLog = errorLog
+//*************************************
 
