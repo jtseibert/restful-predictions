@@ -219,8 +219,8 @@ router.route('/testError')
 		try {
 			helpers.testError()
 		}
-		catch(error, method) {
-			helpers.errorLog(err, method)
+		catch(error) {
+			helpers.errorLog(error.error, error.method)
 		}
 	})
 
