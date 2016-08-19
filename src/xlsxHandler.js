@@ -52,6 +52,21 @@ function updateOpportunityFromXlsx(opportunityData, callback) {
 	function() {
 		process.nextTick(function() {callback(null)})
 	})
+
+
+	async.eachOfSeries(sheetData, function(role, roleKey, callback) {
+		//for(var number in role) {
+		async.eachSeries(role, function(week_allocations, callback){
+			utilities.query(
+				"INSERT INTO sales_pipeline(opportunity, role, week_allocations, attachment, project_size) values($1, $2, $3, $4, $5)",
+				[opportunityName, roleKey, week_allocations, true, null],
+				function() { process.nextTick(callback) }
+			)
+		}, function(){ process.nextTick(callback) })
+	}, function() { 
+		process.nextTick(function(){ callback(null)})
+	})
+
 }
 //*************************************
 
