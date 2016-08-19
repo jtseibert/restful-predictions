@@ -207,7 +207,7 @@ router.route('/trigger')
 					xlsxHandler.updateDatabaseFromXlsx(opportunityData, function callback() {
 						res.json({message: 'Trigger Done.'})
 					})
-				}		
+				} else { res.json({message: 'Failed to update'}) }	
 			})
 		} catch(error) {
 			helpers.errorLog(error)
