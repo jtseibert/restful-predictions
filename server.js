@@ -143,7 +143,7 @@ router.route('/updatePipelineTable')
 				case "update_pipeline":
 					helpers.query(req.body.query, req.body.values, function callback() {
 						helpers.query("SELECT attachment FROM sales_pipeline where opportunity = $1",
-							req.body.opportunityName,
+							[req.body.opportunityName],
 							function(attachment) {
 								if(attachment[0]) {
 									pipeline.exportToSheets(function handlePipelineData(pipelineData) {
