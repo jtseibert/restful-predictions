@@ -247,7 +247,7 @@ function getHeaderStart(sheet, indexes) {
 */
 function sheetIsValidFormat(workbook, sheet, indexes) {
 	var isValid = true,
-		errorDescription = ''
+		errorDescription = 'test(s) '
 	var tests = {
 		0: (workbook.Props.SheetNames[2] == 'Estimate'),
 		1: (getCellValue(sheet, indexes.topRow, indexes.topCol, 'v') == 'Role*'),
@@ -261,15 +261,15 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 	for(var test in tests) {
 		console.log('test '+test+' is: '+tests[test])
 		if(!tests[test]){
-			errorDescription += 'test '+test+'failed\n'
+			errorDescription = erroDescription+test+', '
 		}
 		isValid = isValid && tests[test]
 	}
 	if(!isValid){
-		var error = new Error(errorDescription)
+		var error = new Error(errorDescription+'failed')
 		helpers.errorLog(error)
-	}
-	return isValid
+		return isValid
+	} else { return isValid }
 }
 //*************************************
 
