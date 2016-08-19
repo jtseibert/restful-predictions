@@ -201,7 +201,6 @@ router.route('/trigger')
 	.post(function(req, res) {
 		try {
 			parser.parseExcelSheet(req.body, function callback(opportunityData) {
-				console.log('In callback of parseExcelSheet: '+opportunityData)
 				if(opportunityData != undefined) {
 					console.log(opportunityData)
 					xlsxHandler.updateDatabaseFromXlsx(opportunityData, function callback() {
