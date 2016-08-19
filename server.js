@@ -201,6 +201,7 @@ router.route('/updatePipelineTable')
 					helpers.setOpportunityStatus(req.body.opportunities, req.body.status, function callback() {
 						res.json({message: "Success!"})
 					})
+					break
 				default:
 					res.json({message: "Default case, No Update."})
 			}
