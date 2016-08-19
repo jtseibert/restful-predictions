@@ -180,7 +180,8 @@ function getColumnLimit(sheet, bottomRow, dataColStart, n) {
 	var consecutiveCheck = true
 	while(!done) {
 		for(var i = currentCol; i < currentCol + n; i++) {
-			consecutiveCheck = consecutiveCheck && (getCellValue(sheet, bottomRow, i, 'v') == 0.00)
+			console.log(getCellValue(sheet, bottomRow + 1, i, 'v'))
+			consecutiveCheck = consecutiveCheck && (getCellValue(sheet, bottomRow + 1, i, 'v') == 0.00)
 		}
 		// When consecutiveCheck == false, there exists at least 1 nonzero value
 		if(!consecutiveCheck) {
