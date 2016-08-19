@@ -234,6 +234,7 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 	}
 
 	for(var test in tests) {
+		console.log('test '+test+' is: '+tests[test])
 		isValid = isValid && tests[test]
 	}
 	return isValid
