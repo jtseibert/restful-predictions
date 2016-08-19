@@ -246,7 +246,8 @@ function getHeaderStart(sheet, indexes) {
 * @returns true/false sheet valid status
 */
 function sheetIsValidFormat(workbook, sheet, indexes) {
-	var isValid = true
+	var isValid = true,
+		errorDescription = ''
 	var tests = {
 		0: (workbook.Props.SheetNames[2] == 'Estimate'),
 		1: (getCellValue(sheet, indexes.topRow, indexes.topCol, 'v') == 'Role*'),
@@ -259,7 +260,14 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 
 	for(var test in tests) {
 		console.log('test '+test+' is: '+tests[test])
+		if(!tests[test]){
+			errorDescription += 'test '+test+'failed\n'
+		}
 		isValid = isValid && tests[test]
+	}
+	if(!isValid){
+		var error = new Error(errorDescription)
+		helpers.errorLog(error)
 	}
 	return isValid
 }
