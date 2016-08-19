@@ -198,7 +198,7 @@ router.route('/updatePipelineTable')
 					})
 					break
 				case "protected":
-					helpers.setOpportunityStatus(req.body.opportunities, req.body.status, function callback)() {
+					helpers.setOpportunityStatus(req.body.opportunities, req.body.status, function callback() {
 						res.json({message: "Success!"})
 					})
 				default:
