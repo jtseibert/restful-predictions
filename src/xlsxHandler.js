@@ -41,23 +41,10 @@ module.exports.updateDatabaseFromXlsx = updateDatabaseFromXlsx
 function updateOpportunityFromXlsx(opportunityData, callback) {
 	var sheetData = opportunityData.sheetData
 	var opportunityName = opportunityData.opportunityName
-	async.eachOfSeries(sheetData, function(week_allocations, roleKey, callback) {
-		// Insert a new row for every role with the week_allocations JSON object
-		helpers.query(
-			"INSERT INTO sales_pipeline(opportunity, role, week_allocations, attachment, project_size) values($1, $2, $3, $4, $5)",
-			[opportunityName, roleKey, week_allocations, true, null],
-			function() {process.nextTick(function() {callback(null)})}
-		)
-	}, 
-	function() {
-		process.nextTick(function() {callback(null)})
-	})
-
-
 	async.eachOfSeries(sheetData, function(role, roleKey, callback) {
 		//for(var number in role) {
 		async.eachSeries(role, function(week_allocations, callback){
-			utilities.query(
+			helpers.query(
 				"INSERT INTO sales_pipeline(opportunity, role, week_allocations, attachment, project_size) values($1, $2, $3, $4, $5)",
 				[opportunityName, roleKey, week_allocations, true, null],
 				function() { process.nextTick(callback) }
@@ -66,7 +53,6 @@ function updateOpportunityFromXlsx(opportunityData, callback) {
 	}, function() { 
 		process.nextTick(function(){ callback(null)})
 	})
-
 }
 //*************************************
 
