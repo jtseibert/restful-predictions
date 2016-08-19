@@ -71,14 +71,14 @@ function syncRows(row, callback) {
 		function(results) {
 			if(results[0]) {
 				if(results[0].protected)
-					updateProtectedOpportunity(curRow, function callback() {
+					updateProtectedOpportunity(curRow, function() {
 						callback(null)
 					})
-				else updateAttachmentOpportunity(curRow, function callback() {
+				else updateAttachmentOpportunity(curRow, function() {
 					callback(null)
 				})
 			} else {
-				insertWithDefaultSize(curRow, function callback() {
+				insertWithDefaultSize(curRow, function() {
 					callback(null)
 				})
 			}
