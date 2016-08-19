@@ -37,6 +37,8 @@ var parseExcelSheet = function(body, callback) {
 	}
 	var temp = getBottomRow(sheet, indexes)
 	indexes.bottomRow = temp
+	var headerStart = getHeaderStart(indexes)
+	indexes.topRow = headerStart
 
 	// Parse the sheet if valid
 	if(!sheetIsValidFormat(workbook, sheet, indexes)) {
@@ -211,6 +213,26 @@ function getBottomRow(sheet, indexes) {
 	}
 	return 0
 }
+//*************************************
+
+/**
+* @function getHeaderStart
+* @desc Get the row number for the headers in the sheet.
+* @param indexes
+* @returns {integer} row number of header start
+*/
+function getHeaderStart(indexes) {
+	var rowStart = 12
+	var maxIter = 0;
+	while(maxIter < 10) { // Scan through at most 10 rows, if anymore the user should consider actually following the template
+		if(getCellValue(sheet, rowStart + maxIter, indexes.topCol, 'v') == 'Role*') {
+			return rowStart + maxIter
+		} else {
+			maxIter++
+		}
+	}
+}
+
 //*************************************
 
 /**
