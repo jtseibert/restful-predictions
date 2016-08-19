@@ -142,11 +142,22 @@ router.route('/updatePipelineTable')
 					break
 				case "update_pipeline":
 					helpers.query(req.body.query, req.body.values, function callback() {
-						pipeline.syncSingleOpportunity(req.body.opportunityName, function callback() {
-							pipeline.exportToSheets(function callback(pipelineData) {
-								res.json(pipelineData)
-							})
-						})
+						helpers.query("SELECT attachment FROM sales_pipeline where opportunity = $1",
+							req.body.opportunityName,
+							function(attachment) {
+								if(attachment[0]) {
+									pipeline.exportToSheets(function(pipelineData) {
+										res.json(pipelineData)
+									})
+								} else {
+									pipeline.syncSingleOpportunity(req.body.opportunityName, function callback() {
+										pipeline.exportToSheets(function callback(pipelineData) {
+											res.json(pipelineData)
+										})
+									})
+								}
+							}
+						)
 					})
 					break
 				case "remove":
