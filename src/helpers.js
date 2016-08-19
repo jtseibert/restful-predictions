@@ -77,8 +77,9 @@ var setOpportunityStatus = function(opportunities, status, callback) {
 	async.eachSeries(opportunities,
 		function updateStatus(opportunity, callback) {
 			query(
-				"UPDATE sales_pipeline SET protected = $1, generic = $2, omitted = $3 WHERE opportunity = $4",
-				[status.protected, status.generic, status.omitted, opportunity],
+				"UPDATE sales_pipeline SET protected = $1, generic = $2, omitted = $3, "
+				+ "attachment = $4 WHERE opportunity = $5",
+				[status.protected, status.generic, status.omitted, status.attachment, opportunity],
 				function() {callback(null)}
 			)
 		},
