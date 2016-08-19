@@ -41,7 +41,7 @@ var indexes = {
 var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 	queryPipeline(accessToken, path, function handlePipelineData(pipelineData) {
 		var today = moment().format("MM/DD/YYYY")
-		var deleteQuery = "DELETE FROM sales_pipeline WHERE (protected = FALSE AND attachment = FALSE) OR start_date < " 
+		var deleteQuery = "DELETE FROM sales_pipeline WHERE (protected = FALSE AND attachment = FALSE AND generic = FALSE) OR start_date < " 
 						+ "'" + today + "'"
 		helpers.query(deleteQuery, null, function deleteQueryCallback() {
 			// For each row in pipelineData, sync accordingly
