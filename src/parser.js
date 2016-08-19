@@ -257,14 +257,13 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 	}
 
 	for(var test in tests) {
-		console.log('test '+test+' is: '+tests[test])
 		if(!tests[test]){
 			errorDescription = errorDescription+test+', '
 		}
 		isValid = isValid && tests[test]
 	}
 	if(!isValid){
-		helpers.errorLog(new Error(''+errorDescription+'failed'))
+		helpers.errorLog(new Error(''+errorDescription+'failed. See assumptions tab in spreadsheet'))
 		return isValid
 	} else { return isValid }
 }
