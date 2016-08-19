@@ -200,6 +200,7 @@ router.route('/updatePipelineTable')
 router.route('/trigger')
 	.post(function(req, res) {
 		try {
+			console.log('req.body = '+req.body)
 			parser.parseExcelSheet(req.body, function callback(opportunityData) {
 				if(opportunityData != undefined) {
 					console.log(opportunityData)
