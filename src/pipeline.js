@@ -70,14 +70,19 @@ function syncRows(row, callback) {
 		[curRow[indexes.OPPORTUNITY_NAME]],
 		function(results) {
 			if(results[0]) {
-				if(results[0].protected)
+				if(results[0].protected) {
+					console.log('updateProtected')
 					updateProtectedOpportunity(curRow, function() {
 						callback(null)
 					})
-				else updateAttachmentOpportunity(curRow, function() {
-					callback(null)
-				})
+				} else { 
+					console.log('updateAttached')
+					updateAttachmentOpportunity(curRow, function() {
+						callback(null)
+					})
+				}
 			} else {
+				console.log('inserting defaults')
 				insertWithDefaultSize(curRow, function() {
 					callback(null)
 				})
