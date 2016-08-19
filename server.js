@@ -146,7 +146,7 @@ router.route('/updatePipelineTable')
 							req.body.opportunityName,
 							function(attachment) {
 								if(attachment[0]) {
-									pipeline.exportToSheets(function(pipelineData) {
+									pipeline.exportToSheets(function handlePipelineData(pipelineData) {
 										res.json(pipelineData)
 									})
 								} else {
