@@ -71,18 +71,15 @@ function syncRows(row, callback) {
 		function(results) {
 			if(results[0]) {
 				if(results[0].protected) {
-					console.log('updateProtected')
 					updateProtectedOpportunity(curRow, function() {
 						callback(null)
 					})
 				} else { 
-					console.log('updateAttached')
 					updateAttachmentOpportunity(curRow, function() {
 						callback(null)
 					})
 				}
 			} else {
-				console.log('inserting defaults')
 				insertWithDefaultSize(curRow, function() {
 					callback(null)
 				})
@@ -100,7 +97,7 @@ function syncRows(row, callback) {
 */
 function updateProtectedOpportunity(opportunityData, callback) {
 	var updateQuery = "UPDATE sales_pipeline SET amount = $1, "
-		+ "expected_revenue = $2, close_date = $3, WHERE opportunity = $6"
+		+ "expected_revenue = $2, close_date = $3 WHERE opportunity = $6"
 
 	var updateValues = [
 		opportunityData[indexes.AMOUNT], 
