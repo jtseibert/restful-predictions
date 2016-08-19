@@ -261,7 +261,7 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 	for(var test in tests) {
 		console.log('test '+test+' is: '+tests[test])
 		if(!tests[test]){
-			errorDescription = erroDescription+test+', '
+			errorDescription = errorDescription+test+', '
 		}
 		isValid = isValid && tests[test]
 	}
