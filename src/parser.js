@@ -37,7 +37,7 @@ var parseExcelSheet = function(body, callback) {
 	}
 	var temp = getBottomRow(sheet, indexes)
 	indexes.bottomRow = temp
-	var headerStart = getHeaderStart(indexes)
+	var headerStart = getHeaderStart(sheet, indexes)
 	indexes.topRow = headerStart
 
 	// Parse the sheet if valid
@@ -218,10 +218,11 @@ function getBottomRow(sheet, indexes) {
 /**
 * @function getHeaderStart
 * @desc Get the row number for the headers in the sheet.
+* @param sheet
 * @param indexes
 * @returns {integer} row number of header start
 */
-function getHeaderStart(indexes) {
+function getHeaderStart(sheet, indexes) {
 	var rowStart = 12
 	var maxIter = 0;
 	while(maxIter < 10) { // Scan through at most 10 rows, if anymore the user should consider actually following the template
