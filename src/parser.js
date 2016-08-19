@@ -266,8 +266,8 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 		isValid = isValid && tests[test]
 	}
 	if(!isValid){
-		var error = new Error(errorDescription+'failed')
-		helpers.errorLog(error)
+		//helpers.errorLog(new Error('attachment failed to validate'))
+		helpers.errorLog(new Error(''+errorDescription+'failed'))
 		return isValid
 	} else { return isValid }
 }
