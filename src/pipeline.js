@@ -97,7 +97,7 @@ function syncRows(row, callback) {
 */
 function updateProtectedOpportunity(opportunityData, callback) {
 	var updateQuery = "UPDATE sales_pipeline SET amount = $1, "
-		+ "expected_revenue = $2, close_date = $3 WHERE opportunity = $6"
+		+ "expected_revenue = $2, close_date = $3 WHERE opportunity = $4"
 
 	var updateValues = [
 		opportunityData[indexes.AMOUNT], 
