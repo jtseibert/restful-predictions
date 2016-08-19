@@ -39,6 +39,8 @@ var parseExcelSheet = function(body, callback) {
 
 	// Parse the sheet if valid
 	if(!sheetIsValidFormat(workbook, sheet, indexes)) {
+		helpers.errorLog(new Error({name: 'attachment not valid'}))
+		console.log('sheet failed to validate')
 		callback(undefined)
 	} else {
 		var sheetData = {}
