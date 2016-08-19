@@ -42,8 +42,6 @@ var parseExcelSheet = function(body, callback) {
 
 	// Parse the sheet if valid
 	if(!sheetIsValidFormat(workbook, sheet, indexes)) {
-		//helpers.errorLog(new Error('attachment failed to validate'))
-		//console.log('sheet failed to validate')
 		callback(undefined)
 	} else {
 		var sheetData = {}
@@ -247,7 +245,7 @@ function getHeaderStart(sheet, indexes) {
 */
 function sheetIsValidFormat(workbook, sheet, indexes) {
 	var isValid = true,
-		errorDescription = 'test(s) '
+		errorDescription = 'Sheet validation test(s) '
 	var tests = {
 		0: (workbook.Props.SheetNames[2] == 'Estimate'),
 		1: (getCellValue(sheet, indexes.topRow, indexes.topCol, 'v') == 'Role*'),
@@ -266,7 +264,6 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 		isValid = isValid && tests[test]
 	}
 	if(!isValid){
-		//helpers.errorLog(new Error('attachment failed to validate'))
 		helpers.errorLog(new Error(''+errorDescription+'failed'))
 		return isValid
 	} else { return isValid }
