@@ -44,7 +44,7 @@ function updateOpportunityFromXlsx(opportunityData, callback) {
 	async.eachOfSeries(sheetData, function(week_allocations, roleKey, callback) {
 		// Insert a new row for every role with the week_allocations JSON object
 		helpers.query(
-			"INSERT INTO sales_pipeline(opportunity, role, week_allocations, protected, project_size) values($1, $2, $3, $4, $5)",
+			"INSERT INTO sales_pipeline(opportunity, role, week_allocations, attachment, project_size) values($1, $2, $3, $4, $5)",
 			[opportunityName, roleKey, week_allocations, true, null],
 			function() {process.nextTick(function() {callback(null)})}
 		)

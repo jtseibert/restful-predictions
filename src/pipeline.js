@@ -41,7 +41,7 @@ var indexes = {
 var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 	queryPipeline(accessToken, path, function handlePipelineData(pipelineData) {
 		var today = moment().format("MM/DD/YYYY")
-		var deleteQuery = "DELETE FROM sales_pipeline WHERE protected = FALSE OR start_date < " 
+		var deleteQuery = "DELETE FROM sales_pipeline WHERE (protected = FALSE AND attachment = FALSE) OR start_date < " 
 						+ "'" + today + "'"
 		helpers.query(deleteQuery, null, function deleteQueryCallback() {
 			// For each row in pipelineData, sync accordingly
@@ -66,15 +66,19 @@ module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
 function syncRows(row, callback) {
 	var curRow = row
 	helpers.query(
-		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
+		"SELECT opportunity,protected FROM sales_pipeline WHERE opportunity=$1",
 		[curRow[indexes.OPPORTUNITY_NAME]],
 		function(results) {
-			if(results[0].exists) {
-				updateProtectedOpportunity(curRow, function updateProtectedOpportunityCallback() {
+			if(results[0]) {
+				if(results[0].protected)
+					updateProtectedOpportunity(curRow, function callback() {
+						callback(null)
+					})
+				else updateAttachmentOpportunity(curRow, function callback() {
 					callback(null)
 				})
 			} else {
-				insertWithDefaultSize(curRow, function insertWithDefaultSizeCallback() {
+				insertWithDefaultSize(curRow, function callback() {
 					callback(null)
 				})
 			}
@@ -91,15 +95,36 @@ function syncRows(row, callback) {
 */
 function updateProtectedOpportunity(opportunityData, callback) {
 	var updateQuery = "UPDATE sales_pipeline SET amount = $1, "
-		+ "expected_revenue = $2, close_date = $3, start_date = $4, "
-		+ "probability = $5 " 
-		+ "WHERE opportunity = $6"
+		+ "expected_revenue = $2, close_date = $3, WHERE opportunity = $6"
 
 	var updateValues = [
 		opportunityData[indexes.AMOUNT], 
 		opportunityData[indexes.EXP_AMOUNT],
 		opportunityData[indexes.CLOSE_DATE], 
-		opportunityData[indexes.START_DATE], 
+		opportunityData[indexes.OPPORTUNITY_NAME]
+	]
+	helpers.query(updateQuery, updateValues, function() {
+		callback(null)
+	})
+}
+//*************************************
+
+/**
+* @function updateProtectedOpportunity
+* @desc Updates opportunity without mutating role or week fields set by 
+	the xlsx attachment from a opportunity object in salesforce.
+* @param opportunityData - 1D array of opportunity data queried from salesforce
+*/
+function updateAttachmentOpportunity(opportunityData, callback) {
+	var updateQuery = "UPDATE sales_pipeline SET amount = $1, "
+		+ "expected_revenue = $2, close_date = $3, start_date = $4, "
+		+ "probability = $5 WHERE opportunity = $6"
+
+	var updateValues = [
+		opportunityData[indexes.AMOUNT], 
+		opportunityData[indexes.EXP_AMOUNT],
+		opportunityData[indexes.CLOSE_DATE],
+		opportunityData[indexes.START_DATE],
 		opportunityData[indexes.PROBABILITY],
 		opportunityData[indexes.OPPORTUNITY_NAME]
 	]
