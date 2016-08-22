@@ -153,7 +153,7 @@ var createWeekAllocations = function(weekOffset, startDate, callback) {
 		weekAllocations[weekDate] = hours
 		process.nextTick(callback)
 	}, function(){ 
-		process.nextTick(function(){callback(null, weekAllocations)}) 
+		process.nextTick(function(){callback(weekAllocations)}) 
 	})
 }
 
