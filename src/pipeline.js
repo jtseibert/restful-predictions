@@ -263,7 +263,7 @@ var exportToSheets = function(callback) {
 						formattedStartDate,
 						opportunity.probability*100,
 						opportunity.role,
-						moment(new Date(week)).format("MM/DD/YYYY"),
+						week,
 						hours
 					]
 					values.push(temp)
