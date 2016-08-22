@@ -159,12 +159,12 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 			opportunityData[indexes.AMOUNT] = 0
 		}
 		getDefaultSizeQuery = "SELECT sizeid, pricehigh, roles_allocations, numweeks " 
-	 	+ "FROM project_size WHERE ABS($1 - pricehigh) = "
-	 	+ "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)"
+	 							+ "FROM project_size WHERE ABS($1 - pricehigh) = "
+	 							+ "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)"
 	 	defaultSizeQueryValues = [opportunityData[indexes.AMOUNT]]
 	} else {
 	 	getDefaultSizeQuery = "SELECT sizeid, pricehigh, roles_allocations, numweeks "
-			+ "FROM project_size WHERE sizeid = $1"
+								+ "FROM project_size WHERE sizeid = $1"
 		defaultSizeQueryValues = [opportunityData[indexes.PROJECT_SIZE]]
 	}
 	helpers.query(
@@ -189,7 +189,7 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  					function(callback) {
 		  						offset_allocation[offset] = hours
 		  						offset++
-		  						callback()
+		  						process.nextTick(callback)
 		  					},
 		  					//async.whilst callback
 		  					function(error) {
@@ -213,7 +213,7 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  							insertValues,
 		  							function(error) {
 		  								if (error) { throw error }
-		  								callback(null)
+		  								process.nextTick(callback)
 		  							}
 		  						)
 		  					}
@@ -221,11 +221,11 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  			},
 		  			function(error) {
 		  				if (error) { throw error }
-		  				callback(null)
+		  				process.nextTick(callback)
 		  			}
 		  		)	
 		  	} else {
-		  		callback(null)
+		  		process.nextTick(callback)
 		  	}		  
 	  	}
 	)
@@ -284,7 +284,7 @@ var exportToSheets = function(callback) {
 					values.push(temp)
 					process.nextTick(function(error) {
 						if (error) { throw error }
-						callback(null)
+						process.nextTick(callback)
 					})
 				},
 				function(error) {
@@ -318,15 +318,14 @@ function queryPipeline(accessToken, path, callback) {
 
 	// Connect to SF
 	var conn = new sf.Connection({
-	instanceUrl: "https://" + path,
-	accessToken: accessToken
+		instanceUrl: "https://" + path,
+		accessToken: accessToken
 	})
 
 	var today = moment(new Date).format("YYYY-MM-DD")
 	// Constraint where opportunity has not closed as of current date
-	var pipelineQuery = 
-		"SELECT Name, Amount, ExpectedRevenue, CloseDate, Probability "
-	  + "FROM Opportunity WHERE CloseDate>=" + today
+	var pipelineQuery = "SELECT Name, Amount, ExpectedRevenue, CloseDate, Probability "
+						+ "FROM Opportunity WHERE CloseDate>=" + today
 
 	// Execute SOQL query to populate pipelineData
 	conn.query(pipelineQuery)
@@ -370,12 +369,12 @@ function syncWithDefaultSizes(callback) {
 			async.eachSeries(queryData, function updateWithNewSize(opportunityKey, callback) {
 				syncSingleOpportunity(opportunityKey.opportunity, function(error) {
 					if (error) { throw error }
-					callback(null)
+					process.nextTick(callback)
 				})
 			},
 			function(error) {
 				if (error) { throw error }
-				callback(null)
+				process.nextTick(callback)
 			})
 		}
 	)
@@ -402,7 +401,7 @@ function syncSingleOpportunity(opportunityName, callback) {
 			// Data is returned as an array of 1 element,
 			var temp = queryData[0]
 			if(temp.amount == null) {
-				callback(null)
+				process.nextTick(callback)
 			} else {
 				helpers.deleteOpportunities([temp.opportunity], function(error) {
 					if (error) { throw error }
@@ -422,7 +421,7 @@ function syncSingleOpportunity(opportunityName, callback) {
 							{protected: temp.protected, omitted: temp.omitted, generic: temp.generic},
 							function(error) {
 								if (error) { throw error }
-								callback(null)
+								process.nextTick(callback)
 							}
 						)
 					})
