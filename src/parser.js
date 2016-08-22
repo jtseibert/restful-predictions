@@ -80,7 +80,7 @@ var parseExcelSheet = function(body, callback) {
 		}
 		var opportunityData = {
 			sheetData: 			sheetData,
-			opportunityName: 	body.opportunityName
+			opportunityName: 	body.opportunityName,
 			startDate: 			startDate
 		}
 		callback(opportunityData)
