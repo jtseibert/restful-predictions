@@ -50,7 +50,7 @@ var queryAllocation = function(accessToken, path, callback) {
 	.on("end", function returnAllocationData(query) {
 		console.log("total in database : " + query.totalSize);
 		console.log("total fetched : " + query.totalFetched);
-		process.nextTick(function() {callback(allocationData)})
+		process.nextTick(function() {callback(null, allocationData)})
 		})
 	.on("error", function handleError(err) {
 		process.nextTick(function() {callback(err)})

@@ -38,7 +38,7 @@ var query = function query(query, values, callback) {
 					})
 					query.on("end", function onEndCallback(result) {
 						done()
-						callback(result.rows)
+						callback(null, result.rows)
 					})	
 				}
 			})
@@ -55,7 +55,7 @@ var query = function query(query, values, callback) {
 					})
 					query.on("end", function onEndCallback(result) {
 					done()
-					callback(result.rows)
+					callback(null, result.rows)
 					})	
 				} 
 			})
@@ -142,7 +142,7 @@ var opportunityCheck = function(opportunityName, callback) {
 		[opportunityName],
 		function(error, results) {
 			if (error) { throw error }
-			callback(results[0].exists)
+			callback(null, results[0].exists)
 		}
 	)
 }
@@ -170,7 +170,7 @@ var createWeekAllocations = function(weekOffset, startDate, callback) {
 		process.nextTick(callback)
 	}, function(error){
 		if (error) { throw error } 
-		process.nextTick(function(){callback(weekAllocations)}) 
+		process.nextTick(function(){callback(null, weekAllocations)}) 
 	})
 }
 

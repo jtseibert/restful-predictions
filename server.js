@@ -29,7 +29,8 @@ app.use('/api', router)
 router.route('/query')
 	.post(function(req, res) {
 		try {
-			helpers.query(req.body.query, req.body.values, function returnQueryResults(results) {
+			helpers.query(req.body.query, req.body.values, function returnQueryResults(error, results) {
+				if (error) { throw error }
 				res.json(results)
 			})
 		} catch(error) {
@@ -44,7 +45,8 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 		try{
 			var accessToken = req.params.accessToken,
 				instance    = req.params.instance
-			allocation.queryAllocation(accessToken, instance, function handleAllocationData(allocationData) {
+			allocation.queryAllocation(accessToken, instance, function handleAllocationData(error, allocationData) {
+				if (error) { throw error }
 				res.json(allocationData)
 			})
 		} catch(error) {
@@ -60,9 +62,11 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 		try {
 			var accessToken = req.params.accessToken,
 				instance    = req.params.instance
-			pipeline.syncPipelineWithSalesforce(accessToken, instance, function callback() {
+			pipeline.syncPipelineWithSalesforce(accessToken, instance, function callback(error) {
+				if (error) { throw error }
 				console.log("DATABASE UPDATE DONE")
-				pipeline.exportToSheets(function callback(pipelineData) {
+				pipeline.exportToSheets(function callback(error, pipelineData) {
+					if (error) { throw error }
 					console.log("EXPORT DONE")
 					res.json(pipelineData)
 				})
@@ -79,10 +83,14 @@ router.route('/:instance/DATA_Capacity/:accessToken')
 		try {
 			var accessToken = req.params.accessToken,
 				instance    = req.params.instance
-			capacity.queryCapacity(accessToken, instance, function handleCapacityData(capacityData) {
-				capacity.clearCapacityTable(function callback() {
-					capacity.insertCapacity(capacityData, function callback() {
-						capacity.exportCapacity(function callback(capacityDataFromDB) {
+			capacity.queryCapacity(accessToken, instance, function handleCapacityData(error, capacityData) {
+				if (error) { throw error }
+				capacity.clearCapacityTable(function callback(error) {
+					if (error) { throw error }
+					capacity.insertCapacity(capacityData, function callback(error) {
+						if (error) { throw error }
+						capacity.exportCapacity(function callback(error, capacityDataFromDB) {
+							if (error) { throw error }
 							res.json(capacityDataFromDB)
 						})
 					})
@@ -99,8 +107,10 @@ router.route('/:instance/DATA_Capacity/:accessToken')
 router.route('/DATA_Forecast')
 	.post(function(req, res) {
 		try {
-			forecast = new Forecast(req.body, function() {
-				forecast.create(function() {
+			forecast = new Forecast(req.body, function(error) {
+				if (error) { throw error }
+				forecast.create(function(error) {
+					if (error) { throw error }
 					res.json(forecast.returnData)
 					delete forecast
 				})
@@ -119,9 +129,12 @@ router.route('/updatePipelineTable')
 		try {
 			switch(req.body.type) {
 				case "add":
-					pipeline.insertWithDefaultSize(req.body.opportunityData, function callback() {
-						helpers.setOpportunityStatus([req.body.opportunityName], req.body.status, function callback() {
-							pipeline.exportToSheets(function callback(pipelineData) {
+					pipeline.insertWithDefaultSize(req.body.opportunityData, function callback(error) {
+						if (error) { throw error }
+						helpers.setOpportunityStatus([req.body.opportunityName], req.body.status, function callback(error) {
+							if (error) { throw error }
+							pipeline.exportToSheets(function callback(error, pipelineData) {
+								if (error) { throw error }
 								res.json(pipelineData)
 							})			
 						})
@@ -131,9 +144,12 @@ router.route('/updatePipelineTable')
 				case "update_generic":
 					console.log('query is ' + req.body.query)
 					console.log('vals is ' + req.body.values)
-					helpers.query(req.body.query, req.body.values, function callback() {
-						pipeline.syncSingleOpportunity(req.body.opportunityName, function callback() {
-								pipeline.exportToSheets(function callback(pipelineData) {
+					helpers.query(req.body.query, req.body.values, function callback(error) {
+						if (error) { throw error }
+						pipeline.syncSingleOpportunity(req.body.opportunityName, function callback(error) {
+							if (error) { throw error }
+								pipeline.exportToSheets(function callback(error, pipelineData) {
+									if (error) { throw error }
 									res.json(pipelineData)
 								})			
 							}
@@ -141,17 +157,22 @@ router.route('/updatePipelineTable')
 					})
 					break
 				case "update_pipeline":
-					helpers.query(req.body.query, req.body.values, function callback() {
+					helpers.query(req.body.query, req.body.values, function callback(error) {
+						if (error) { throw error }
 						helpers.query("SELECT attachment FROM sales_pipeline where opportunity = $1",
 							[req.body.opportunityName],
-							function(attachment) {
+							function(error, attachment) {
+								if (error) { throw error }
 								if(attachment[0]) {
-									pipeline.exportToSheets(function handlePipelineData(pipelineData) {
+									pipeline.exportToSheets(function handlePipelineData(error, pipelineData) {
+										if (error) { throw error }
 										res.json(pipelineData)
 									})
 								} else {
-									pipeline.syncSingleOpportunity(req.body.opportunityName, function callback() {
-										pipeline.exportToSheets(function callback(pipelineData) {
+									pipeline.syncSingleOpportunity(req.body.opportunityName, function callback(error) {
+										if (error) { throw error }
+										pipeline.exportToSheets(function callback(error, pipelineData) {
+											if (error) { throw error }
 											res.json(pipelineData)
 										})
 									})
@@ -161,44 +182,55 @@ router.route('/updatePipelineTable')
 					})
 					break
 				case "remove":
-					helpers.deleteOpportunities(req.body.opportunities, function deleteOpportunitiesCallback() {
-						pipeline.exportToSheets(function callback(pipelineData) {
+					helpers.deleteOpportunities(req.body.opportunities, function deleteOpportunitiesCallback(error) {
+						if (error) { throw error }
+						pipeline.exportToSheets(function callback(error, pipelineData) {
+							if (error) { throw error }
 							res.json(pipelineData)
 						})	
 					})
 					break
 				case "omit":
 					helpers.setOpportunityStatus(req.body.opportunities, req.body.status,
-						function setOpportunityStatusCallback() {
-							pipeline.exportToSheets(function callback(pipelineData) {
+						function setOpportunityStatusCallback(error) {
+							if (error) { throw error }
+							pipeline.exportToSheets(function callback(error, pipelineData) {
+								if (error) { throw error }
 								res.json(pipelineData)
 							})
 						}
 					)
 					break
 				case "project_size":
-					helpers.query(req.body.query, req.body.values, function callback() {
-						pipeline.syncWithDefaultSizes(function callback() {
-							pipeline.exportToSheets(function(pipelineData) {
+					helpers.query(req.body.query, req.body.values, function callback(error) {
+						if (error) { throw error }
+						pipeline.syncWithDefaultSizes(function callback(error) {
+							if (error) { throw error }
+							pipeline.exportToSheets(function(error, pipelineData) {
+								if (error) { throw error }
 								res.json(pipelineData)
 							})
 						})
 					})
 					break
 				case "assign_role":
-					capacity.assignRole(req.body.name, req.body.role, function callback() {
-						capacity.exportCapacity(function callback(capacityData) {
+					capacity.assignRole(req.body.name, req.body.role, function callback(error) {
+						if (error) { throw error }
+						capacity.exportCapacity(function callback(error, capacityData) {
+							if (error) { throw error }
 							res.json(capacityData)
 						})
 					})
 					break
 				case "debug":
-					pipeline.exportToSheets(function callback(pipelineData) {
+					pipeline.exportToSheets(function callback(error, pipelineData) {
+						if (error) { throw error }
 						res.json(pipelineData)
 					})
 					break
 				case "protected":
-					helpers.setOpportunityStatus(req.body.opportunities, req.body.status, function callback() {
+					helpers.setOpportunityStatus(req.body.opportunities, req.body.status, function callback(error) {
+						if (error) { throw error }
 						res.json({message: "Success!"})
 					})
 					break
@@ -216,10 +248,12 @@ router.route('/updatePipelineTable')
 router.route('/trigger')
 	.post(function(req, res) {
 		try {
-			parser.parseExcelSheet(req.body, function callback(opportunityData) {
+			parser.parseExcelSheet(req.body, function callback(error, opportunityData) {
+				if (error) { throw error }
 				if(opportunityData != undefined) {
 					console.log(opportunityData)
-					xlsxHandler.updateDatabaseFromXlsx(opportunityData, function callback() {
+					xlsxHandler.updateDatabaseFromXlsx(opportunityData, function callback(error) {
+						if (error) { throw error }
 						res.json({message: 'Trigger Done.'})
 					})
 				} else { res.json({message: 'Failed to update'}) }	

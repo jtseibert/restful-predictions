@@ -39,13 +39,16 @@ var indexes = {
 * @param callback - callback function to handle google sheet sync
 */
 var syncPipelineWithSalesforce = function(accessToken, path, callback) {
-	queryPipeline(accessToken, path, function handlePipelineData(pipelineData) {
+	queryPipeline(accessToken, path, function handlePipelineData(error, pipelineData) {
+		if (error) { throw error }
 		var today = moment().format("MM/DD/YYYY")
 		var deleteQuery = "DELETE FROM sales_pipeline WHERE (protected = FALSE AND attachment = FALSE AND generic = FALSE) OR start_date < " 
 						+ "'" + today + "'"
-		helpers.query(deleteQuery, null, function deleteQueryCallback() {
+		helpers.query(deleteQuery, null, function deleteQueryCallback(error) {
+			if (error) { throw error }
 			// For each row in pipelineData, sync accordingly
-			async.eachSeries(pipelineData, syncRows, function syncRowsCallback() {
+			async.eachSeries(pipelineData, syncRows, function syncRowsCallback(error) {
+				if (error) { throw error }
 				console.log('ALL ROWS DONE')
 				callback()
 			})
@@ -256,7 +259,8 @@ var exportToSheets = function(callback) {
 	helpers.query(
 		sheetQuery,
 		null,
-		function(queryData) {
+		function(error, queryData) {
+			if (error) { throw error }
 			var values = []
 			// Asyncronusly convert result to 2D array
 			async.each(queryData, function(opportunity, callback) {
@@ -290,7 +294,7 @@ var exportToSheets = function(callback) {
 			function(error) {
 				if (error) { throw error }
 				pipelineData = headers.concat(values)
-				process.nextTick(function() {callback(pipelineData)})
+				process.nextTick(function() {callback(null, pipelineData)})
 			})
 		}
 	)
@@ -341,7 +345,7 @@ function queryPipeline(accessToken, path, callback) {
 		.on("end", function(query) {
 			console.log("total in database : " + query.totalSize);
 			console.log("total fetched : " + query.totalFetched);
-			process.nextTick(function() {callback(pipelineData)})
+			process.nextTick(function() {callback(null, pipelineData)})
 		})
 		.on("error", function(err) {
 			process.nextTick(function() {callback(err)})

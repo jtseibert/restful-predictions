@@ -42,7 +42,7 @@ var parseExcelSheet = function(body, callback) {
 
 	// Parse the sheet if valid
 	if(!sheetIsValidFormat(workbook, sheet, indexes)) {
-		callback(undefined)
+		callback(null, undefined)
 	} else {
 		var sheetData = {}
 		var colEnd = getColumnLimit(sheet, indexes.bottomRow, indexes.dataColStart, 3)
@@ -83,7 +83,7 @@ var parseExcelSheet = function(body, callback) {
 			opportunityName: 	body.opportunityName,
 			startDate: 			startDate
 		}
-		callback(opportunityData)
+		callback(null, opportunityData)
 	}
 }
 

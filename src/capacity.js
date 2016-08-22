@@ -40,7 +40,7 @@ var queryCapacity = function(accessToken, path, callback) {
 	.on("end", function returnCapacityData(query) {
 		console.log("total in database : " + query.totalSize);
 		console.log("total fetched : " + query.totalFetched);
-		process.nextTick(function() {callback(capacityData)})
+		process.nextTick(function() {callback(null, capacityData)})
 		})
 	.on("error", function handleError(err) {
 		process.nextTick(function() {callback(err)})
@@ -103,7 +103,7 @@ var exportCapacity = function(callback) {
 		function(error) {
 			if (error) { throw error }
 			capacityData = headers.concat(values)
-			process.nextTick(function() {callback(capacityData)})
+			process.nextTick(function() {callback(null, capacityData)})
 		})
 	})	
 }
