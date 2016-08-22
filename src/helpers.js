@@ -134,6 +134,29 @@ module.exports.opportunityCheck = opportunityCheck
 //*************************************
 
 /**
+* @function createWeekAllocations
+* @desc takes in weekOffset JSON and applies the offsets to the start date to get each week allocation
+* @param {json} weekOffset - json of how many weeks from the start date that the role is estimated the associated hours
+* @param {string} startDate - start date of the project
+* @param callback - callback function to handle result
+* @returns json object: {week: allocation}
+*/
+var createWeekAllocations = function(weekOffset, startDate, callback) {
+	var weekAllocations = {}
+
+	async.eachOf(weekOffset, function(hours, offset, callback){
+		var roleStartDate = startDate.clone()
+		var weekDate = roleStartDate.add(offset, 'weeks').format('MM/DD/YYYY')
+
+		weekAllocations[weekDate] = hours
+		process.nextTick(callback)
+	}, function(){ process.nextTick(function(){callback(null, weekAllocations)}) })
+}
+
+module.exports.createWeekAllocations = createWeekAllocations
+//*************************************
+
+/**
 * @function errorLog
 * @desc Sends all errors to our database
 * @param {error} error - error thrown
