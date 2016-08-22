@@ -265,7 +265,7 @@ var exportToSheets = function(callback) {
 						opportunity.probability*100,
 						opportunity.role,
 						startDate.add(week, 'weeks').format('MM/DD/YYYY'),
-						hours * opportunit.probability
+						hours * opportunity.probability
 					]
 					values.push(temp)
 					process.nextTick(function() {callback(null)})
