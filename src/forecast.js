@@ -40,10 +40,9 @@ function Forecast(data, callback) {
 
 	// Creates a JSON of all roles and their capacities from the DB
 	var one = function(callback){
-		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+		pg.connect(process.env.DATABASE_URL, function(error, client, done) {
 			roleCapacities = {}
-			if (err)
-				console.log(err)
+			if (error) { throw error }
 			var query = client.query('SELECT role, SUM(hours) AS capacity FROM capacity GROUP BY role')
 			query.on("row", function (row, result) {
 				roleCapacities[row.role] = row.capacity
@@ -65,7 +64,8 @@ function Forecast(data, callback) {
 			weeks.push(today.format('L'))
 			today = today.add(7,'d')
 			process.nextTick(function(){next()})
-		}, function(){
+		}, function(error){
+			if (error) { throw error }
 			process.nextTick(function(){callback(null, weeks)})
 		})
 	}
@@ -73,7 +73,8 @@ function Forecast(data, callback) {
 	async.parallel({
 	 	'one': one,
 	 	'two': two
-	}, function(err, results){
+	}, function(error, results){
+		if (error) { throw error }
 	 	objInstance.roleCapacities = results.one
 	 	objInstance.weeks = results.two
 	 	process.nextTick(callback)
@@ -118,10 +119,12 @@ Forecast.prototype.create = function(callback) {
 			objInstance.returnData.push(tempRow)
 
 			process.nextTick(callback)
-		}, function(){
+		}, function(error){
+			if (error) { throw error }
 			process.nextTick(callback)
 		})
-	}, function(){
+	}, function(error){
+		if (error) { throw error }
 		process.nextTick(callback)
 	})
 }

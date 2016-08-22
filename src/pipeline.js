@@ -105,7 +105,8 @@ function updateProtectedOpportunity(opportunityData, callback) {
 		opportunityData[indexes.CLOSE_DATE], 
 		opportunityData[indexes.OPPORTUNITY_NAME]
 	]
-	helpers.query(updateQuery, updateValues, function() {
+	helpers.query(updateQuery, updateValues, function(error) {
+		if (error) { throw error }
 		callback(null)
 	})
 }
@@ -129,7 +130,8 @@ function updateAttachmentOpportunity(opportunityData, callback) {
 		opportunityData[indexes.PROBABILITY],
 		opportunityData[indexes.OPPORTUNITY_NAME]
 	]
-	helpers.query(updateQuery, updateValues, function() {
+	helpers.query(updateQuery, updateValues, function(error) {
+		if (error) { throw error }
 		callback(null)
 	})
 }
@@ -164,7 +166,8 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 	helpers.query(
 		getDefaultSizeQuery,
 	  	defaultSizeQueryValues,	  	
-	  	function(results) {
+	  	function(error, results) {
+	  		if (error) { throw error }
 	  		// For each role, insert *role duration* rows
 	  		// Check for missing amount in opportunity
 	  		if(opportunityData[indexes.AMOUNT] != null || opportunityData[indexes.PROJECT_SIZE] != undefined) {
@@ -185,7 +188,8 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  						callback()
 		  					},
 		  					//async.whilst callback
-		  					function() {
+		  					function(error) {
+		  						if (error) { throw error }
 								var insertValues = [
 		  							opportunityData[indexes.OPPORTUNITY_NAME],
 		  						 	opportunityData[indexes.AMOUNT],
@@ -203,12 +207,18 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  							+ "role, offset_allocation, project_size) VALUES "
 		  							+ "($1, $2, $3, $4, $5, $6, $7, $8, $9)",
 		  							insertValues,
-		  							function() {callback(null)}
+		  							function(error) {
+		  								if (error) { throw error }
+		  								callback(null)
+		  							}
 		  						)
 		  					}
 		  				)
 		  			},
-		  			function() {callback(null)}
+		  			function(error) {
+		  				if (error) { throw error }
+		  				callback(null)
+		  			}
 		  		)	
 		  	} else {
 		  		callback(null)
@@ -267,13 +277,18 @@ var exportToSheets = function(callback) {
 						hours * opportunity.probability
 					]
 					values.push(temp)
-					process.nextTick(function() {callback(null)})
+					process.nextTick(function(error) {
+						if (error) { throw error }
+						callback(null)
+					})
 				},
-				function() {
+				function(error) {
+					if (error) { throw error }
 					process.nextTick(callback)
 				})
 			},
-			function() {
+			function(error) {
+				if (error) { throw error }
 				pipelineData = headers.concat(values)
 				process.nextTick(function() {callback(pipelineData)})
 			})
@@ -345,13 +360,16 @@ function syncWithDefaultSizes(callback) {
 	helpers.query(
 		"SELECT DISTINCT opportunity FROM sales_pipeline WHERE project_size IS NOT NULL",
 		null,
-		function(queryData) {
+		function(error, queryData) {
+			if (error) { throw error }
 			async.eachSeries(queryData, function updateWithNewSize(opportunityKey, callback) {
-				syncSingleOpportunity(opportunityKey.opportunity, function() {
+				syncSingleOpportunity(opportunityKey.opportunity, function(error) {
+					if (error) { throw error }
 					callback(null)
 				})
 			},
-			function() {
+			function(error) {
+				if (error) { throw error }
 				callback(null)
 			})
 		}
@@ -374,13 +392,15 @@ function syncSingleOpportunity(opportunityName, callback) {
 		"start_date, probability, protected, omitted, generic " +
 		"FROM sales_pipeline where opportunity = $1 LIMIT 1",
 		[opportunityName],
-		function(queryData) {
+		function(error, queryData) {
+			if (error) { throw error }
 			// Data is returned as an array of 1 element,
 			var temp = queryData[0]
 			if(temp.amount == null) {
 				callback(null)
 			} else {
-				helpers.deleteOpportunities([temp.opportunity], function() {
+				helpers.deleteOpportunities([temp.opportunity], function(error) {
+					if (error) { throw error }
 					// Format opportunity to match index for default insertion
 					var opportunityData = [
 						temp.opportunity,
@@ -390,11 +410,13 @@ function syncSingleOpportunity(opportunityName, callback) {
 						moment(new Date(temp.start_date)).format("MM/DD/YYYY"),
 						temp.probability
 					]
-					insertWithDefaultSize(opportunityData, function() {
+					insertWithDefaultSize(opportunityData, function(error) {
+						if (error) { throw error }
 						helpers.setOpportunityStatus(
 							[opportunityName], 
 							{protected: temp.protected, omitted: temp.omitted, generic: temp.generic},
-							function() {
+							function(error) {
+								if (error) { throw error }
 								callback(null)
 							}
 						)
