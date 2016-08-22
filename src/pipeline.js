@@ -181,7 +181,7 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  				async.whilst(
 		  					function() {return offset <= duration},
 		  					function(callback) {
-		  						offset_allocation[offset] = hours * opportunityData[indexes.PROBABILITY]
+		  						offset_allocation[offset] = hours
 		  						offset++
 		  						callback()
 		  					},
@@ -265,7 +265,7 @@ var exportToSheets = function(callback) {
 						opportunity.probability*100,
 						opportunity.role,
 						startDate.add(week, 'weeks').format('MM/DD/YYYY'),
-						hours
+						hours * opportunit.probability
 					]
 					values.push(temp)
 					process.nextTick(function() {callback(null)})
