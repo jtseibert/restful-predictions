@@ -50,7 +50,7 @@ var queryAllocation = function(accessToken, path, callback) {
 	.on("end", function returnAllocationData(query) {
 		console.log("total in database : " + query.totalSize);
 		console.log("total fetched : " + query.totalFetched);
-		process.nextTick(function() {callback(allocationData)})
+		process.nextTick(function() {callback(null, allocationData)})
 		})
 	.on("error", function handleError(err) {
 		process.nextTick(function() {callback(err)})
@@ -70,8 +70,19 @@ function getQueryString() {
 	var queryString
 	var startDate = moment(new Date).format("YYYY-MM-DD")
 	var closeDate = moment(new Date).add(26, 'weeks').format("YYYY-MM-DD")
-	queryString = "SELECT pse__Resource__r.ContactID_18__c, pse__Resource__r.Name, pse__Project__r.Name, pse__Resource__r.pse__Resource_Role__c, pse__Estimated_Hours__c, pse__Start_Date__c FROM pse__Est_Vs_Actuals__c WHERE pse__Estimated_Hours__c>0 AND pse__Resource__r.pse__Exclude_from_Resource_Planner__c=False AND pse__End_Date__c>=" +
-	startDate + "AND pse__End_Date__c<" + closeDate + "AND pse__Resource__r.ContactID_18__c!=null"
+	queryString = "SELECT pse__Resource__r.ContactID_18__c, "
+					+ "pse__Resource__r.Name, "
+					+ "pse__Project__r.Name, "
+					+ "pse__Resource__r.pse__Resource_Role__c, "
+					+ "pse__Estimated_Hours__c, "
+					+ "pse__Start_Date__c "
+					+ "FROM pse__Est_Vs_Actuals__c "
+					+ "WHERE pse__Estimated_Hours__c>0 AND "
+					+ "pse__Resource__r.pse__Exclude_from_Resource_Planner__c=False AND "
+					+ "pse__Project__r.Name!='Internal - Magnet - Admin' AND "
+					+ "pse__End_Date__c>=" + startDate
+					+ "AND pse__End_Date__c<" + closeDate
+					+ "AND pse__Resource__r.ContactID_18__c!=null"
 	return queryString
 }
 //*************************************

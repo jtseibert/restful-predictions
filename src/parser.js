@@ -42,11 +42,13 @@ var parseExcelSheet = function(body, callback) {
 
 	// Parse the sheet if valid
 	if(!sheetIsValidFormat(workbook, sheet, indexes)) {
-		callback(undefined)
+		callback(null, undefined)
 	} else {
 		var sheetData = {}
 		var colEnd = getColumnLimit(sheet, indexes.bottomRow, indexes.dataColStart, 3)
 		var year = getYear(sheet, indexes)
+		var startDate = moment(new Date(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year))
+							   .format('MM/DD/YYYY')
 
 		// Iterate over the roles column until subtotal is reached
 		//	* For each role, grab each estimated hour for each week date
@@ -59,24 +61,29 @@ var parseExcelSheet = function(body, callback) {
 					sheetData[role] = {}
 				}
 				sheetData[role][indexes.dataRowStart] = {}
+
+				var weekOffset = 0
 				for(var i = indexes.dataColStart; i < colEnd; i++) {
-					var date = moment(new Date(getCellValue(sheet, indexes.topRow, i, 'w') + '/' + year))
-							   .format('MM/DD/YYYY')
-					if(date != '') {
+					// var date = moment(new Date(getCellValue(sheet, indexes.topRow, i, 'w') + '/' + year))
+					// 		   .format('MM/DD/YYYY')
+					//if(date != '') {
 						var hours = getCellValue(sheet, indexes.dataRowStart, i, 'v')
 						if(hours != '') {
-							sheetData[role][indexes.dataRowStart][date] = hours
-						}
-					}
+							sheetData[role][indexes.dataRowStart][weekOffset] = hours
+							weekOffset++
+						} else { weekOffset++ }
+					//}
+
 				}
 			}
 			indexes.dataRowStart += 1
 		}
 		var opportunityData = {
-			sheetData: sheetData,
-			opportunityName: body.opportunityName
+			sheetData: 			sheetData,
+			opportunityName: 	body.opportunityName,
+			startDate: 			startDate
 		}
-		callback(opportunityData)
+		callback(null, opportunityData)
 	}
 }
 
