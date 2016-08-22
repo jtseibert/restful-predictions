@@ -44,15 +44,11 @@ function updateOpportunityFromXlsx(opportunityData, callback) {
 	var startDate = opportunityData.startDate
 	async.eachOfSeries(sheetData, function(role, roleKey, callback) {
 		async.eachSeries(role, function(weekOffset, callback){
-			helpers.createWeekAllocations(weekOffset, startDate, function(weekAllocations){
-				// helpers.query(
-				// 	"INSERT INTO sales_pipeline(opportunity, role, week_allocations, attachment, project_size) values($1, $2, $3, $4, $5)",
-				// 	[opportunityName, roleKey, week_allocations, true, null],
-				// 	function() { process.nextTick(callback) }
-				// )
-				console.log(weekAllocations)
-				process.nextTick(callback)
-			})
+			helpers.query(
+				"INSERT INTO sales_pipeline(opportunity, role, offset_allocation, attachment, project_size) values($1, $2, $3, $4, $5)",
+				[opportunityName, roleKey, weekOffset, true, null],
+				function() { process.nextTick(callback) }
+			)
 		}, function(){ process.nextTick(callback) })
 	}, function() { 
 		process.nextTick(function(){ callback(null)})

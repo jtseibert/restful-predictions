@@ -174,19 +174,15 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  			roleAllocations, 
 		  			function(roleValues, role, callback) {
 		  				// Start the counter at a role offset and iterate for duration - offset
-		  				var durationCounter = roleValues.offset
+		  				var offset = roleValues.offset
 		  				var duration = roleValues.duration
-		  				var roleStartDate = moment(new Date(opportunityData[indexes.START_DATE]))
 		  				var hours = roleValues.allocation
-		  				var week_allocations = {}
+		  				var offset_allocation = {}
 		  				async.whilst(
-		  					function() {return durationCounter <= duration},
+		  					function() {return offset <= duration},
 		  					function(callback) {
-		  						// Temp so roleStartDate is not mutated
-		  						var temp = roleStartDate.clone()
-		  						var date = temp.add(durationCounter, 'weeks').format('MM/DD/YYYY')
-		  						week_allocations[date] = hours * opportunityData[indexes.PROBABILITY]
-		  						durationCounter++
+		  						offset_allocation[offset] = hours * opportunityData[indexes.PROBABILITY]
+		  						offset++
 		  						callback()
 		  					},
 		  					//async.whilst callback
@@ -199,13 +195,13 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  						 	opportunityData[indexes.START_DATE],
 		  						 	opportunityData[indexes.PROBABILITY],
 		  						 	role,
-		  						 	week_allocations,
+		  						 	offset_allocation,
 		  						 	results[0].sizeid
 		  						]
 		  						helpers.query("INSERT INTO sales_pipeline "
 		  							+ "(opportunity, amount, expected_revenue, "
 		  							+ "close_date, start_date, probability, "
-		  							+ "role, week_allocations, project_size) VALUES "
+		  							+ "role, offset_allocation, project_size) VALUES "
 		  							+ "($1, $2, $3, $4, $5, $6, $7, $8, $9)",
 		  							insertValues,
 		  							function() {callback(null)}
@@ -246,7 +242,7 @@ var exportToSheets = function(callback) {
 	var sheetQuery = 
 		"SELECT opportunity, amount, expected_revenue, "
 	  + "close_date, start_date, probability, "
-	  + "role, week_allocations FROM sales_pipeline WHERE omitted = FALSE"
+	  + "role, offset_allocation FROM sales_pipeline WHERE omitted = FALSE"
 
 	helpers.query(
 		sheetQuery,
@@ -255,10 +251,10 @@ var exportToSheets = function(callback) {
 			var values = []
 			// Asyncronusly convert result to 2D array
 			async.each(queryData, function(opportunity, callback) {
-				// Opportunity is {opp: name, ... , role: role, week_allocations: {...}}
+				// Opportunity is {opp: name, ... , role: role, offset_allocation: {...}}
 				var formattedCloseDate = moment(new Date(opportunity.close_date)).format("MM/DD/YYYY")
 				var formattedStartDate = moment(new Date(opportunity.start_date)).format("MM/DD/YYYY")
-				async.eachOf(opportunity.week_allocations, function(hours, week, callback) {
+				async.eachOf(opportunity.offset_allocation, function(hours, week, callback) {
 					var temp = [
 						opportunity.opportunity,
 						opportunity.amount,
