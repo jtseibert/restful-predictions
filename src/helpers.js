@@ -5,6 +5,7 @@
 */
 //*************************************
 var pg = require('pg')
+var moment = require('moment')
 pg.defaults.ssl = true
 pg.defaults.poolSize = 10
 //*************************************
@@ -20,8 +21,9 @@ pg.defaults.poolSize = 10
 var query = function query(query, values, callback) {
 	q = query
 	v = values
-	pg.connect(process.env.DATABASE_URL, function pgConnectCallback(err, client, done) {
+	pg.connect(process.env.DATABASE_URL, function pgConnectCallback(error, client, done) {
 		//console.log("query is: " + q + ' with values ' + v)
+		if (error) { throw error }
 		var query
 		if(v != null) {
 			query = client.query(q, v, function queryCallback(error) {
@@ -32,11 +34,11 @@ var query = function query(query, values, callback) {
 					callback(error)
 				} else {
 					query.on("row", function onRowCallback(row, result) {
-					result.addRow(row)
+						result.addRow(row)
 					})
 					query.on("end", function onEndCallback(result) {
-					done()
-					callback(result.rows)
+						done()
+						callback(null, result.rows)
 					})	
 				}
 			})
@@ -53,7 +55,7 @@ var query = function query(query, values, callback) {
 					})
 					query.on("end", function onEndCallback(result) {
 					done()
-					callback(result.rows)
+					callback(null, result.rows)
 					})	
 				} 
 			})
@@ -82,10 +84,16 @@ var setOpportunityStatus = function(opportunities, status, callback) {
 				+ "attachment = COALESCE($4,attachment) "
 				+ "WHERE opportunity = $5",
 				[status.protected, status.generic, status.omitted, status.attachment, opportunity],
-				function() {callback(null)}
+				function(error) {
+					if (error) { throw error }
+					callback(null)
+				}
 			)
 		},
-		function() {callback(null)}
+		function(error) {
+			if (error) { throw error }
+			callback(null)
+		}
 	)
 }
 
@@ -105,10 +113,16 @@ var deleteOpportunities = function(opportunities, callback) {
 			query(
 				"DELETE FROM sales_pipeline WHERE opportunity=$1",
 				[opportunity],
-				function() {callback(null)}
+				function(error) {
+					if (error) { throw error }
+					callback(null)
+				}
 			)
 		},
-		function() {callback(null)}
+		function(error) {
+			if (error) { throw error }
+			callback(null)
+		}
 	)
 }
 
@@ -126,11 +140,41 @@ var opportunityCheck = function(opportunityName, callback) {
 	query(
 		"SELECT EXISTS (SELECT opportunity FROM sales_pipeline WHERE opportunity=$1)",
 		[opportunityName],
-		function(results) {callback(results[0].exists)}
+		function(error, results) {
+			if (error) { throw error }
+			callback(null, results[0].exists)
+		}
 	)
 }
 
 module.exports.opportunityCheck = opportunityCheck
+//*************************************
+
+/**
+* @function createWeekAllocations
+* @desc takes in weekOffset JSON and applies the offsets to the start date to get each week allocation
+* @param {json} weekOffset - json of how many weeks from the start date that the role is estimated the associated hours
+* @param {string} startDate - start date of the project
+* @param callback - callback function to handle result
+* @returns json object: {week: allocation}
+*/
+var createWeekAllocations = function(weekOffset, startDate, callback) {
+	var weekAllocations = {}
+	var startDate = moment(new Date(startDate))
+
+	async.eachOf(weekOffset, function(hours, offset, callback){
+		var roleStartDate = startDate.clone()
+		var weekDate = roleStartDate.add(offset, 'weeks').format('MM/DD/YYYY')
+
+		weekAllocations[weekDate] = hours
+		process.nextTick(callback)
+	}, function(error){
+		if (error) { throw error } 
+		process.nextTick(function(){callback(null, weekAllocations)}) 
+	})
+}
+
+module.exports.createWeekAllocations = createWeekAllocations
 //*************************************
 
 /**
@@ -143,7 +187,7 @@ var errorLog = function(error) {
 	query(
 		"INSERT INTO errors(name,message,stack,time,routine) values($1,$2,$3,$4,$5)",
 		[error.name, error.message, error.stack.toString(), new Date(), error.routine],
-		function(results) {} 
+		function(error, results) { if (error) { throw error } } 
 	)
 }
 

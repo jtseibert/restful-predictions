@@ -16,13 +16,16 @@ var async     = require('async')
 var updateDatabaseFromXlsx = function(opportunityData, callback) {
 	helpers.opportunityCheck(opportunityData.opportunityName, function(exists) {
 		if(exists) {
-			helpers.deleteOpportunities([opportunityData.opportunityName], function() {
-				updateOpportunityFromXlsx(opportunityData, function() {
+			helpers.deleteOpportunities([opportunityData.opportunityName], function(error) {
+				if (error) { throw error }
+				updateOpportunityFromXlsx(opportunityData, function(error) {
+					if (error) { throw error }
 					process.nextTick(callback)
 				})
 			})
 		} else {
-			updateOpportunityFromXlsx(opportunityData, function() {
+			updateOpportunityFromXlsx(opportunityData, function(error) {
+				if (error) { throw error }
 				process.nextTick(callback)
 			})
 		}
@@ -41,16 +44,22 @@ module.exports.updateDatabaseFromXlsx = updateDatabaseFromXlsx
 function updateOpportunityFromXlsx(opportunityData, callback) {
 	var sheetData = opportunityData.sheetData
 	var opportunityName = opportunityData.opportunityName
+	var startDate = opportunityData.startDate
 	async.eachOfSeries(sheetData, function(role, roleKey, callback) {
-		//for(var number in role) {
-		async.eachSeries(role, function(week_allocations, callback){
+		async.eachSeries(role, function(weekOffset, callback){
 			helpers.query(
-				"INSERT INTO sales_pipeline(opportunity, role, week_allocations, attachment, project_size) values($1, $2, $3, $4, $5)",
-				[opportunityName, roleKey, week_allocations, true, null],
-				function() { process.nextTick(callback) }
-			)
-		}, function(){ process.nextTick(callback) })
-	}, function() { 
+				"INSERT INTO sales_pipeline(opportunity, start_date, role, offset_allocation, attachment, project_size) values($1, $2, $3, $4, $5, $6)",
+				[opportunityName, startDate, roleKey, weekOffset, true, null],
+				function(error) { 
+					if (error) { throw error }
+					process.nextTick(callback)
+				})
+		}, function(error){
+			if (error) { throw error }
+			process.nextTick(callback)
+		})
+	}, function(error) { 
+		if (error) { throw errror}
 		process.nextTick(function(){ callback(null)})
 	})
 }

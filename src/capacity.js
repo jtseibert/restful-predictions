@@ -40,7 +40,7 @@ var queryCapacity = function(accessToken, path, callback) {
 	.on("end", function returnCapacityData(query) {
 		console.log("total in database : " + query.totalSize);
 		console.log("total fetched : " + query.totalFetched);
-		process.nextTick(function() {callback(capacityData)})
+		process.nextTick(function() {callback(null, capacityData)})
 		})
 	.on("error", function handleError(err) {
 		process.nextTick(function() {callback(err)})
@@ -62,10 +62,14 @@ function insertCapacity(capacityData, callback) {
 		helpers.query("INSERT INTO capacity (role, name, utilization, hours) "
 			+ "VALUES ($1, $2, $3, $4)",
 			row,
-			function() {process.nextTick(callback)}
+			function(error) {
+				if (error) { throw error }
+				process.nextTick(callback)
+			}
 		)
 	},
-	function() {
+	function(error) {
+		if (error) { throw error }
 		process.nextTick(callback)
 	})
 }
@@ -88,16 +92,18 @@ var exportCapacity = function(callback) {
 		]]
 	var capacityData = []
 	var values = []
-	helpers.query("SELECT * FROM capacity", null, function(capacityData) {
+	helpers.query("SELECT * FROM capacity", null, function(error, capacityData) {
+		if (error) { throw error }
 		async.each(capacityData, function pushRow(row, callback) {
 			var temp = []
 			temp.push(row.role, row.name, row.utilization, row.hours)
 			values.push(temp)
 			process.nextTick(callback)
 		},
-		function() {
+		function(error) {
+			if (error) { throw error }
 			capacityData = headers.concat(values)
-			process.nextTick(function() {callback(capacityData)})
+			process.nextTick(function() {callback(null, capacityData)})
 		})
 	})	
 }
@@ -111,7 +117,10 @@ module.exports.exportCapacity = exportCapacity
 * @param callback - callback function
 */
 var clearCapacityTable = function(callback) {
-	helpers.query("DELETE FROM capacity *", null, function() {callback()})
+	helpers.query("DELETE FROM capacity *", null, function(error) {
+		if (error) { throw error }
+		callback()
+	})
 }
 
 module.exports.clearCapacityTable = clearCapacityTable
@@ -128,7 +137,10 @@ function assignRole(name, role, callback) {
 	helpers.query(
 		"UPDATE capacity SET role = $1 WHERE name = $2",
 		[role, name],
-		function() {callback()}
+		function(error) {
+			if (error) { throw error }
+			callback()
+		}
 	)
 }
 

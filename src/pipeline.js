@@ -39,13 +39,16 @@ var indexes = {
 * @param callback - callback function to handle google sheet sync
 */
 var syncPipelineWithSalesforce = function(accessToken, path, callback) {
-	queryPipeline(accessToken, path, function handlePipelineData(pipelineData) {
+	queryPipeline(accessToken, path, function handlePipelineData(error, pipelineData) {
+		if (error) { throw error }
 		var today = moment().format("MM/DD/YYYY")
 		var deleteQuery = "DELETE FROM sales_pipeline WHERE (protected = FALSE AND attachment = FALSE AND generic = FALSE) OR start_date < " 
 						+ "'" + today + "'"
-		helpers.query(deleteQuery, null, function deleteQueryCallback() {
+		helpers.query(deleteQuery, null, function deleteQueryCallback(error) {
+			if (error) { throw error }
 			// For each row in pipelineData, sync accordingly
-			async.eachSeries(pipelineData, syncRows, function syncRowsCallback() {
+			async.eachSeries(pipelineData, syncRows, function syncRowsCallback(error) {
+				if (error) { throw error }
 				console.log('ALL ROWS DONE')
 				callback()
 			})
@@ -68,7 +71,8 @@ function syncRows(row, callback) {
 	helpers.query(
 		"SELECT opportunity,protected FROM sales_pipeline WHERE opportunity=$1",
 		[curRow[indexes.OPPORTUNITY_NAME]],
-		function(results) {
+		function(error, results) {
+			if (error) { throw error }
 			if(results[0]) {
 				if(results[0].protected) {
 					updateProtectedOpportunity(curRow, function() {
@@ -105,7 +109,8 @@ function updateProtectedOpportunity(opportunityData, callback) {
 		opportunityData[indexes.CLOSE_DATE], 
 		opportunityData[indexes.OPPORTUNITY_NAME]
 	]
-	helpers.query(updateQuery, updateValues, function() {
+	helpers.query(updateQuery, updateValues, function(error) {
+		if (error) { throw error }
 		callback(null)
 	})
 }
@@ -119,18 +124,18 @@ function updateProtectedOpportunity(opportunityData, callback) {
 */
 function updateAttachmentOpportunity(opportunityData, callback) {
 	var updateQuery = "UPDATE sales_pipeline SET amount = $1, "
-		+ "expected_revenue = $2, close_date = $3, start_date = $4, "
-		+ "probability = $5 WHERE opportunity = $6"
+		+ "expected_revenue = $2, close_date = $3, "
+		+ "probability = $4 WHERE opportunity = $5"
 
 	var updateValues = [
 		opportunityData[indexes.AMOUNT], 
 		opportunityData[indexes.EXP_AMOUNT],
 		opportunityData[indexes.CLOSE_DATE],
-		opportunityData[indexes.START_DATE],
 		opportunityData[indexes.PROBABILITY],
 		opportunityData[indexes.OPPORTUNITY_NAME]
 	]
-	helpers.query(updateQuery, updateValues, function() {
+	helpers.query(updateQuery, updateValues, function(error) {
+		if (error) { throw error }
 		callback(null)
 	})
 }
@@ -165,7 +170,8 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 	helpers.query(
 		getDefaultSizeQuery,
 	  	defaultSizeQueryValues,	  	
-	  	function(results) {
+	  	function(error, results) {
+	  		if (error) { throw error }
 	  		// For each role, insert *role duration* rows
 	  		// Check for missing amount in opportunity
 	  		if(opportunityData[indexes.AMOUNT] != null || opportunityData[indexes.PROJECT_SIZE] != undefined) {
@@ -174,23 +180,20 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  			roleAllocations, 
 		  			function(roleValues, role, callback) {
 		  				// Start the counter at a role offset and iterate for duration - offset
-		  				var durationCounter = roleValues.offset
+		  				var offset = roleValues.offset
 		  				var duration = roleValues.duration
-		  				var roleStartDate = moment(new Date(opportunityData[indexes.START_DATE]))
 		  				var hours = roleValues.allocation
-		  				var week_allocations = {}
+		  				var offset_allocation = {}
 		  				async.whilst(
-		  					function() {return durationCounter <= duration},
+		  					function() {return offset <= duration},
 		  					function(callback) {
-		  						// Temp so roleStartDate is not mutated
-		  						var temp = roleStartDate.clone()
-		  						var date = temp.add(durationCounter, 'weeks').format('MM/DD/YYYY')
-		  						week_allocations[date] = hours * opportunityData[indexes.PROBABILITY]
-		  						durationCounter++
+		  						offset_allocation[offset] = hours
+		  						offset++
 		  						callback()
 		  					},
 		  					//async.whilst callback
-		  					function() {
+		  					function(error) {
+		  						if (error) { throw error }
 								var insertValues = [
 		  							opportunityData[indexes.OPPORTUNITY_NAME],
 		  						 	opportunityData[indexes.AMOUNT],
@@ -199,21 +202,27 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  						 	opportunityData[indexes.START_DATE],
 		  						 	opportunityData[indexes.PROBABILITY],
 		  						 	role,
-		  						 	week_allocations,
+		  						 	offset_allocation,
 		  						 	results[0].sizeid
 		  						]
 		  						helpers.query("INSERT INTO sales_pipeline "
 		  							+ "(opportunity, amount, expected_revenue, "
 		  							+ "close_date, start_date, probability, "
-		  							+ "role, week_allocations, project_size) VALUES "
+		  							+ "role, offset_allocation, project_size) VALUES "
 		  							+ "($1, $2, $3, $4, $5, $6, $7, $8, $9)",
 		  							insertValues,
-		  							function() {callback(null)}
+		  							function(error) {
+		  								if (error) { throw error }
+		  								callback(null)
+		  							}
 		  						)
 		  					}
 		  				)
 		  			},
-		  			function() {callback(null)}
+		  			function(error) {
+		  				if (error) { throw error }
+		  				callback(null)
+		  			}
 		  		)	
 		  	} else {
 		  		callback(null)
@@ -246,19 +255,21 @@ var exportToSheets = function(callback) {
 	var sheetQuery = 
 		"SELECT opportunity, amount, expected_revenue, "
 	  + "close_date, start_date, probability, "
-	  + "role, week_allocations FROM sales_pipeline WHERE omitted = FALSE"
+	  + "role, offset_allocation FROM sales_pipeline WHERE omitted = FALSE"
 
 	helpers.query(
 		sheetQuery,
 		null,
-		function(queryData) {
+		function(error, queryData) {
+			if (error) { throw error }
 			var values = []
 			// Asyncronusly convert result to 2D array
 			async.each(queryData, function(opportunity, callback) {
-				// Opportunity is {opp: name, ... , role: role, week_allocations: {...}}
+				// Opportunity is {opp: name, ... , role: role, offset_allocation: {...}}
 				var formattedCloseDate = moment(new Date(opportunity.close_date)).format("MM/DD/YYYY")
 				var formattedStartDate = moment(new Date(opportunity.start_date)).format("MM/DD/YYYY")
-				async.eachOf(opportunity.week_allocations, function(hours, week, callback) {
+				async.eachOf(opportunity.offset_allocation, function(hours, week, callback) {
+					var startDate = moment(new Date(opportunity.start_date))
 					var temp = [
 						opportunity.opportunity,
 						opportunity.amount,
@@ -267,19 +278,24 @@ var exportToSheets = function(callback) {
 						formattedStartDate,
 						opportunity.probability*100,
 						opportunity.role,
-						moment(new Date(week)).format("MM/DD/YYYY"),
-						hours
+						startDate.add(week, 'weeks').format('MM/DD/YYYY'),
+						hours * opportunity.probability
 					]
 					values.push(temp)
-					process.nextTick(function() {callback(null)})
+					process.nextTick(function(error) {
+						if (error) { throw error }
+						callback(null)
+					})
 				},
-				function() {
+				function(error) {
+					if (error) { throw error }
 					process.nextTick(callback)
 				})
 			},
-			function() {
+			function(error) {
+				if (error) { throw error }
 				pipelineData = headers.concat(values)
-				process.nextTick(function() {callback(pipelineData)})
+				process.nextTick(function() {callback(null, pipelineData)})
 			})
 		}
 	)
@@ -330,7 +346,7 @@ function queryPipeline(accessToken, path, callback) {
 		.on("end", function(query) {
 			console.log("total in database : " + query.totalSize);
 			console.log("total fetched : " + query.totalFetched);
-			process.nextTick(function() {callback(pipelineData)})
+			process.nextTick(function() {callback(null, pipelineData)})
 		})
 		.on("error", function(err) {
 			process.nextTick(function() {callback(err)})
@@ -349,13 +365,16 @@ function syncWithDefaultSizes(callback) {
 	helpers.query(
 		"SELECT DISTINCT opportunity FROM sales_pipeline WHERE project_size IS NOT NULL",
 		null,
-		function(queryData) {
+		function(error, queryData) {
+			if (error) { throw error }
 			async.eachSeries(queryData, function updateWithNewSize(opportunityKey, callback) {
-				syncSingleOpportunity(opportunityKey.opportunity, function() {
+				syncSingleOpportunity(opportunityKey.opportunity, function(error) {
+					if (error) { throw error }
 					callback(null)
 				})
 			},
-			function() {
+			function(error) {
+				if (error) { throw error }
 				callback(null)
 			})
 		}
@@ -378,13 +397,15 @@ function syncSingleOpportunity(opportunityName, callback) {
 		"start_date, probability, protected, omitted, generic " +
 		"FROM sales_pipeline where opportunity = $1 LIMIT 1",
 		[opportunityName],
-		function(queryData) {
+		function(error, queryData) {
+			if (error) { throw error }
 			// Data is returned as an array of 1 element,
 			var temp = queryData[0]
 			if(temp.amount == null) {
 				callback(null)
 			} else {
-				helpers.deleteOpportunities([temp.opportunity], function() {
+				helpers.deleteOpportunities([temp.opportunity], function(error) {
+					if (error) { throw error }
 					// Format opportunity to match index for default insertion
 					var opportunityData = [
 						temp.opportunity,
@@ -394,11 +415,13 @@ function syncSingleOpportunity(opportunityName, callback) {
 						moment(new Date(temp.start_date)).format("MM/DD/YYYY"),
 						temp.probability
 					]
-					insertWithDefaultSize(opportunityData, function() {
+					insertWithDefaultSize(opportunityData, function(error) {
+						if (error) { throw error }
 						helpers.setOpportunityStatus(
 							[opportunityName], 
 							{protected: temp.protected, omitted: temp.omitted, generic: temp.generic},
-							function() {
+							function(error) {
+								if (error) { throw error }
 								callback(null)
 							}
 						)
