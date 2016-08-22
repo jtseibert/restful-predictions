@@ -50,7 +50,7 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 			async.eachSeries(pipelineData, syncRows, function syncRowsCallback(error) {
 				if (error) { throw error }
 				console.log('ALL ROWS DONE')
-				callback()
+				process.nextTick(callback)
 			})
 		})
 	})
@@ -75,17 +75,20 @@ function syncRows(row, callback) {
 			if (error) { throw error }
 			if(results[0]) {
 				if(results[0].protected) {
-					updateProtectedOpportunity(curRow, function() {
-						callback(null)
+					updateProtectedOpportunity(curRow, function(error) {
+						if (error) { throw error }
+						process.nextTick(callback)
 					})
 				} else { 
-					updateAttachmentOpportunity(curRow, function() {
-						callback(null)
+					updateAttachmentOpportunity(curRow, function(error) {
+						if (error) { throw error }
+						process.nextTick(callback)
 					})
 				}
 			} else {
-				insertWithDefaultSize(curRow, function() {
-					callback(null)
+				insertWithDefaultSize(curRow, function(error) {
+					if (error) { throw error }
+					process.nextTick(callback)
 				})
 			}
 		}
@@ -111,7 +114,7 @@ function updateProtectedOpportunity(opportunityData, callback) {
 	]
 	helpers.query(updateQuery, updateValues, function(error) {
 		if (error) { throw error }
-		callback(null)
+		process.nextTick(callback)
 	})
 }
 //*************************************
@@ -136,7 +139,7 @@ function updateAttachmentOpportunity(opportunityData, callback) {
 	]
 	helpers.query(updateQuery, updateValues, function(error) {
 		if (error) { throw error }
-		callback(null)
+		process.nextTick(callback)
 	})
 }
 //*************************************
@@ -189,7 +192,7 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  					function(callback) {
 		  						offset_allocation[offset] = hours
 		  						offset++
-		  						callback()
+		  						process.nextTick(callback)
 		  					},
 		  					//async.whilst callback
 		  					function(error) {
@@ -213,7 +216,7 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  							insertValues,
 		  							function(error) {
 		  								if (error) { throw error }
-		  								callback(null)
+		  								process.nextTick(callback)
 		  							}
 		  						)
 		  					}
@@ -221,11 +224,11 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		  			},
 		  			function(error) {
 		  				if (error) { throw error }
-		  				callback(null)
+		  				process.nextTick(callback)
 		  			}
 		  		)	
 		  	} else {
-		  		callback(null)
+		  		process.nextTick(callback)
 		  	}		  
 	  	}
 	)
@@ -284,7 +287,7 @@ var exportToSheets = function(callback) {
 					values.push(temp)
 					process.nextTick(function(error) {
 						if (error) { throw error }
-						callback(null)
+						process.nextTick(callback)
 					})
 				},
 				function(error) {
@@ -370,12 +373,12 @@ function syncWithDefaultSizes(callback) {
 			async.eachSeries(queryData, function updateWithNewSize(opportunityKey, callback) {
 				syncSingleOpportunity(opportunityKey.opportunity, function(error) {
 					if (error) { throw error }
-					callback(null)
+					process.nextTick(callback)
 				})
 			},
 			function(error) {
 				if (error) { throw error }
-				callback(null)
+				process.nextTick(callback)
 			})
 		}
 	)
@@ -402,7 +405,7 @@ function syncSingleOpportunity(opportunityName, callback) {
 			// Data is returned as an array of 1 element,
 			var temp = queryData[0]
 			if(temp.amount == null) {
-				callback(null)
+				process.nextTick(callback)
 			} else {
 				helpers.deleteOpportunities([temp.opportunity], function(error) {
 					if (error) { throw error }
@@ -422,7 +425,7 @@ function syncSingleOpportunity(opportunityName, callback) {
 							{protected: temp.protected, omitted: temp.omitted, generic: temp.generic},
 							function(error) {
 								if (error) { throw error }
-								callback(null)
+								process.nextTick(callback)
 							}
 						)
 					})
