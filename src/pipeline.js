@@ -71,7 +71,8 @@ function syncRows(row, callback) {
 	helpers.query(
 		"SELECT opportunity,protected FROM sales_pipeline WHERE opportunity=$1",
 		[curRow[indexes.OPPORTUNITY_NAME]],
-		function(results) {
+		function(error, results) {
+			if (error) { throw error }
 			if(results[0]) {
 				if(results[0].protected) {
 					updateProtectedOpportunity(curRow, function() {
