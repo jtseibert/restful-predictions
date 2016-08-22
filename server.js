@@ -218,11 +218,10 @@ router.route('/trigger')
 		try {
 			parser.parseExcelSheet(req.body, function callback(opportunityData) {
 				if(opportunityData != undefined) {
-					console.log(JSON.stringify(opportunityData))
-					res.json({message: 'Trigger Done.'})
-					// xlsxHandler.updateDatabaseFromXlsx(opportunityData, function callback() {
-					// 	res.json({message: 'Trigger Done.'})
-					// })
+					console.log(opportunityData)
+					xlsxHandler.updateDatabaseFromXlsx(opportunityData, function callback() {
+						res.json({message: 'Trigger Done.'})
+					})
 				} else { res.json({message: 'Failed to update'}) }	
 			})
 		} catch(error) {
