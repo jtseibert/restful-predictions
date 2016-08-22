@@ -119,14 +119,13 @@ function updateProtectedOpportunity(opportunityData, callback) {
 */
 function updateAttachmentOpportunity(opportunityData, callback) {
 	var updateQuery = "UPDATE sales_pipeline SET amount = $1, "
-		+ "expected_revenue = $2, close_date = $3, start_date = $4, "
-		+ "probability = $5 WHERE opportunity = $6"
+		+ "expected_revenue = $2, close_date = $3, "
+		+ "probability = $4 WHERE opportunity = $5"
 
 	var updateValues = [
 		opportunityData[indexes.AMOUNT], 
 		opportunityData[indexes.EXP_AMOUNT],
 		opportunityData[indexes.CLOSE_DATE],
-		opportunityData[indexes.START_DATE],
 		opportunityData[indexes.PROBABILITY],
 		opportunityData[indexes.OPPORTUNITY_NAME]
 	]
