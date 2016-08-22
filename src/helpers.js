@@ -144,6 +144,7 @@ module.exports.opportunityCheck = opportunityCheck
 */
 var createWeekAllocations = function(weekOffset, startDate, callback) {
 	var weekAllocations = {}
+	var startDate = moment(new Date(startDate))
 
 	async.eachOf(weekOffset, function(hours, offset, callback){
 		var roleStartDate = startDate.clone()
