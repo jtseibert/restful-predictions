@@ -47,6 +47,10 @@ var parseExcelSheet = function(body, callback) {
 		var sheetData = {}
 		var colEnd = getColumnLimit(sheet, indexes.bottomRow, indexes.dataColStart, 3)
 		var year = getYear(sheet, indexes)
+		var startDate = moment(new Date(getCellValue(sheet, indexes.topRow, dataColStart, 'w') + '/' + year))
+							   .format('MM/DD/YYYY')
+
+		console.log('startDate: ' + startDate)
 
 		// Iterate over the roles column until subtotal is reached
 		//	* For each role, grab each estimated hour for each week date
