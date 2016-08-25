@@ -43,7 +43,7 @@ var queryCapacity = function(accessToken, path, callback) {
 		process.nextTick(function() {callback(null, capacityData)})
 		})
 	.on("error", function handleError(err) {
-		process.nextTick(function() {callback(err)})
+		process.nextTick(function() {callback(err, capacityData)})
 		})
 	.run({ autoFetch : true, maxFetch : 8000 });
 }
@@ -63,14 +63,14 @@ function insertCapacity(capacityData, callback) {
 			+ "VALUES ($1, $2, $3, $4)",
 			row,
 			function(error) {
-				if (error) { throw error }
-				process.nextTick(callback)
+				if (error) { process.nextTick(function() {callback(error)}) }
+				process.nextTick(function() {callback(null)})
 			}
 		)
 	},
 	function(error) {
-		if (error) { throw error }
-		process.nextTick(callback)
+		if (error) { process.nextTick(function() {callback(error)}) }
+		process.nextTick(null)
 	})
 }
 
@@ -93,7 +93,7 @@ var exportCapacity = function(callback) {
 	var capacityData = []
 	var values = []
 	helpers.query("SELECT * FROM capacity", null, function(error, capacityData) {
-		if (error) { throw error }
+		if (error) { process.nextTick(function() {callback(error, capacityData)}) }
 		async.each(capacityData, function pushRow(row, callback) {
 			var temp = []
 			temp.push(row.role, row.name, row.utilization, row.hours)
@@ -101,7 +101,7 @@ var exportCapacity = function(callback) {
 			process.nextTick(callback)
 		},
 		function(error) {
-			if (error) { throw error }
+			if (error) { process.nextTick(function() {callback(error, capacityData)}) }
 			capacityData = headers.concat(values)
 			process.nextTick(function() {callback(null, capacityData)})
 		})
@@ -116,10 +116,10 @@ module.exports.exportCapacity = exportCapacity
 * @desc Delete all rows in the capacity table for fresh salesforce sync.
 * @param callback - callback function
 */
-var clearCapacityTable = function(callback) {
+var clearCapacityTable = function(capacityData, callback) {
 	helpers.query("DELETE FROM capacity *", null, function(error) {
-		if (error) { throw error }
-		callback()
+		if (error) { process.nextTick(function() {callback(err, capacityData)}) }
+		process.nextTick(function() {callback(null, capacityData)})
 	})
 }
 

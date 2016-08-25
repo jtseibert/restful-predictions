@@ -83,18 +83,27 @@ router.route('/:instance/DATA_Capacity/:accessToken')
 		try {
 			var accessToken = req.params.accessToken,
 				instance    = req.params.instance
-			capacity.queryCapacity(accessToken, instance, function handleCapacityData(error, capacityData) {
+			// capacity.queryCapacity(accessToken, instance, function handleCapacityData(error, capacityData) {
+			// 	if (error) { throw error }
+			// 	capacity.clearCapacityTable(function callback(error) {
+			// 		if (error) { throw error }
+			// 		capacity.insertCapacity(capacityData, function callback(error) {
+			// 			if (error) { throw error }
+			// 			capacity.exportCapacity(function callback(error, capacityDataFromDB) {
+			// 				if (error) { throw error }
+			// 				res.json(capacityDataFromDB)
+			// 			})
+			// 		})
+			// 	})
+			// })
+			async.waterfall([
+				async.apply(capacity.queryCapacity,accessToken,instance),
+				capacity.clearCapacityTable,
+				capacity.insertCapacity,
+				capacity.exportCapacity
+			], function(error, results) {
 				if (error) { throw error }
-				capacity.clearCapacityTable(function callback(error) {
-					if (error) { throw error }
-					capacity.insertCapacity(capacityData, function callback(error) {
-						if (error) { throw error }
-						capacity.exportCapacity(function callback(error, capacityDataFromDB) {
-							if (error) { throw error }
-							res.json(capacityDataFromDB)
-						})
-					})
-				})
+				res.json(results)
 			})
 		} catch(error){
 			helpers.errorLog(error)
