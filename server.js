@@ -126,18 +126,6 @@ router.route('/updatePipelineTable')
 		try {
 			switch(req.body.type) {
 				case "add":
-					// pipeline.insertWithDefaultSize(req.body.opportunityData, function callback(error) {
-					// 	if (error) { throw error }
-					// 	helpers.setOpportunityStatus([req.body.opportunityName], req.body.status, function callback(error) {
-					// 		if (error) { throw error }
-					// 		pipeline.exportToSheets(function callback(error, pipelineData) {
-					// 			if (error) { throw error }
-					// 			res.json(pipelineData)
-					// 		})			
-					// 	})
-			
-					// })
-					console.log('hello')
 					async.series({
 						one: async.apply(pipeline.insertWithDefaultSize, req.body.opportunityData),
 						two: async.apply(helpers.setOpportunityStatus,[req.body.opportunityName],req.body.status),
