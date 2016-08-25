@@ -137,6 +137,7 @@ router.route('/updatePipelineTable')
 					// 	})
 			
 					// })
+					console.log('hello')
 					async.series({
 						one: async.apply(pipeline.insertWithDefaultSize, req.body.opportunityData),
 						two: async.apply(helpers.setOpportunityStatus,[req.body.opportunityName],req.body.status),
