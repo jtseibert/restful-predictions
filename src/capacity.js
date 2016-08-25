@@ -70,7 +70,7 @@ function insertCapacity(capacityData, callback) {
 	},
 	function(error) {
 		if (error) { process.nextTick(function() {callback(error)}) }
-		process.nextTick(null)
+		process.nextTick(function() {callback(null)})
 	})
 }
 
@@ -118,7 +118,7 @@ module.exports.exportCapacity = exportCapacity
 */
 var clearCapacityTable = function(capacityData, callback) {
 	helpers.query("DELETE FROM capacity *", null, function(error) {
-		if (error) { process.nextTick(function() {callback(err, capacityData)}) }
+		if (error) { process.nextTick(function() {callback(error, capacityData)}) }
 		process.nextTick(function() {callback(null, capacityData)})
 	})
 }
