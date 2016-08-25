@@ -85,14 +85,14 @@ var setOpportunityStatus = function(opportunities, status, callback) {
 				+ "WHERE opportunity = $5",
 				[status.protected, status.generic, status.omitted, status.attachment, opportunity],
 				function(error) {
-					if (error) { throw error }
-					callback(null)
+					if (error) { process.nextTick(function() {callback(error)}) }
+					process.nextTick(callback)
 				}
 			)
 		},
 		function(error) {
-			if (error) { throw error }
-			callback(null)
+			if (error) { process.nextTick(function() {callback(error)}) }
+			process.nextTick(callback)
 		}
 	)
 }

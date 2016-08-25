@@ -174,59 +174,55 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		getDefaultSizeQuery,
 	  	defaultSizeQueryValues,	  	
 	  	function(error, results) {
-	  		if (error) { throw error }
+	  		if (error) { process.nextTick(function() {callback(error)}) }
 	  		// For each role, insert *role duration* rows
 	  		// Check for missing amount in opportunity
 	  		if(opportunityData[indexes.AMOUNT] != null || opportunityData[indexes.PROJECT_SIZE] != undefined) {
 		  		var roleAllocations = results[0].roles_allocations
-		  		async.eachOfSeries(
-		  			roleAllocations, 
-		  			function(roleValues, role, callback) {
-		  				// Start the counter at a role offset and iterate for duration - offset
-		  				var offset = roleValues.offset
-		  				var duration = roleValues.duration
-		  				var hours = roleValues.allocation
-		  				var offset_allocation = {}
-		  				async.whilst(
-		  					function() {return offset <= duration},
-		  					function(callback) {
-		  						offset_allocation[offset] = hours
-		  						offset++
-		  						process.nextTick(callback)
-		  					},
-		  					//async.whilst callback
-		  					function(error) {
-		  						if (error) { throw error }
-								var insertValues = [
-		  							opportunityData[indexes.OPPORTUNITY_NAME],
-		  						 	opportunityData[indexes.AMOUNT],
-		  						 	opportunityData[indexes.EXP_AMOUNT],
-		  						 	opportunityData[indexes.CLOSE_DATE],
-		  						 	opportunityData[indexes.START_DATE],
-		  						 	opportunityData[indexes.PROBABILITY],
-		  						 	role,
-		  						 	offset_allocation,
-		  						 	results[0].sizeid
-		  						]
-		  						helpers.query("INSERT INTO sales_pipeline "
-		  							+ "(opportunity, amount, expected_revenue, "
-		  							+ "close_date, start_date, probability, "
-		  							+ "role, offset_allocation, project_size) VALUES "
-		  							+ "($1, $2, $3, $4, $5, $6, $7, $8, $9)",
-		  							insertValues,
-		  							function(error) {
-		  								if (error) { throw error }
-		  								process.nextTick(callback)
-		  							}
-		  						)
-		  					}
-		  				)
-		  			},
-		  			function(error) {
-		  				if (error) { throw error }
-		  				process.nextTick(callback)
-		  			}
-		  		)	
+		  		async.eachOfSeries(roleAllocations, function(roleValues, role, callback) {
+	  				// Start the counter at a role offset and iterate for duration - offset
+	  				var offset = roleValues.offset
+	  				var duration = roleValues.duration
+	  				var hours = roleValues.allocation
+	  				var offset_allocation = {}
+	  				async.whilst(
+	  					function() {return offset <= duration},
+	  					function(callback) {
+	  						offset_allocation[offset] = hours
+	  						offset++
+	  						process.nextTick(callback)
+	  					},
+	  					//async.whilst callback
+	  					function(error) {
+	  						if (error) { process.nextTick(function() {callback(error)}) }
+							var insertValues = [
+	  							opportunityData[indexes.OPPORTUNITY_NAME],
+	  						 	opportunityData[indexes.AMOUNT],
+	  						 	opportunityData[indexes.EXP_AMOUNT],
+	  						 	opportunityData[indexes.CLOSE_DATE],
+	  						 	opportunityData[indexes.START_DATE],
+	  						 	opportunityData[indexes.PROBABILITY],
+	  						 	role,
+	  						 	offset_allocation,
+	  						 	results[0].sizeid
+	  						]
+	  						helpers.query("INSERT INTO sales_pipeline "
+	  							+ "(opportunity, amount, expected_revenue, "
+	  							+ "close_date, start_date, probability, "
+	  							+ "role, offset_allocation, project_size) VALUES "
+	  							+ "($1, $2, $3, $4, $5, $6, $7, $8, $9)",
+	  							insertValues,
+	  							function(error) {
+	  								if (error) { process.nextTick(function() {callback(error)}) }
+	  								process.nextTick(callback)
+	  							}
+	  						)
+	  					}
+	  				)
+	  			},function(error) {
+		  			if (error) { process.nextTick(function() {callback(error)}) }
+		  			process.nextTick(callback)
+		  		})	
 		  	} else {
 		  		process.nextTick(callback)
 		  	}		  
@@ -264,7 +260,7 @@ var exportToSheets = function(callback) {
 		sheetQuery,
 		null,
 		function(error, queryData) {
-			if (error) { throw error }
+			if (error) { process.nextTick(function() {callback(error,pipelineData)})}
 			var values = []
 			// Asyncronusly convert result to 2D array
 			async.each(queryData, function(opportunity, callback) {
@@ -285,18 +281,15 @@ var exportToSheets = function(callback) {
 						hours * opportunity.probability
 					]
 					values.push(temp)
-					process.nextTick(function(error) {
-						if (error) { throw error }
-						process.nextTick(callback)
-					})
+					process.nextTick(callback)
 				},
 				function(error) {
-					if (error) { throw error }
+					if (error) { process.nextTick(function() {callback(error)}) }
 					process.nextTick(callback)
 				})
 			},
 			function(error) {
-				if (error) { throw error }
+				if (error) { process.nextTick(function() {callback(error, pipelineData)}) }
 				pipelineData = headers.concat(values)
 				process.nextTick(function() {callback(null, pipelineData)})
 			})

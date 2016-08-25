@@ -83,19 +83,7 @@ router.route('/:instance/DATA_Capacity/:accessToken')
 		try {
 			var accessToken = req.params.accessToken,
 				instance    = req.params.instance
-			// capacity.queryCapacity(accessToken, instance, function handleCapacityData(error, capacityData) {
-			// 	if (error) { throw error }
-			// 	capacity.clearCapacityTable(function callback(error) {
-			// 		if (error) { throw error }
-			// 		capacity.insertCapacity(capacityData, function callback(error) {
-			// 			if (error) { throw error }
-			// 			capacity.exportCapacity(function callback(error, capacityDataFromDB) {
-			// 				if (error) { throw error }
-			// 				res.json(capacityDataFromDB)
-			// 			})
-			// 		})
-			// 	})
-			// })
+
 			async.waterfall([
 				async.apply(capacity.queryCapacity,accessToken,instance),
 				capacity.clearCapacityTable,
@@ -138,16 +126,24 @@ router.route('/updatePipelineTable')
 		try {
 			switch(req.body.type) {
 				case "add":
-					pipeline.insertWithDefaultSize(req.body.opportunityData, function callback(error) {
-						if (error) { throw error }
-						helpers.setOpportunityStatus([req.body.opportunityName], req.body.status, function callback(error) {
-							if (error) { throw error }
-							pipeline.exportToSheets(function callback(error, pipelineData) {
-								if (error) { throw error }
-								res.json(pipelineData)
-							})			
-						})
+					// pipeline.insertWithDefaultSize(req.body.opportunityData, function callback(error) {
+					// 	if (error) { throw error }
+					// 	helpers.setOpportunityStatus([req.body.opportunityName], req.body.status, function callback(error) {
+					// 		if (error) { throw error }
+					// 		pipeline.exportToSheets(function callback(error, pipelineData) {
+					// 			if (error) { throw error }
+					// 			res.json(pipelineData)
+					// 		})			
+					// 	})
 			
+					// })
+					async.series({
+						one: async.apply(pipeline.insertWithDefaultSize, req.body.opportunityData),
+						two: async.apply(helpers.setOpportunityStatus,[req.body.opportunityName],req.body.status),
+						three: pipeline.exportToSheets
+					}, function(error, results) {
+						if (error) { throw error }
+						res.json(results.three)
 					})
 					break
 				case "update_generic":
