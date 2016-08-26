@@ -251,12 +251,14 @@ function getBottomRow(sheet, indexes) {
 		function(callback){
 			if (getCellValue(sheet, bottomRow, indexes.topCol, 'v') == 'Subtotal') {
 				found = true
+				console.log('bottomRow found: '+bottomRow)
 				process.nextTick(function(){ callback(null, found, bottomRow) })
 			} else {
 				bottomRow++
 				process.nextTick(function(){ callback(null, found, bottomRow) })
 			}
 		}, function(error, found, bottomRow) {
+			console.log('in the getBottomRow callback,erroer: '+error+', found: '+found+', bottomRow: '+bottomRow)
 			if (error) { process.nextTick(function(){ callback(error, 0) }) }
 			else if (found) { process.nextTick(function(){ callback(null, bottomRow) })}
 			else { process.nextTick(function(){ callback(new Error('Could not find bottomRow of xlsx'), 0) })}
