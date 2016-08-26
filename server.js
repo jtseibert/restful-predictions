@@ -196,12 +196,12 @@ router.route('/updatePipelineTable')
 					})
 					break
 				case "assign_role":
-					capacity.assignRole(req.body.name, req.body.role, function callback(error) {
+					async.series({
+						one: async.apply(capacity.assignRole, req.body.name, req.body.role),
+						two: capacity.exportCapacity
+					}, function(error, results){
 						if (error) { throw error }
-						capacity.exportCapacity(function callback(error, capacityData) {
-							if (error) { throw error }
-							res.json(capacityData)
-						})
+						res.json(results.two)
 					})
 					break
 				case "debug":
