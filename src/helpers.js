@@ -109,19 +109,19 @@ module.exports.setOpportunityStatus = setOpportunityStatus
 var deleteOpportunities = function(opportunities, callback) {
 	async.eachSeries(
 		opportunities, 
-		function deleteOpportunity(opportunity, callback) {
+		function(opportunity, callback) {
 			query(
 				"DELETE FROM sales_pipeline WHERE opportunity=$1",
 				[opportunity],
 				function(error) {
-					if (error) { throw error }
-					callback(null)
+					if (error) { process.nextTick(function() {callback(error)}) }
+					process.nextTick(callback)
 				}
 			)
 		},
 		function(error) {
-			if (error) { throw error }
-			callback(null)
+			if (error) { process.nextTick(function() {callback(error)}) }
+			process.nextTick(callback)
 		}
 	)
 }

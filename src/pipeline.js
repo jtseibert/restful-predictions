@@ -362,15 +362,15 @@ function syncWithDefaultSizes(callback) {
 		"SELECT DISTINCT opportunity FROM sales_pipeline WHERE project_size IS NOT NULL",
 		null,
 		function(error, queryData) {
-			if (error) { throw error }
-			async.eachSeries(queryData, function updateWithNewSize(opportunityKey, callback) {
+			if (error) { process.nextTick(function() {callback(error)}) }
+			async.eachSeries(queryData, function(opportunityKey, callback) {
 				syncSingleOpportunity(opportunityKey.opportunity, function(error) {
-					if (error) { throw error }
+					if (error) { process.nextTick(function() {callback(error)}) }
 					process.nextTick(callback)
 				})
 			},
 			function(error) {
-				if (error) { throw error }
+				if (error) { process.nextTick(function() {callback(error)}) }
 				process.nextTick(callback)
 			})
 		}

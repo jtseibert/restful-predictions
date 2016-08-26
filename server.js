@@ -177,33 +177,22 @@ router.route('/updatePipelineTable')
 					})
 					break
 				case "omit":
-					// helpers.setOpportunityStatus(req.body.opportunities, req.body.status,
-					// 	function setOpportunityStatusCallback(error) {
-					// 		if (error) { throw error }
-					// 		pipeline.exportToSheets(function callback(error, pipelineData) {
-					// 			if (error) { throw error }
-					// 			res.json(pipelineData)
-					// 		})
-					// 	}
-					// )
 					async.series({
 						one: async.apply(helpers.setOpportunityStatus, req.body.opportunities, req.body.status),
 						two: pipeline.exportToSheets
 					}, function(error, results){
 						if (error) { throw error }
-						res.json(pipelineData)
+						res.json(results.two)
 					})
 					break
 				case "project_size":
-					helpers.query(req.body.query, req.body.values, function callback(error) {
+					async.series({
+						one: async.apply(helpers.query, req.body.query, req.body.values),
+						two: pipeline.syncWithDefaultSizes,
+						three: pipeline.exportToSheets
+					}, function(error, results){
 						if (error) { throw error }
-						pipeline.syncWithDefaultSizes(function callback(error) {
-							if (error) { throw error }
-							pipeline.exportToSheets(function(error, pipelineData) {
-								if (error) { throw error }
-								res.json(pipelineData)
-							})
-						})
+						res.json(results.three)
 					})
 					break
 				case "assign_role":
