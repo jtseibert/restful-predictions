@@ -60,16 +60,12 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
 		try {
-			var accessToken = req.params.accessToken,
-				instance    = req.params.instance
-			pipeline.syncPipelineWithSalesforce(accessToken, instance, function(error) {
+			async.series({
+				one: async.apply(pipeline.syncPipelineWithSalesforce, req.params.accessToken, req.params.instance),
+				two: pipeline.exportToSheets
+			}, function(error, results){
 				if (error) { throw error }
-				console.log("DATABASE UPDATE DONE")
-				pipeline.exportToSheets(function(error, pipelineData) {
-					if (error) { throw error }
-					console.log("EXPORT DONE")
-					res.json(pipelineData)
-				})
+				res.json(results.two)
 			})
 		} catch(error) {
 			helpers.errorLog(error)

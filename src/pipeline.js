@@ -39,17 +39,16 @@ var indexes = {
 * @param callback - callback function to handle google sheet sync
 */
 var syncPipelineWithSalesforce = function(accessToken, path, callback) {
-	queryPipeline(accessToken, path, function handlePipelineData(error, pipelineData) {
-		if (error) { throw error }
+	queryPipeline(accessToken, path, function(error, pipelineData) {
+		if (error) { process.nextTick(function() {callback(error)}) }
 		var today = moment().format("MM/DD/YYYY")
 		var deleteQuery = "DELETE FROM sales_pipeline WHERE (protected = FALSE AND attachment = FALSE AND generic = FALSE) OR start_date < " 
 						+ "'" + today + "'"
-		helpers.query(deleteQuery, null, function deleteQueryCallback(error) {
-			if (error) { throw error }
+		helpers.query(deleteQuery, null, function(error) {
+			if (error) { process.nextTick(function() {callback(error)}) }
 			// For each row in pipelineData, sync accordingly
-			async.eachSeries(pipelineData, syncRows, function syncRowsCallback(error) {
-				if (error) { throw error }
-				console.log('ALL ROWS DONE')
+			async.eachSeries(pipelineData, syncRows, function(error) {
+				if (error) { process.nextTick(function() {callback(error)}) }
 				process.nextTick(callback)
 			})
 		})
