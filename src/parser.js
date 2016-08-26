@@ -48,69 +48,69 @@ var parseExcelSheet = function(body, callback) {
 		if (error) { process.nextTick(function(){ callback(error, undefined) })}
 		indexes.bottomRow = results.one
 		indexes.topRow = results.two
-	})
 
-	// Parse the sheet if valid
-	if(!sheetIsValidFormat(workbook, sheet, indexes)) {
-		process.nextTick(function(){ callback(null, undefined) })
-	} else {
-		var sheetData = {},
-			colEnd,
-			year,
-			startDate = moment(new Date(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year))
-							   .format('MM/DD/YYYY')
+		// Parse the sheet if valid
+		if(!sheetIsValidFormat(workbook, sheet, indexes)) {
+			process.nextTick(function(){ callback(null, undefined) })
+		} else {
+			var sheetData = {},
+				colEnd,
+				year,
+				startDate = moment(new Date(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year))
+								   .format('MM/DD/YYYY')
 
-		async.parallel({
-			one: async.apply(getColumnLimit, sheet, indexes.bottomRow, indexes.dataColStart, 3),
-			two: async.apply(getYear, sheet, indexes)
-		}, function(error, results) {
-			if (error) { process.nextTick(function(){ callback(error, undefined) }) }
-			colEnd = results.one
-			year = results.two
-		})
+			async.parallel({
+				one: async.apply(getColumnLimit, sheet, indexes.bottomRow, indexes.dataColStart, 3),
+				two: async.apply(getYear, sheet, indexes)
+			}, function(error, results) {
+				if (error) { process.nextTick(function(){ callback(error, undefined) }) }
+				colEnd = results.one
+				year = results.two
 
-		async.whilst(
-			function(){ return getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal' },
-			function(callback){
-				var role = getCellValue(sheet, indexes.dataRowStart, 1, 'v')
-				if(role != '') {
-					role = mapRole(role)
-					if(!sheetData[role]) {
-						sheetData[role] = {}
-					}
-					sheetData[role][indexes.dataRowStart] = {}
+				async.whilst(
+					function(){ return getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal' },
+					function(callback){
+						var role = getCellValue(sheet, indexes.dataRowStart, 1, 'v')
+						if(role != '') {
+							role = mapRole(role)
+							if(!sheetData[role]) {
+								sheetData[role] = {}
+							}
+							sheetData[role][indexes.dataRowStart] = {}
 
-					var weekOffset = 0
-					async.times(colEnd-indexes.dataColStart, function(n, next){
-						var hours = getCellValue(sheet, indexes.dataRowStart, indexes.dataColStart+n, 'v')
-						if (hours != '') {
-							sheetData[role][indexes.dataRowStart][weekOffset] = hours
-							weekOffset++
-							next(null)
+							var weekOffset = 0
+							async.times(colEnd-indexes.dataColStart, function(n, next){
+								var hours = getCellValue(sheet, indexes.dataRowStart, indexes.dataColStart+n, 'v')
+								if (hours != '') {
+									sheetData[role][indexes.dataRowStart][weekOffset] = hours
+									weekOffset++
+									next(null)
+								} else {
+									weekOffset++
+									next(null)
+								}
+							}, function(error) {
+								if (error) { process.nextTick(function(){ callback(error) }) }
+								indexes.dataRowStart++
+								process.nextTick(callback)
+							})
 						} else {
-							weekOffset++
-							next(null)
+							indexes.dataRowStart++
+							process.nextTick(callback)
 						}
-					}, function(error) {
-						if (error) { process.nextTick(function(){ callback(error) }) }
-						indexes.dataRowStart++
-						process.nextTick(callback)
-					})
-				} else {
-					indexes.dataRowStart++
-					process.nextTick(callback)
-				}
-			}, function(error){
-				if (error) {  process.nextTick(function(){ callback(error) }) }
-				var opportunityData = {
-					sheetData: 			sheetData,
-					opportunityName: 	body.opportunityName,
-					startDate: 			startDate
-				}
-				process.nextTick(function(){ callback(null, opportunityData) })
-			}
-		)
-	}
+					}, function(error){
+						if (error) {  process.nextTick(function(){ callback(error) }) }
+						var opportunityData = {
+							sheetData: 			sheetData,
+							opportunityName: 	body.opportunityName,
+							startDate: 			startDate
+						}
+						process.nextTick(function(){ callback(null, opportunityData) })
+					}
+				)
+			})
+		}
+	})
 }
 
 module.exports.parseExcelSheet = parseExcelSheet
