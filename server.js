@@ -29,7 +29,7 @@ app.use('/api', router)
 router.route('/query')
 	.post(function(req, res) {
 		try {
-			helpers.query(req.body.query, req.body.values, function returnQueryResults(error, results) {
+			helpers.query(req.body.query, req.body.values, function(error, results) {
 				if (error) { throw error }
 				res.json(results)
 			})
@@ -45,7 +45,7 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 		try{
 			var accessToken = req.params.accessToken,
 				instance    = req.params.instance
-			allocation.queryAllocation(accessToken, instance, function handleAllocationData(error, allocationData) {
+			allocation.queryAllocation(accessToken, instance, function(error, allocationData) {
 				if (error) { throw error }
 				res.json(allocationData)
 			})
@@ -62,10 +62,10 @@ router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 		try {
 			var accessToken = req.params.accessToken,
 				instance    = req.params.instance
-			pipeline.syncPipelineWithSalesforce(accessToken, instance, function callback(error) {
+			pipeline.syncPipelineWithSalesforce(accessToken, instance, function(error) {
 				if (error) { throw error }
 				console.log("DATABASE UPDATE DONE")
-				pipeline.exportToSheets(function callback(error, pipelineData) {
+				pipeline.exportToSheets(function(error, pipelineData) {
 					if (error) { throw error }
 					console.log("EXPORT DONE")
 					res.json(pipelineData)
@@ -205,13 +205,13 @@ router.route('/updatePipelineTable')
 					})
 					break
 				case "debug":
-					pipeline.exportToSheets(function callback(error, pipelineData) {
+					pipeline.exportToSheets(function(error, pipelineData) {
 						if (error) { throw error }
 						res.json(pipelineData)
 					})
 					break
 				case "protected":
-					helpers.setOpportunityStatus(req.body.opportunities, req.body.status, function callback(error) {
+					helpers.setOpportunityStatus(req.body.opportunities, req.body.status, function(error) {
 						if (error) { throw error }
 						res.json({message: "Success!"})
 					})
@@ -230,11 +230,11 @@ router.route('/updatePipelineTable')
 router.route('/trigger')
 	.post(function(req, res) {
 		try {
-			parser.parseExcelSheet(req.body, function callback(error, opportunityData) {
+			parser.parseExcelSheet(req.body, function(error, opportunityData) {
 				if (error) { throw error }
 				if(opportunityData != undefined) {
 					console.log(opportunityData)
-					xlsxHandler.updateDatabaseFromXlsx(opportunityData, function callback(error) {
+					xlsxHandler.updateDatabaseFromXlsx(opportunityData, function(error) {
 						if (error) { throw error }
 						res.json({message: 'Trigger Done.'})
 					})
