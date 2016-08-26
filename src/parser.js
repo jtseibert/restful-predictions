@@ -105,6 +105,7 @@ var parseExcelSheet = function(body, callback) {
 							opportunityName: 	body.opportunityName,
 							startDate: 			startDate
 						}
+						console.log(JSON.stringify(opportunityData))
 						process.nextTick(function(){ callback(null, opportunityData) })
 					}
 				)
@@ -251,14 +252,12 @@ function getBottomRow(sheet, indexes, callback) {
 		function(callback){
 			if (getCellValue(sheet, bottomRow, indexes.topCol, 'v') == 'Subtotal') {
 				found = true
-				console.log('bottomRow found: '+bottomRow)
 				process.nextTick(function(){ callback(null, found, bottomRow) })
 			} else {
 				bottomRow++
 				process.nextTick(function(){ callback(null, found, bottomRow) })
 			}
 		}, function(error, found, bottomRow) {
-			console.log('in the getBottomRow callback,erroer: '+error+', found: '+found+', bottomRow: '+bottomRow)
 			if (error) { process.nextTick(function(){ callback(error, 0) }) }
 			else if (found) { process.nextTick(function(){ callback(null, bottomRow) })}
 			else { process.nextTick(function(){ callback(new Error('Could not find bottomRow of xlsx'), 0) })}
@@ -282,9 +281,7 @@ function getHeaderStart(sheet, indexes, callback) {
 	async.whilst(
 		function(){ return (maxIter < 10 && !found) },
 		function(callback) {
-			console.log(maxIter)
 			if(getCellValue(sheet, rowStart+maxIter, indexes.topCol, 'v') == 'Role*') {
-				console.log('Found = true')
 				found = true
 				process.nextTick(function(){ callback(null, found, rowStart+maxIter) })
 			} else {
@@ -312,7 +309,6 @@ function getHeaderStart(sheet, indexes, callback) {
 function sheetIsValidFormat(workbook, sheet, indexes) {
 	var isValid = true,
 		errorDescription = 'Sheet validation test(s) '
-	console.log(indexes.bottomRow + ', ' + indexes.bottomCol + ', ' + indexes.topCol)
 	var tests = {
 		0: (workbook.Props.SheetNames[2] == 'Estimate'),
 		1: (getCellValue(sheet, indexes.topRow, indexes.topCol, 'v') == 'Role*'),
