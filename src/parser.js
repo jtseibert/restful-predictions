@@ -215,6 +215,7 @@ function getColumnLimit(sheet, bottomRow, dataColStart, num, callback) {
 		function() { return !done },
 		function(callback) {
 			async.times(num, function(n, next){
+				console.log('test: '+n)
 				consecutiveCheck = consecutiveCheck && (getCellValue(sheet, bottomRow + 1, n, 'v') == 0.00)
 				next(null)
 			}, function(error) {
@@ -222,19 +223,39 @@ function getColumnLimit(sheet, bottomRow, dataColStart, num, callback) {
 				if(!consecutiveCheck) {
 					currentCol += num
 					consecutiveCheck = true
-					process.nextTick(function(){ callback(null) })
+					process.nextTick(function(){ callback(null, null) })
 				} else {
 					done = true
 					colEnd = currentCol
-					process.nextTick(function(){ callback(null) })
+					process.nextTick(function(){ callback(null, colEnd) })
 				}
 			})
-		}, function(error) {
-			if (error) { process.nextTick(function(){ callback(null, colEnd) }) }
+		}, function(error, colEnd) {
+			if (error) { process.nextTick(function(){ callback(error, colEnd) }) }
 			process.nextTick(function(){ callback(null, colEnd) })
 		}
 	)
 }
+// function getColumnLimit(sheet, bottomRow, dataColStart, n) {	
+// 	var colEnd
+// 	var currentCol = dataColStart
+// 	var done = false
+// 	var consecutiveCheck = true
+// 	while(!done) {
+// 		for(var i = currentCol; i < currentCol + n; i++) {
+// 			consecutiveCheck = consecutiveCheck && (getCellValue(sheet, bottomRow + 1, i, 'v') == 0.00)
+// 		}
+// 		// When consecutiveCheck == false, there exists at least 1 nonzero value
+// 		if(!consecutiveCheck) {
+// 			currentCol += n
+// 			consecutiveCheck = true
+// 		} else {
+// 			done = true
+// 			colEnd = currentCol
+// 		}
+// 	}
+// 	return colEnd
+// }
 //*************************************
 
 /**
