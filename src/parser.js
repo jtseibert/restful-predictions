@@ -283,7 +283,8 @@ function getHeaderStart(sheet, indexes, callback) {
 		function(){ return (maxIter < 10 && !found) },
 		function(callback) {
 			console.log(maxIter)
-			if(getCellValue(sheet, rowStart, maxIter, indexes.topCol, 'v') == 'Role*') {
+			if(getCellValue(sheet, rowStart+maxIter, indexes.topCol, 'v') == 'Role*') {
+				console.log('Found = true')
 				found = true
 				process.nextTick(function(){ callback(null, found, rowStart+maxIter) })
 			} else {
