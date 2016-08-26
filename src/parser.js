@@ -204,7 +204,7 @@ n consecutive 0.00 values in the subtotal row.
 * @param {int} n - number of consecutive 0.00 values before stop
 * @returns {int} colEnd - numeric index of last column of row data
 */
-function getColumnLimit(sheet, bottomRow, dataColStart, num) {	
+function getColumnLimit(sheet, bottomRow, dataColStart, num, callback) {	
 	var colEnd
 	var currentCol = dataColStart
 	var done = false
@@ -242,7 +242,7 @@ function getColumnLimit(sheet, bottomRow, dataColStart, num) {
 * @param indexes - JSON formatted object of numeric indexes of key rows/cols
 * @returns numeric row index of cell containing 'Subtotal'
 */
-function getBottomRow(sheet, indexes) {
+function getBottomRow(sheet, indexes, callback) {
 	var bottomRow = indexes.topRow,
 		max = 75,
 		found = false
@@ -275,7 +275,7 @@ function getBottomRow(sheet, indexes) {
 * @param indexes
 * @returns {integer} row number of header start
 */
-function getHeaderStart(sheet, indexes) {
+function getHeaderStart(sheet, indexes, callback) {
 	var rowStart = 12,
 		maxIter = 0,
 		found = false
