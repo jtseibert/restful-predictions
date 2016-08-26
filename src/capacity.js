@@ -138,8 +138,8 @@ function assignRole(name, role, callback) {
 		"UPDATE capacity SET role = $1 WHERE name = $2",
 		[role, name],
 		function(error) {
-			if (error) { throw error }
-			callback()
+			if (error) { process.nextTick(function() {callback(error)}) }
+			process.nextTick(callback)
 		}
 	)
 }
