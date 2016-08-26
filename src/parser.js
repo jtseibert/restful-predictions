@@ -61,7 +61,7 @@ var parseExcelSheet = function(body, callback) {
 							   .format('MM/DD/YYYY')
 
 		async.parallel({
-			one: async.apply(getColumnLimit, sheet, indexes.bottomRow, indexes.dataColStart, 3)
+			one: async.apply(getColumnLimit, sheet, indexes.bottomRow, indexes.dataColStart, 3),
 			two: async.apply(getYear, sheet, indexes)
 		}, function(error, results) {
 			if (error) { process.nextTick(function(){ callback(error, undefined) }) }
