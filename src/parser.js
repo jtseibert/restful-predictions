@@ -232,7 +232,7 @@ function getColumnLimit(sheet, bottomRow, dataColStart, num, callback) {
 			process.nextTick(function(){ callback(null, colEnd) })
 		}
 	)
-
+}
 //*************************************
 
 /**
