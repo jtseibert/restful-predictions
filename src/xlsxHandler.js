@@ -14,7 +14,7 @@ var async     = require('async')
 * @param callback - callback to handle status
 */
 var updateDatabaseFromXlsx = function(opportunityData, callback) {
-	if (opportunityData == undefined) {
+	if (!opportunityData) {
 		process.nextTick(function(){ callback(new Error('xlsx was invalid')) })
 	} else { 
 		helpers.opportunityCheck(opportunityData.opportunityName, function(exists) {

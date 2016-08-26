@@ -308,6 +308,7 @@ function getHeaderStart(sheet, indexes) {
 function sheetIsValidFormat(workbook, sheet, indexes) {
 	var isValid = true,
 		errorDescription = 'Sheet validation test(s) '
+	console.log(indexes.bottomRow + ', ' + indexes.bottomCol + ', ' + indexes.topCol)
 	var tests = {
 		0: (workbook.Props.SheetNames[2] == 'Estimate'),
 		1: (getCellValue(sheet, indexes.topRow, indexes.topCol, 'v') == 'Role*'),
