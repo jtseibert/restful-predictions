@@ -50,35 +50,7 @@ var parseExcelSheet = function(body, callback) {
 		var year = getYear(sheet, indexes)
 		var startDate = moment(new Date(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year))
 							   .format('MM/DD/YYYY')
-
-		// Iterate over the roles column until subtotal is reached
-		//	* For each role, grab each estimated hour for each week date
-		//  * If a role, date, or hour is empty, do nothing
-		// while(getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal') {
-		// 	var role = getCellValue(sheet, indexes.dataRowStart, 1, 'v')
-		// 	if(role != '') {
-		// 		role = mapRole(role)
-		// 		if(!sheetData[role]) {
-		// 			sheetData[role] = {}
-		// 		}
-		// 		sheetData[role][indexes.dataRowStart] = {}
-
-		// 		var weekOffset = 0
-		// 		for(var i = indexes.dataColStart; i < colEnd; i++) {
-		// 			// var date = moment(new Date(getCellValue(sheet, indexes.topRow, i, 'w') + '/' + year))
-		// 			// 		   .format('MM/DD/YYYY')
-		// 			//if(date != '') {
-		// 				var hours = getCellValue(sheet, indexes.dataRowStart, i, 'v')
-		// 				if(hours != '') {
-		// 					sheetData[role][indexes.dataRowStart][weekOffset] = hours
-		// 					weekOffset++
-		// 				} else { weekOffset++ }
-		// 			//}
-
-		// 		}
-		// 	}
-		// 	indexes.dataRowStart += 1
-		// }
+							   
 		async.whilst(
 			function(){ return getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal' },
 			function(callback){
@@ -91,13 +63,6 @@ var parseExcelSheet = function(body, callback) {
 					sheetData[role][indexes.dataRowStart] = {}
 
 					var weekOffset = 0
-					// for(var i = indexes.dataColStart; i < colEnd; i++) {
-					// 		var hours = getCellValue(sheet, indexes.dataRowStart, i, 'v')
-					// 		if(hours != '') {
-					// 			sheetData[role][indexes.dataRowStart][weekOffset] = hours
-					// 			weekOffset++
-					// 		} else { weekOffset++ }
-					// }
 					async.times(colEnd-indexes.dataColStart, function(n, next){
 						var hours = getCellValue(sheet, indexes.dataRowStart, indexes.dataColStart+n, 'v')
 						if (hours != '') {
