@@ -97,7 +97,6 @@ var parseExcelSheet = function(body, callback) {
 								process.nextTick(callback)
 							})
 						} else {
-							console.log('in the else block')
 							indexes.dataRowStart++
 							process.nextTick(callback)
 						}
@@ -231,8 +230,8 @@ function getColumnLimit(sheet, bottomRow, dataColStart, num, callback) {
 				}
 			})
 		}, function(error) {
-			if (error) { process.nextTick(function(){ callback(null, currentCol) }) }
-			process.nextTick(function(){ callback(null, currentCol) })
+			if (error) { process.nextTick(function(){ callback(null, colEnd) }) }
+			process.nextTick(function(){ callback(null, colEnd) })
 		}
 	)
 }
