@@ -55,16 +55,16 @@ function updateOpportunityFromXlsx(opportunityData, callback) {
 				"INSERT INTO sales_pipeline(opportunity, start_date, role, offset_allocation, attachment, project_size) values($1, $2, $3, $4, $5, $6)",
 				[opportunityName, startDate, roleKey, weekOffset, true, null],
 				function(error) { 
-					if (error) { throw error }
+					if (error) { process.nextTick(function(){ callback(error) }) }
 					process.nextTick(callback)
 				})
 		}, function(error){
-			if (error) { throw error }
+			if (error) { process.nextTick(function(){ callback(error) }) }
 			process.nextTick(callback)
 		})
 	}, function(error) { 
-		if (error) { throw errror}
-		process.nextTick(function(){ callback(null)})
+		if (error) { process.nextTick(function(){ callback(error) }) }
+		process.nextTick(callback)
 	})
 }
 //*************************************
