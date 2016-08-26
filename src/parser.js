@@ -58,6 +58,7 @@ var parseExcelSheet = function(body, callback) {
 				year,
 				startDate = moment(new Date(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year))
 								   .format('MM/DD/YYYY')
+			console.log(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w'))
 
 			async.parallel({
 				one: async.apply(getColumnLimit, sheet, indexes.bottomRow, indexes.dataColStart, 3),
@@ -105,7 +106,7 @@ var parseExcelSheet = function(body, callback) {
 							opportunityName: 	body.opportunityName,
 							startDate: 			startDate
 						}
-						console.log(JSON.stringify(opportunityData))
+						console.log(JSON.stringify(opportunityData.sheetData['Project Coordinator'].18))
 						console.log(JSON.stringify(indexes))
 						process.nextTick(function(){ callback(null, opportunityData) })
 					}
