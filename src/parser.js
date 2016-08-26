@@ -79,6 +79,7 @@ var parseExcelSheet = function(body, callback) {
 							sheetData[role][indexes.dataRowStart] = {}
 
 							var weekOffset = 0
+							console.log('test')
 							async.times(colEnd-indexes.dataColStart, function(n, next){
 								var hours = getCellValue(sheet, indexes.dataRowStart, indexes.dataColStart+n, 'v')
 								console.log('hours: '+hours+', row: '+indexes.dataRowStart+', col:'+indexes.dataq+n)
@@ -96,6 +97,7 @@ var parseExcelSheet = function(body, callback) {
 								process.nextTick(callback)
 							})
 						} else {
+							console.log('in the else block')
 							indexes.dataRowStart++
 							process.nextTick(callback)
 						}
