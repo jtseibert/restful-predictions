@@ -19,16 +19,16 @@ var updateDatabaseFromXlsx = function(opportunityData, callback) {
 	} else { 
 		helpers.opportunityCheck(opportunityData.opportunityName, function(exists) {
 			if(exists) {
-				helpers.deleteOpportunities([opportunityData.opportunityName], function(error) {
-					if (error) { throw error }
-					updateOpportunityFromXlsx(opportunityData, function(error) {
-						if (error) { throw error }
-						process.nextTick(callback)
-					})
+				async.series({
+					one: async.apply(helpers.deleteOpportunities, [opportunityData.opportunityName]),
+					two: async.apply(updateOpportunityFromXlsx, opportunityData)
+				},function(error, results){
+					if (error) { process.nextTick(function(){ callback(error) }) }
+					process.nextTick(callback)
 				})
 			} else {
 				updateOpportunityFromXlsx(opportunityData, function(error) {
-					if (error) { throw error }
+					if (error) { process.nextTick(function(){ callback(error) }) }
 					process.nextTick(callback)
 				})
 			}
