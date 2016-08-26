@@ -16,23 +16,24 @@ var async     = require('async')
 var updateDatabaseFromXlsx = function(opportunityData, callback) {
 	if (opportunityData == undefined) {
 		process.nextTick(function(){ callback(new Error('xlsx was invalid')) })
-	}
-	helpers.opportunityCheck(opportunityData.opportunityName, function(exists) {
-		if(exists) {
-			helpers.deleteOpportunities([opportunityData.opportunityName], function(error) {
-				if (error) { throw error }
+	} else { 
+		helpers.opportunityCheck(opportunityData.opportunityName, function(exists) {
+			if(exists) {
+				helpers.deleteOpportunities([opportunityData.opportunityName], function(error) {
+					if (error) { throw error }
+					updateOpportunityFromXlsx(opportunityData, function(error) {
+						if (error) { throw error }
+						process.nextTick(callback)
+					})
+				})
+			} else {
 				updateOpportunityFromXlsx(opportunityData, function(error) {
 					if (error) { throw error }
 					process.nextTick(callback)
 				})
-			})
-		} else {
-			updateOpportunityFromXlsx(opportunityData, function(error) {
-				if (error) { throw error }
-				process.nextTick(callback)
-			})
-		}
-	})
+			}
+		})
+	}
 }
 
 module.exports.updateDatabaseFromXlsx = updateDatabaseFromXlsx
