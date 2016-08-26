@@ -106,6 +106,7 @@ var parseExcelSheet = function(body, callback) {
 							startDate: 			startDate
 						}
 						console.log(JSON.stringify(opportunityData))
+						console.log(JSON.stringify(indexes))
 						process.nextTick(function(){ callback(null, opportunityData) })
 					}
 				)
