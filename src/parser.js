@@ -66,7 +66,6 @@ var parseExcelSheet = function(body, callback) {
 				year = results.two
 				var startDate = moment(new Date(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year))
 								   .format('MM/DD/YYYY')
-				console.log(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year)
 
 				async.whilst(
 					function(){ return getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal' },
@@ -82,6 +81,7 @@ var parseExcelSheet = function(body, callback) {
 							var weekOffset = 0
 							async.times(colEnd-indexes.dataColStart, function(n, next){
 								var hours = getCellValue(sheet, indexes.dataRowStart, indexes.dataColStart+n, 'v')
+								console.log('hours: '+hours+', row: '+indexes.dataRowStart+', col:'+indexes.dataq+n)
 								if (hours != '') {
 									sheetData[role][indexes.dataRowStart][weekOffset] = hours
 									weekOffset++
@@ -106,8 +106,6 @@ var parseExcelSheet = function(body, callback) {
 							opportunityName: 	body.opportunityName,
 							startDate: 			startDate
 						}
-						console.log(JSON.stringify(opportunityData.sheetData['Project Coordinator'][18]))
-						console.log(JSON.stringify(indexes))
 						process.nextTick(function(){ callback(null, opportunityData) })
 					}
 				)
