@@ -58,7 +58,7 @@ var parseExcelSheet = function(body, callback) {
 				year,
 				startDate = moment(new Date(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year))
 								   .format('MM/DD/YYYY')
-			console.log(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w'))
+			console.log(startDate)
 
 			async.parallel({
 				one: async.apply(getColumnLimit, sheet, indexes.bottomRow, indexes.dataColStart, 3),
