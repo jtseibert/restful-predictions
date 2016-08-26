@@ -55,10 +55,7 @@ var parseExcelSheet = function(body, callback) {
 		} else {
 			var sheetData = {},
 				colEnd,
-				year,
-				startDate = moment(new Date(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year))
-								   .format('MM/DD/YYYY')
-			console.log(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year)
+				year
 
 			async.parallel({
 				one: async.apply(getColumnLimit, sheet, indexes.bottomRow, indexes.dataColStart, 3),
@@ -67,6 +64,9 @@ var parseExcelSheet = function(body, callback) {
 				if (error) { process.nextTick(function(){ callback(error, undefined) }) }
 				colEnd = results.one
 				year = results.two
+				var startDate = moment(new Date(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year))
+								   .format('MM/DD/YYYY')
+				console.log(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year)
 
 				async.whilst(
 					function(){ return getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal' },
