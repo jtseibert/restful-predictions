@@ -36,21 +36,39 @@ var parseExcelSheet = function(body, callback) {
 		flagRow: 0,
 		flagCol: 4
 	}
-	var temp = getBottomRow(sheet, indexes)
-	indexes.bottomRow = temp
-	var headerStart = getHeaderStart(sheet, indexes)
-	indexes.topRow = headerStart
+	// var temp = getBottomRow(sheet, indexes)
+	// indexes.bottomRow = temp
+	// var headerStart = getHeaderStart(sheet, indexes)
+	// indexes.topRow = headerStart
+
+	async.parallel({
+		one: async.apply(getBottomRow, sheet, indexes),
+		two: async.apply(getHeaderStart, sheet, indexes)
+	}, function(error, results) {
+		if (error) { process.nextTick(function(){ callback(error, undefined) })}
+		indexes.bottomRow = results.one
+		indexes.topRow = results.two
+	})
 
 	// Parse the sheet if valid
 	if(!sheetIsValidFormat(workbook, sheet, indexes)) {
-		callback(null, undefined)
+		process.nextTick(function(){ callback(null, undefined) })
 	} else {
-		var sheetData = {}
-		var colEnd = getColumnLimit(sheet, indexes.bottomRow, indexes.dataColStart, 3)
-		var year = getYear(sheet, indexes)
-		var startDate = moment(new Date(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year))
+		var sheetData = {},
+			colEnd,
+			year,
+			startDate = moment(new Date(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year))
 							   .format('MM/DD/YYYY')
-							   
+
+		async.parallel({
+			one: async.apply(getColumnLimit, sheet, indexes.bottomRow, indexes.dataColStart, 3)
+			two: async.apply(getYear, sheet, indexes)
+		}, function(error, results) {
+			if (error) { process.nextTick(function(){ callback(error, undefined) }) }
+			colEnd = results.one
+			year = results.two
+		})
+
 		async.whilst(
 			function(){ return getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal' },
 			function(callback){
@@ -89,7 +107,7 @@ var parseExcelSheet = function(body, callback) {
 					opportunityName: 	body.opportunityName,
 					startDate: 			startDate
 				}
-				callback(null, opportunityData)
+				process.nextTick(function(){ callback(null, opportunityData) })
 			}
 		)
 	}
@@ -123,7 +141,7 @@ Assumes forecast will not be more than 1 year out.
 * @param {worksheet} sheet - xlsx sheet object
 * @param indexes - JSON formatted object of numeric indexes of key rows/cols
 */
-function getYear(sheet, indexes) {
+function getYear(sheet, indexes, callback) {
 	var opportunityDate = getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w')
 	var opportunityMonth = opportunityDate.split('/')[0]
 	var opportunityYear
@@ -137,7 +155,7 @@ function getYear(sheet, indexes) {
 	} else {
 		opportunityYear = currentYear + 1
 	}
-	return opportunityYear
+	process.nextTick(function(){ callback(null, opportunityYear) })
 }
 //*************************************
 
@@ -186,25 +204,34 @@ n consecutive 0.00 values in the subtotal row.
 * @param {int} n - number of consecutive 0.00 values before stop
 * @returns {int} colEnd - numeric index of last column of row data
 */
-function getColumnLimit(sheet, bottomRow, dataColStart, n) {	
+function getColumnLimit(sheet, bottomRow, dataColStart, num) {	
 	var colEnd
 	var currentCol = dataColStart
 	var done = false
 	var consecutiveCheck = true
-	while(!done) {
-		for(var i = currentCol; i < currentCol + n; i++) {
-			consecutiveCheck = consecutiveCheck && (getCellValue(sheet, bottomRow + 1, i, 'v') == 0.00)
+	async.whilst(
+		function() { return !done },
+		function(callback) {
+			async.times(num, function(n, next){
+				consecutiveCheck = consecutiveCheck && (getCellValue(sheet, bottomRow + 1, i, 'v') == 0.00)
+				next(null)
+			}, function(error) {
+				// When consecutiveCheck == false, there exists at least 1 nonzero value
+				if(!consecutiveCheck) {
+					currentCol += num
+					consecutiveCheck = true
+					process.nextTick(function(){ callback(null) })
+				} else {
+					done = true
+					colEnd = currentCol
+					process.nextTick(function(){ callback(null) })
+				}
+			})
+		}, function(error) {
+			if (error) { process.nextTick(function(){ callback(null, currentCol) }) }
+			process.nextTick(function(){ callback(null, currentCol) })
 		}
-		// When consecutiveCheck == false, there exists at least 1 nonzero value
-		if(!consecutiveCheck) {
-			currentCol += n
-			consecutiveCheck = true
-		} else {
-			done = true
-			colEnd = currentCol
-		}
-	}
-	return colEnd
+	)
 }
 //*************************************
 
@@ -216,16 +243,26 @@ function getColumnLimit(sheet, bottomRow, dataColStart, n) {
 * @returns numeric row index of cell containing 'Subtotal'
 */
 function getBottomRow(sheet, indexes) {
-	var bottomRow = indexes.topRow
-		max = 75
-	while(bottomRow < max) {
-		if(getCellValue(sheet, bottomRow, indexes.topCol, 'v') == 'Subtotal') {
-			return bottomRow
-		} else {
-			bottomRow++
+	var bottomRow = indexes.topRow,
+		max = 75,
+		found = false
+	async.whilst(
+		function(){ return (bottomRow < max && !found)},
+		function(callback){
+			if (getCellValue(sheet, bottomRow, indexes.topCol, 'v') == 'Subtotal') {
+				found = true
+				process.nextTick(function(){ callback(null, found, bottomRow) })
+			} else {
+				bottomRow++
+				process.nextTick(function(){ callback(null, found, bottomRow) })
+			}
+		}, function(error, found, bottomRow) {
+			if (error) { process.nextTick(function(){ callback(error, 0) }) }
+			else if (found) { process.nextTick(function(){ callback(null, bottomRow) })}
+			else { process.nextTick(function(){ callback(new Error('Could not find bottomRow of xlsx'), 0) })}
+
 		}
-	}
-	return 0
+	)
 }
 //*************************************
 
@@ -237,15 +274,25 @@ function getBottomRow(sheet, indexes) {
 * @returns {integer} row number of header start
 */
 function getHeaderStart(sheet, indexes) {
-	var rowStart = 12
-	var maxIter = 0;
-	while(maxIter < 10) { // Scan through at most 10 rows, if anymore the user should consider actually following the template
-		if(getCellValue(sheet, rowStart + maxIter, indexes.topCol, 'v') == 'Role*') {
-			return rowStart + maxIter
-		} else {
-			maxIter++
+	var rowStart = 12,
+		maxIter = 0,
+		found = false
+	async.whilst(
+		function(){ return (maxIter < 10 && !found) },
+		function(callback) {
+			if(getCellValue(sheet, rowStart, maxIter, indexes.topCol, 'v') == 'Role*') {
+				found = true
+				process.nextTick(function(){ callback(null, found, rowStart+maxIter) })
+			} else {
+				maxIter++
+				process.nextTick(function(){ callback(null, found, rowStart+maxIter) })
+			}
+		}, function(error, found, headerStart) {
+			if (error) { process.nextTick(function(){ callback(error, headerStart) }) }
+			else if(found) { process.nextTick(function(){ callback(null, headerStart) }) }
+			else { process.nextTick(function(){ callback(new Error('Could not find Headers in xlsx'), headerStart) })}
 		}
-	}
+	)
 }
 
 //*************************************
