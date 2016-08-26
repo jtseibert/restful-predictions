@@ -71,7 +71,6 @@ var parseExcelSheet = function(body, callback) {
 					function(){ return getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal' },
 					function(callback){
 						var role = getCellValue(sheet, indexes.dataRowStart, 1, 'v')
-						console.log('role: '+role+', indexes.dataRowStart: '+indexes.dataRowStart)
 						if(role != '') {
 							role = mapRole(role)
 							if(!sheetData[role]) {
@@ -80,7 +79,7 @@ var parseExcelSheet = function(body, callback) {
 							sheetData[role][indexes.dataRowStart] = {}
 
 							var weekOffset = 0
-							console.log('test')
+							console.log('colEnd: '+colEnd+', indexes.dataColStart'+indexes.dataColStart)
 							async.times(colEnd-indexes.dataColStart, function(n, next){
 								var hours = getCellValue(sheet, indexes.dataRowStart, indexes.dataColStart+n, 'v')
 								console.log('hours: '+hours+', row: '+indexes.dataRowStart+', col:'+indexes.dataq+n)
