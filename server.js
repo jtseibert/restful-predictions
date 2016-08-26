@@ -146,29 +146,6 @@ router.route('/updatePipelineTable')
 					})
 					break
 				case "update_pipeline":
-					// helpers.query(req.body.query, req.body.values, function callback(error) {
-					// 	if (error) { throw error }
-					// 	helpers.query("SELECT attachment FROM sales_pipeline where opportunity = $1",
-					// 		[req.body.opportunityName],
-					// 		function(error, attachment) {
-					// 			if (error) { throw error }
-					// 			if(attachment[0]) {
-					// 				pipeline.exportToSheets(function handlePipelineData(error, pipelineData) {
-					// 					if (error) { throw error }
-					// 					res.json(pipelineData)
-					// 				})
-					// 			} else {
-					// 				pipeline.syncSingleOpportunity(req.body.opportunityName, function callback(error) {
-					// 					if (error) { throw error }
-					// 					pipeline.exportToSheets(function callback(error, pipelineData) {
-					// 						if (error) { throw error }
-					// 						res.json(pipelineData)
-					// 					})
-					// 				})
-					// 			}
-					// 		}
-					// 	)
-					// })
 					async.series({
 						one: async.apply(helpers.query, req.body.query, req.body.values),
 						two: async.apply(helpers.query, "SELECT attachment FROM sales_pipeline where opportunity = $1", [req.body.opportunityName])
@@ -191,12 +168,19 @@ router.route('/updatePipelineTable')
 					})
 					break
 				case "remove":
-					helpers.deleteOpportunities(req.body.opportunities, function deleteOpportunitiesCallback(error) {
+					// helpers.deleteOpportunities(req.body.opportunities, function deleteOpportunitiesCallback(error) {
+					// 	if (error) { throw error }
+					// 	pipeline.exportToSheets(function callback(error, pipelineData) {
+					// 		if (error) { throw error }
+					// 		res.json(pipelineData)
+					// 	})	
+					// })
+					async.series({
+						one: async.apply(helpers.deleteOpportunities, req.body.opportunities),
+						two: pipeline.exportToSheets
+					}, function(error, results){
 						if (error) { throw error }
-						pipeline.exportToSheets(function callback(error, pipelineData) {
-							if (error) { throw error }
-							res.json(pipelineData)
-						})	
+						res.json(results.two)
 					})
 					break
 				case "omit":
