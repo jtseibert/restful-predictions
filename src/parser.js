@@ -282,6 +282,7 @@ function getHeaderStart(sheet, indexes, callback) {
 	async.whilst(
 		function(){ return (maxIter < 10 && !found) },
 		function(callback) {
+			console.log(maxIter)
 			if(getCellValue(sheet, rowStart, maxIter, indexes.topCol, 'v') == 'Role*') {
 				found = true
 				process.nextTick(function(){ callback(null, found, rowStart+maxIter) })
