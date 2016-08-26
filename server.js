@@ -230,15 +230,12 @@ router.route('/updatePipelineTable')
 router.route('/trigger')
 	.post(function(req, res) {
 		try {
-			parser.parseExcelSheet(req.body, function(error, opportunityData) {
+			async.waterfall([
+				async.apply(parser.parseExcelSheet, req.body),
+				xlsxHandler.updateDatabaseFromXlsx
+			], function(error, results){
 				if (error) { throw error }
-				if(opportunityData != undefined) {
-					console.log(opportunityData)
-					xlsxHandler.updateDatabaseFromXlsx(opportunityData, function(error) {
-						if (error) { throw error }
-						res.json({message: 'Trigger Done.'})
-					})
-				} else { res.json({message: 'Failed to update'}) }	
+				res.json({ message: 'Trigger Done' })
 			})
 		} catch(error) {
 			helpers.errorLog(error)
