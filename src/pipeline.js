@@ -394,14 +394,14 @@ function syncSingleOpportunity(opportunityName, callback) {
 		"FROM sales_pipeline where opportunity = $1 LIMIT 1",
 		[opportunityName],
 		function(error, queryData) {
-			if (error) { throw error }
+			if (error) { process.nextTick(function() {callback(error)}) }
 			// Data is returned as an array of 1 element,
 			var temp = queryData[0]
 			if(temp.amount == null) {
 				process.nextTick(callback)
 			} else {
 				helpers.deleteOpportunities([temp.opportunity], function(error) {
-					if (error) { throw error }
+					if (error) { process.nextTick(function() {callback(error)}) }
 					// Format opportunity to match index for default insertion
 					var opportunityData = [
 						temp.opportunity,
@@ -412,12 +412,12 @@ function syncSingleOpportunity(opportunityName, callback) {
 						temp.probability
 					]
 					insertWithDefaultSize(opportunityData, function(error) {
-						if (error) { throw error }
+						if (error) { process.nextTick(function() {callback(error)}) }
 						helpers.setOpportunityStatus(
 							[opportunityName], 
 							{protected: temp.protected, omitted: temp.omitted, generic: temp.generic},
 							function(error) {
-								if (error) { throw error }
+								if (error) { process.nextTick(function() {callback(error)}) }
 								process.nextTick(callback)
 							}
 						)

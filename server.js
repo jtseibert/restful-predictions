@@ -136,18 +136,24 @@ router.route('/updatePipelineTable')
 					})
 					break
 				case "update_generic":
-					console.log('query is ' + req.body.query)
-					console.log('vals is ' + req.body.values)
-					helpers.query(req.body.query, req.body.values, function callback(error) {
+					// helpers.query(req.body.query, req.body.values, function callback(error) {
+					// 	if (error) { throw error }
+					// 	pipeline.syncSingleOpportunity(req.body.opportunityName, function callback(error) {
+					// 		if (error) { throw error }
+					// 			pipeline.exportToSheets(function callback(error, pipelineData) {
+					// 				if (error) { throw error }
+					// 				res.json(pipelineData)
+					// 			})			
+					// 		}
+					// 	)
+					// })
+					async.series({
+						one: async.apply(helpers.query, req.body.query, req.body.values),
+						two: async.apply(pipeline.syncSingleOpportunity, req.body.opportunityName),
+						three: pipeline.exportToSheets
+					}, function(error, results){
 						if (error) { throw error }
-						pipeline.syncSingleOpportunity(req.body.opportunityName, function callback(error) {
-							if (error) { throw error }
-								pipeline.exportToSheets(function callback(error, pipelineData) {
-									if (error) { throw error }
-									res.json(pipelineData)
-								})			
-							}
-						)
+							res.json(results.three)
 					})
 					break
 				case "update_pipeline":

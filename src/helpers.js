@@ -23,7 +23,7 @@ var query = function query(query, values, callback) {
 	v = values
 	pg.connect(process.env.DATABASE_URL, function pgConnectCallback(error, client, done) {
 		//console.log("query is: " + q + ' with values ' + v)
-		if (error) { throw error }
+		if (error) { process.nextTick(function() {callback(error)}) }
 		var query
 		if(v != null) {
 			query = client.query(q, v, function queryCallback(error) {
@@ -31,14 +31,14 @@ var query = function query(query, values, callback) {
 					done()
 					console.log(error)
 					errorLog(error)
-					callback(error)
+					process.nextTick(function() {callback(error)})
 				} else {
 					query.on("row", function onRowCallback(row, result) {
 						result.addRow(row)
 					})
 					query.on("end", function onEndCallback(result) {
 						done()
-						callback(null, result.rows)
+						process.nextTick(function() {callback(null, result.rows)})
 					})	
 				}
 			})
@@ -48,14 +48,14 @@ var query = function query(query, values, callback) {
 					done()
 					console.log(error)
 					errorLog(error)
-					callback(error)
+					process.nextTick(function() {callback(error)})
 				} else {
 					query.on("row", function onRowCallback(row, result) {
 					result.addRow(row)
 					})
 					query.on("end", function onEndCallback(result) {
 					done()
-					callback(null, result.rows)
+					process.nextTick(function() {callback(null, result.rows)})
 					})	
 				} 
 			})
