@@ -168,13 +168,6 @@ router.route('/updatePipelineTable')
 					})
 					break
 				case "remove":
-					// helpers.deleteOpportunities(req.body.opportunities, function deleteOpportunitiesCallback(error) {
-					// 	if (error) { throw error }
-					// 	pipeline.exportToSheets(function callback(error, pipelineData) {
-					// 		if (error) { throw error }
-					// 		res.json(pipelineData)
-					// 	})	
-					// })
 					async.series({
 						one: async.apply(helpers.deleteOpportunities, req.body.opportunities),
 						two: pipeline.exportToSheets
@@ -184,15 +177,22 @@ router.route('/updatePipelineTable')
 					})
 					break
 				case "omit":
-					helpers.setOpportunityStatus(req.body.opportunities, req.body.status,
-						function setOpportunityStatusCallback(error) {
-							if (error) { throw error }
-							pipeline.exportToSheets(function callback(error, pipelineData) {
-								if (error) { throw error }
-								res.json(pipelineData)
-							})
-						}
-					)
+					// helpers.setOpportunityStatus(req.body.opportunities, req.body.status,
+					// 	function setOpportunityStatusCallback(error) {
+					// 		if (error) { throw error }
+					// 		pipeline.exportToSheets(function callback(error, pipelineData) {
+					// 			if (error) { throw error }
+					// 			res.json(pipelineData)
+					// 		})
+					// 	}
+					// )
+					async.series({
+						one: async.apply(helpers.setOpportunityStatus, req.body.opportunities, req.body.status),
+						two: pipeline.exportToSheets
+					}, function(error, results){
+						if (error) { throw error }
+						res.json(pipelineData)
+					})
 					break
 				case "project_size":
 					helpers.query(req.body.query, req.body.values, function callback(error) {
