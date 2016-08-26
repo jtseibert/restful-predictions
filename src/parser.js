@@ -71,6 +71,7 @@ var parseExcelSheet = function(body, callback) {
 					function(){ return getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal' },
 					function(callback){
 						var role = getCellValue(sheet, indexes.dataRowStart, 1, 'v')
+						console.log('role: '+role+', indexes.dataRowStart: '+indexes.dataRowStart)
 						if(role != '') {
 							role = mapRole(role)
 							if(!sheetData[role]) {

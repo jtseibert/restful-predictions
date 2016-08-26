@@ -49,7 +49,6 @@ function updateOpportunityFromXlsx(opportunityData, callback) {
 	var sheetData = opportunityData.sheetData
 	var opportunityName = opportunityData.opportunityName
 	var startDate = opportunityData.startDate
-	console.log('startDate: '+startDate)
 	async.eachOfSeries(sheetData, function(role, roleKey, callback) {
 		async.eachSeries(role, function(weekOffset, callback){
 			helpers.query(
