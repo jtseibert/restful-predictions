@@ -215,8 +215,7 @@ function getColumnLimit(sheet, bottomRow, dataColStart, num, callback) {
 		function() { return !done },
 		function(callback) {
 			async.times(num, function(n, next){
-				console.log('test: '+n+'bottomRow: '+bottomRow+1)
-				consecutiveCheck = consecutiveCheck && (getCellValue(sheet, bottomRow + 1, n, 'v') == 0.00)
+				consecutiveCheck = consecutiveCheck && (getCellValue(sheet, bottomRow + 1, n+currentCol, 'v') == 0.00)
 				next(null)
 			}, function(error) {
 				// When consecutiveCheck == false, there exists at least 1 nonzero value
