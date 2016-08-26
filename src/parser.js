@@ -8,6 +8,7 @@ ESTIMATE xlsx file.
 var xlsx = require('xlsx')
 var moment = require('moment')
 var helpers = require('./helpers')
+var async = require('async')
 //*************************************
 
 /**
@@ -53,37 +54,79 @@ var parseExcelSheet = function(body, callback) {
 		// Iterate over the roles column until subtotal is reached
 		//	* For each role, grab each estimated hour for each week date
 		//  * If a role, date, or hour is empty, do nothing
-		while(getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal') {
-			var role = getCellValue(sheet, indexes.dataRowStart, 1, 'v')
-			if(role != '') {
-				role = mapRole(role)
-				if(!sheetData[role]) {
-					sheetData[role] = {}
-				}
-				sheetData[role][indexes.dataRowStart] = {}
+		// while(getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal') {
+		// 	var role = getCellValue(sheet, indexes.dataRowStart, 1, 'v')
+		// 	if(role != '') {
+		// 		role = mapRole(role)
+		// 		if(!sheetData[role]) {
+		// 			sheetData[role] = {}
+		// 		}
+		// 		sheetData[role][indexes.dataRowStart] = {}
 
-				var weekOffset = 0
-				for(var i = indexes.dataColStart; i < colEnd; i++) {
-					// var date = moment(new Date(getCellValue(sheet, indexes.topRow, i, 'w') + '/' + year))
-					// 		   .format('MM/DD/YYYY')
-					//if(date != '') {
-						var hours = getCellValue(sheet, indexes.dataRowStart, i, 'v')
-						if(hours != '') {
+		// 		var weekOffset = 0
+		// 		for(var i = indexes.dataColStart; i < colEnd; i++) {
+		// 			// var date = moment(new Date(getCellValue(sheet, indexes.topRow, i, 'w') + '/' + year))
+		// 			// 		   .format('MM/DD/YYYY')
+		// 			//if(date != '') {
+		// 				var hours = getCellValue(sheet, indexes.dataRowStart, i, 'v')
+		// 				if(hours != '') {
+		// 					sheetData[role][indexes.dataRowStart][weekOffset] = hours
+		// 					weekOffset++
+		// 				} else { weekOffset++ }
+		// 			//}
+
+		// 		}
+		// 	}
+		// 	indexes.dataRowStart += 1
+		// }
+		async.whilst(
+			function(){ return getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal' },
+			function(callback){
+				var role = getCellValue(sheet, indexes.dataRowStart, 1, 'v')
+				if(role != '') {
+					role = mapRole(role)
+					if(!sheetData[role]) {
+						sheetData[role] = {}
+					}
+					sheetData[role][indexes.dataRowStart] = {}
+
+					var weekOffset = 0
+					// for(var i = indexes.dataColStart; i < colEnd; i++) {
+					// 		var hours = getCellValue(sheet, indexes.dataRowStart, i, 'v')
+					// 		if(hours != '') {
+					// 			sheetData[role][indexes.dataRowStart][weekOffset] = hours
+					// 			weekOffset++
+					// 		} else { weekOffset++ }
+					// }
+					async.times(colEnd-indexes.dataColStart, function(n, next){
+						var hours = getCellValue(sheet, indexes.dataRowStart, indexes.dataColStart+n, 'v')
+						if (hours != '') {
 							sheetData[role][indexes.dataRowStart][weekOffset] = hours
 							weekOffset++
-						} else { weekOffset++ }
-					//}
-
+							next(null)
+						} else {
+							weekOffset++
+							next(null)
+						}
+					}, function(error) {
+						if (error) { process.nextTick(function(){ callback(error) }) }
+						indexes.dataRowStart++
+						process.nextTick(callback)
+					})
+				} else {
+					indexes.dataRowStart++
+					process.nextTick(callback)
 				}
+			}, function(error){
+				if (error) {  process.nextTick(function(){ callback(error) }) }
+				var opportunityData = {
+					sheetData: 			sheetData,
+					opportunityName: 	body.opportunityName,
+					startDate: 			startDate
+				}
+				callback(null, opportunityData)
 			}
-			indexes.dataRowStart += 1
-		}
-		var opportunityData = {
-			sheetData: 			sheetData,
-			opportunityName: 	body.opportunityName,
-			startDate: 			startDate
-		}
-		callback(null, opportunityData)
+		)
 	}
 }
 
