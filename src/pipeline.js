@@ -259,7 +259,7 @@ var exportToSheets = function(callback) {
 		sheetQuery,
 		null,
 		function(error, queryData) {
-			if (error) { process.nextTick(function() {callback(error,pipelineData)})}
+			if (error) { process.nextTick(function() {callback(error,null)})}
 			var values = []
 			// Asyncronusly convert result to 2D array
 			async.each(queryData, function(opportunity, callback) {
@@ -288,7 +288,7 @@ var exportToSheets = function(callback) {
 				})
 			},
 			function(error) {
-				if (error) { process.nextTick(function() {callback(error, pipelineData)}) }
+				if (error) { process.nextTick(function() {callback(error, null)}) }
 				pipelineData = headers.concat(values)
 				process.nextTick(function() {callback(null, pipelineData)})
 			})

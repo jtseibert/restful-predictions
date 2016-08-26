@@ -220,7 +220,7 @@ function getColumnLimit(sheet, bottomRow, dataColStart, num, callback) {
 				if(!consecutiveCheck) {
 					currentCol += num
 					consecutiveCheck = true
-					process.nextTick(function(){ callback(null, null) })
+					process.nextTick(callback)
 				} else {
 					done = true
 					colEnd = currentCol
@@ -228,31 +228,11 @@ function getColumnLimit(sheet, bottomRow, dataColStart, num, callback) {
 				}
 			})
 		}, function(error, colEnd) {
-			if (error) { process.nextTick(function(){ callback(error, colEnd) }) }
+			if (error) { process.nextTick(function(){ callback(error, null) }) }
 			process.nextTick(function(){ callback(null, colEnd) })
 		}
 	)
-}
-// function getColumnLimit(sheet, bottomRow, dataColStart, n) {	
-// 	var colEnd
-// 	var currentCol = dataColStart
-// 	var done = false
-// 	var consecutiveCheck = true
-// 	while(!done) {
-// 		for(var i = currentCol; i < currentCol + n; i++) {
-// 			consecutiveCheck = consecutiveCheck && (getCellValue(sheet, bottomRow + 1, i, 'v') == 0.00)
-// 		}
-// 		// When consecutiveCheck == false, there exists at least 1 nonzero value
-// 		if(!consecutiveCheck) {
-// 			currentCol += n
-// 			consecutiveCheck = true
-// 		} else {
-// 			done = true
-// 			colEnd = currentCol
-// 		}
-// 	}
-// 	return colEnd
-// }
+
 //*************************************
 
 /**
@@ -277,9 +257,9 @@ function getBottomRow(sheet, indexes, callback) {
 				process.nextTick(function(){ callback(null, found, bottomRow) })
 			}
 		}, function(error, found, bottomRow) {
-			if (error) { process.nextTick(function(){ callback(error, 0) }) }
+			if (error) { process.nextTick(function(){ callback(error, null) }) }
 			else if (found) { process.nextTick(function(){ callback(null, bottomRow) })}
-			else { process.nextTick(function(){ callback(new Error('Could not find bottomRow of xlsx'), 0) })}
+			else { process.nextTick(function(){ callback(new Error('Could not find bottomRow of xlsx'), null) })}
 
 		}
 	)
@@ -308,9 +288,9 @@ function getHeaderStart(sheet, indexes, callback) {
 				process.nextTick(function(){ callback(null, found, rowStart+maxIter) })
 			}
 		}, function(error, found, headerStart) {
-			if (error) { process.nextTick(function(){ callback(error, headerStart) }) }
+			if (error) { process.nextTick(function(){ callback(error, null) }) }
 			else if(found) { process.nextTick(function(){ callback(null, headerStart) }) }
-			else { process.nextTick(function(){ callback(new Error('Could not find Headers in xlsx'), headerStart) })}
+			else { process.nextTick(function(){ callback(new Error('Could not find Headers in xlsx'), null) })}
 		}
 	)
 }

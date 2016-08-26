@@ -43,7 +43,7 @@ var queryCapacity = function(accessToken, path, callback) {
 		process.nextTick(function() {callback(null, capacityData)})
 		})
 	.on("error", function handleError(err) {
-		process.nextTick(function() {callback(err, capacityData)})
+		process.nextTick(function() {callback(err, null)})
 		})
 	.run({ autoFetch : true, maxFetch : 8000 });
 }
@@ -93,7 +93,7 @@ var exportCapacity = function(callback) {
 	var capacityData = []
 	var values = []
 	helpers.query("SELECT * FROM capacity", null, function(error, capacityData) {
-		if (error) { process.nextTick(function() {callback(error, capacityData)}) }
+		if (error) { process.nextTick(function() {callback(error, null)}) }
 		async.each(capacityData, function pushRow(row, callback) {
 			var temp = []
 			temp.push(row.role, row.name, row.utilization, row.hours)
@@ -101,7 +101,7 @@ var exportCapacity = function(callback) {
 			process.nextTick(callback)
 		},
 		function(error) {
-			if (error) { process.nextTick(function() {callback(error, capacityData)}) }
+			if (error) { process.nextTick(function() {callback(error, null)}) }
 			capacityData = headers.concat(values)
 			process.nextTick(function() {callback(null, capacityData)})
 		})
@@ -118,7 +118,7 @@ module.exports.exportCapacity = exportCapacity
 */
 var clearCapacityTable = function(capacityData, callback) {
 	helpers.query("DELETE FROM capacity *", null, function(error) {
-		if (error) { process.nextTick(function() {callback(error, capacityData)}) }
+		if (error) { process.nextTick(function() {callback(error, null)}) }
 		process.nextTick(function() {callback(null, capacityData)})
 	})
 }
