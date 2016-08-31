@@ -76,6 +76,7 @@ function Forecast(data, callback) {
 	 	'two': two
 	}, function(error, results){
 		if (error) { throw error }
+		console.log('Test')
 	 	objInstance.roleCapacities = results.one
 	 	objInstance.weeks = results.two
 	 	process.nextTick(callback)
