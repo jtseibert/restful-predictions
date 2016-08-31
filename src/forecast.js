@@ -44,7 +44,7 @@ function Forecast(data, callback) {
 		pg.connect(process.env.DATABASE_URL, function(error, client, done) {
 			roleCapacities = {}
 			if (error) { throw error }
-			var query = client.query('SELECT role, group, SUM(hours) AS capacity FROM capacity INNER JOIN roles USING (role) GROUP BY role')
+			var query = client.query('SELECT role, m360group as group, SUM(hours) AS capacity FROM capacity INNER JOIN roles USING (role) GROUP BY role, m360group')
 			query.on("row", function (row, result) {
 				roleCapacities[row.role] = { capacity: row.capacity, group: row.group }
 			})
@@ -76,7 +76,6 @@ function Forecast(data, callback) {
 	 	'two': two
 	}, function(error, results){
 		if (error) { throw error }
-		console.log('Test')
 	 	objInstance.roleCapacities = results.one
 	 	objInstance.weeks = results.two
 	 	process.nextTick(callback)
