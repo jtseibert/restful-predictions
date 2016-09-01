@@ -22,7 +22,6 @@ var query = function query(query, values, callback) {
 	q = query
 	v = values
 	pg.connect(process.env.DATABASE_URL, function pgConnectCallback(error, client, done) {
-		console.log("query is: " + q + ' with values ' + v)
 		if (error) { process.nextTick(function() {callback(error)}) }
 		var query
 		if(v != null) {
