@@ -37,6 +37,7 @@ var query = function query(query, values, callback) {
 						result.addRow(row)
 					})
 					query.on("end", function onEndCallback(result) {
+						console.log(result.rows)
 						done()
 						process.nextTick(function() {callback(null, result.rows)})
 					})	
@@ -50,14 +51,11 @@ var query = function query(query, values, callback) {
 					errorLog(error)
 					process.nextTick(function() {callback(error)})
 				} else {
-					console.log('in else')
 					query.on("row", function onRowCallback(row, result) {
-						console.log(row)
 						result.addRow(row)
 					})
 					query.on("end", function onEndCallback(result) {
 						done()
-						console.log(result.rows)
 						process.nextTick(function() {callback(null, result.rows)})
 					})	
 				} 
