@@ -26,6 +26,7 @@ var query = function query(query, values, callback) {
 		if (error) { process.nextTick(function() {callback(error)}) }
 		var query
 		if(v != null) {
+			console.log('entered if v != null')
 			query = client.query(q, v, function queryCallback(error) {
 				if(error) {
 					done()
@@ -34,6 +35,7 @@ var query = function query(query, values, callback) {
 					process.nextTick(function() {callback(error)})
 				} else {
 					query.on("row", function onRowCallback(row, result) {
+						console.log(row)
 						result.addRow(row)
 					})
 					query.on("end", function onEndCallback(result) {
