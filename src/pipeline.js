@@ -333,7 +333,7 @@ function queryPipeline(accessToken, path, callback) {
 			record.Amount,
 			record.ExpectedRevenue,
 			moment(new Date(record.CloseDate)).format("MM/DD/YYYY"),
-			moment(new Date(record.CloseDate)).day(6).format("MM/DD/YYYY"),
+			moment(new Date(record.CloseDate)).day(6).add(28).format("MM/DD/YYYY"),
 			record.Probability/100
 			)
 			pipelineData.push(recordData)
