@@ -160,12 +160,12 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		if(opportunityData[indexes.AMOUNT] === null || opportunityData[indexes.AMOUNT] == undefined) {
 			opportunityData[indexes.AMOUNT] = 0
 		}
-		getDefaultSizeQuery = "SELECT sizeid, pricehigh, roles_allocations, numweeks " 
-	 	+ "FROM project_size WHERE ABS($1 - pricehigh) = "
-	 	+ "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)"
+		getDefaultSizeQuery = "SELECT sizeid, midpoint, roles_allocations, numweeks " 
+	 	+ "FROM project_size WHERE ABS($1 - midpoint) = "
+	 	+ "(SELECT MIN(ABS($1 - midpoint)) FROM project_size)"
 	 	defaultSizeQueryValues = [opportunityData[indexes.AMOUNT]]
 	} else {
-	 	getDefaultSizeQuery = "SELECT sizeid, pricehigh, roles_allocations, numweeks "
+	 	getDefaultSizeQuery = "SELECT sizeid, midpoint, roles_allocations, numweeks "
 			+ "FROM project_size WHERE sizeid = $1"
 		defaultSizeQueryValues = [opportunityData[indexes.PROJECT_SIZE]]
 	}
