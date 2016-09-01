@@ -327,7 +327,7 @@ function queryPipeline(accessToken, path, callback) {
 	conn.query(pipelineQuery)
 		.on("record", function(record) {
 			var recordData = [],
-				startDate = moment(new Date(record.CloseDate)).add(28)
+				startDate = moment(new Date(record.CloseDate)).add(28, 'days')
 			// Format the date with Moment library for sheet consistency
 			recordData.push(
 			record.Name,
