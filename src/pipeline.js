@@ -326,14 +326,15 @@ function queryPipeline(accessToken, path, callback) {
 	// Execute SOQL query to populate pipelineData
 	conn.query(pipelineQuery)
 		.on("record", function(record) {
-			var recordData = []
+			var recordData = [],
+				startDate = moment(new Date(record.CloseDate)).add(28, 'days')
 			// Format the date with Moment library for sheet consistency
 			recordData.push(
 			record.Name,
 			record.Amount,
 			record.ExpectedRevenue,
 			moment(new Date(record.CloseDate)).format("MM/DD/YYYY"),
-			moment(new Date(record.CloseDate)).format("MM/DD/YYYY").day(6).add(28, 'days').format("MM/DD/YYYY"),
+			startDate.day(6).format("MM/DD/YYYY"),
 			record.Probability/100
 			)
 			pipelineData.push(recordData)
