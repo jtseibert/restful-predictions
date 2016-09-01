@@ -55,6 +55,7 @@ var query = function query(query, values, callback) {
 					})
 					query.on("end", function onEndCallback(result) {
 					done()
+					console.log('result.rows')
 					process.nextTick(function() {callback(null, result.rows)})
 					})	
 				} 
