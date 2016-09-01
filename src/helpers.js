@@ -21,24 +21,24 @@ pg.defaults.poolSize = 10
 var query = function query(query, values, callback) {
 	q = query
 	v = values
-	pg.connect(process.env.DATABASE_URL, function pgConnectCallback(error, client, done) {
+	pg.connect(process.env.DATABASE_URL, function(error, client, done) {
 		console.log("query is: " + q + ' with values ' + v)
 		if (error) { process.nextTick(function() {callback(error)}) }
 		var query
 		if(v != null) {
 			console.log('entered if v != null')
-			query = client.query(q, v, function queryCallback(error) {
+			query = client.query(q, v, function(error) {
 				if(error) {
 					done()
 					console.log(error)
 					errorLog(error)
 					process.nextTick(function() {callback(error)})
 				} else {
-					query.on("row", function onRowCallback(row, result) {
+					query.on("row", function(row, result) {
 						console.log(row)
 						result.addRow(row)
 					})
-					query.on("end", function onEndCallback(result) {
+					query.on("end", function(result) {
 						console.log(result.rows)
 						done()
 						process.nextTick(function() {callback(null, result.rows)})
@@ -46,17 +46,17 @@ var query = function query(query, values, callback) {
 				}
 			})
 		} else {
-			query = client.query(q, function queryCallback(error) {
+			query = client.query(q, function(error) {
 				if(error) {
 					done()
 					console.log(error)
 					errorLog(error)
 					process.nextTick(function() {callback(error)})
 				} else {
-					query.on("row", function onRowCallback(row, result) {
+					query.on("row", function(row, result) {
 						result.addRow(row)
 					})
-					query.on("end", function onEndCallback(result) {
+					query.on("end", function(result) {
 						done()
 						process.nextTick(function() {callback(null, result.rows)})
 					})	
