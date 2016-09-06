@@ -135,8 +135,8 @@ module.exports.clearCapacityTable = clearCapacityTable
 
 function assignRole(name, role, callback) {
 	helpers.query(
-		'UPDATE capacity SET role = $1, protected = true WHERE name = "'+name+'"',
-		[role],
+		"UPDATE capacity SET role = $1, protected = true WHERE name = $2",
+		[role, helpers.apostrapheCheck(name)],
 		function(error) {
 			if (error) { process.nextTick(function() {callback(error)}) }
 			process.nextTick(callback)
@@ -148,7 +148,7 @@ function unprotectRole(employees, callback) {
 	async.each(employees, function(empoloyee, callback) {
 		helpers.query(
 			"UPDATE capacity SET protected = false WHERE name = $1",
-			[employee],
+			[helpers.apostrapheCheck(employee)],
 			function(error) {
 				if (error) { process.nextTick(function() {callback(error)}) }
 				process.nextTick(callback)

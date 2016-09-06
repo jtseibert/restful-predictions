@@ -194,4 +194,21 @@ var errorLog = function(error) {
 module.exports.errorLog = errorLog
 //*************************************
 
+/**
+* @function apostrapheCheck
+* @desc Checks a string for apostraphe's and does the following conversion ' --> '' 
+* for PostgresQL standards
+* @param {string} name - a name with potential apostraphe in it
+*/
+var apostrapheCheck = function(name, callback) {
+	if (name.indexOf("'") > -1) {
+		name.replace("'","''")
+		return name
+	}
+	else{ return name }
+}
+
+module.exports.errorLog = errorLog
+//*************************************
+
 

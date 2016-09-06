@@ -69,7 +69,7 @@ function syncRows(row, callback) {
 	var curRow = row
 	helpers.query(
 		"SELECT opportunity,protected FROM sales_pipeline WHERE opportunity=$1",
-		[curRow[indexes.OPPORTUNITY_NAME]],
+		[helpers.apostrapheCheck(curRow[indexes.OPPORTUNITY_NAME])],
 		function(error, results) {
 			if (error) { throw error }
 			if(results[0]) {
@@ -109,7 +109,7 @@ function updateProtectedOpportunity(opportunityData, callback) {
 		opportunityData[indexes.AMOUNT], 
 		opportunityData[indexes.EXP_AMOUNT],
 		opportunityData[indexes.CLOSE_DATE], 
-		opportunityData[indexes.OPPORTUNITY_NAME]
+		helpers.apostrapheCheck(opportunityData[indexes.OPPORTUNITY_NAME])
 	]
 	helpers.query(updateQuery, updateValues, function(error) {
 		if (error) { throw error }
@@ -134,7 +134,7 @@ function updateAttachmentOpportunity(opportunityData, callback) {
 		opportunityData[indexes.EXP_AMOUNT],
 		opportunityData[indexes.CLOSE_DATE],
 		opportunityData[indexes.PROBABILITY],
-		opportunityData[indexes.OPPORTUNITY_NAME]
+		helpers.apostrapheCheck(opportunityData[indexes.OPPORTUNITY_NAME])
 	]
 	helpers.query(updateQuery, updateValues, function(error) {
 		if (error) { throw error }
@@ -392,7 +392,7 @@ function syncSingleOpportunity(opportunityName, callback) {
 		"SELECT opportunity, amount, expected_revenue, close_date, " +
 		"start_date, probability, protected, omitted, generic " +
 		"FROM sales_pipeline where opportunity = $1 LIMIT 1",
-		[opportunityName],
+		[helpers.apostrapheCheck(opportunityName)],
 		function(error, queryData) {
 			if (error) { process.nextTick(function() {callback(error)}) }
 			// Data is returned as an array of 1 element,
