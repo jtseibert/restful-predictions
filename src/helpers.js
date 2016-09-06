@@ -201,8 +201,10 @@ module.exports.errorLog = errorLog
 * @param {string} name - a name with potential apostraphe in it
 */
 var apostrapheCheck = function(name, callback) {
+	console.log(name)
 	if (name.indexOf("'") > -1) {
 		name.replace("'","''")
+		console.log(name)
 		return name
 	}
 	else{ return name }
