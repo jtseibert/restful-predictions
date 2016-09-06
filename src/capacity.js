@@ -135,6 +135,7 @@ module.exports.clearCapacityTable = clearCapacityTable
 */
 
 function assignRole(name, role, callback) {
+	role = role
 	async.waterfall([
 		async.apply(helpers.apostrapheCheck, name),
 		function(name, callback) { 
