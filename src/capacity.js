@@ -138,13 +138,11 @@ function assignRole(name, role, callback) {
 	async.waterfall([
 		async.apply(helpers.apostrapheCheck, name),
 		function(name, callback) { 
-			console.log(role)
 			helpers.query(
 				"UPDATE capacity SET role = $1, protected = true WHERE name = '"+name+"'",
 				[role],
 				function(error, result) {
 					if (error) { process.nextTick(function() {callback(error)}) }
-					console.log(result)
 					process.nextTick(callback)
 				}
 			)
