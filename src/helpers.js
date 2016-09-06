@@ -208,7 +208,7 @@ var apostrapheCheck = function(name, callback) {
 	else{ return name }
 }
 
-module.exports.errorLog = errorLog
+module.exports.apostrapheCheck = apostrapheCheck
 //*************************************
 
 
