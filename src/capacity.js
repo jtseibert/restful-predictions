@@ -156,10 +156,10 @@ function unprotectRole(employees, callback) {
 	async.each(employees, function(empoloyee, callback) {
 		async.waterfall([
 			async.apply(helpers.apostrapheCheck, employee),
-			function(employee, callback) {
+			function(name, callback) {
 				helpers.query(
 					"UPDATE capacity SET protected = false WHERE name = $1",
-					[employee],
+					[name],
 					function(error) {
 						if (error) { process.nextTick(function() {callback(error)}) }
 						process.nextTick(callback)
