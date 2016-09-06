@@ -60,7 +60,7 @@ module.exports.queryCapacity = queryCapacity
 function insertCapacity(capacityData, callback) {
 	async.eachSeries(capacityData, function insertRow(row, callback) {
 		helpers.query("INSERT INTO capacity (role, name, utilization, hours) "
-			+ "VALUES ($1, $2, $3, $4) WHERE NOT EXISTS ( SELECT * from capacity where name = $2 )",
+			+ "SELECT $1, $2, $3, $4 WHERE NOT EXISTS ( SELECT * from capacity where name = $2 )",
 			row,
 			function(error) {
 				if (error) { process.nextTick(function() {callback(error)}) }
