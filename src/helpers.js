@@ -203,9 +203,9 @@ module.exports.errorLog = errorLog
 var apostrapheCheck = function(name, callback) {
 	if (name.indexOf("'") > -1) {
 		name.replace("'","''")
-		process.nextTick( function(){ callack(null, name)} )
+		process.nextTick( function(){ callback(null, name)} )
 	}
-	else{ process.nextTick( function(){ callack(null, name)} ) }
+	else{ process.nextTick( function(){ callback(null, name)} ) }
 }
 
 module.exports.apostrapheCheck = apostrapheCheck
