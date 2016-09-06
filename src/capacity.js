@@ -139,8 +139,8 @@ function assignRole(name, role, callback) {
 		async.apply(helpers.apostrapheCheck, name),
 		function(name, callback) { 
 			helpers.query(
-				"SELECT * FROM capacity WHERE name = $2",
-				[role, name],
+				"SELECT * FROM capacity WHERE name = $1",
+				[name],
 				function(error) {
 					if (error) { process.nextTick(function() {callback(error)}) }
 					process.nextTick(callback)
