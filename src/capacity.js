@@ -125,6 +125,7 @@ var clearCapacityTable = function(capacityData, callback) {
 
 module.exports.clearCapacityTable = clearCapacityTable
 //*************************************
+
 /**
 * @function assignRole
 * @desc Assigns a new role to a person.
@@ -134,6 +135,7 @@ module.exports.clearCapacityTable = clearCapacityTable
 */
 
 function assignRole(name, role, callback) {
+	console.log('Hello')
 	async.waterfall([
 		async.apply(helpers.apostrapheCheck, name),
 		function(name, callback) { 
@@ -151,6 +153,16 @@ function assignRole(name, role, callback) {
 		process.nextTick(callback)
 	})
 }
+
+module.exports.assignRole = assignRole
+//*************************************
+
+/**
+* @function unprotectRole
+* @desc Removes a protected flag from an employee in the capacity table
+* @param name - name of person to be unflagged
+* @param callback - callback function 
+*/
 
 function unprotectRole(employees, callback) {
 	async.each(employees, function(empoloyee, callback) {
@@ -176,10 +188,8 @@ function unprotectRole(employees, callback) {
 	})
 }
 
-module.exports.assignRole = assignRole
+module.exports.unprotectRole = unprotectRole
 //*************************************
-
-
 
 
 
