@@ -166,8 +166,7 @@ module.exports.assignRole = assignRole
 */
 
 function unprotectRole(employees, callback) {
-	async.each(employees, function(empoloyee, callback) {
-		var employee = employee
+	async.each(employees, function(employee, callback) {
 		async.waterfall([
 			async.apply(helpers.apostrapheCheck, employee),
 			function(name, callback) {
