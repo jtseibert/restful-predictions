@@ -204,6 +204,7 @@ var apostrapheCheck = function(name, callback) {
 	console.log('hello: '+name)
 	if (name.indexOf("'") > -1) {
 		name.replace("'","''")
+		console.log('name: '+name)
 		process.nextTick( function(){ callback(null, name)} )
 	}
 	else{ process.nextTick( function(){ callback(null, name)} ) }
