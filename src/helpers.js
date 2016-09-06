@@ -27,7 +27,7 @@ var query = function query(query, values, callback) {
 		var query
 		if(v != null) {
 			console.log('entered if v != null')
-			query = client.query(q, v+'', function(error) {
+			query = client.query(q, v, function(error) {
 				if(error) {
 					done()
 					console.log(error)

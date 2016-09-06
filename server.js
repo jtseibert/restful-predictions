@@ -235,6 +235,17 @@ router.route('/updatePipelineTable')
 					} else { res.json({message: "Success!"}) }
 				})
 				break
+			case "roleProtected":
+				async.series({
+					one: async.apply(capacity.unprotectRole, req.body.employees),
+					two: capacity.exportCapacity
+				}, function(error, results){
+					if (error) {
+						helpers.errorLog(error)
+						res.json(error)
+					} else { res.json(results.two) }
+				})
+				break
 			default:
 				res.json({message: "Default case, No Update."})
 		}

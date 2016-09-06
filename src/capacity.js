@@ -60,7 +60,7 @@ module.exports.queryCapacity = queryCapacity
 function insertCapacity(capacityData, callback) {
 	async.eachSeries(capacityData, function insertRow(row, callback) {
 		helpers.query("INSERT INTO capacity (role, name, utilization, hours) "
-			+ "VALUES ($1, $2, $3, $4)",
+			+ "VALUES ($1, $2, $3, $4) WHERE NOT EXISTS ( SELECT * from capacity where name = $2 )",
 			row,
 			function(error) {
 				if (error) { process.nextTick(function() {callback(error)}) }
@@ -117,7 +117,7 @@ module.exports.exportCapacity = exportCapacity
 * @param callback - callback function
 */
 var clearCapacityTable = function(capacityData, callback) {
-	helpers.query("DELETE FROM capacity *", null, function(error) {
+	helpers.query("DELETE FROM capacity * where protected = false", null, function(error) {
 		if (error) { process.nextTick(function() {callback(error, null)}) }
 		process.nextTick(function() {callback(null, capacityData)})
 	})
@@ -135,13 +135,29 @@ module.exports.clearCapacityTable = clearCapacityTable
 
 function assignRole(name, role, callback) {
 	helpers.query(
-		"UPDATE capacity SET role = $1 WHERE name = $2",
+		"UPDATE capacity SET role = $1, protected = true WHERE name = $2",
 		[role, name],
 		function(error) {
 			if (error) { process.nextTick(function() {callback(error)}) }
 			process.nextTick(callback)
 		}
 	)
+}
+
+function unprotectRole(employees, callback) {
+	async.each(employees, function(empoloyee, callback) {
+		helpers.query(
+			"UPDATE capacity SET protected = false WHERE name = $1",
+			[employee],
+			function(error) {
+				if (error) { process.nextTick(function() {callback(error)}) }
+				process.nextTick(callback)
+			}
+		)
+	}, function(error) {
+		if (error) { process.nextTick(function() {callback(error)}) }
+		process.nextTick(callback)
+	})
 }
 
 module.exports.assignRole = assignRole
