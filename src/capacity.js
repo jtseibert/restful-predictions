@@ -141,8 +141,8 @@ function assignRole(name, role, callback) {
 		function(name, callback) { 
 			console.log(role)
 			helpers.query(
-				"UPDATE capacity SET role = $1, protected = true WHERE name = $2",
-				[role, name],
+				"UPDATE capacity SET role = $1, protected = true WHERE name = '"+name+"'",
+				[role],
 				function(error, result) {
 					if (error) { process.nextTick(function() {callback(error)}) }
 					console.log(result)
@@ -172,8 +172,8 @@ function unprotectRole(employees, callback) {
 			async.apply(helpers.apostrapheCheck, employee),
 			function(name, callback) {
 				helpers.query(
-					"UPDATE capacity SET protected = false WHERE name = $1",
-					[name],
+					"UPDATE capacity SET protected = false WHERE name = '"+name"'",
+					null,
 					function(error) {
 						if (error) { process.nextTick(function() {callback(error)}) }
 						process.nextTick(callback)
