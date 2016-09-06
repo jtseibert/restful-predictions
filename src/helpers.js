@@ -202,7 +202,7 @@ module.exports.errorLog = errorLog
 */
 var apostrapheCheck = function(name, callback) {
 	console.log('hello: '+name)
-	if (name.indexOf("'") > -1) {
+	if (name.indexOf("'") > -1 && name.indexOf("''") < 0) {
 		var newName = name.replace("'","''")
 		console.log('name: '+newName)
 		process.nextTick( function(){ callback(null, newName)} )
