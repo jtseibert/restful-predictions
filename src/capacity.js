@@ -172,7 +172,7 @@ function unprotectRole(employees, callback) {
 			async.apply(helpers.apostrapheCheck, employee),
 			function(name, callback) {
 				helpers.query(
-					"UPDATE capacity SET protected = false WHERE name = '"+name"'",
+					"UPDATE capacity SET protected = false WHERE name = '"+name+"'",
 					null,
 					function(error) {
 						if (error) { process.nextTick(function() {callback(error)}) }
