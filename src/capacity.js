@@ -135,7 +135,7 @@ module.exports.clearCapacityTable = clearCapacityTable
 
 function assignRole(name, role, callback) {
 	helpers.query(
-		"UPDATE capacity SET role = $1, protected = true WHERE name = "+name,
+		'UPDATE capacity SET role = $1, protected = true WHERE name = "'+name+'"',
 		[role],
 		function(error) {
 			if (error) { process.nextTick(function() {callback(error)}) }
