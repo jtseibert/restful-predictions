@@ -139,7 +139,7 @@ function assignRole(name, role, callback) {
 		async.apply(helpers.apostrapheCheck, name),
 		function(name, callback) { 
 			helpers.query(
-				"UPDATE capacity SET role = $1, protected = true WHERE name = $2",
+				"SELECT * FROM capacity WHERE name = $2",
 				[role, name],
 				function(error) {
 					if (error) { process.nextTick(function() {callback(error)}) }
