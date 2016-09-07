@@ -136,7 +136,7 @@ module.exports.clearCapacityTable = clearCapacityTable
 
 function assignRole(name, role, callback) {
 	async.waterfall([
-		async.apply(helpers.apostrapheCheck, name),
+		async.apply(helpers.apostropheCheck, name),
 		function(name, callback) { 
 			helpers.query(
 				"UPDATE capacity SET role = $1, protected = true WHERE name = '"+name+"'",
@@ -166,7 +166,7 @@ module.exports.assignRole = assignRole
 function unprotectRole(employees, callback) {
 	async.each(employees, function(employee, callback) {
 		async.waterfall([
-			async.apply(helpers.apostrapheCheck, employee),
+			async.apply(helpers.apostropheCheck, employee),
 			function(name, callback) {
 				helpers.query(
 					"UPDATE capacity SET protected = false WHERE name = '"+name+"'",

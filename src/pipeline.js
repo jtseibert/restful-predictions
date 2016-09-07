@@ -68,7 +68,7 @@ module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
 function syncRows(row, callback) {
 	var curRow = row
 	async.waterfall([
-		async.apply(helpers.apostrapheCheck, curRow[indexes.OPPORTUNITY_NAME]),
+		async.apply(helpers.apostropheCheck, curRow[indexes.OPPORTUNITY_NAME]),
 		function(opportunityName, callback){
 			helpers.query(
 				"SELECT opportunity,protected FROM sales_pipeline WHERE opportunity=$1",
@@ -114,7 +114,7 @@ function updateProtectedOpportunity(opportunityData, callback) {
 		+ "expected_revenue = $2, close_date = $3 WHERE opportunity = $4"
 
 	async.waterfall([
-		async.apply(helpers.apostrapheCheck, opportunityData[indexes.OPPORTUNITY_NAME]),
+		async.apply(helpers.apostropheCheck, opportunityData[indexes.OPPORTUNITY_NAME]),
 		function(opportunityName, callback) {
 
 			var updateValues = [
@@ -148,7 +148,7 @@ function updateAttachmentOpportunity(opportunityData, callback) {
 		+ "probability = $4 WHERE opportunity = $5"
 
 	async.waterfall([
-		async.apply(helpers.apostrapheCheck, opportunityData[indexes.OPPORTUNITY_NAME]),
+		async.apply(helpers.apostropheCheck, opportunityData[indexes.OPPORTUNITY_NAME]),
 		function(opportunityName, callback) {
 			var updateValues = [
 				opportunityData[indexes.AMOUNT], 
@@ -415,7 +415,7 @@ module.exports.syncWithDefaultSizes = syncWithDefaultSizes
 
 function syncSingleOpportunity(opportunityName, callback) {
 	async.waterfall([
-		async.apply(helpers.apostrapheCheck, opportunityName),
+		async.apply(helpers.apostropheCheck, opportunityName),
 		function(opportunityName, callback) {
 			helpers.query(
 				"SELECT opportunity, amount, expected_revenue, close_date, " +

@@ -194,12 +194,12 @@ module.exports.errorLog = errorLog
 //*************************************
 
 /**
-* @function apostrapheCheck
-* @desc Checks a string for apostraphe's and does the following conversion ' --> '' 
+* @function apostropheCheck
+* @desc Checks a string for apostrophe's and does the following conversion ' --> '' 
 * for PostgresQL standards
-* @param {string} name - a name with potential apostraphe in it
+* @param {string} name - a name with potential apostrophe in it
 */
-var apostrapheCheck = function(name, callback) {
+var apostropheCheck = function(name, callback) {
 	if (name.indexOf("'") > -1 && name.indexOf("''") < 0) {
 		var newName = name.replace("'","''")
 		process.nextTick( function(){ callback(null, newName)} )
@@ -207,7 +207,7 @@ var apostrapheCheck = function(name, callback) {
 	else{ process.nextTick( function(){ callback(null, name)} ) }
 }
 
-module.exports.apostrapheCheck = apostrapheCheck
+module.exports.apostropheCheck = apostropheCheck
 //*************************************
 
 
