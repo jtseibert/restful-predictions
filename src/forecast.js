@@ -32,7 +32,8 @@ function Forecast(data, callback) {
 									'WEEK_DATE',
 									'ALLOCATED_HOURS',
 									'FORECASTED_HOURS',
-									'CAPACITY']]
+									'CAPACITY',
+									'GROUP']]
 	this.roleCapacities
 	this.weeks
 
@@ -43,9 +44,9 @@ function Forecast(data, callback) {
 		pg.connect(process.env.DATABASE_URL, function(error, client, done) {
 			roleCapacities = {}
 			if (error) { throw error }
-			var query = client.query('SELECT role, SUM(hours) AS capacity FROM capacity GROUP BY role')
+			var query = client.query('SELECT role, m360group as group, SUM(hours) AS capacity FROM capacity INNER JOIN roles USING (role) GROUP BY role, m360group')
 			query.on("row", function (row, result) {
-				roleCapacities[row.role] = row.capacity
+				roleCapacities[row.role] = { capacity: row.capacity, group: row.group }
 			})
 			query.on("end", function (result) {
 				done()
@@ -92,9 +93,10 @@ Forecast.prototype.create = function(callback) {
 	var objInstance = this
 	//console.log(objInstance.forecastedHours)
 	//console.log(objInstance.allocatedHours)
-	async.eachOf(objInstance.roleCapacities, function(capacity, role, callback){
+	async.eachOf(objInstance.roleCapacities, function(capacityAndGroup, role, callback){
 		var role = role,
-			capacity = capacity
+			capacity = capacityAndGroup.capacity,
+			group = capacityAndGroup.group
 		async.each(objInstance.weeks, function(week,callback){
 			var tempRow = []
 
@@ -116,6 +118,7 @@ Forecast.prototype.create = function(callback) {
 			} else { tempRow.push(0) }
 
 			tempRow.push(capacity)
+			tempRow.push(group)
 			objInstance.returnData.push(tempRow)
 
 			process.nextTick(callback)

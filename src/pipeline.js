@@ -67,31 +67,39 @@ module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
 */
 function syncRows(row, callback) {
 	var curRow = row
-	helpers.query(
-		"SELECT opportunity,protected FROM sales_pipeline WHERE opportunity=$1",
-		[curRow[indexes.OPPORTUNITY_NAME]],
-		function(error, results) {
-			if (error) { throw error }
-			if(results[0]) {
-				if(results[0].protected) {
-					updateProtectedOpportunity(curRow, function(error) {
-						if (error) { throw error }
-						process.nextTick(callback)
-					})
-				} else { 
-					updateAttachmentOpportunity(curRow, function(error) {
-						if (error) { throw error }
-						process.nextTick(callback)
-					})
+	async.waterfall([
+		async.apply(helpers.apostropheCheck, curRow[indexes.OPPORTUNITY_NAME]),
+		function(opportunityName, callback){
+			helpers.query(
+				"SELECT opportunity,protected FROM sales_pipeline WHERE opportunity=$1",
+				[opportunityName],
+				function(error, results) {
+					if (error) { process.nextTick(function(){ callback(error) }) }
+					if(results[0]) {
+						if(results[0].protected) {
+							updateProtectedOpportunity(curRow, function(error) {
+								if (error) { process.nextTick(function(){ callback(error) }) }
+								process.nextTick(callback)
+							})
+						} else { 
+							updateAttachmentOpportunity(curRow, function(error) {
+								if (error) { process.nextTick(function(){ callback(error) }) }
+								process.nextTick(callback)
+							})
+						}
+					} else {
+						insertWithDefaultSize(curRow, function(error) {
+							if (error) { process.nextTick(function(){ callback(error) }) }
+							process.nextTick(callback)
+						})
+					}
 				}
-			} else {
-				insertWithDefaultSize(curRow, function(error) {
-					if (error) { throw error }
-					process.nextTick(callback)
-				})
-			}
+			)
 		}
-	)
+	], function(error) {
+		if (error) { process.nextTick(function(){ callback(error) }) }
+		process.nextTick(callback)
+	})
 }
 //*************************************
 
@@ -105,14 +113,24 @@ function updateProtectedOpportunity(opportunityData, callback) {
 	var updateQuery = "UPDATE sales_pipeline SET amount = $1, "
 		+ "expected_revenue = $2, close_date = $3 WHERE opportunity = $4"
 
-	var updateValues = [
-		opportunityData[indexes.AMOUNT], 
-		opportunityData[indexes.EXP_AMOUNT],
-		opportunityData[indexes.CLOSE_DATE], 
-		opportunityData[indexes.OPPORTUNITY_NAME]
-	]
-	helpers.query(updateQuery, updateValues, function(error) {
-		if (error) { throw error }
+	async.waterfall([
+		async.apply(helpers.apostropheCheck, opportunityData[indexes.OPPORTUNITY_NAME]),
+		function(opportunityName, callback) {
+
+			var updateValues = [
+				opportunityData[indexes.AMOUNT], 
+				opportunityData[indexes.EXP_AMOUNT],
+				opportunityData[indexes.CLOSE_DATE], 
+				opportunityName
+			]
+
+			helpers.query(updateQuery, updateValues, function(error) {
+				if (error) { process.nextTick(function(){ callback(error) }) }
+				process.nextTick(callback)
+			})
+		}
+	], function(error) {
+		if (error) { process.nextTick(function(){ callback(error) }) }
 		process.nextTick(callback)
 	})
 }
@@ -129,15 +147,23 @@ function updateAttachmentOpportunity(opportunityData, callback) {
 		+ "expected_revenue = $2, close_date = $3, "
 		+ "probability = $4 WHERE opportunity = $5"
 
-	var updateValues = [
-		opportunityData[indexes.AMOUNT], 
-		opportunityData[indexes.EXP_AMOUNT],
-		opportunityData[indexes.CLOSE_DATE],
-		opportunityData[indexes.PROBABILITY],
-		opportunityData[indexes.OPPORTUNITY_NAME]
-	]
-	helpers.query(updateQuery, updateValues, function(error) {
-		if (error) { throw error }
+	async.waterfall([
+		async.apply(helpers.apostropheCheck, opportunityData[indexes.OPPORTUNITY_NAME]),
+		function(opportunityName, callback) {
+			var updateValues = [
+				opportunityData[indexes.AMOUNT], 
+				opportunityData[indexes.EXP_AMOUNT],
+				opportunityData[indexes.CLOSE_DATE],
+				opportunityData[indexes.PROBABILITY],
+				opportunityName
+			]
+			helpers.query(updateQuery, updateValues, function(error) {
+				if (error) { process.nextTick(function(){ callback(error) }) }
+				process.nextTick(callback)
+			})
+		}
+	], function(error) {
+		if (error) { process.nextTick(function(){ callback(error) }) }
 		process.nextTick(callback)
 	})
 }
@@ -160,12 +186,12 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		if(opportunityData[indexes.AMOUNT] === null || opportunityData[indexes.AMOUNT] == undefined) {
 			opportunityData[indexes.AMOUNT] = 0
 		}
-		getDefaultSizeQuery = "SELECT sizeid, pricehigh, roles_allocations, numweeks " 
-	 	+ "FROM project_size WHERE ABS($1 - pricehigh) = "
-	 	+ "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)"
+		getDefaultSizeQuery = "SELECT sizeid, midpoint, roles_allocations, numweeks " 
+	 	+ "FROM project_size WHERE ABS($1 - midpoint) = "
+	 	+ "(SELECT MIN(ABS($1 - midpoint)) FROM project_size)"
 	 	defaultSizeQueryValues = [opportunityData[indexes.AMOUNT]]
 	} else {
-	 	getDefaultSizeQuery = "SELECT sizeid, pricehigh, roles_allocations, numweeks "
+	 	getDefaultSizeQuery = "SELECT sizeid, midpoint, roles_allocations, numweeks "
 			+ "FROM project_size WHERE sizeid = $1"
 		defaultSizeQueryValues = [opportunityData[indexes.PROJECT_SIZE]]
 	}
@@ -388,44 +414,52 @@ module.exports.syncWithDefaultSizes = syncWithDefaultSizes
 */
 
 function syncSingleOpportunity(opportunityName, callback) {
-	helpers.query(
-		"SELECT opportunity, amount, expected_revenue, close_date, " +
-		"start_date, probability, protected, omitted, generic " +
-		"FROM sales_pipeline where opportunity = $1 LIMIT 1",
-		[opportunityName],
-		function(error, queryData) {
-			if (error) { process.nextTick(function() {callback(error)}) }
-			// Data is returned as an array of 1 element,
-			var temp = queryData[0]
-			if(temp.amount == null) {
-				process.nextTick(callback)
-			} else {
-				helpers.deleteOpportunities([temp.opportunity], function(error) {
+	async.waterfall([
+		async.apply(helpers.apostropheCheck, opportunityName),
+		function(opportunityName, callback) {
+			helpers.query(
+				"SELECT opportunity, amount, expected_revenue, close_date, " +
+				"start_date, probability, protected, omitted, generic " +
+				"FROM sales_pipeline where opportunity = $1 LIMIT 1",
+				[opportunityName],
+				function(error, queryData) {
 					if (error) { process.nextTick(function() {callback(error)}) }
-					// Format opportunity to match index for default insertion
-					var opportunityData = [
-						temp.opportunity,
-						temp.amount,
-						temp.expected_revenue,
-						moment(new Date(temp.close_date)).format("MM/DD/YYYY"),
-						moment(new Date(temp.start_date)).format("MM/DD/YYYY"),
-						temp.probability
-					]
-					insertWithDefaultSize(opportunityData, function(error) {
-						if (error) { process.nextTick(function() {callback(error)}) }
-						helpers.setOpportunityStatus(
-							[opportunityName], 
-							{protected: temp.protected, omitted: temp.omitted, generic: temp.generic},
-							function(error) {
+					// Data is returned as an array of 1 element,
+					var temp = queryData[0]
+					if(temp.amount == null) {
+						process.nextTick(callback)
+					} else {
+						helpers.deleteOpportunities([temp.opportunity], function(error) {
+							if (error) { process.nextTick(function() {callback(error)}) }
+							// Format opportunity to match index for default insertion
+							var opportunityData = [
+								temp.opportunity,
+								temp.amount,
+								temp.expected_revenue,
+								moment(new Date(temp.close_date)).format("MM/DD/YYYY"),
+								moment(new Date(temp.start_date)).format("MM/DD/YYYY"),
+								temp.probability
+							]
+							insertWithDefaultSize(opportunityData, function(error) {
 								if (error) { process.nextTick(function() {callback(error)}) }
-								process.nextTick(callback)
-							}
-						)
-					})
-				})
-			}
+								helpers.setOpportunityStatus(
+									[opportunityName], 
+									{protected: temp.protected, omitted: temp.omitted, generic: temp.generic},
+									function(error) {
+										if (error) { process.nextTick(function() {callback(error)}) }
+										process.nextTick(callback)
+									}
+								)
+							})
+						})
+					}
+				}
+			)
 		}
-	)
+	], function(error) {
+		if (error) { process.nextTick(function() {callback(error)}) }
+		process.nextTick(callback)
+	})
 }
 
 module.exports.syncSingleOpportunity = syncSingleOpportunity

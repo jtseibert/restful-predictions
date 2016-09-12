@@ -21,41 +21,40 @@ pg.defaults.poolSize = 10
 var query = function query(query, values, callback) {
 	q = query
 	v = values
-	pg.connect(process.env.DATABASE_URL, function pgConnectCallback(error, client, done) {
-		console.log("query is: " + q + ' with values ' + v)
+	pg.connect(process.env.DATABASE_URL, function(error, client, done) {
 		if (error) { process.nextTick(function() {callback(error)}) }
 		var query
 		if(v != null) {
-			query = client.query(q, v, function queryCallback(error) {
+			query = client.query(q, v, function(error) {
 				if(error) {
 					done()
 					console.log(error)
 					errorLog(error)
 					process.nextTick(function() {callback(error)})
 				} else {
-					query.on("row", function onRowCallback(row, result) {
+					query.on("row", function(row, result) {
 						result.addRow(row)
 					})
-					query.on("end", function onEndCallback(result) {
+					query.on("end", function(result) {
 						done()
 						process.nextTick(function() {callback(null, result.rows)})
 					})	
 				}
 			})
 		} else {
-			query = client.query(q, function queryCallback(error) {
+			query = client.query(q, function(error) {
 				if(error) {
 					done()
 					console.log(error)
 					errorLog(error)
 					process.nextTick(function() {callback(error)})
 				} else {
-					query.on("row", function onRowCallback(row, result) {
-					result.addRow(row)
+					query.on("row", function(row, result) {
+						result.addRow(row)
 					})
-					query.on("end", function onEndCallback(result) {
-					done()
-					process.nextTick(function() {callback(null, result.rows)})
+					query.on("end", function(result) {
+						done()
+						process.nextTick(function() {callback(null, result.rows)})
 					})	
 				} 
 			})
@@ -192,6 +191,23 @@ var errorLog = function(error) {
 }
 
 module.exports.errorLog = errorLog
+//*************************************
+
+/**
+* @function apostropheCheck
+* @desc Checks a string for apostrophe's and does the following conversion ' --> '' 
+* for PostgresQL standards
+* @param {string} name - a name with potential apostrophe in it
+*/
+var apostropheCheck = function(name, callback) {
+	if (name.indexOf("'") > -1 && name.indexOf("''") < 0) {
+		var newName = name.replace("'","''")
+		process.nextTick( function(){ callback(null, newName)} )
+	}
+	else{ process.nextTick( function(){ callback(null, name)} ) }
+}
+
+module.exports.apostropheCheck = apostropheCheck
 //*************************************
 
 
