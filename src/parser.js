@@ -310,10 +310,10 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 		errorDescription = 'Sheet validation test(s) '
 	var tests = {
 		0: (workbook.Props.SheetNames[2] == 'Estimate'),
-		1: (getCellValue(sheet, indexes.topRow, indexes.topCol, 'v') == 'Role*'),
-		2: (getCellValue(sheet, indexes.topRow, indexes.topCol + 1, 'v') == 'Responsibilities'),
-		3: (getCellValue(sheet, indexes.topRow, indexes.bottomCol, 'v') == 'Projected Non-Billable Revenue'),
-		4: (getCellValue(sheet, indexes.bottomRow + 1, indexes.bottomCol, 'v') == 'Total Cost'),
+		1: (getCellValue(sheet, indexes.topRow, indexes.topCol, 'v') == 'Role*'), // test first 4 chars
+		2: (getCellValue(sheet, indexes.topRow, indexes.topCol + 1, 'v') == 'Responsibilities'),// test first 4 chars
+		// 3: (getCellValue(sheet, indexes.topRow, indexes.bottomCol, 'v') == 'Projected Non-Billable Revenue'),
+		// 4: (getCellValue(sheet, indexes.bottomRow + 1, indexes.bottomCol, 'v') == 'Total Cost'),
 		5: (getCellValue(sheet, indexes.bottomRow, indexes.topCol, 'v') == 'Subtotal'),
 		6: (getCellValue(sheet, indexes.flagRow, indexes.flagCol, 'v').toUpperCase() != 'DO NOT UPDATE')
 	}
