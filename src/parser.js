@@ -314,8 +314,8 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 		2: (getCellValue(sheet, indexes.topRow, indexes.topCol + 1, 'v') == 'Responsibilities'),// test first 4 chars
 		// 3: (getCellValue(sheet, indexes.topRow, indexes.bottomCol, 'v') == 'Projected Non-Billable Revenue'),
 		// 4: (getCellValue(sheet, indexes.bottomRow + 1, indexes.bottomCol, 'v') == 'Total Cost'),
-		5: (getCellValue(sheet, indexes.bottomRow, indexes.topCol, 'v') == 'Subtotal'),
-		6: (getCellValue(sheet, indexes.flagRow, indexes.flagCol, 'v').toUpperCase() != 'DO NOT UPDATE')
+		3: (getCellValue(sheet, indexes.bottomRow, indexes.topCol, 'v') == 'Subtotal'),
+		4: (getCellValue(sheet, indexes.flagRow, indexes.flagCol, 'v').toUpperCase() != 'DO NOT UPDATE')
 	}
 
 	for(var test in tests) {
