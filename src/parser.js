@@ -248,25 +248,25 @@ n consecutive 0.00 values in the subtotal row.
 */
 function getColumnStart(sheet, topRow, callback) {	
 	var topRow,
-		startCol = 1,
+		curCol = 1,
 		max = 40,
 		found = false
 
 	async.whilst(
-		function() { return (bottomRow < max && !found) },
+		function() { return (curCol < max && !found) },
 		function(callback) {
-			if (moment(getCellValue(sheet, topRow, startCol, 'v'), "MM/DD/YYYY").isValid()) {
-				console.log(getCellValue(sheet, topRow, startCol, 'v'))
+			if (moment(getCellValue(sheet, topRow, curCol, 'v'), "MM/DD/YYYY").isValid()) {
+				console.log(getCellValue(sheet, topRow, curCol, 'v'))
 				found = true
-				process.nextTick(function(){ callback(null, found, startCol) })
+				process.nextTick(function(){ callback(null, found, curCol) })
 			} else {
-				console.log(getCellValue(sheet, topRow, startCol, 'v'))
+				console.log(getCellValue(sheet, topRow, curCol, 'v'))
 				startCol++
-				process.nextTick(function(){ callback(null, found, startCol) })
+				process.nextTick(function(){ callback(null, found, curCol) })
 			}
-		}, function(error, colEnd) {
+		}, function(error, found, startCol) {
 			if (error) { process.nextTick(function(){ callback(error, null) }) }
-			process.nextTick(function(){ callback(null, colEnd) })
+			process.nextTick(function(){ callback(null, startCol) })
 		}
 	)
 }
