@@ -65,6 +65,7 @@ var parseExcelSheet = function(body, callback) {
 				if (error) { process.nextTick(function(){ callback(error, undefined) }) }
 				colEnd = results.one
 				year = results.two
+				indexes.dataColStart = results.three
 				var startDate = moment(new Date(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year))
 								   .format('MM/DD/YYYY')
 
