@@ -249,20 +249,20 @@ n consecutive 0.00 values in the subtotal row.
 function getColumnStart(sheet, topRow, callback) {	
 	var topRow,
 		startCol = 1,
-		increment = 0,
+		max = 40,
 		found = false
 
 	async.whilst(
-		function() { return !found },
+		function() { return (bottomRow < max && !found) },
 		function(callback) {
-			if (moment(getCellValue(sheet, topRow, startCol+increment, 'v'), "MM/DD").isValid()) {
-				console.log(getCellValue(sheet, topRow, startCol+increment, 'v'))
+			if (moment(getCellValue(sheet, topRow, startCol, 'v'), "MM/DD/YYYY").isValid()) {
+				console.log(getCellValue(sheet, topRow, startCol, 'v'))
 				found = true
-				process.nextTick(function(){ callback(null, found, startCol+increment) })
+				process.nextTick(function(){ callback(null, found, startCol) })
 			} else {
-				console.log(getCellValue(sheet, topRow, startCol+increment, 'v'))
-				increment++
-				process.nextTick(function(){ callback(null, found, startCol+increment) })
+				console.log(getCellValue(sheet, topRow, startCol, 'v'))
+				startCol++
+				process.nextTick(function(){ callback(null, found, startCol) })
 			}
 		}, function(error, colEnd) {
 			if (error) { process.nextTick(function(){ callback(error, null) }) }
