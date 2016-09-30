@@ -259,11 +259,9 @@ function getColumnStart(sheet, topRow, callback) {
 		function(callback) {
 			curCellValue = getCellValue(sheet, topRow, curCol, 'v')
 			if (curCellValue === parseInt(curCellValue, 10)) {
-				console.log('Found: '+curCellValue)
 				found = true
 				process.nextTick(function(){ callback(null, found, curCol) })
 			} else {
-				console.log(curCellValue)
 				curCol++
 				process.nextTick(function(){ callback(null, found, curCol) })
 			}
