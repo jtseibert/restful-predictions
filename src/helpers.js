@@ -111,8 +111,8 @@ var deleteOpportunities = function(opportunities, callback) {
 		opportunities, 
 		function(opportunity, callback) {
 			query(
-				"DELETE FROM sales_pipeline WHERE opportunity=$1",
-				[opportunity],
+				"DELETE FROM sales_pipeline WHERE opportunity='"+opportunity+"'",
+				null,
 				function(error) {
 					if (error) { process.nextTick(function() {callback(error)}) }
 					process.nextTick(callback)

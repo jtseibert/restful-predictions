@@ -282,7 +282,7 @@ function getColumnStart(sheet, topRow, callback) {
 */
 function getBottomRow(sheet, indexes, callback) {
 	var bottomRow = indexes.topRow,
-		max = 75,
+		max = 100,
 		found = false
 	async.whilst(
 		function(){ return (bottomRow < max && !found)},
