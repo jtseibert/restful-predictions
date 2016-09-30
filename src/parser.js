@@ -255,7 +255,7 @@ function getColumnStart(sheet, topRow, callback) {
 	async.whilst(
 		function() { return !found },
 		function(callback) {
-			if (moment(getCellValue(sheet, bottomRow, startCol+increment, 'v'), "MM/DD").isValid()) {
+			if (moment(getCellValue(sheet, topRow, startCol+increment, 'v'), "MM/DD").isValid()) {
 				console.log(getCellValue(sheet, topRow, startCol+increment, 'v'))
 				found = true
 				process.nextTick(function(){ callback(null, found, startCol+increment) })
