@@ -261,7 +261,7 @@ function getColumnStart(sheet, topRow, callback) {
 				process.nextTick(function(){ callback(null, found, curCol) })
 			} else {
 				console.log(getCellValue(sheet, topRow, curCol, 'v'))
-				startCol++
+				curCol++
 				process.nextTick(function(){ callback(null, found, curCol) })
 			}
 		}, function(error, found, startCol) {
