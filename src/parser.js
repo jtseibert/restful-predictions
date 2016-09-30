@@ -59,7 +59,8 @@ var parseExcelSheet = function(body, callback) {
 
 			async.parallel({
 				one: async.apply(getColumnLimit, sheet, indexes.bottomRow, indexes.dataColStart, 3),
-				two: async.apply(getYear, sheet, indexes)
+				two: async.apply(getYear, sheet, indexes),
+				three: async.apply(getColumnStart, sheet, indexes.topRow)
 			}, function(error, results) {
 				if (error) { process.nextTick(function(){ callback(error, undefined) }) }
 				colEnd = results.one
@@ -236,6 +237,42 @@ function getColumnLimit(sheet, bottomRow, dataColStart, num, callback) {
 //*************************************
 
 /**
+* @function getColumnLimit
+* @desc Determines the stop point for each row iteration by scanning for
+n consecutive 0.00 values in the subtotal row.
+* @param {worksheet} sheet - xlsx sheet object
+* @param {int} bottomRow - numeric index of the row for subtotals
+* @param {int} dataColStart - numeric index of column where subtotal data begins
+* @param {int} n - number of consecutive 0.00 values before stop
+* @returns {int} colEnd - numeric index of last column of row data
+*/
+function getColumnStart(sheet, topRow, callback) {	
+	var topRow,
+		startCol = 1,
+		increment = 0,
+		found = false
+
+	async.whilst(
+		function() { return !found },
+		function(callback) {
+			if (moment(getCellValue(sheet, bottomRow, startCol+increment, 'v'), "MM/DD").isValid()) {
+				console.log(getCellValue(sheet, topRow, startCol+increment, 'v'))
+				found = true
+				process.nextTick(function(){ callback(null, found, startCol+increment) })
+			} else {
+				console.log(getCellValue(sheet, topRow, startCol+increment, 'v'))
+				increment++
+				process.nextTick(function(){ callback(null, found, startCol+increment) })
+			}
+		}, function(error, colEnd) {
+			if (error) { process.nextTick(function(){ callback(error, null) }) }
+			process.nextTick(function(){ callback(null, colEnd) })
+		}
+	)
+}
+//*************************************
+
+/**
 * @function getBottomRow
 * @desc Finds numeric row index of cell with value 'Subtotal'.
 * @param {worksheet} sheet - xlsx worksheet object
@@ -280,7 +317,7 @@ function getHeaderStart(sheet, indexes, callback) {
 	async.whilst(
 		function(){ return (maxIter < 10 && !found) },
 		function(callback) {
-			if(getCellValue(sheet, rowStart+maxIter, indexes.topCol, 'v') == 'Role*') {
+			if(getCellValue(sheet, rowStart+maxIter, indexes.topCol, 'v').startsWith('Role')) {
 				found = true
 				process.nextTick(function(){ callback(null, found, rowStart+maxIter) })
 			} else {
@@ -310,8 +347,8 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 		errorDescription = 'Sheet validation test(s) '
 	var tests = {
 		0: (workbook.Props.SheetNames[2] == 'Estimate'),
-		1: (getCellValue(sheet, indexes.topRow, indexes.topCol, 'v') == 'Role*'), // test first 4 chars
-		2: (getCellValue(sheet, indexes.topRow, indexes.topCol + 1, 'v') == 'Responsibilities'),// test first 4 chars
+		1: (getCellValue(sheet, indexes.topRow, indexes.topCol, 'v').startsWith('Role')), // test first 4 chars
+		2: (getCellValue(sheet, indexes.topRow, indexes.topCol + 1, 'v').startsWith('Resp')),// test first 4 chars
 		// 3: (getCellValue(sheet, indexes.topRow, indexes.bottomCol, 'v') == 'Projected Non-Billable Revenue'),
 		// 4: (getCellValue(sheet, indexes.bottomRow + 1, indexes.bottomCol, 'v') == 'Total Cost'),
 		3: (getCellValue(sheet, indexes.bottomRow, indexes.topCol, 'v') == 'Subtotal'),
