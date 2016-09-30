@@ -250,17 +250,19 @@ function getColumnStart(sheet, topRow, callback) {
 	var topRow,
 		curCol = 1,
 		max = 40,
-		found = false
+		found = false,
+		curCellValue
 
 	async.whilst(
 		function() { return (curCol < max && !found) },
 		function(callback) {
-			if (moment(getCellValue(sheet, topRow, curCol, 'v'), "MM/DD/YYYY").isValid()) {
-				console.log(getCellValue(sheet, topRow, curCol, 'v'))
+			curCellValue = getCellValue(sheet, topRow, curCol, 'v')
+			if (curCellValue === parseInt(curCellValue, 10)) {
+				console.log('Found: '+curCellValue)
 				found = true
 				process.nextTick(function(){ callback(null, found, curCol) })
 			} else {
-				console.log(getCellValue(sheet, topRow, curCol, 'v'))
+				console.log(curCellValue)
 				curCol++
 				process.nextTick(function(){ callback(null, found, curCol) })
 			}
