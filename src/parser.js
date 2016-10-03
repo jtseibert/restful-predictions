@@ -215,7 +215,7 @@ function mapRole(role) {
 		function(mappedRole, splitRole, indexSr, indexQA, callback) {
 			// Check for Sr.
 			if(indexSr > -1) {
-				splitRole[indexFound] = 'Senior'
+				splitRole[indexSr] = 'Senior'
 				mappedRole = Array.prototype.join.call(splitRole, ' ')
 				process.nextTick(function(){ callback(null, mappedRole, splitRole, indexSr, indexQA) })
 			} else {
@@ -237,7 +237,7 @@ function mapRole(role) {
 		function(mappedRole, splitRole, indexSr, indexQA, callback) {
 			// Check for QA
 			if(indexQA > -1) {
-				splitRole[indexFound] = 'Quality Assurance'
+				splitRole[indexQA] = 'Quality Assurance'
 				mappedRole = Array.prototype.join.call(splitRole, ' ')
 				process.nextTick(function(){ callback(null, mappedRole) })
 			} else {
