@@ -166,11 +166,11 @@ function getYear(sheet, indexes, callback) {
 */
 function mapRole(role) {
 	// Check for trailing and leading whitespace
-	var mappedRole = role.trim(),
-		splitRole = mappedRole.split(' '),
-		indexSr = splitRole.indexOf('Sr.'),
-		indexQA = splitRole.indexOf('QA'),
-		indexFound
+	mappedRole = role.trim()
+	splitRole = mappedRole.split(' ')
+	indexSr = splitRole.indexOf('Sr.')
+	indexQA = splitRole.indexOf('QA')
+	indexFound
 	// // Check for * in the last character
 	// if(mappedRole.slice(-1) == '*') {
 	// 	mappedRole = mappedRole.substring(0, mappedRole.length - 1)
