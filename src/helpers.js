@@ -142,6 +142,7 @@ var opportunityCheck = function(opportunityName, callback) {
 		[opportunityName],
 		function(error, results) {
 			if (error) { throw error }
+			console.log('Opportunity is in database already: '+results[0].exists)
 			callback(null, results[0].exists)
 		}
 	)
