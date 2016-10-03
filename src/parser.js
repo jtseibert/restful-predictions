@@ -166,11 +166,11 @@ function getYear(sheet, indexes, callback) {
 */
 function mapRole(role) {
 	// Check for trailing and leading whitespace
-	mappedRole = role.trim()
-	splitRole = mappedRole.split(' ')
-	indexSr = splitRole.indexOf('Sr.')
-	indexQA = splitRole.indexOf('QA')
-	indexFound
+	// var mappedRole = role.trim(),
+	//	splitRole = mappedRole.split(' '),
+	// 	indexSr = splitRole.indexOf('Sr.'),
+	// 	indexQA = splitRole.indexOf('QA'),
+	// 	indexFound
 	// // Check for * in the last character
 	// if(mappedRole.slice(-1) == '*') {
 	// 	mappedRole = mappedRole.substring(0, mappedRole.length - 1)
@@ -198,49 +198,53 @@ function mapRole(role) {
 
 	// return mappedRole
 
-	async.series({
-		one: function(callback) {
+	async.waterfall([
+		function(callback) {
+			var mappedRole = role.trim(),
+				splitRole = mappedRole.split(' '),
+				indexSr = splitRole.indexOf('Sr.'),
+				indexQA = splitRole.indexOf('QA')
 			// Check for * in the last character
 			if(mappedRole.slice(-1) == '*') {
 				mappedRole = mappedRole.substring(0, mappedRole.length - 1)
-				process.nextTick(callback)
+				process.nextTick(function(){ callback(null, mappedRole, splitRole, indexSr, indexQA) })
 			} else {
-				process.nextTick(callback)
+				process.nextTick(function(){ callback(null, mappedRole, splitRole, indexSr, indexQA) })
 			}
 		},
-		two: function(callback) {
+		function(mappedRole, splitRole, indexSr, indexQA, callback) {
 			// Check for Sr.
 			if(indexSr > -1) {
 				splitRole[indexFound] = 'Senior'
 				mappedRole = Array.prototype.join.call(splitRole, ' ')
-				process.nextTick(callback)
+				process.nextTick(function(){ callback(null, mappedRole, splitRole, indexSr, indexQA) })
 			} else {
-				process.nextTick(callback)
+				process.nextTick(function(){ callback(null, mappedRole, splitRole, indexSr, indexQA) })
 			}
 		},
-		three: function(callback) {
+		function(mappedRole, splitRole, indexSr, indexQA, callback) {
 			// Check for Senior or Associate prefix
 			if(splitRole[0] == 'Senior' || splitRole[0] == 'Associate') {
 				var temp = splitRole[0]
 				splitRole.shift()
 				splitRole = Array.prototype.join.call(splitRole, ' ')
 				mappedRole = splitRole + ', ' + temp
-				process.nextTick(callback)
+				process.nextTick(function(){ callback(null, mappedRole, splitRole, indexSr, indexQA) })
 			} else {
-				process.nextTick(callback)
+				process.nextTick(function(){ callback(null, mappedRole, splitRole, indexSr, indexQA) })
 			}
 		},
-		four: function(callback) {
+		function(mappedRole, splitRole, indexSr, indexQA, callback) {
 			// Check for QA
 			if(indexQA > -1) {
 				splitRole[indexFound] = 'Quality Assurance'
 				mappedRole = Array.prototype.join.call(splitRole, ' ')
-				process.nextTick(callback)
+				process.nextTick(function(){ callback(null, mappedRole) })
 			} else {
-				process.nextTick(callback)
+				process.nextTick(function(){ callback(null, mappedRole) })
 			}
 		}
-	}, function(error) {
+	], function(error, mappedRole) {
 		return mappedRole
 	})
 }
