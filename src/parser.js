@@ -215,6 +215,7 @@ function mapRole(role) {
 		},
 		function(mappedRole, splitRole, indexSr, indexQA, callback) {
 			// Check for Sr.
+			console.log('two: '+mappedRole)
 			if(indexSr > -1) {
 				splitRole[indexSr] = 'Senior'
 				mappedRole = Array.prototype.join.call(splitRole, ' ')
@@ -225,6 +226,7 @@ function mapRole(role) {
 		},
 		function(mappedRole, splitRole, indexSr, indexQA, callback) {
 			// Check for Senior or Associate prefix
+			console.log('three: '+mappedRole)
 			if(splitRole[0] == 'Senior' || splitRole[0] == 'Associate') {
 				var temp = splitRole[0]
 				splitRole.shift()
@@ -237,6 +239,7 @@ function mapRole(role) {
 		},
 		function(mappedRole, splitRole, indexSr, indexQA, callback) {
 			// Check for QA
+			console.log('four: '+mappedRole)
 			if(indexQA > -1) {
 				splitRole[indexQA] = 'Quality Assurance'
 				mappedRole = Array.prototype.join.call(splitRole, ' ')
