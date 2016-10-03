@@ -200,6 +200,7 @@ function mapRole(role) {
 
 	async.waterfall([
 		function(callback) {
+			console.log(role)
 			var mappedRole = role.trim(),
 				splitRole = mappedRole.split(' '),
 				indexSr = splitRole.indexOf('Sr.'),
