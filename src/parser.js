@@ -172,7 +172,7 @@ function mapRole(role) {
 		indexQA = splitRole.indexOf('QA'),
 		indexFound
 	// Check for * in the last character
-	if(mappedRole.slice(-1) == '*') {
+	if(splitRole[splitRole.length-1] == '*') {
 		mappedRole = mappedRole.substring(0, mappedRole.length - 1)
 	}
 
