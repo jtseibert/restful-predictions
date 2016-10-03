@@ -107,7 +107,6 @@ module.exports.setOpportunityStatus = setOpportunityStatus
 * @param callback - callback function
 */
 var deleteOpportunities = function(opportunities, callback) {
-	console.log('START: deleteOpportunities')
 	async.eachSeries(
 		opportunities, 
 		function(opportunity, callback) {
@@ -143,8 +142,7 @@ var opportunityCheck = function(opportunityName, callback) {
 		[opportunityName],
 		function(error, results) {
 			if (error) { throw error }
-			console.log('Opportunity is in database already: '+results[0].exists)
-			callback(null, results[0].exists)
+			callback(results[0].exists)
 		}
 	)
 }
