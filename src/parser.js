@@ -171,32 +171,78 @@ function mapRole(role) {
 		indexSr = splitRole.indexOf('Sr.'),
 		indexQA = splitRole.indexOf('QA'),
 		indexFound
-	// Check for * in the last character
-	if(mappedRole.slice(-1) == '*') {
-		mappedRole = mappedRole.substring(0, mappedRole.length - 1)
-	}
+	// // Check for * in the last character
+	// if(mappedRole.slice(-1) == '*') {
+	// 	mappedRole = mappedRole.substring(0, mappedRole.length - 1)
+	// }
 
-	// Check for Sr.
-	if(indexSr > -1) {
-		splitRole[indexFound] = 'Senior'
-		mappedRole = Array.prototype.join.call(splitRole, ' ')
-	}
+	// // Check for Sr.
+	// if(indexSr > -1) {
+	// 	splitRole[indexFound] = 'Senior'
+	// 	mappedRole = Array.prototype.join.call(splitRole, ' ')
+	// }
 
-	// Check for Senior or Associate prefix
-	if(splitRole[0] == 'Senior' || splitRole[0] == 'Associate') {
-		var temp = splitRole[0]
-		splitRole.shift()
-		splitRole = Array.prototype.join.call(splitRole, ' ')
-		mappedRole = splitRole + ', ' + temp
-	}
+	// // Check for Senior or Associate prefix
+	// if(splitRole[0] == 'Senior' || splitRole[0] == 'Associate') {
+	// 	var temp = splitRole[0]
+	// 	splitRole.shift()
+	// 	splitRole = Array.prototype.join.call(splitRole, ' ')
+	// 	mappedRole = splitRole + ', ' + temp
+	// }
 
-	// Check for QA
-	if(indexQA > -1) {
-		splitRole[indexFound] = 'Quality Assurance'
-		mappedRole = Array.prototype.join.call(splitRole, ' ')
-	}
+	// // Check for QA
+	// if(indexQA > -1) {
+	// 	splitRole[indexFound] = 'Quality Assurance'
+	// 	mappedRole = Array.prototype.join.call(splitRole, ' ')
+	// }
 
-	return mappedRole
+	// return mappedRole
+
+	async.series({
+		one: function(callback) {
+			// Check for * in the last character
+			if(mappedRole.slice(-1) == '*') {
+				mappedRole = mappedRole.substring(0, mappedRole.length - 1)
+				process.nextTick(callback)
+			} else {
+				process.nextTick(callback)
+			}
+		},
+		two: function(callback) {
+			// Check for Sr.
+			if(indexSr > -1) {
+				splitRole[indexFound] = 'Senior'
+				mappedRole = Array.prototype.join.call(splitRole, ' ')
+				process.nextTick(callback)
+			} else {
+				process.nextTick(callback)
+			}
+		},
+		three: function(callback) {
+			// Check for Senior or Associate prefix
+			if(splitRole[0] == 'Senior' || splitRole[0] == 'Associate') {
+				var temp = splitRole[0]
+				splitRole.shift()
+				splitRole = Array.prototype.join.call(splitRole, ' ')
+				mappedRole = splitRole + ', ' + temp
+				process.nextTick(callback)
+			} else {
+				process.nextTick(callback)
+			}
+		},
+		four: function(callback) {
+			// Check for QA
+			if(indexQA > -1) {
+				splitRole[indexFound] = 'Quality Assurance'
+				mappedRole = Array.prototype.join.call(splitRole, ' ')
+				process.nextTick(callback)
+			} else {
+				process.nextTick(callback)
+			}
+		}
+	}, function(error) {
+		return mappedRole
+	})
 }
 //*************************************
 
