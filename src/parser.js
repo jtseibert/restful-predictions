@@ -169,18 +169,17 @@ function mapRole(role) {
 	var mappedRole = role.trim(),
 		splitRole = mappedRole.split(' '),
 		indexSr = splitRole.indexOf('Sr.'),
-		indexQA = splitRole.indexOf('QA'),
-		indexStar = splitRole.indexOf('*')
-
-	// // Check for * in the last character
-	// if(indexStar > -1) {
-	// 	splitRole[indexStar] = ''
-	// 	//mappedRole = Array.prototype.join.call(splitRole, ' ')
-	// }
+		indexQA = splitRole.indexOf('QA')
 
 	// Check for Sr.
 	if(indexSr > -1) {
 		splitRole[indexSr] = 'Senior'
+		//mappedRole = Array.prototype.join.call(splitRole, ' ')
+	}
+
+	// Check for QA
+	if(indexQA > -1) {
+		splitRole[indexQA] = 'Quality Assurance'
 		//mappedRole = Array.prototype.join.call(splitRole, ' ')
 	}
 
@@ -192,67 +191,7 @@ function mapRole(role) {
 		//mappedRole = splitRole + ', ' + temp
 	}
 
-	// Check for QA
-	if(indexQA > -1) {
-		splitRole[indexQA] = 'Quality Assurance'
-		//mappedRole = Array.prototype.join.call(splitRole, ' ')
-	}
-
 	return (Array.prototype.join.call(splitRole, ' ')).replace('*','')
-	// async.waterfall([
-	// 	function(callback) {
-	// 		console.log(role)
-	// 		var mappedRole = role.trim(),
-	// 			splitRole = mappedRole.split(' '),
-	// 			indexSr = splitRole.indexOf('Sr.'),
-	// 			indexQA = splitRole.indexOf('QA')
-	// 		// Check for * in the last character
-	// 		if(mappedRole.slice(-1) == '*') {
-	// 			mappedRole = mappedRole.substring(0, mappedRole.length - 1)
-	// 			process.nextTick(function(){ callback(null, mappedRole, splitRole, indexSr, indexQA) })
-	// 		} else {
-	// 			process.nextTick(function(){ callback(null, mappedRole, splitRole, indexSr, indexQA) })
-	// 		}
-	// 	},
-	// 	function(mappedRole, splitRole, indexSr, indexQA, callback) {
-	// 		// Check for Sr.
-	// 		console.log('two: '+mappedRole)
-	// 		if(indexSr > -1) {
-	// 			splitRole[indexSr] = 'Senior'
-	// 			mappedRole = Array.prototype.join.call(splitRole, ' ')
-	// 			process.nextTick(function(){ callback(null, mappedRole, splitRole, indexSr, indexQA) })
-	// 		} else {
-	// 			process.nextTick(function(){ callback(null, mappedRole, splitRole, indexSr, indexQA) })
-	// 		}
-	// 	},
-	// 	function(mappedRole, splitRole, indexSr, indexQA, callback) {
-	// 		// Check for Senior or Associate prefix
-	// 		console.log('three: '+mappedRole)
-	// 		if(splitRole[0] == 'Senior' || splitRole[0] == 'Associate') {
-	// 			var temp = splitRole[0]
-	// 			splitRole.shift()
-	// 			splitRole = Array.prototype.join.call(splitRole, ' ')
-	// 			mappedRole = splitRole + ', ' + temp
-	// 			process.nextTick(function(){ callback(null, mappedRole, splitRole, indexSr, indexQA) })
-	// 		} else {
-	// 			process.nextTick(function(){ callback(null, mappedRole, splitRole, indexSr, indexQA) })
-	// 		}
-	// 	},
-	// 	function(mappedRole, splitRole, indexSr, indexQA, callback) {
-	// 		// Check for QA
-	// 		console.log('four: '+mappedRole)
-	// 		if(indexQA > -1) {
-	// 			splitRole[indexQA] = 'Quality Assurance'
-	// 			mappedRole = Array.prototype.join.call(splitRole, ' ')
-	// 			process.nextTick(function(){ callback(null, mappedRole) })
-	// 		} else {
-	// 			process.nextTick(function(){ callback(null, mappedRole) })
-	// 		}
-	// 	}
-	// ], function(error, mappedRole) {
-	// 	console.log(mappedRole)
-	// 	return mappedRole
-	// })
 }
 //*************************************
 
