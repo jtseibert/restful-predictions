@@ -167,6 +167,9 @@ function getYear(sheet, indexes, callback) {
 function mapRole(role) {
 	// Check for trailing and leading whitespace
 	var mappedRole = role.trim(),
+		splitRole = mappedRole.split(' '),
+		indexSr = splitRole.indexOf('Sr.'),
+		indexQA = splitRole.indexOf('QA'),
 		indexFound
 	// Check for * in the last character
 	if(mappedRole.slice(-1) == '*') {
@@ -174,15 +177,12 @@ function mapRole(role) {
 	}
 
 	// Check for Sr.
-	splitRole = mappedRole.split(' ')
-	indexFound = splitRole.indexOf('Sr.')
-	if(indexFound > -1) {
+	if(indexSr > -1) {
 		splitRole[indexFound] = 'Senior'
-		splitRole = Array.prototype.join.call(splitRole, ' ')
+		mappedRole = Array.prototype.join.call(splitRole, ' ')
 	}
 
 	// Check for Senior or Associate prefix
-	var splitRole = mappedRole.split(' ')
 	if(splitRole[0] == 'Senior' || splitRole[0] == 'Associate') {
 		var temp = splitRole[0]
 		splitRole.shift()
@@ -191,11 +191,9 @@ function mapRole(role) {
 	}
 
 	// Check for QA
-	splitRole = mappedRole.split(' ')
-	indexFound = splitRole.indexOf('QA')
-	if(indexFound > -1) {
+	if(indexQA > -1) {
 		splitRole[indexFound] = 'Quality Assurance'
-		splitRole = Array.prototype.join.call(splitRole, ' ')
+		mappedRole = Array.prototype.join.call(splitRole, ' ')
 	}
 
 	return mappedRole
