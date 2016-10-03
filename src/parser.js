@@ -175,9 +175,8 @@ function mapRole(role) {
 
 	// Check for Sr.
 	splitRole = mappedRole.split(' ')
-	if(splitRole.indexOf('Sr.') > -1) {
-		indexFound = splitRole.indexOf('Sr.')
-		console.log(splitRole[indexFound])
+	indexFound = splitRole.indexOf('Sr.')
+	if(indexFound > -1) {
 		splitRole[indexFound] = 'Senior'
 		splitRole = Array.prototype.join.call(splitRole, ' ')
 	}
@@ -193,9 +192,8 @@ function mapRole(role) {
 
 	// Check for QA
 	splitRole = mappedRole.split(' ')
-	if(splitRole.indexOf('QA') > -1) {
-		indexFound = splitRole.indexOf('QA')
-		console.log(splitRole[indexFound])
+	indexFound = splitRole.indexOf('QA')
+	if(indexFound > -1) {
 		splitRole[indexFound] = 'Quality Assurance'
 		splitRole = Array.prototype.join.call(splitRole, ' ')
 	}
