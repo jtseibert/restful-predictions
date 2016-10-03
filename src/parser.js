@@ -172,11 +172,11 @@ function mapRole(role) {
 		indexQA = splitRole.indexOf('QA'),
 		indexStar = splitRole.indexOf('*')
 
-	// Check for * in the last character
-	if(indexStar > -1) {
-		splitRole[indexStar] = ''
-		//mappedRole = Array.prototype.join.call(splitRole, ' ')
-	}
+	// // Check for * in the last character
+	// if(indexStar > -1) {
+	// 	splitRole[indexStar] = ''
+	// 	//mappedRole = Array.prototype.join.call(splitRole, ' ')
+	// }
 
 	// Check for Sr.
 	if(indexSr > -1) {
@@ -198,7 +198,7 @@ function mapRole(role) {
 		//mappedRole = Array.prototype.join.call(splitRole, ' ')
 	}
 
-	return Array.prototype.join.call(splitRole, ' ')
+	return (Array.prototype.join.call(splitRole, ' ')).replace('*','')
 	// async.waterfall([
 	// 	function(callback) {
 	// 		console.log(role)
