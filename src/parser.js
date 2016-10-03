@@ -249,6 +249,7 @@ function mapRole(role) {
 			}
 		}
 	], function(error, mappedRole) {
+		console.log(mappedRole)
 		return mappedRole
 	})
 }
