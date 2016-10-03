@@ -19,7 +19,6 @@ var updateDatabaseFromXlsx = function(opportunityData, callback) {
 	} else { 
 		helpers.opportunityCheck(opportunityData.opportunityName, function(exists) {
 			if(exists) {
-				console.log('START: updateDatabaseFromXlsx if stmt')
 				async.series({
 					one: async.apply(helpers.deleteOpportunities, [opportunityData.opportunityName]),
 					two: async.apply(updateOpportunityFromXlsx, opportunityData)
@@ -28,7 +27,6 @@ var updateDatabaseFromXlsx = function(opportunityData, callback) {
 					process.nextTick(callback)
 				})
 			} else {
-				console.log('START: updateDatabaseFromXlsx else stmt')
 				updateOpportunityFromXlsx(opportunityData, function(error) {
 					if (error) { process.nextTick(function(){ callback(error) }) }
 					process.nextTick(callback)

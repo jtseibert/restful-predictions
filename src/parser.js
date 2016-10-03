@@ -48,6 +48,7 @@ var parseExcelSheet = function(body, callback) {
 		if (error) { process.nextTick(function(){ callback(error, undefined) })}
 		indexes.bottomRow = results.one
 		indexes.topRow = results.two
+		indexes.dataRowStart = results.two + 1
 
 		// Parse the sheet if valid
 		if(!sheetIsValidFormat(workbook, sheet, indexes)) {
@@ -267,6 +268,7 @@ function getColumnStart(sheet, topRow, callback) {
 			}
 		}, function(error, found, startCol) {
 			if (error) { process.nextTick(function(){ callback(error, null) }) }
+			console.log('StartCol: '+startCol)
 			process.nextTick(function(){ callback(null, startCol) })
 		}
 	)
