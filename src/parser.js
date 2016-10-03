@@ -170,16 +170,18 @@ function mapRole(role) {
 		splitRole = mappedRole.split(' '),
 		indexSr = splitRole.indexOf('Sr.'),
 		indexQA = splitRole.indexOf('QA'),
-		indexFound
+		indexStar = splitRole.indexOf('*')
+
 	// Check for * in the last character
-	if(splitRole[splitRole.length-1] == '*') {
-		mappedRole = mappedRole.substring(0, mappedRole.length - 1)
+	if(indexStar > -1) {
+		splitRole[indexStar] = ''
+		//mappedRole = Array.prototype.join.call(splitRole, ' ')
 	}
 
 	// Check for Sr.
 	if(indexSr > -1) {
 		splitRole[indexSr] = 'Senior'
-		mappedRole = Array.prototype.join.call(splitRole, ' ')
+		//mappedRole = Array.prototype.join.call(splitRole, ' ')
 	}
 
 	// Check for Senior or Associate prefix
@@ -187,17 +189,16 @@ function mapRole(role) {
 		var temp = splitRole[0]
 		splitRole.shift()
 		splitRole = Array.prototype.join.call(splitRole, ' ')
-		mappedRole = splitRole + ', ' + temp
+		//mappedRole = splitRole + ', ' + temp
 	}
 
 	// Check for QA
 	if(indexQA > -1) {
 		splitRole[indexQA] = 'Quality Assurance'
-		mappedRole = Array.prototype.join.call(splitRole, ' ')
+		//mappedRole = Array.prototype.join.call(splitRole, ' ')
 	}
 
-	return mappedRole
-
+	return Array.prototype.join.call(splitRole, ' ')
 	// async.waterfall([
 	// 	function(callback) {
 	// 		console.log(role)
