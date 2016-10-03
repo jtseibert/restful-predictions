@@ -36,10 +36,6 @@ var parseExcelSheet = function(body, callback) {
 		flagRow: 0,
 		flagCol: 4
 	}
-	// var temp = getBottomRow(sheet, indexes)
-	// indexes.bottomRow = temp
-	// var headerStart = getHeaderStart(sheet, indexes)
-	// indexes.topRow = headerStart
 
 	async.parallel({
 		one: async.apply(getBottomRow, sheet, indexes),
@@ -176,6 +172,13 @@ function mapRole(role) {
 		mappedRole = mappedRole.substring(0, mappedRole.length - 1)
 	}
 
+	// Check for Sr.
+	splitRole = mappedRole.split(' ')
+	if(splitRole.indexOf('Sr.') > -1) {
+		splitRole[splitRole.indexOf('Sr.')] = 'Senior'
+		splitRole = Array.prototype.join.call(splitRole, ' ')
+	}
+
 	// Check for Senior or Associate prefix
 	var splitRole = mappedRole.split(' ')
 	if(splitRole[0] == 'Senior' || splitRole[0] == 'Associate') {
@@ -187,12 +190,11 @@ function mapRole(role) {
 
 	// Check for QA
 	splitRole = mappedRole.split(' ')
-	if(splitRole[0] == 'QA') {
-		splitRole.shift()
+	if(splitRole.indexOf('QA') > -1) {
+		splitRole[splitRole.indexOf('QA')] = 'Quality Assurance'
 		splitRole = Array.prototype.join.call(splitRole, ' ')
-		mappedRole = 'Quality Assurance ' + splitRole
-
 	}
+
 	return mappedRole
 }
 //*************************************
