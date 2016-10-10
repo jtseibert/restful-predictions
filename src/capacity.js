@@ -26,10 +26,10 @@ var queryCapacity = function(accessToken, path, callback) {
 	})
 
 	// Execute SOQL query to populate capacityData
-	conn.query("SELECT pse__Resource_Role__c,"+
-					"Name,"+
+	conn.query("SELECT pse__Resource_Role__c, "+
+					"Name, "+
 					"pse__Utilization_Target__c "+
-				"FROM Contact"+
+				"FROM Contact "+
 				"WHERE pse__Resource_Role__c!='' "+
 					"AND pse__Utilization_Target__c>0 "+
 					"AND Account.Name = 'Magnet 360' "+
