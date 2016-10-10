@@ -31,7 +31,6 @@ var queryCapacity = function(accessToken, path, callback) {
 					"pse__Utilization_Target__c "+
 				"FROM Contact "+
 				"WHERE pse__Resource_Role__c!='' "+
-					"AND pse__Utilization_Target__c>0 "+
 					"AND Account.Name = 'Magnet 360' "+
 				"ORDER BY pse__Resource_Role__c")
   	.on("record", function handleRecord(record) {
