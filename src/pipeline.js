@@ -66,9 +66,10 @@ module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
 * @param row - 1D array of opportunity data
 */
 function syncRows(row, callback) {
-	var curRow = row
+	var curRow = row,
+		oppName = curRow[indexes.OPPORTUNITY_NAME].replace("'","'''")
 	helpers.query(
-		"SELECT opportunity, protected, attachment FROM sales_pipeline WHERE opportunity=$1",
+		'SELECT opportunity, protected, attachment FROM sales_pipeline WHERE opportunity="'+oppName+'"',
 		[curRow[indexes.OPPORTUNITY_NAME]],
 		function(error, results) {
 			if (error) { throw error }
