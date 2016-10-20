@@ -69,7 +69,7 @@ function syncRows(row, callback) {
 	var curRow = row,
 		oppName = curRow[indexes.OPPORTUNITY_NAME].replace("'","'''")
 	helpers.query(
-		'SELECT opportunity, protected, attachment FROM sales_pipeline WHERE opportunity="'+oppName+'"',
+		"SELECT opportunity, protected, attachment FROM sales_pipeline WHERE opportunity='"+oppName+'"',
 		[curRow[indexes.OPPORTUNITY_NAME]],
 		function(error, results) {
 			if (error) { throw error }
