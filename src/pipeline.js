@@ -68,6 +68,7 @@ module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
 function syncRows(row, callback) {
 	var curRow = row,
 		oppName = curRow[indexes.OPPORTUNITY_NAME].replace("'","\'")
+	console.log(oppName)
 	helpers.query(
 		"SELECT opportunity, protected, attachment FROM sales_pipeline WHERE opportunity='"+oppName+"'",
 		null,
@@ -75,20 +76,20 @@ function syncRows(row, callback) {
 			if (error) { throw error }
 			if(results[0]) {
 				if(results[0].protected) {
-					console.log(results[0].opportunity+' was found protected\n')
+					//console.log(results[0].opportunity+' was found protected\n')
 					updateProtectedOpportunity(curRow, function(error) {
 						if (error) { throw error }
 						process.nextTick(callback)
 					})
 				} else if(results[0].attachment){
-					console.log(results[0].opportunity+' was found with attachment\n') 
+					//console.log(results[0].opportunity+' was found with attachment\n') 
 					updateAttachmentOpportunity(curRow, function(error) {
 						if (error) { throw error }
 						process.nextTick(callback)
 					})
 				}
 			} else {
-				console.log(curRow[indexes.OPPORTUNITY_NAME]+' not found\n')
+				//console.log(curRow[indexes.OPPORTUNITY_NAME]+' not found\n')
 				insertWithDefaultSize(curRow, function(error) {
 					if (error) { throw error }
 					process.nextTick(callback)
