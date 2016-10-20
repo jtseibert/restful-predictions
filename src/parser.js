@@ -268,7 +268,6 @@ function getColumnStart(sheet, topRow, callback) {
 			}
 		}, function(error, found, startCol) {
 			if (error) { process.nextTick(function(){ callback(error, null) }) }
-			console.log('StartCol: '+startCol)
 			process.nextTick(function(){ callback(null, startCol) })
 		}
 	)
