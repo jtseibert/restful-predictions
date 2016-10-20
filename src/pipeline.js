@@ -68,8 +68,8 @@ module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
 function syncRows(row, callback) {
 	var curRow = row
 	helpers.query(
-		"SELECT opportunity,protected FROM sales_pipeline WHERE opportunity='"+curRow[indexes.OPPORTUNITY_NAME]+"'",
-		null,
+		"SELECT opportunity,protected FROM sales_pipeline WHERE opportunity=$1",
+		[curRow[indexes.OPPORTUNITY_NAME]],
 		function(error, results) {
 			if (error) { throw error }
 			if(results[0]) {
