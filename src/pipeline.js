@@ -67,7 +67,7 @@ module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
 */
 function syncRows(row, callback) {
 	var curRow = row,
-		oppName = curRow[indexes.OPPORTUNITY_NAME].replace("'","\'")
+		oppName = curRow[indexes.OPPORTUNITY_NAME].replace("\'\g","\'")
 	console.log(oppName)
 	helpers.query(
 		"SELECT opportunity, protected, attachment FROM sales_pipeline WHERE opportunity='"+oppName+"'",
