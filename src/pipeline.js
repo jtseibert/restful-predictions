@@ -42,7 +42,7 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 	queryPipeline(accessToken, path, function(error, pipelineData) {
 		if (error) { process.nextTick(function() {callback(error)}) }
 		var today = moment().format("MM/DD/YYYY")
-		var deleteQuery = "DELETE FROM sales_pipeline WHERE (protected = FALSE AND attachment = FALSE AND omitted = FALSE) OR start_date < " 
+		var deleteQuery = "DELETE FROM sales_pipeline WHERE (protected = FALSE AND attachment = FALSE AND generic = FALSE) OR start_date < " 
 						+ "'" + today + "'"
 		helpers.query(deleteQuery, null, function(error) {
 			if (error) { process.nextTick(function() {callback(error)}) }
@@ -68,8 +68,8 @@ module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
 function syncRows(row, callback) {
 	var curRow = row
 	helpers.query(
-		"SELECT opportunity,protected FROM sales_pipeline WHERE opportunity=$1",
-		[curRow[indexes.OPPORTUNITY_NAME]],
+		"SELECT opportunity,protected FROM sales_pipeline WHERE opportunity='"+curRow[indexes.OPPORTUNITY_NAME]+"'",
+		null,
 		function(error, results) {
 			if (error) { throw error }
 			if(results[0]) {
