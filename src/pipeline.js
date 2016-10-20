@@ -68,7 +68,7 @@ module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
 function syncRows(row, callback) {
 	var curRow = row
 	helpers.query(
-		"SELECT opportunity, protected, attached FROM sales_pipeline WHERE opportunity=$1",
+		"SELECT opportunity, protected, attachment FROM sales_pipeline WHERE opportunity=$1",
 		[curRow[indexes.OPPORTUNITY_NAME]],
 		function(error, results) {
 			if (error) { throw error }
@@ -79,7 +79,7 @@ function syncRows(row, callback) {
 						if (error) { throw error }
 						process.nextTick(callback)
 					})
-				} else if(results[0].attached){
+				} else if(results[0].attachment){
 					console.log(results[0].opportunity+' was found with attachment\n') 
 					updateAttachmentOpportunity(curRow, function(error) {
 						if (error) { throw error }
