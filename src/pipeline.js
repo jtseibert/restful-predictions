@@ -88,7 +88,7 @@ function syncRows(row, callback) {
 					})
 				}
 			} else {
-				console.log(curRow[indexes.OPPORTUNITY_NAME]+' not found\n')
+				console.log(oppName+' not found\n')
 				insertWithDefaultSize(curRow, function(error) {
 					if (error) { throw error }
 					process.nextTick(callback)
