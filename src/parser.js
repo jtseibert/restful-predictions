@@ -42,72 +42,74 @@ var parseExcelSheet = function(body, callback) {
 		two: async.apply(getHeaderStart, sheet, indexes)
 	}, function(error, results) {
 		if (error) { process.nextTick(function(){ callback(error, undefined) })}
-		indexes.bottomRow = results.one
-		indexes.topRow = results.two
-		indexes.dataRowStart = results.two + 1
+		else {
+			indexes.bottomRow = results.one
+			indexes.topRow = results.two
+			indexes.dataRowStart = results.two + 1
 
-		// Parse the sheet if valid
-		if(!sheetIsValidFormat(workbook, sheet, indexes)) {
-			process.nextTick(function(){ callback(null, undefined) })
-		} else {
-			var sheetData = {},
-				colEnd,
-				year
+			// Parse the sheet if valid
+			if(!sheetIsValidFormat(workbook, sheet, indexes)) {
+				process.nextTick(function(){ callback(null, undefined) })
+			} else {
+				var sheetData = {},
+					colEnd,
+					year
 
-			async.parallel({
-				one: async.apply(getColumnLimit, sheet, indexes.bottomRow, indexes.dataColStart, 3),
-				two: async.apply(getYear, sheet, indexes),
-				three: async.apply(getColumnStart, sheet, indexes.topRow)
-			}, function(error, results) {
-				if (error) { process.nextTick(function(){ callback(error, undefined) }) }
-				colEnd = results.one
-				year = results.two
-				indexes.dataColStart = results.three
-				var startDate = moment(new Date(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year))
-								   .format('MM/DD/YYYY')
+				async.parallel({
+					one: async.apply(getColumnLimit, sheet, indexes.bottomRow, indexes.dataColStart, 3),
+					two: async.apply(getYear, sheet, indexes),
+					three: async.apply(getColumnStart, sheet, indexes.topRow)
+				}, function(error, results) {
+					if (error) { process.nextTick(function(){ callback(error, undefined) }) }
+					colEnd = results.one
+					year = results.two
+					indexes.dataColStart = results.three
+					var startDate = moment(new Date(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year))
+									   .format('MM/DD/YYYY')
 
-				async.whilst(
-					function(){ return getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal' },
-					function(callback){
-						var role = getCellValue(sheet, indexes.dataRowStart, 1, 'v')
-						if(role != '') {
-							role = mapRole(role)
-							if(!sheetData[role]) {
-								sheetData[role] = {}
-							}
-							sheetData[role][indexes.dataRowStart] = {}
-
-							var weekOffset = 0
-							async.times(colEnd-indexes.dataColStart, function(n, next){
-								var hours = getCellValue(sheet, indexes.dataRowStart, indexes.dataColStart+n, 'v')
-								if (hours != '') {
-									sheetData[role][indexes.dataRowStart][weekOffset] = hours
-									weekOffset++
-									next(null)
-								} else {
-									weekOffset++
-									next(null)
+					async.whilst(
+						function(){ return getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal' },
+						function(callback){
+							var role = getCellValue(sheet, indexes.dataRowStart, 1, 'v')
+							if(role != '') {
+								role = mapRole(role)
+								if(!sheetData[role]) {
+									sheetData[role] = {}
 								}
-							}, function(error) {
-								if (error) { process.nextTick(function(){ callback(error) }) }
+								sheetData[role][indexes.dataRowStart] = {}
+
+								var weekOffset = 0
+								async.times(colEnd-indexes.dataColStart, function(n, next){
+									var hours = getCellValue(sheet, indexes.dataRowStart, indexes.dataColStart+n, 'v')
+									if (hours != '') {
+										sheetData[role][indexes.dataRowStart][weekOffset] = hours
+										weekOffset++
+										next(null)
+									} else {
+										weekOffset++
+										next(null)
+									}
+								}, function(error) {
+									if (error) { process.nextTick(function(){ callback(error) }) }
+									indexes.dataRowStart++
+									process.nextTick(callback)
+								})
+							} else {
 								indexes.dataRowStart++
 								process.nextTick(callback)
-							})
-						} else {
-							indexes.dataRowStart++
-							process.nextTick(callback)
+							}
+						}, function(error){
+							if (error) {  process.nextTick(function(){ callback(error) }) }
+							var opportunityData = {
+								sheetData: 			sheetData,
+								opportunityName: 	body.opportunityName,
+								startDate: 			startDate
+							}
+							process.nextTick(function(){ callback(null, opportunityData) })
 						}
-					}, function(error){
-						if (error) {  process.nextTick(function(){ callback(error) }) }
-						var opportunityData = {
-							sheetData: 			sheetData,
-							opportunityName: 	body.opportunityName,
-							startDate: 			startDate
-						}
-						process.nextTick(function(){ callback(null, opportunityData) })
-					}
-				)
-			})
+					)
+				})
+			}
 		}
 	})
 }
@@ -282,7 +284,7 @@ function getColumnStart(sheet, topRow, callback) {
 */
 function getBottomRow(sheet, indexes, callback) {
 	var bottomRow = indexes.topRow,
-		max = 100,
+		max = 150,
 		found = false
 	async.whilst(
 		function(){ return (bottomRow < max && !found)},
@@ -350,8 +352,6 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 		0: (workbook.Props.SheetNames[2] == 'Estimate'),
 		1: (getCellValue(sheet, indexes.topRow, indexes.topCol, 'v').startsWith('Role')), // test first 4 chars
 		2: (getCellValue(sheet, indexes.topRow, indexes.topCol + 1, 'v').startsWith('Resp')),// test first 4 chars
-		// 3: (getCellValue(sheet, indexes.topRow, indexes.bottomCol, 'v') == 'Projected Non-Billable Revenue'),
-		// 4: (getCellValue(sheet, indexes.bottomRow + 1, indexes.bottomCol, 'v') == 'Total Cost'),
 		3: (getCellValue(sheet, indexes.bottomRow, indexes.topCol, 'v') == 'Subtotal'),
 		4: (getCellValue(sheet, indexes.flagRow, indexes.flagCol, 'v').toUpperCase() != 'DO NOT UPDATE')
 	}
