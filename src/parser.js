@@ -45,12 +45,10 @@ var parseExcelSheet = function(body, callback) {
 			var sheet = sheet
 
 			// Get the bottom row of the data and the header
-			console.log(sheet)
 			async.parallel({
 				one: async.apply(getBottomRow, sheet, indexes),
 				two: async.apply(getHeaderStart, sheet, indexes)
 			}, function(error, results) {
-				console.log(sheet)
 				// Return if either the bottom row or header weren't found
 				if (error) { process.nextTick(function(){ callback(error, undefined) })}
 				else {
@@ -377,10 +375,11 @@ function getHeaderStart(sheet, indexes, callback) {
 /**
 * @function getSheetTabNumber
 * @desc Get and then set the proper sheet of the estimate workbook
-* @param workbook
+* @param wb
 * @returns {sheet} the estimate sheet in the workbook
 */
-function getEstimateSheet(workbook, callback) {
+function getEstimateSheet(wb, callback) {
+	var workbook = wb
 	async.forEachOf(workbook.Props.SheetNames, function(sheetName, sheetNum, callback) {
 		if ( sheetName.toLowerCase() == 'estimate' ) {
 			process.nextTick(function(){ callback(null, sheetNum) })
