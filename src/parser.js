@@ -21,8 +21,7 @@ xlsx workbook object for parsing using the xlsx library.
 * @returns JSON format object of estimated forecasted hours for each role/week, and opportunity name
 */
 var parseExcelSheet = function(body, callback) {
-	var workbook = xlsx.read(body.b64, {type: 'base64'})	
-	var sheet 	 = workbook.Sheets[workbook.SheetNames[2]]
+	var workbook = xlsx.read(body.b64, {type: 'base64'})
 	// Template indexes are hardcoded here
 	// Top row/col refers to upper left cell B18
 	// Bottom row/col refers to lower right cell I61
@@ -37,79 +36,116 @@ var parseExcelSheet = function(body, callback) {
 		flagCol: 4
 	}
 
-	async.parallel({
-		one: async.apply(getBottomRow, sheet, indexes),
-		two: async.apply(getHeaderStart, sheet, indexes)
-	}, function(error, results) {
-		if (error) { process.nextTick(function(){ callback(error, undefined) })}
+	// Get the estimate sheet from the workbook
+	getSheetNumber(workbook, function( error, sheetNum) {
+		// Return if the estimate sheet isn't found
+		if ( error ) { process.nextTick(function(){ callback(null, undefined) }) }
 		else {
-			indexes.bottomRow = results.one
-			indexes.topRow = results.two
-			indexes.dataRowStart = results.two + 1
+			// Estimate sheet was found, proceed
+			var sheet = workbook.Sheets[workbook.SheetNames[sheetNum]]
 
-			// Parse the sheet if valid
-			if(!sheetIsValidFormat(workbook, sheet, indexes)) {
-				process.nextTick(function(){ callback(null, undefined) })
-			} else {
-				var sheetData = {},
-					colEnd,
-					year
+			// Get the bottom row of the data and the header
+			async.parallel({
+				one: async.apply(getBottomRow, sheet, indexes),
+				two: async.apply(getHeaderStart, sheet, indexes)
+			}, function(error, results) {
+				// Return if either the bottom row or header weren't found
+				if (error) { process.nextTick(function(){ callback(error, undefined) })}
+				else {
+					// Bottom row and header were found, proceed
+					// Set indexes that were found above
+					indexes.bottomRow = results.one
+					indexes.topRow = results.two
+					indexes.dataRowStart = results.two + 1
 
-				async.parallel({
-					one: async.apply(getColumnLimit, sheet, indexes.bottomRow, indexes.dataColStart, 3),
-					two: async.apply(getYear, sheet, indexes),
-					three: async.apply(getColumnStart, sheet, indexes.topRow)
-				}, function(error, results) {
-					if (error) { process.nextTick(function(){ callback(error, undefined) }) }
-					colEnd = results.one
-					year = results.two
-					indexes.dataColStart = results.three
-					var startDate = moment(new Date(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year))
-									   .format('MM/DD/YYYY')
+					// Parse the sheet if valid
+					if(!sheetIsValidFormat(workbook, sheet, indexes)) {
+						process.nextTick(function(){ callback(null, undefined) })
+					} else {
+						// Sheet is valid, proceed
+						var sheetData = {},
+							colEnd,
+							year
 
-					async.whilst(
-						function(){ return getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal' },
-						function(callback){
-							var role = getCellValue(sheet, indexes.dataRowStart, 1, 'v')
-							if(role != '') {
-								role = mapRole(role)
-								if(!sheetData[role]) {
-									sheetData[role] = {}
-								}
-								sheetData[role][indexes.dataRowStart] = {}
+						// Get limits of the allocation area of the spreadsheet
+						async.parallel({
+							one: async.apply(getColumnLimit, sheet, indexes.bottomRow, indexes.dataColStart, 3),
+							two: async.apply(getYear, sheet, indexes),
+							three: async.apply(getColumnStart, sheet, indexes.topRow)
+						}, function(error, results) {
+							// Return if the indexes were not found
+							if (error) { process.nextTick(function(){ callback(error, undefined) }) }
+							else {
+								// Indexes were found, set and proceed
+								colEnd = results.one
+								year = results.two
+								indexes.dataColStart = results.three
+								// Calculate the startDate from mm/dd on sheet
+								var startDate = moment(new Date(getCellValue(sheet, indexes.topRow, indexes.dataColStart, 'w') + '/' + year))
+												   .format('MM/DD/YYYY')
 
-								var weekOffset = 0
-								async.times(colEnd-indexes.dataColStart, function(n, next){
-									var hours = getCellValue(sheet, indexes.dataRowStart, indexes.dataColStart+n, 'v')
-									if (hours != '') {
-										sheetData[role][indexes.dataRowStart][weekOffset] = hours
-										weekOffset++
-										next(null)
-									} else {
-										weekOffset++
-										next(null)
+								// Get allocation information per role and assign in JSON
+								async.whilst(
+									function(){ return getCellValue(sheet, indexes.dataRowStart, 1, 'v') != 'Subtotal' },
+									function(callback){
+										var role = getCellValue(sheet, indexes.dataRowStart, 1, 'v')
+										// Check if a role name was found on the row
+										if(role != '') {
+											// Role was found, set Role
+											role = mapRole(role)
+											// Check if this is the first of this role found
+											if(!sheetData[role]) {
+												// Create a key for the role in the JSON
+												sheetData[role] = {}
+											}
+											// Create key for THIS role in the JSON by using the row number
+											sheetData[role][indexes.dataRowStart] = {}
+
+											// Build the allocation JSON
+											var weekOffset = 0
+											// Get all week allocations from the columns in the spreadsheet
+											async.times(colEnd-indexes.dataColStart, function(n, next){
+												var hours = getCellValue(sheet, indexes.dataRowStart, indexes.dataColStart+n, 'v')
+												/*
+												* Check if hours were found
+												* assign hours and weekOffset to THIS role if found
+												* else increment weekOffset and continue
+												*/
+												if (hours != '') {
+													sheetData[role][indexes.dataRowStart][weekOffset] = hours
+													weekOffset++
+													next(null)
+												} else {
+													weekOffset++
+													next(null)
+												}
+											}, function(error) {
+												if (error) { process.nextTick(function(){ callback(error) }) }
+												// Move to the next Row(Role) in the spreadsheet
+												indexes.dataRowStart++
+												process.nextTick(callback)
+											})
+										} else {
+											// A role name was not found on this row, increment and move to next Row
+											indexes.dataRowStart++
+											process.nextTick(callback)
+										}
+									}, function(error){
+										if (error) {  process.nextTick(function(){ callback(error) }) }
+										// Create the JSON to be returned
+										var opportunityData = {
+											sheetData: 			sheetData,
+											opportunityName: 	body.opportunityName,
+											startDate: 			startDate
+										}
+										process.nextTick(function(){ callback(null, opportunityData) })
 									}
-								}, function(error) {
-									if (error) { process.nextTick(function(){ callback(error) }) }
-									indexes.dataRowStart++
-									process.nextTick(callback)
-								})
-							} else {
-								indexes.dataRowStart++
-								process.nextTick(callback)
+								)
 							}
-						}, function(error){
-							if (error) {  process.nextTick(function(){ callback(error) }) }
-							var opportunityData = {
-								sheetData: 			sheetData,
-								opportunityName: 	body.opportunityName,
-								startDate: 			startDate
-							}
-							process.nextTick(function(){ callback(null, opportunityData) })
-						}
-					)
-				})
-			}
+						})
+					}
+				}
+			})
 		}
 	})
 }
@@ -337,6 +373,28 @@ function getHeaderStart(sheet, indexes, callback) {
 //*************************************
 
 /**
+* @function getSheetTabNumber
+* @desc Get and then set the proper sheet of the estimate workbook
+* @param workbook
+* @param sheet
+* @returns {sheet} the estimate sheet in the workbooj
+*/
+function getSheetNumber(workbook, callback) {
+	async.forEachOf(workbook.Props.SheetNames, function(sheetName, sheetNum, callback) {
+		if ( sheetName.toLowerCase() == 'estimate' ) {
+			console.log(sheetNum)
+			process.nextTick(function(){ callback(null, sheetNum) })
+		}
+		else{ process.nextTick(callback) }
+	}, function(error, sheetNum) {
+		if ( sheetNum ) { process.nextTick(function(){ callback(null, sheetNum) }) }
+		else { process.nextTick(function(){ callback(new Error('Could not find Estimate tab in spreadsheet'), null) }) }
+	})
+}
+
+//*************************************
+
+/**
 * @function sheetIsValidFormat
 * @desc Validates the sheet format.
 * @param {workbook} workbook - xlsx workbook object
@@ -348,11 +406,11 @@ function sheetIsValidFormat(workbook, sheet, indexes) {
 	var isValid = true,
 		errorDescription = 'Sheet validation test(s) '
 	var tests = {
-		0: (workbook.Props.SheetNames[2] == 'Estimate'),
-		1: (getCellValue(sheet, indexes.topRow, indexes.topCol, 'v').startsWith('Role')), // test first 4 chars
-		2: (getCellValue(sheet, indexes.topRow, indexes.topCol + 1, 'v').startsWith('Resp')),// test first 4 chars
-		3: (getCellValue(sheet, indexes.bottomRow, indexes.topCol, 'v') == 'Subtotal'),
-		4: (getCellValue(sheet, indexes.flagRow, indexes.flagCol, 'v').toUpperCase() != 'DO NOT UPDATE')
+		//0: (workbook.Props.SheetNames[2] == 'Estimate'),
+		0: (getCellValue(sheet, indexes.topRow, indexes.topCol, 'v').startsWith('Role')), // test first 4 chars
+		1: (getCellValue(sheet, indexes.topRow, indexes.topCol + 1, 'v').startsWith('Resp')),// test first 4 chars
+		2: (getCellValue(sheet, indexes.bottomRow, indexes.topCol, 'v') == 'Subtotal'),
+		3: (getCellValue(sheet, indexes.flagRow, indexes.flagCol, 'v').toUpperCase() != 'DO NOT UPDATE')
 	}
 
 	for(var test in tests) {
