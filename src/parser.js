@@ -37,12 +37,12 @@ var parseExcelSheet = function(body, callback) {
 	}
 
 	// Get the estimate sheet from the workbook
-	getSheetNumber(workbook, function( error, sheetNum) {
+	getSheetNumber(workbook, function( error, sheet) {
 		// Return if the estimate sheet isn't found
 		if ( error ) { process.nextTick(function(){ callback(null, undefined) }) }
 		else {
 			// Estimate sheet was found, proceed
-			var sheet = workbook.Sheets[workbook.SheetNames[sheetNum]]
+			//var sheet = workbook.Sheets[workbook.SheetNames[sheetNum]]
 
 			// Get the bottom row of the data and the header
 			async.parallel({
@@ -376,19 +376,24 @@ function getHeaderStart(sheet, indexes, callback) {
 * @function getSheetTabNumber
 * @desc Get and then set the proper sheet of the estimate workbook
 * @param workbook
-* @param sheet
-* @returns {sheet} the estimate sheet in the workbooj
+* @returns {sheet} the estimate sheet in the workbook
 */
-function getSheetNumber(workbook, callback) {
+function getEstimateSheet(workbook, callback) {
 	async.forEachOf(workbook.Props.SheetNames, function(sheetName, sheetNum, callback) {
 		if ( sheetName.toLowerCase() == 'estimate' ) {
-			console.log(sheetNum)
 			process.nextTick(function(){ callback(null, sheetNum) })
 		}
 		else{ process.nextTick(callback) }
 	}, function(error, sheetNum) {
-		if ( sheetNum ) { process.nextTick(function(){ callback(null, sheetNum) }) }
-		else { process.nextTick(function(){ callback(new Error('Could not find Estimate tab in spreadsheet'), null) }) }
+		if ( sheetNum ) { 
+			process.nextTick(function(){ 
+				callback(null, workbook.Sheets[workbook.SheetNames[sheetNum]])
+			}) 
+		} else { 
+			process.nextTick(function(){
+				callback(new Error('Could not find Estimate tab in spreadsheet'), null)
+			})
+		}
 	})
 }
 
