@@ -39,9 +39,9 @@ var parseExcelSheet = function(body, callback) {
 	// Get the estimate sheet from the workbook
 	getEstimateSheet(xlsx.read(body.b64, {type: 'base64'}), function( error, sheet, sheetNum) {
 		// Return if the estimate sheet isn't found
-		console.log('test')
-
-		if ( error ) { process.nextTick(function(){ callback(null, undefined) }) }
+		if ( error ) {
+			console.log('Gotcha')
+			process.nextTick(function(){ callback(null, undefined) }) }
 		else {
 			console.log('Begin Estimate')
 			console.log(sheetNum+':'+workbook.SheetNames[sheetNum])
