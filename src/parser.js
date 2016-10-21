@@ -37,10 +37,12 @@ var parseExcelSheet = function(body, callback) {
 	}
 
 	// Get the estimate sheet from the workbook
-	getEstimateSheet(workbook, function( error, sheet) {
+	getEstimateSheet(workbook, function( error, sheet, sheetNum) {
 		// Return if the estimate sheet isn't found
 		if ( error ) { process.nextTick(function(){ callback(null, undefined) }) }
 		else {
+
+			console.log(sheetNum+':'+workbook.SheetNames[sheetNum])
 			// Estimate sheet was found, proceed
 			var sheet = sheet
 
@@ -388,11 +390,12 @@ function getEstimateSheet(wb, callback) {
 	}, function(error, sheetNum) {
 		if ( sheetNum ) { 
 			process.nextTick(function(){ 
-				callback(null, workbook.Sheets[workbook.SheetNames[sheetNum]])
+				callback(null, workbook.Sheets[workbook.SheetNames[sheetNum]], sheetNum)
+				console.log(sheetNum+':'+workbook.SheetNames[sheetNum])
 			}) 
 		} else { 
 			process.nextTick(function(){
-				callback(new Error('Could not find Estimate tab in spreadsheet'), null)
+				callback(new Error('Could not find Estimate tab in spreadsheet'), null, null)
 			})
 		}
 	})
