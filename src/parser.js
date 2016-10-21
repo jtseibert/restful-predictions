@@ -40,10 +40,8 @@ var parseExcelSheet = function(body, callback) {
 	getEstimateSheet(xlsx.read(body.b64, {type: 'base64'}), function( error, sheet, sheetNum) {
 		// Return if the estimate sheet isn't found
 		if ( error ) {
-			console.log('Gotcha')
 			process.nextTick(function(){ callback(null, undefined) }) }
 		else {
-			console.log('Begin Estimate')
 			console.log(sheetNum+':'+workbook.SheetNames[sheetNum])
 			// Estimate sheet was found, proceed
 			var sheet = sheet
@@ -384,13 +382,14 @@ function getHeaderStart(sheet, indexes, callback) {
 */
 function getEstimateSheet(wb, callback) {
 	var workbook = wb
-	async.forEachOfSeries(workbook.Props.SheetNames, function(sheetName, sheetNum, callback) {
-		console.log(sheetName)
+	async.forEachOf(workbook.Props.SheetNames, function(sheetName, sheetNum, callback) {
 		if ( sheetName.toLowerCase() == 'estimate' ) {
+			console.log(sheetNum+': '+sheetName)
 			process.nextTick(function(){ callback(null, sheetNum) })
 		}
 		else{ process.nextTick(callback) }
 	}, function(error, sheetNum) {
+		console.log('sheetNum:" '+sheetNum)
 		if ( sheetNum ) {
 			console.log(sheetNum)
 			process.nextTick(function(){
