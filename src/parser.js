@@ -42,13 +42,15 @@ var parseExcelSheet = function(body, callback) {
 		if ( error ) { process.nextTick(function(){ callback(null, undefined) }) }
 		else {
 			// Estimate sheet was found, proceed
-			//var sheet = workbook.Sheets[workbook.SheetNames[sheetNum]]
+			var sheet = sheet
 
 			// Get the bottom row of the data and the header
+			console.log(sheet)
 			async.parallel({
 				one: async.apply(getBottomRow, sheet, indexes),
 				two: async.apply(getHeaderStart, sheet, indexes)
 			}, function(error, results) {
+				console.log(sheet)
 				// Return if either the bottom row or header weren't found
 				if (error) { process.nextTick(function(){ callback(error, undefined) })}
 				else {
