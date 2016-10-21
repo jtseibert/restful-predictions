@@ -384,8 +384,8 @@ function getHeaderStart(sheet, indexes, callback) {
 */
 function getEstimateSheet(wb, callback) {
 	var workbook = wb
-	console.log(workbook.Props.SheetNames)
-	async.forEachOf(workbook.Props.SheetNames, function(sheetName, sheetNum, callback) {
+	async.forEachOfSeries(workbook.Props.SheetNames, function(sheetName, sheetNum, callback) {
+		console.log(sheetName)
 		if ( sheetName.toLowerCase() == 'estimate' ) {
 			process.nextTick(function(){ callback(null, sheetNum) })
 		}
@@ -396,7 +396,8 @@ function getEstimateSheet(wb, callback) {
 			process.nextTick(function(){
 				callback(null, workbook.Sheets[workbook.SheetNames[sheetNum]], sheetNum)
 			}) 
-		} else { 
+		} else {
+			console.log('Threw error')
 			process.nextTick(function(){
 				callback(new Error('Could not find Estimate tab in spreadsheet'), null, null)
 			})
