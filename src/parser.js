@@ -41,7 +41,7 @@ var parseExcelSheet = function(body, callback) {
 		// Return if the estimate sheet isn't found
 		if ( error ) { process.nextTick(function(){ callback(null, undefined) }) }
 		else {
-
+			console.log('Begin Estimate')
 			console.log(sheetNum+':'+workbook.SheetNames[sheetNum])
 			// Estimate sheet was found, proceed
 			var sheet = sheet
@@ -389,9 +389,9 @@ function getEstimateSheet(wb, callback) {
 		else{ process.nextTick(callback) }
 	}, function(error, sheetNum) {
 		if ( sheetNum ) { 
-			process.nextTick(function(){ 
-				callback(null, workbook.Sheets[workbook.SheetNames[sheetNum]], sheetNum)
+			process.nextTick(function(){
 				console.log(sheetNum+':'+workbook.SheetNames[sheetNum])
+				callback(null, workbook.Sheets[workbook.SheetNames[sheetNum]], sheetNum)
 			}) 
 		} else { 
 			process.nextTick(function(){
