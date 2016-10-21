@@ -42,7 +42,6 @@ var parseExcelSheet = function(body, callback) {
 		if ( error ) {
 			process.nextTick(function(){ callback(null, undefined) }) }
 		else {
-			console.log(sheetNum+':'+workbook.SheetNames[sheetNum])
 			// Estimate sheet was found, proceed
 			var sheet = sheet
 
@@ -382,40 +381,16 @@ function getHeaderStart(sheet, indexes, callback) {
 */
 function getEstimateSheet(wb, callback) {
 	var workbook = wb
-	// async.forEachOf(workbook.Props.SheetNames, function(sheetName, sheetNum, callback) {
-	// 	if ( sheetName.toLowerCase() == 'estimate' ) {
-	// 		console.log(sheetNum+': '+sheetName)
-	// 		process.nextTick(function(){ callback(null, sheetNum) })
-	// 	}
-	// 	else{ process.nextTick(callback) }
-	// }, function(error, sheetNum) {
-	// 	console.log('sheetNum: '+sheetNum)
-	// 	if ( sheetNum ) {
-	// 		console.log(sheetNum)
-	// 		process.nextTick(function(){
-	// 			callback(null, workbook.Sheets[workbook.SheetNames[sheetNum]], sheetNum)
-	// 		}) 
-	// 	} else {
-	// 		console.log('Threw error')
-	// 		process.nextTick(function(){
-	// 			callback(new Error('Could not find Estimate tab in spreadsheet'), null, null)
-	// 		})
-	// 	}
-	// })
 	async.detect(workbook.SheetNames, function(sheetName, callback) {
-		console.log(sheetName)
 		if ( sheetName.toLowerCase() == 'estimate' ) {
 			process.nextTick(function(){ callback(null, true) })
 		}
 	}, function(error, result) {
-		console.log(result)
 		if ( result ) {
-			console.log(result+': '+workbook.Sheets[result])
 			process.nextTick(function(){
 				callback(null, workbook.Sheets[result])
 			})
 		} else {
-			console.log('Threw error')
 			process.nextTick(function(){
 				callback(new Error('Could not find Estimate tab in spreadsheet'), null)
 			})
