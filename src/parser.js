@@ -405,7 +405,6 @@ function getEstimateSheet(wb, callback) {
 	async.detect(workbook.SheetNames, function(sheetName, callback) {
 		console.log(sheetName)
 		if ( sheetName.toLowerCase() == 'estimate' ) {
-			console.log(sheetNum+': '+sheetName)
 			process.nextTick(function(){ callback(null, true) })
 		}
 	}, function(error, result) {
