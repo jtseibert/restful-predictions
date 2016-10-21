@@ -388,9 +388,9 @@ function getEstimateSheet(wb, callback) {
 		}
 		else{ process.nextTick(callback) }
 	}, function(error, sheetNum) {
-		if ( sheetNum ) { 
+		if ( sheetNum ) {
+			console.log(sheetNum)
 			process.nextTick(function(){
-				console.log(sheetNum+':'+workbook.SheetNames[sheetNum])
 				callback(null, workbook.Sheets[workbook.SheetNames[sheetNum]], sheetNum)
 			}) 
 		} else { 
