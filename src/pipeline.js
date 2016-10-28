@@ -42,8 +42,8 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 	queryPipeline(accessToken, path, function(error, pipelineData) {
 		if (error) { process.nextTick(function() {callback(error)}) }
 		var today = moment().format("MM/DD/YYYY")
-		var deleteQuery = "DELETE FROM sales_pipeline WHERE (protected = FALSE AND attachment = FALSE AND generic = FALSE) OR close_date < " 
-						+ "'" + today + "'"
+		var deleteQuery = "DELETE FROM sales_pipeline WHERE (protected = FALSE AND attachment = FALSE AND generic = FALSE) OR (close_date < " 
+						+ "'" + today + "' AND opportunity != 'UNI Supplier.net Discovery Session'"
 		helpers.query(deleteQuery, null, function(error) {
 			if (error) { process.nextTick(function() {callback(error)}) }
 			// For each row in pipelineData, sync accordingly
