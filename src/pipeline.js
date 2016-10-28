@@ -329,7 +329,7 @@ function queryPipeline(accessToken, path, callback) {
 	// Constraint where opportunity has not closed as of current date
 	var pipelineQuery = 
 		"SELECT Name, Amount, ExpectedRevenue, CloseDate, Probability "
-	  + "FROM Opportunity WHERE CloseDate>=" + today
+	  + "FROM Opportunity WHERE Probability > 0 AND CloseDate>=" + today
 
 	// Execute SOQL query to populate pipelineData
 	conn.query(pipelineQuery)
