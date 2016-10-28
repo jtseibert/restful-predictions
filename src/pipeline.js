@@ -252,12 +252,14 @@ var exportToSheets = function(callback) {
 		"PROBABILITY",
 		"ROLE",
 		"WEEK",
-		"ESTIMATED_HOURS"
+		"ESTIMATED_HOURS",
+		"ATTACHMENT",
+		"GENERIC"
 	]]
 	var sheetQuery = 
 		"SELECT opportunity, amount, expected_revenue, "
 	  + "close_date, start_date, probability, "
-	  + "role, offset_allocation FROM sales_pipeline WHERE omitted = FALSE"
+	  + "role, offset_allocation, attachment, generic FROM sales_pipeline WHERE omitted = FALSE"
 
 	helpers.query(
 		sheetQuery,
@@ -281,7 +283,9 @@ var exportToSheets = function(callback) {
 						opportunity.probability*100,
 						opportunity.role,
 						startDate.add(week, 'weeks').format('MM/DD/YYYY'),
-						hours * opportunity.probability
+						hours * opportunity.probability,
+						opportunity.attachment,
+						opportunity.generic
 					]
 					values.push(temp)
 					process.nextTick(callback)
