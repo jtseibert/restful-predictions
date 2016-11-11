@@ -226,7 +226,8 @@ function mapRole(role) {
 	if(splitRole[0] == 'Senior' || splitRole[0] == 'Associate') {
 		var temp = splitRole[0]
 		splitRole.shift()
-		splitRole.push(','+temp)
+		splitRole[splitRole.length] = splitRole[splitRole.length] + ','
+		splitRole.push(temp)
 		//mappedRole = splitRole + ', ' + temp
 	}
 
