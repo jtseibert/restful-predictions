@@ -271,9 +271,9 @@ var exportToSheets = function(callback) {
 			async.each(queryData, function(opportunity, callback) {
 				// Opportunity is {opp: name, ... , role: role, offset_allocation: {...}}
 				var formattedCloseDate = moment(new Date(opportunity.close_date)).weekday(6).format("MM/DD/YYYY")
-				var formattedStartDate = moment(new Date(opportunity.start_date)).weekday(6).format("MM/DD/YYYY")
+				var formattedStartDate = moment(new Date(opportunity.start_date)).format("MM/DD/YYYY")
 				async.eachOf(opportunity.offset_allocation, function(hours, week, callback) {
-					var startDate = moment(new Date(opportunity.start_date))
+					var startDate = moment(new Date(opportunity.start_date)).weekday(6)
 					var temp = [
 						opportunity.opportunity,
 						opportunity.amount,
