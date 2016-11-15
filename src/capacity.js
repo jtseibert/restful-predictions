@@ -32,6 +32,7 @@ var queryCapacity = function(accessToken, path, callback) {
 				"FROM Contact "+
 				"WHERE pse__Resource_Role__c!='' "+
 					"AND Account.Name = 'Magnet 360' "+
+					"AND No_Longer_Employee__c = false "+
 				"ORDER BY pse__Resource_Role__c")
   	.on("record", function handleRecord(record) {
   		var recordData = []
