@@ -33,7 +33,8 @@ var parseExcelSheet = function(body, callback) {
 		bottomRow: 0,
 		bottomCol: 8,
 		flagRow: 0,
-		flagCol: 4
+		flagCol: 4,
+		projectedHrs: 0
 	}
 
 	// Get the estimate sheet from the workbook
@@ -245,29 +246,38 @@ n consecutive 0.00 values in the subtotal row.
 * @param {int} n - number of consecutive 0.00 values before stop
 * @returns {int} colEnd - numeric index of last column of row data
 */
-function getColumnLimit(sheet, bottomRow, dataColStart, num, callback) {	
-	var colEnd
-	var currentCol = dataColStart
-	var done = false
-	var consecutiveCheck = true
+function getColumnLimit(sheet, indexes, dataColStart, num, callback) {	
+	var colEnd,
+		currentCol = dataColStart,
+		done = false,
+		hoursCount = 0
+
 	async.whilst(
 		function() { return !done },
 		function(callback) {
-			async.times(num, function(n, next){
-				consecutiveCheck = consecutiveCheck && (getCellValue(sheet, bottomRow + 1, n+currentCol, 'v') == 0.00)
-				next(null)
-			}, function(error) {
-				// When consecutiveCheck == false, there exists at least 1 nonzero value
-				if(!consecutiveCheck) {
-					currentCol += num
-					consecutiveCheck = true
-					process.nextTick(callback)
-				} else {
+
+			// Get the projected hours for the current week
+			var weeklyHrs = getCellValue(sheet, indexes.bottomRow + 1, currentCol, 'v')
+
+			// Check if we have reached the end of the sheet, returning ''
+			if ( weeklyHrs.equals( '' ) ) {
+				done = true
+				colEnd = currentCol
+			} else {
+
+				// Add the projected hours for the week to the hours count
+				hoursCount += parseInt( weeklyHrs )
+
+				// Check if we have hit all of the projected hours
+				if ( hoursCount == indexes.projectedHrs ) {
 					done = true
 					colEnd = currentCol
-					process.nextTick(function(){ callback(null, colEnd) })
+				} else {
+					// Increment to the next week
+					currentCol++
 				}
-			})
+			}
+
 		}, function(error, colEnd) {
 			if (error) { process.nextTick(function(){ callback(error, null) }) }
 			process.nextTick(function(){ callback(null, colEnd) })
@@ -359,6 +369,19 @@ function getHeaderStart(sheet, indexes, callback) {
 		function(callback) {
 			if(getCellValue(sheet, rowStart+maxIter, indexes.topCol, 'v').startsWith('Role')) {
 				found = true
+				var sheet  = sheet
+				var headerRow = rowStart+maxIter
+				async.detect([indexes.topCol, indexes.topCol+1, indexes.topCol+2, indexes.topCol+3, indexes.topCol+4, indexes.topCol+5],
+					function(col, callback) {
+						if ( getCellValue(sheet, headerRow, col, 'v').indexOf('Hours') > -1 ) {
+							process.nextTick(function(){ callback(null, true) })
+						}
+					}, function(error, result) {
+						if ( result ) {
+							tempIndex = result
+							indexes.projectedHrs = getCellValue
+						}
+					})
 				process.nextTick(function(){ callback(null, found, rowStart+maxIter) })
 			} else {
 				maxIter++
