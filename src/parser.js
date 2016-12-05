@@ -366,13 +366,13 @@ function getHeaderStart(sheet, indexes, callback) {
 	var rowStart = 12,
 		maxIter = 0,
 		found = false,
-		sheet = sheet
+		xSheet = sheet
 
 	async.whilst(
 		function(){ return (maxIter < 10 && !found) },
 		function(callback) {
 
-			console.log("Hello, " + sheet)
+			console.log("Hello, " + xSheet)
 
 			if(getCellValue(sheet, rowStart+maxIter, indexes.topCol, 'v').startsWith('Role')) {
 				found = true
