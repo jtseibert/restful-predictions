@@ -75,7 +75,7 @@ var parseExcelSheet = function(body, callback) {
 
 						// Get limits of the allocation area of the spreadsheet
 						async.parallel({
-							one: async.apply(getColumnLimit, sheet, indexes.bottomRow, indexes.dataColStart, 3),
+							one: async.apply(getColumnLimit, sheet, indexes, indexes.dataColStart, 3),
 							two: async.apply(getYear, sheet, indexes),
 							three: async.apply(getColumnStart, sheet, indexes.topRow)
 						}, function(error, results) {
@@ -261,8 +261,7 @@ function getColumnLimit(sheet, indexes, dataColStart, num, callback) {
 		sheet = sheet,
 		currentCol = dataColStart,
 		done = false,
-		hoursCount = 0,
-		indexes = indexes
+		hoursCount = 0
 
 		console.log('projected hours: '+indexes.projectedHrs)
 
