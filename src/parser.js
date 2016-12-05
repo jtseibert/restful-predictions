@@ -396,7 +396,7 @@ function getHeaderStart(sheet, indexes, callback) {
 					}, function(error, result) {
 						if ( result ) {
 							tempIndex = result
-							console.log('indexes: '+indexes)
+							console.log('result: '+result)
 							indexes.projectedHrs = getCellValue(xSheet, headerRow, result, 'v')
 						}
 					})
