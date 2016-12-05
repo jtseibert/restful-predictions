@@ -34,7 +34,8 @@ var parseExcelSheet = function(body, callback) {
 		bottomCol: 8,
 		flagRow: 0,
 		flagCol: 4,
-		projectedHrs: 0
+		projectedHrs: 0,
+		projectedHrsCol: 0
 	}
 
 	// Get the estimate sheet from the workbook
@@ -59,6 +60,9 @@ var parseExcelSheet = function(body, callback) {
 					indexes.bottomRow = results.one
 					indexes.topRow = results.two
 					indexes.dataRowStart = results.two + 1
+					indexes.projectedHrs = getCellValue(sheet, indexes.bottomRow, indexes.projectedHrsCol, 'v')
+
+					console.log(indexes.projectedHrs)
 
 					// Parse the sheet if valid
 					if(!sheetIsValidFormat(workbook, sheet, indexes)) {
@@ -396,8 +400,7 @@ function getHeaderStart(sheet, indexes, callback) {
 					}, function(error, result) {
 						if ( result ) {
 							tempIndex = result
-							console.log('result: '+result)
-							indexes.projectedHrs = getCellValue(xSheet, headerRow, result, 'v')
+							indexes.projectedHrsCol = result
 						}
 					})
 				process.nextTick(function(){ callback(null, found, rowStart+maxIter) })
