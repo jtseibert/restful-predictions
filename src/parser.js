@@ -363,14 +363,17 @@ function getBottomRow(sheet, indexes, callback) {
 */
 function getHeaderStart(sheet, indexes, callback) {
 
-	console.log("Hello, " + sheet)
-
 	var rowStart = 12,
 		maxIter = 0,
-		found = false
+		found = false,
+		sheet = sheet
+
 	async.whilst(
 		function(){ return (maxIter < 10 && !found) },
 		function(callback) {
+
+			console.log("Hello, " + sheet)
+
 			if(getCellValue(sheet, rowStart+maxIter, indexes.topCol, 'v').startsWith('Role')) {
 				found = true
 				var sheet  = sheet
