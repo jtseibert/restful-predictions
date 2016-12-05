@@ -269,7 +269,7 @@ function getColumnLimit(sheet, indexes, dataColStart, num, callback) {
 
 			// Get the projected hours for the current week
 			var weeklyHrs = getCellValue(sheet, indexes.bottomRow + 1, currentCol, 'v')
-			console.log('weeklyHrs: '+weeklyHrs)
+			console.log('weeklyHrs: '+weeklyHrs+'weeklyHrs == ""'+(weeklyHrs == ''))
 			// Check if we have reached the end of the sheet, returning ''
 			if ( weeklyHrs == '' ) {
 				done = true
