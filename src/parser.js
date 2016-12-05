@@ -362,8 +362,10 @@ function getBottomRow(sheet, indexes, callback) {
 * @returns {integer} row number of header start
 */
 function getHeaderStart(sheet, indexes, callback) {
+
+	if (sheet == null || sheet == undefined) { console.log("found") }
+
 	var rowStart = 12,
-		sheet = sheet,
 		maxIter = 0,
 		found = false
 	async.whilst(
