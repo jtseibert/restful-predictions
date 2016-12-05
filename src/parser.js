@@ -110,7 +110,7 @@ var parseExcelSheet = function(body, callback) {
 
 											console.log('colEnd: '+colEnd)
 											console.log('colStart'+indexes.dataColStart)
-											console.log('number of cols: '+colEnd-indexes.dataColStart)
+											console.log('number of cols: '+(colEnd-indexes.dataColStart))
 
 											async.times(colEnd-indexes.dataColStart, function(n, next){
 												var hours = getCellValue(sheet, indexes.dataRowStart, indexes.dataColStart+n, 'v')
