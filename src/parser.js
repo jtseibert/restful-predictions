@@ -248,6 +248,7 @@ n consecutive 0.00 values in the subtotal row.
 */
 function getColumnLimit(sheet, indexes, dataColStart, num, callback) {	
 	var colEnd,
+		sheet = sheet,
 		currentCol = dataColStart,
 		done = false,
 		hoursCount = 0
