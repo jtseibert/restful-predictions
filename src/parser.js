@@ -264,6 +264,8 @@ function getColumnLimit(sheet, indexes, dataColStart, num, callback) {
 		hoursCount = 0,
 		indexes = indexes
 
+		console.log('projected hours: '+indexes.projectedHrs)
+
 	async.whilst(
 		function() { return !done },
 		function(callback) {
