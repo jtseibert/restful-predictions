@@ -257,8 +257,6 @@ function getColumnLimit(sheet, indexes, dataColStart, num, callback) {
 		function() { return !done },
 		function(callback) {
 
-			console.log("Hello")
-
 			// Get the projected hours for the current week
 			var weeklyHrs = getCellValue(sheet, indexes.bottomRow + 1, currentCol, 'v')
 
@@ -266,6 +264,7 @@ function getColumnLimit(sheet, indexes, dataColStart, num, callback) {
 			if ( weeklyHrs == '' ) {
 				done = true
 				colEnd = currentCol
+				process.nextTick(function(){ callback(null, done) })
 			} else {
 
 				// Add the projected hours for the week to the hours count
@@ -275,12 +274,13 @@ function getColumnLimit(sheet, indexes, dataColStart, num, callback) {
 				if ( hoursCount == indexes.projectedHrs ) {
 					done = true
 					colEnd = currentCol
+					process.nextTick(function(){ callback(null, done) })
 				} else {
 					// Increment to the next week
 					currentCol++
+					process.nextTick(function(){ callback(null, done) })
 				}
 			}
-			process.nextTick(function(){ callback(null, done) })
 
 		}, function(error, colEnd) {
 			if (error) { process.nextTick(function(){ callback(error, null) }) }
