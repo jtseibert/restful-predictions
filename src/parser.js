@@ -280,6 +280,7 @@ function getColumnLimit(sheet, indexes, dataColStart, num, callback) {
 					currentCol++
 				}
 			}
+			process.nextTick(function(){ callback(null, done) })
 
 		}, function(error, colEnd) {
 			if (error) { process.nextTick(function(){ callback(error, null) }) }
