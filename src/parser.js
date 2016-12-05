@@ -372,11 +372,9 @@ function getHeaderStart(sheet, indexes, callback) {
 		function(){ return (maxIter < 10 && !found) },
 		function(callback) {
 
-			console.log("Hello, " + xSheet)
-
-			if(getCellValue(sheet, rowStart+maxIter, indexes.topCol, 'v').startsWith('Role')) {
+			if(getCellValue(xSheet, rowStart+maxIter, indexes.topCol, 'v').startsWith('Role')) {
 				found = true
-				var sheet  = sheet
+				var sheet  = xSheet
 				var headerRow = rowStart+maxIter
 				async.detect([indexes.topCol, indexes.topCol+1, indexes.topCol+2, indexes.topCol+3, indexes.topCol+4, indexes.topCol+5],
 					function(col, callback) {
