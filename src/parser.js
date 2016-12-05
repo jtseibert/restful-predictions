@@ -396,7 +396,7 @@ function getHeaderStart(sheet, indexes, callback) {
 					}, function(error, result) {
 						if ( result ) {
 							tempIndex = result
-							indexes.projectedHrs = getCellValue
+							indexes.projectedHrs = getCellValue(xSheet, headerRow, result, 'v')
 						}
 					})
 				process.nextTick(function(){ callback(null, found, rowStart+maxIter) })
