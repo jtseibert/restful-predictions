@@ -261,7 +261,7 @@ function getColumnLimit(sheet, indexes, dataColStart, num, callback) {
 			var weeklyHrs = getCellValue(sheet, indexes.bottomRow + 1, currentCol, 'v')
 
 			// Check if we have reached the end of the sheet, returning ''
-			if ( weeklyHrs.equals( '' ) ) {
+			if ( weeklyHrs == '' ) {
 				done = true
 				colEnd = currentCol
 			} else {
