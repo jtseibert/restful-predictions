@@ -261,7 +261,8 @@ function getColumnLimit(sheet, indexes, dataColStart, num, callback) {
 		sheet = sheet,
 		currentCol = dataColStart,
 		done = false,
-		hoursCount = 0
+		hoursCount = 0,
+		indexes = indexes
 
 	async.whilst(
 		function() { return !done },
