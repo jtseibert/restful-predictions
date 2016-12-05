@@ -62,8 +62,6 @@ var parseExcelSheet = function(body, callback) {
 					indexes.dataRowStart = results.two + 1
 					indexes.projectedHrs = getCellValue(sheet, indexes.bottomRow, indexes.projectedHrsCol, 'v')
 
-					console.log(indexes.projectedHrs)
-
 					// Parse the sheet if valid
 					if(!sheetIsValidFormat(workbook, sheet, indexes)) {
 						process.nextTick(function(){ callback(null, undefined) })
@@ -83,7 +81,6 @@ var parseExcelSheet = function(body, callback) {
 							if (error) { process.nextTick(function(){ callback(error, undefined) }) }
 							else {
 								// Indexes were found, set and proceed
-								console.log('results.three: '+results.three)
 								colEnd = results.one
 								year = results.two
 								indexes.dataColStart = results.three
@@ -111,10 +108,6 @@ var parseExcelSheet = function(body, callback) {
 											// Build the allocation JSON
 											var weekOffset = 0
 											// Get all week allocations from the columns in the spreadsheet
-
-											console.log('colEnd: '+colEnd)
-											console.log('colStart'+indexes.dataColStart)
-											console.log('number of cols: '+(colEnd-indexes.dataColStart))
 
 											async.times(colEnd-indexes.dataColStart, function(n, next){
 												var hours = getCellValue(sheet, indexes.dataRowStart, indexes.dataColStart+n, 'v')
@@ -269,7 +262,7 @@ function getColumnLimit(sheet, indexes, dataColStart, num, callback) {
 
 			// Get the projected hours for the current week
 			var weeklyHrs = getCellValue(sheet, indexes.bottomRow + 1, currentCol, 'v')
-			console.log('weeklyHrs: '+weeklyHrs+', weeklyHrs == "" -> '+(weeklyHrs === ''))
+
 			// Check if we have reached the end of the sheet, returning ''
 			if ( weeklyHrs === '' ) {
 				done = true
@@ -294,7 +287,6 @@ function getColumnLimit(sheet, indexes, dataColStart, num, callback) {
 
 		}, function(error, done) {
 			if (error) { process.nextTick(function(){ callback(error, null) }) }
-			console.log('in callback: '+colEnd)
 			process.nextTick(function(){ callback(null, colEnd) })
 		}
 	)
