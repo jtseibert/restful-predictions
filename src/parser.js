@@ -363,7 +363,7 @@ function getBottomRow(sheet, indexes, callback) {
 */
 function getHeaderStart(sheet, indexes, callback) {
 
-	console.log("Hello")
+	console.log("Hello, " + sheet)
 
 	var rowStart = 12,
 		maxIter = 0,
