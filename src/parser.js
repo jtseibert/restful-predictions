@@ -106,6 +106,9 @@ var parseExcelSheet = function(body, callback) {
 											// Build the allocation JSON
 											var weekOffset = 0
 											// Get all week allocations from the columns in the spreadsheet
+
+											console.log('number of cols: '+colEnd-indexes.dataColStart)
+
 											async.times(colEnd-indexes.dataColStart, function(n, next){
 												var hours = getCellValue(sheet, indexes.dataRowStart, indexes.dataColStart+n, 'v')
 												/*
