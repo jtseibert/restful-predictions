@@ -263,6 +263,8 @@ function getColumnLimit(sheet, indexes, dataColStart, num, callback) {
 		function() { return !done },
 		function(callback) {
 
+			console.log('projected hours: '+indexes.projectedHrs)
+
 			// Get the projected hours for the current week
 			var weeklyHrs = getCellValue(sheet, indexes.bottomRow + 1, currentCol, 'v')
 
