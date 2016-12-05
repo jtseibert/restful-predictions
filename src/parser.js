@@ -79,6 +79,7 @@ var parseExcelSheet = function(body, callback) {
 							if (error) { process.nextTick(function(){ callback(error, undefined) }) }
 							else {
 								// Indexes were found, set and proceed
+								console.log('results.one: '+results.one)
 								colEnd = results.one
 								year = results.two
 								indexes.dataColStart = results.three
@@ -107,6 +108,7 @@ var parseExcelSheet = function(body, callback) {
 											var weekOffset = 0
 											// Get all week allocations from the columns in the spreadsheet
 
+											console.log('colEnd: '+colEnd)
 											console.log('number of cols: '+colEnd-indexes.dataColStart)
 
 											async.times(colEnd-indexes.dataColStart, function(n, next){
