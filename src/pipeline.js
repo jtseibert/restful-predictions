@@ -84,50 +84,56 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 		newPipelineData = pipelineData
 
 		var fnOne = function(accessToken, path, callback) {
-				console.log('START function one')
 				async.parallel({
 					one: async.apply(getClosedWon, accessToken, path),
 					two: getCurDB,
 					three: async.apply(getAllocated, accessToken, path)
 				}, function(error, results) {
-					console.log('finished getting json arrays')	
 					if (error) { process.nextTick(function() {callback(error)}) } 
-					closedWonQuery = results.one
-					currentDB = results.two
-					allocated = results.three
-					process.nextTick(callback)
+					else {
+						closedWonQuery = results.one
+						currentDB = results.two
+						allocated = results.three
+						process.nextTick(callback)
+					}
 				})
-				console.log('END funciton one')
 			},
 			fnTwo = function(callback) {
-				console.log('START function two')
 				async.eachSeries(newPipelineData, function(row, callback) {
-					console.log('START eachSeries1')
 					oppName = row[indexes.OPPORTUNITY_NAME]
 					name = oppName.replace("'","''")
 					if (!(currentDB[oppName] != false 
 							&& closedWonQuery[oppName] != false
 							&& allocated[oppName] == false )) {
-						console.log('Deleting opportunity')
+						console.log('Deleting opportunity: '+name)
 						helpers.query(
 							'DELETE FROM sales_pipeline WHERE opportunity = '+name,
 							null,
 							function(error) {
-								if (error) { process.nextTick(function() {callback(error)}) }
-								process.nextTick(callback)
+								if (error) {
+									console.log('error: '+error)
+									process.nextTick(function() {callback(error)})
+								}
+								else { 
+									console.log('Successful return')
+									process.nextTick(callback)
+								}
 							})
 					} else {
 						console.log('Not deleting opportunity')
 						process.nextTick(callback)
 					}
-					console.log('END eachSeries1')
 				}, function(error) {
 					console.log('START callback1')
-					if (error) { process.nextTick(function() {callback(error)}) }
-					console.log('END callback1')
-					process.nextTick(callback)
+					if (error) {
+						console.log('error: '+error)
+						process.nextTick(function() {callback(error)})
+					}
+					else { 
+						console.log('Successful return')
+						process.nextTick(callback)
+					}
 				})
-				console.log('END function two')
 			}
 
 		async.series({
@@ -136,13 +142,19 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 		}, function(error) {
 			console.log('START callback2')
 			if (error) { process.nextTick(function() {callback(error)}) }
-			async.eachSeries(newPipelineData, syncRows, function(error) {
-				console.log('START callback3')
-				if (error) { process.nextTick(function() {callback(error)}) }
-				console.log('END callback3')
-				process.nextTick(callback)
-			})
-			console.log('END callback2')
+			else {
+				async.eachSeries(newPipelineData, syncRows, function(error) {
+					console.log('START callback3')
+					if (error) {
+						console.log('error: '+error)
+						process.nextTick(function() {callback(error)})
+					}
+					else { 
+						console.log('Successful return')
+						process.nextTick(callback)
+					}
+				})
+			}
 		})
 	})
 }
