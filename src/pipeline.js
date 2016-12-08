@@ -83,25 +83,47 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 
 		newPipelineData = pipelineData
 		async.series({
-			one: async.apply(getClosedWon, accessToken, path),
-			two: getCurDB,
-			three: async.apply(getAllocated, accessToken, path)
-		}, function(error, results) {
+			one: async.parallel({
+					one: async.apply(getClosedWon, accessToken, path),
+					two: getCurDB,
+					three: async.apply(getAllocated, accessToken, path)
+			}, function(error, results) {
+					if (error) { process.nextTick(function() {callback(error)}) } 
+					closedWonQuery = results.one
+					currentDB = results.two
+					allocated = results.three
+					process.nextTick(callback)
+			}),
+			two: function(callback){
+				async.eachSeries(newPipelineData, function(row, callback) {
+					oppName = row[indexes.OPPORTUNITY_NAME]
+					name = oppName.replace("'","''")
+					if (!(currentDB[oppName] != false 
+							&& closedWonQuery[oppName] != false
+							&& allocated[oppName] == false )) {
+						helpers.query(
+							'DELETE FROM sales_pipeline WHERE opportunity = '+name,
+							null,
+							function(error) {
+								if (error) { process.nextTick(function() {callback(error)}) }
+								process.nextTick(callback)
+							})
+					} else {
+						process.nextTick(callback)
+					}
+				}, function(error) {
+					if (error) { process.nextTick(function() {callback(error)}) }
+					process.nextTick(callback)
+				})
+			}
+		}, function(error) {
 			if (error) { process.nextTick(function() {callback(error)}) }
-
-			closedWonQuery = results.one
-			currentDB = results.two
-			allocated = results.three
-
-			if (Object.keys(closedWonQuery).length > 0) { console.log('closedWonQuery not empty') }
-			else { console.log('closedWonQuery is empty') }
-			if (Object.keys(currentDB).length > 0) { console.log('currentDB not empty') }
-			else { console.log('currentDB is empty') }
-			if (Object.keys(allocated).length > 0) { console.log('allocated not empty') }
-			else { console.log('allocated is empty') }
+			async.eachSeries(newPipelineData, syncRows, function(error) {
+				if (error) { process.nextTick(function() {callback(error)}) }
+				process.nextTick(callback)
+			})
 		})
-	})
-
+	}
 }
 
 module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
@@ -211,16 +233,12 @@ function getAllocated(accessToken, path, callback) {
 	// Execute SOQL query to populate allocationData
 	conn.query(allocationQuery)
 	  	.on("record", function(record) {
-	  		console.log('record found: '+JSON.stringify(record))
 	  		allocationData[record.Name] = record.expr0
-	  		console.log('record added')
 			})
 		.on("end", function(query) {
-			console.log('leaving getAllocated')
 			process.nextTick(function() {callback(null, allocationData)})
 			})
 		.on("error", function(err) {
-			console.log('error found: '+err)
 			process.nextTick(function() {callback(err)})
 			})
 		.run({ autoFetch : true, maxFetch : 1000 });
