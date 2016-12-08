@@ -100,6 +100,9 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 							// Therefore we need to delete it from the Heroku sales pipeline
 							if (name === "3M - Newsroom Marketing Cloud Functionality") {
 								console.log('DELETING IT1!')
+								console.log('currentDB[oppName] = '+currentDB[oppName])
+								console.log('closedWonQuery[oppName] = '+closedWonQuery[oppName])
+								console.log('allocated[oppName] = '+allocated[oppName])
 							}
 							helpers.query(
 								"DELETE FROM sales_pipeline WHERE opportunity = '"+name+"'",
