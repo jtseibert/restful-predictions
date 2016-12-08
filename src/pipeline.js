@@ -212,7 +212,7 @@ function getAllocated(accessToken, path, callback) {
 	conn.query(allocationQuery)
 	  	.on("record", function(record) {
 	  		console.log('record found: '+JSON.stringify(record))
-	  		allocationData[record.pse__Project__r.Name] = ''
+	  		allocationData[record.Name] = record.expr0
 	  		console.log('record added')
 			})
 		.on("end", function(query) {
