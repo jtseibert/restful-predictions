@@ -212,7 +212,7 @@ function getAllocated(accessToken, path, callback) {
 	conn.query(allocationQuery)
 	  	.on("record", function handleRecord(record) {
 	  		console.log('record found')
-	  		allocationData[record.pse__Project__r.Name] = record['count(pse__Start_Date__c)']
+	  		allocationData[record.pse__Project__r.Name] = ''
 	  		console.log('record added')
 			})
 		.on("end", function returnAllocationData(query) {
