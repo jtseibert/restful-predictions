@@ -14,6 +14,7 @@
 var async = require('async')
 var helpers = require('./helpers')
 var moment = require('moment')
+var pg = require('pg')
 
 // Define global indexes dictated by query to SF
 var indexes = {
@@ -39,23 +40,185 @@ var indexes = {
 * @param callback - callback function to handle google sheet sync
 */
 var syncPipelineWithSalesforce = function(accessToken, path, callback) {
+	// queryPipeline(accessToken, path, function(error, pipelineData) {
+	// 	if (error) { process.nextTick(function() {callback(error)}) }
+	// 	var today = moment().format("MM/DD/YYYY")
+	// 	var deleteQuery = "DELETE FROM sales_pipeline WHERE (protected = FALSE AND attachment = FALSE) OR (close_date < " 
+	// 					+ "'" + today + "'  AND generic = FALSE)"
+	// 	helpers.query(deleteQuery, null, function(error) {
+	// 		if (error) { process.nextTick(function() {callback(error)}) }
+	// 		// For each row in pipelineData, sync accordingly
+	// 		async.eachSeries(pipelineData, syncRows, function(error) {
+	// 			if (error) { process.nextTick(function() {callback(error)}) }
+	// 			process.nextTick(callback)
+	// 		})
+	// 	})
+	// })
+	var accessToken = accessToken,
+		path = path,
+		closedWonQuery,
+		allocated,
+		currentDB,
+		newPipelineData
+	/*
+	queryPipeline(accessToken, path, function(error, pipelineData) {
+	 	if (error) { process.nextTick(function() {callback(error)}) }
+	
+		in series {
+			in parallel {
+				get closedWonQuery(function)
+				get currentDB(function)
+				get allocated(function)
+			}
+			if !(in currentDB && in closedWonQuery && !in allocated) { 
+				run delete query where name = this
+			}
+		}
+
+	}
+	*/
+
 	queryPipeline(accessToken, path, function(error, pipelineData) {
 		if (error) { process.nextTick(function() {callback(error)}) }
-		var today = moment().format("MM/DD/YYYY")
-		var deleteQuery = "DELETE FROM sales_pipeline WHERE (protected = FALSE AND attachment = FALSE) OR (close_date < " 
-						+ "'" + today + "'  AND generic = FALSE)"
-		helpers.query(deleteQuery, null, function(error) {
+
+		newPipelineData = pipelineData
+		async.series({
+			one: async.apply(getClosedWon, accessToken, path),
+			two: getCurDB(),
+			three: async.apply(getAllocated, accessToken, path)
+		}, function(error, results) {
 			if (error) { process.nextTick(function() {callback(error)}) }
-			// For each row in pipelineData, sync accordingly
-			async.eachSeries(pipelineData, syncRows, function(error) {
-				if (error) { process.nextTick(function() {callback(error)}) }
-				process.nextTick(callback)
-			})
+
+			closedWonQuery = results.one
+			currentDB = results.two
+			allocated = results.three
+
+			if (Object.keys(closedWonQuery).length > 0) { console.log('closedWonQuery not empty') }
+			else { console.log('closedWonQuery is empty') }
+			if (Object.keys(currentDB).length > 0) { console.log('currentDB not empty') }
+			else { console.log('currentDB is empty') }
+			if (Object.keys(allocated).length > 0) { console.log('allocated not empty') }
+			else { console.log('allocated is empty') }
 		})
 	})
+
 }
 
 module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
+//*************************************
+
+/**
+* @function getClosedWon
+* @desc 
+*/
+function getClosedWon(accessToken, path, callback) {
+	var sf = require('node-salesforce')
+	// Set up the sheet headers
+	var closedWonData = {}
+
+	// Connect to SF
+	var conn = new sf.Connection({
+		instanceUrl: "https://" + path,
+		accessToken: accessToken
+	})
+
+	var today = moment(new Date).format("YYYY-MM-DD")
+	// Constraint where opportunity has not closed as of current date
+	var closedWonQuery = 
+		"SELECT Name, StageName "
+		+ "FROM Opportunity "
+		+ "WHERE (StageName != 'Closed Won' "
+		+ "AND StageName != 'Closed Lost' "
+		+ "AND StageName != 'Won / Active' "
+		+ "AND StageName != 'Completed Project' "
+		+ "AND CloseDate < " + today + ") "
+		+ "OR StageName = 'Closed Won'"
+
+	// Execute SOQL query to populate pipelineData
+	conn.query(closedWonQuery)
+		.on("record", function(record) {
+			closedWonData[record.Name] = record.StageName
+		})
+		.on("end", function(query) {
+			process.nextTick(function() { callback(null, closedWonData) })
+		})
+		.on("error", function(err) {
+			process.nextTick(function() { callback(err) })
+		})
+		.run({ autoFetch : true, maxFetch : 5000 });
+}
+//*************************************
+
+/**
+* @function getCurDB
+* @desc 
+*/
+function getCurDB(callback) {
+	pg.connect(process.env.DATABASE_URL, function(error, client, done) {
+			curDBData = {}
+			
+			if (error) { process.nextTick(function(){callback(error, curDBData)}) }
+			
+			var query = client.query(
+				'SELECT opportunity, close_date '
+				+ 'FROM sales_pipeline')
+
+			query.on("row", function (row, result) {
+				curDBData[row.opportunity] = row.close_date
+			})
+
+			query.on("end", function (result) {
+				done()
+				process.nextTick(function(){callback(null, curDBData)})
+			})
+		})
+}
+//*************************************
+
+/**
+* @function getAllocated
+* @desc 
+*/
+function getAllocated(accessToken, path, callback) {
+	var sf = require('node-salesforce')
+	// Set up the sheet headers
+	var allocationData = {}
+
+	// Connect to SF
+	var conn = new sf.Connection({
+	  instanceUrl: "https://" + path,
+	  accessToken: accessToken
+	})
+
+	var startDate = moment(new Date).format("YYYY-MM-DD")
+	var closeDate = moment(new Date).add(26, 'weeks').format("YYYY-MM-DD")
+
+//SELECT pse__Project__r.Name, COUNT(pse__Start_Date__c) FROM pse__Est_Vs_Actuals__c WHERE pse__Estimated_Hours__c>0 AND pse__Resource__r.pse__Exclude_from_Resource_Planner__c=False AND pse__Project__r.Name!='Internal - Magnet - Admin' AND pse__End_Date__c>=2016-12-08 AND pse__End_Date__c<2017-06-07 AND pse__Resource__r.ContactID_18__c!=null GROUP BY pse__Project__r.Name
+
+
+	allocationQuery = 'SELECT pse__Project__r.Name, COUNT(pse__Start_Date__c) '
+		+ 'FROM pse__Est_Vs_Actuals__c '
+		+ 'WHERE pse__Estimated_Hours__c>0 '
+		+ 'AND pse__Resource__r.pse__Exclude_from_Resource_Planner__c=False '
+		+ "AND pse__Project__r.Name!='Internal - Magnet - Admin' "
+		+ 'AND pse__End_Date__c>=2016-12-08 '
+		+ 'AND pse__End_Date__c<2017-06-07 '
+		+ 'AND pse__Resource__r.ContactID_18__c!=null '
+		+ 'GROUP BY pse__Project__r.Name'
+
+	// Execute SOQL query to populate allocationData
+	conn.query(allocationQuery)
+	  	.on("record", function handleRecord(record) {
+	  		allocationData[record.pse__Project__r.Name] = record['count(pse__Start_Date__c)']
+			})
+		.on("end", function returnAllocationData(query) {
+			process.nextTick(function() {callback(null, allocationData)})
+			})
+		.on("error", function handleError(err) {
+			process.nextTick(function() {callback(err)})
+			})
+		.run({ autoFetch : true, maxFetch : 1000 });
+}
 //*************************************
 
 /**
@@ -75,20 +238,17 @@ function syncRows(row, callback) {
 			if (error) { throw error }
 			if(results[0]) {
 				if(results[0].protected) {
-					console.log(results[0].opportunity+' was found protected\n')
 					updateProtectedOpportunity(curRow, function(error) {
 						if (error) { throw error }
 						process.nextTick(callback)
 					})
 				} else if(results[0].attachment){
-					console.log(results[0].opportunity+' was found with attachment\n') 
 					updateAttachmentOpportunity(curRow, function(error) {
 						if (error) { throw error }
 						process.nextTick(callback)
 					})
 				}
 			} else {
-				console.log(oppName+' not found\n')
 				insertWithDefaultSize(curRow, function(error) {
 					if (error) { throw error }
 					process.nextTick(callback)
