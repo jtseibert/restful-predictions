@@ -210,16 +210,16 @@ function getAllocated(accessToken, path, callback) {
 
 	// Execute SOQL query to populate allocationData
 	conn.query(allocationQuery)
-	  	.on("record", function handleRecord(record) {
-	  		console.log('record found')
+	  	.on("record", function(record) {
+	  		console.log('record found: '+JSON.stringify(record))
 	  		allocationData[record.pse__Project__r.Name] = ''
 	  		console.log('record added')
 			})
-		.on("end", function returnAllocationData(query) {
+		.on("end", function(query) {
 			console.log('leaving getAllocated')
 			process.nextTick(function() {callback(null, allocationData)})
 			})
-		.on("error", function handleError(err) {
+		.on("error", function(err) {
 			console.log('error found: '+err)
 			process.nextTick(function() {callback(err)})
 			})
