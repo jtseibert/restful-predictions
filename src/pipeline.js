@@ -98,12 +98,6 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 							// Opportunity was not in the current sales pipeline in the database,
 							// or not in the closedWonQuery, or was already allocated.
 							// Therefore we need to delete it from the Heroku sales pipeline
-							if (name === "3M - Newsroom Marketing Cloud Functionality") {
-								console.log('DELETING IT1!')
-								console.log('currentDB[oppName] = '+currentDB[oppName])
-								console.log('closedWonQuery[oppName] = '+closedWonQuery[oppName])
-								console.log('allocated[oppName] = '+allocated[oppName])
-							}
 							helpers.query(
 								"DELETE FROM sales_pipeline WHERE opportunity = '"+name+"'",
 								null,
@@ -121,9 +115,6 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 						// Opportunity was not protected and did not have an
 						// estimate attached. Deleting from Heroku sales pipeline
 						// to refresh the database
-						if (name === "3M - Newsroom Marketing Cloud Functionality") {
-								console.log('DELETING IT2!')
-						}
 						helpers.query(
 							"DELETE FROM sales_pipeline WHERE opportunity = '"+name+"'",
 							null,
@@ -163,11 +154,17 @@ module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
 
 /**
 * @function getClosedWon
-* @desc 
+* @desc This function is used to query SF and get opportunities that
+	are marked as closed won, or have closedates past the current date
+	and are not marked as a closed opportunity. This is used to make
+	sure that opportunities remain in the Heroku sales pipeline until
+	they are allocated
+* @param {string} accessToken - oauth2 access token
+* @param {string} path - Salesforce server url
 */
 function getClosedWon(accessToken, path, callback) {
 	var sf = require('node-salesforce')
-	// Set up the sheet headers
+	// Declare the return data
 	var closedWonData = {}
 
 	// Connect to SF
@@ -176,8 +173,9 @@ function getClosedWon(accessToken, path, callback) {
 		accessToken: accessToken
 	})
 
+	// Get today's date for the query
 	var today = moment(new Date).format("YYYY-MM-DD")
-	// Constraint where opportunity has not closed as of current date
+	// Query for SF
 	var closedWonQuery = 
 		"SELECT Name, StageName "
 		+ "FROM Opportunity "
@@ -191,10 +189,11 @@ function getClosedWon(accessToken, path, callback) {
 	// Execute SOQL query to populate pipelineData
 	conn.query(closedWonQuery)
 		.on("record", function(record) {
+			// Found an opportunity, adding it to return json obj
 			closedWonData[record.Name] = record.StageName
-			//console.log(record.Name)
 		})
 		.on("end", function(query) {
+			// All opportunities found, returning
 			process.nextTick(function() { callback(null, closedWonData) })
 		})
 		.on("error", function(err) {
@@ -208,18 +207,23 @@ function getClosedWon(accessToken, path, callback) {
 
 /**
 * @function getCurDB
-* @desc 
+* @desc Sends a query to the Heroku sales pipeline to get all
+	opportunities currently in the database
 */
 function getCurDB(callback) {
+	// Connect to the Heroku postgres DB
 	pg.connect(process.env.DATABASE_URL, function(error, client, done) {
+			// Declare the return data
 			curDBData = {}
 			
 			if (error) { process.nextTick(function(){callback(error, curDBData)}) }
 			
+			// Query to get all opportunities and the relevant info from Heroku sales pipeline
 			var query = client.query(
 				'SELECT opportunity, close_date, protected, omitted, generic, attachment '
 				+ 'FROM sales_pipeline')
 
+			// Add every found opportunity to the return data
 			query.on("row", function (row, result) {
 				curDBData[row.opportunity] = {
 					closeDate: row.close_date,
@@ -230,6 +234,7 @@ function getCurDB(callback) {
 				}
 			})
 
+			// Found all opportunities, return curDBData
 			query.on("end", function (result) {
 				done()
 				process.nextTick(function(){callback(null, curDBData)})
@@ -240,11 +245,14 @@ function getCurDB(callback) {
 
 /**
 * @function getAllocated
-* @desc 
+* @desc Sends a query to SF to get all allocated projects within 
+	a date range from today to 26 weeks from now
+* @param {string} accessToken - oauth2 access token
+* @param {string} path - Salesforce server url
 */
 function getAllocated(accessToken, path, callback) {
 	var sf = require('node-salesforce')
-	// Set up the sheet headers
+	// Declare the return data
 	var allocationData = {}
 
 	// Connect to SF
@@ -253,25 +261,29 @@ function getAllocated(accessToken, path, callback) {
 	  accessToken: accessToken
 	})
 
+	// Used for the date range of interest
 	var startDate = moment(new Date).format("YYYY-MM-DD")
 	var closeDate = moment(new Date).add(26, 'weeks').format("YYYY-MM-DD")
 
+	// Query to get the allocation data from SF
 	allocationQuery = 'SELECT pse__Project__r.Name, COUNT(pse__Start_Date__c) '
 		+ 'FROM pse__Est_Vs_Actuals__c '
 		+ 'WHERE pse__Estimated_Hours__c>0 '
 		+ 'AND pse__Resource__r.pse__Exclude_from_Resource_Planner__c=False '
 		+ "AND pse__Project__r.Name!='Internal - Magnet - Admin' "
-		+ 'AND pse__End_Date__c>=2016-12-08 '
-		+ 'AND pse__End_Date__c<2017-06-07 '
+		+ 'AND pse__End_Date__c>='+startDate+' '
+		+ 'AND pse__End_Date__c<'+closeDate+' '
 		+ 'AND pse__Resource__r.ContactID_18__c!=null '
 		+ 'GROUP BY pse__Project__r.Name'
 
 	// Execute SOQL query to populate allocationData
 	conn.query(allocationQuery)
 	  	.on("record", function(record) {
+	  		// Record found, add to return data
 	  		allocationData[record.Name] = record.expr0
 			})
 		.on("end", function(query) {
+			// Found all data, return allocationData
 			process.nextTick(function() {callback(null, allocationData)})
 			})
 		.on("error", function(err) {
