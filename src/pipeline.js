@@ -91,9 +91,9 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 						// in the closedWonQuery, and not currently allocated.
 						// If the above is true, we want to retain the opportunity.
 						// If the above is false, we want to delete the opportunity.
-						if (!(currentDB[oppName] != false 
-							&& closedWonQuery[oppName] != false
-							&& allocated[oppName] == false )) {
+						if (!(currentDB[oppName] != undefined
+							&& closedWonQuery[oppName] != undefined
+							&& allocated[oppName] == undefined)) {
 							
 							// Opportunity was not in the current sales pipeline in the database,
 							// or not in the closedWonQuery, or was already allocated.
