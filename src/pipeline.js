@@ -37,53 +37,27 @@ var indexes = {
     *New opportunities are inserted with default project sizes.
 * @param {string} accessToken - oauth2 access token
 * @param {string} path - Salesforce server url
-* @param callback - callback function to handle google sheet sync
 */
 var syncPipelineWithSalesforce = function(accessToken, path, callback) {
-	// queryPipeline(accessToken, path, function(error, pipelineData) {
-	// 	if (error) { process.nextTick(function() {callback(error)}) }
-	// 	var today = moment().format("MM/DD/YYYY")
-	// 	var deleteQuery = "DELETE FROM sales_pipeline WHERE (protected = FALSE AND attachment = FALSE) OR (close_date < " 
-	// 					+ "'" + today + "'  AND generic = FALSE)"
-	// 	helpers.query(deleteQuery, null, function(error) {
-	// 		if (error) { process.nextTick(function() {callback(error)}) }
-	// 		// For each row in pipelineData, sync accordingly
-	// 		async.eachSeries(pipelineData, syncRows, function(error) {
-	// 			if (error) { process.nextTick(function() {callback(error)}) }
-	// 			process.nextTick(callback)
-	// 		})
-	// 	})
-	// })
+	// Declare the variables needed
 	var accessToken = accessToken,
 		path = path,
 		closedWonQuery,
 		allocated,
 		currentDB,
 		newPipelineData
-	/*
-	queryPipeline(accessToken, path, function(error, pipelineData) {
-	 	if (error) { process.nextTick(function() {callback(error)}) }
-	
-		in series {
-			in parallel {
-				get closedWonQuery(function)
-				get currentDB(function)
-				get allocated(function)
-			}
-			if !(in currentDB && in closedWonQuery && !in allocated) { 
-				run delete query where name = this
-			}
-		}
 
-	}
-	*/
-
+	// Call queryPipeline to get the fresh sales pipeline from salesforce
 	queryPipeline(accessToken, path, function(error, pipelineData) {
 		if (error) { process.nextTick(function() {callback(error)}) }
 
+		// Store fresh sales pipeline here for scoping reasons
 		newPipelineData = pipelineData
 
+
 		var fnOne = function(accessToken, path, callback) {
+				// Call all three query functions to get the jsonArrays
+				// for populating the variables
 				async.parallel({
 					one: async.apply(getClosedWon, accessToken, path),
 					two: getCurDB,
@@ -91,6 +65,7 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 				}, function(error, results) {
 					if (error) { process.nextTick(function() {callback(error)}) } 
 					else {
+						// Data was returned successfully, populate variables
 						closedWonQuery = results.one
 						currentDB = results.two
 						allocated = results.three
@@ -99,40 +74,60 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 				})
 			},
 			fnTwo = function(callback) {
-				async.eachSeries(newPipelineData, function(row, callback) {
-					oppName = row[indexes.OPPORTUNITY_NAME]
+				// Loop through each opportunity currently in the Heroku sales pipeline
+				async.eachOfSeries(currentDB, function(fields, oppName, callback) {
+					oppName = oppName
 					name = oppName.replace("'","''")
-					if (!(currentDB[oppName] != false 
+					var today = moment(new Date).format("YYYY-MM-DD")
+
+					// Check if the close date on the opportunity has passed
+					// and that the opportunity is not generic
+					// or if the opportunity is not protected and doesn't have
+					// an estimate attached
+					if (moment(fields.closeDate).format("YYYY-MM-DD") < today
+						&& fields.generic == false) {
+						// Opportunity's close date has passed.
+						// Check if current opportunity is in the Heroku sales pipeline,
+						// in the closedWonQuery, and not currently allocated.
+						// If the above is true, we want to retain the opportunity.
+						// If the above is false, we want to delete the opportunity.
+						if (!(currentDB[oppName] != false 
 							&& closedWonQuery[oppName] != false
 							&& allocated[oppName] == false )) {
-						console.log('Deleting opportunity: '+name)
+							
+							// Opportunity was not in the current sales pipeline in the database,
+							// or not in the closedWonQuery, or was already allocated.
+							// Therefore we need to delete it from the Heroku sales pipeline
+							helpers.query(
+								"DELETE FROM sales_pipeline WHERE opportunity = '"+name+"'",
+								null,
+								function(error) {
+									if (error) { process.nextTick(function() {callback(error)}) }
+									else { process.nextTick(callback) }
+								})
+						} else {
+							// Opportunity was in the Heroku sales pipeline,
+							// in the closedWonQuery, and not already allocated.
+							// Therefore, retain the opportunity
+							process.nextTick(callback)
+						}
+					} else if (fields.protected == false && fields.attachment == false) {
+						// Opportunity was not protected and did not have an
+						// estimate attached. Deleting from Heroku sales pipeline
+						// to refresh the database
 						helpers.query(
 							"DELETE FROM sales_pipeline WHERE opportunity = '"+name+"'",
 							null,
 							function(error) {
-								if (error) {
-									console.log('error: '+error)
-									process.nextTick(function() {callback(error)})
-								}
-								else { 
-									console.log('Successful return')
-									process.nextTick(callback)
-								}
+								if (error) { process.nextTick(function() {callback(error)}) }
+								else { process.nextTick(callback) }
 							})
-					} else {
-						console.log('Not deleting opportunity')
-						process.nextTick(callback)
 					}
 				}, function(error) {
-					console.log('START callback1')
-					if (error) {
-						console.log('error: '+error)
-						process.nextTick(function() {callback(error)})
-					}
-					else { 
-						console.log('Successful return')
-						process.nextTick(callback)
-					}
+					// We have gone through all opportunities that were
+					// in the Heroku sales pipeline
+					if (error) { process.nextTick(function() {callback(error)}) }
+					else { process.nextTick(callback) }
 				})
 			}
 
@@ -140,19 +135,14 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 			one: async.apply(fnOne, accessToken, path),
 			two: fnTwo
 		}, function(error) {
-			console.log('START callback2')
+			// All opportunities that needed to be cleared out of the
+			// Heroku sales pipeline are gone, call syncRows on all
+			// opportunities in the fresh sales pipeline data from SF
 			if (error) { process.nextTick(function() {callback(error)}) }
 			else {
 				async.eachSeries(newPipelineData, syncRows, function(error) {
-					console.log('START callback3')
-					if (error) {
-						console.log('error: '+error)
-						process.nextTick(function() {callback(error)})
-					}
-					else { 
-						console.log('Successful return')
-						process.nextTick(callback)
-					}
+					if (error) { process.nextTick(function() {callback(error)}) }
+					else { process.nextTick(callback) }
 				})
 			}
 		})
@@ -217,11 +207,17 @@ function getCurDB(callback) {
 			if (error) { process.nextTick(function(){callback(error, curDBData)}) }
 			
 			var query = client.query(
-				'SELECT opportunity, close_date '
+				'SELECT opportunity, close_date, protected, omitted, generic, attachment '
 				+ 'FROM sales_pipeline')
 
 			query.on("row", function (row, result) {
-				curDBData[row.opportunity] = row.close_date
+				curDBData[row.opportunity] = {
+					closeDate: row.close_date,
+					protected: row.protected,
+					omitted: row.omitted,
+					generic: row.generic,
+					attachment: row.attachment
+				}
 			})
 
 			query.on("end", function (result) {
