@@ -82,20 +82,24 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 		if (error) { process.nextTick(function() {callback(error)}) }
 
 		newPipelineData = pipelineData
-		async.series({
-			one: async.parallel({
-				one: async.apply(getClosedWon, accessToken, path),
-				two: getCurDB,
-				three: async.apply(getAllocated, accessToken, path)
-			}, function(error, results) {
-				console.log('finished getting json arrays')	
-				if (error) { process.nextTick(function() {callback(error)}) } 
-				closedWonQuery = results.one
-				currentDB = results.two
-				allocated = results.three
-				process.nextTick(callback)
-			}),
-			two: function(callback){
+
+		var fnOne = function(accessToken, path, callback) {
+				console.log('START function one')
+				async.parallel({
+					one: async.apply(getClosedWon, accessToken, path),
+					two: getCurDB,
+					three: async.apply(getAllocated, accessToken, path)
+				}, function(error, results) {
+					console.log('finished getting json arrays')	
+					if (error) { process.nextTick(function() {callback(error)}) } 
+					closedWonQuery = results.one
+					currentDB = results.two
+					allocated = results.three
+					process.nextTick(callback)
+				})
+				console.log('END funciton one')
+			},
+			fnTwo = function(callback) {
 				console.log('START function two')
 				async.eachSeries(newPipelineData, function(row, callback) {
 					console.log('START eachSeries1')
@@ -125,6 +129,10 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 				})
 				console.log('END function two')
 			}
+
+		async.series({
+			one: async.apply(fnOne, accessToken, path),
+			two: fnTwo
 		}, function(error) {
 			console.log('START callback2')
 			if (error) { process.nextTick(function() {callback(error)}) }
@@ -217,7 +225,6 @@ function getCurDB(callback) {
 * @desc 
 */
 function getAllocated(accessToken, path, callback) {
-	console.log('Entering getAllocated')
 	var sf = require('node-salesforce')
 	// Set up the sheet headers
 	var allocationData = {}
