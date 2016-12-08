@@ -123,7 +123,7 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 				process.nextTick(callback)
 			})
 		})
-	}
+	})
 }
 
 module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
