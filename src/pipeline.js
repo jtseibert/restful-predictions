@@ -84,23 +84,27 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 		newPipelineData = pipelineData
 		async.series({
 			one: async.parallel({
-					one: async.apply(getClosedWon, accessToken, path),
-					two: getCurDB,
-					three: async.apply(getAllocated, accessToken, path)
+				one: async.apply(getClosedWon, accessToken, path),
+				two: getCurDB,
+				three: async.apply(getAllocated, accessToken, path)
 			}, function(error, results) {
-					if (error) { process.nextTick(function() {callback(error)}) } 
-					closedWonQuery = results.one
-					currentDB = results.two
-					allocated = results.three
-					process.nextTick(callback)
+				console.log('finished getting json arrays')	
+				if (error) { process.nextTick(function() {callback(error)}) } 
+				closedWonQuery = results.one
+				currentDB = results.two
+				allocated = results.three
+				process.nextTick(callback)
 			}),
 			two: function(callback){
+				console.log('START function two')
 				async.eachSeries(newPipelineData, function(row, callback) {
+					console.log('START eachSeries1')
 					oppName = row[indexes.OPPORTUNITY_NAME]
 					name = oppName.replace("'","''")
 					if (!(currentDB[oppName] != false 
 							&& closedWonQuery[oppName] != false
 							&& allocated[oppName] == false )) {
+						console.log('Deleting opportunity')
 						helpers.query(
 							'DELETE FROM sales_pipeline WHERE opportunity = '+name,
 							null,
@@ -109,19 +113,28 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 								process.nextTick(callback)
 							})
 					} else {
+						console.log('Not deleting opportunity')
 						process.nextTick(callback)
 					}
+					console.log('END eachSeries1')
 				}, function(error) {
+					console.log('START callback1')
 					if (error) { process.nextTick(function() {callback(error)}) }
+					console.log('END callback1')
 					process.nextTick(callback)
 				})
+				console.log('END function two')
 			}
 		}, function(error) {
+			console.log('START callback2')
 			if (error) { process.nextTick(function() {callback(error)}) }
 			async.eachSeries(newPipelineData, syncRows, function(error) {
+				console.log('START callback3')
 				if (error) { process.nextTick(function() {callback(error)}) }
+				console.log('END callback3')
 				process.nextTick(callback)
 			})
+			console.log('END callback2')
 		})
 	})
 }
@@ -208,8 +221,6 @@ function getAllocated(accessToken, path, callback) {
 	var sf = require('node-salesforce')
 	// Set up the sheet headers
 	var allocationData = {}
-
-	console.log('path: '+path+'\naccessToken: '+accessToken)
 
 	// Connect to SF
 	var conn = new sf.Connection({
