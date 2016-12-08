@@ -183,6 +183,7 @@ function getClosedWon(accessToken, path, callback) {
 	conn.query(closedWonQuery)
 		.on("record", function(record) {
 			closedWonData[record.Name] = record.StageName
+			console.log('record.Name')
 		})
 		.on("end", function(query) {
 			process.nextTick(function() { callback(null, closedWonData) })
