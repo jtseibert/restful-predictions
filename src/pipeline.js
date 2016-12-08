@@ -107,7 +107,7 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 							&& allocated[oppName] == false )) {
 						console.log('Deleting opportunity: '+name)
 						helpers.query(
-							'DELETE FROM sales_pipeline WHERE opportunity = '+name,
+							"DELETE FROM sales_pipeline WHERE opportunity = '"+name+"'",
 							null,
 							function(error) {
 								if (error) {
