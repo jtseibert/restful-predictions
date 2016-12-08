@@ -84,7 +84,7 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 		newPipelineData = pipelineData
 		async.series({
 			one: async.apply(getClosedWon, accessToken, path),
-			two: getCurDB(),
+			two: getCurDB,
 			three: async.apply(getAllocated, accessToken, path)
 		}, function(error, results) {
 			if (error) { process.nextTick(function() {callback(error)}) }
@@ -192,9 +192,6 @@ function getAllocated(accessToken, path, callback) {
 
 	var startDate = moment(new Date).format("YYYY-MM-DD")
 	var closeDate = moment(new Date).add(26, 'weeks').format("YYYY-MM-DD")
-
-//SELECT pse__Project__r.Name, COUNT(pse__Start_Date__c) FROM pse__Est_Vs_Actuals__c WHERE pse__Estimated_Hours__c>0 AND pse__Resource__r.pse__Exclude_from_Resource_Planner__c=False AND pse__Project__r.Name!='Internal - Magnet - Admin' AND pse__End_Date__c>=2016-12-08 AND pse__End_Date__c<2017-06-07 AND pse__Resource__r.ContactID_18__c!=null GROUP BY pse__Project__r.Name
-
 
 	allocationQuery = 'SELECT pse__Project__r.Name, COUNT(pse__Start_Date__c) '
 		+ 'FROM pse__Est_Vs_Actuals__c '
