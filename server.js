@@ -57,14 +57,15 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
 		async.series({
-			one: async.apply(pipeline.syncPipelineWithSalesforce, req.params.accessToken, req.params.instance),
-			two: pipeline.exportToSheets
+			one: async.apply(allocation.queryAllocation, req.params.accessToken, req.params.instance),
+			two: async.apply(pipeline.syncPipelineWithSalesforce, req.params.accessToken, req.params.instance),
+			three: pipeline.exportToSheets
 		}, function(error, results){
 			if (error) {
 				helpers.errorLog(error)
 				res.json(error)
 			} else {
-				res.json(results.two)
+				res.json(results.three)
 			}
 		})
 	})
