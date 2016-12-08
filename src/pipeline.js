@@ -98,6 +98,9 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 							// Opportunity was not in the current sales pipeline in the database,
 							// or not in the closedWonQuery, or was already allocated.
 							// Therefore we need to delete it from the Heroku sales pipeline
+							if (name === "3M - Newsroom Marketing Cloud Functionality") {
+								console.log('DELETING IT1!')
+							}
 							helpers.query(
 								"DELETE FROM sales_pipeline WHERE opportunity = '"+name+"'",
 								null,
@@ -115,6 +118,9 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 						// Opportunity was not protected and did not have an
 						// estimate attached. Deleting from Heroku sales pipeline
 						// to refresh the database
+						if (name === "3M - Newsroom Marketing Cloud Functionality") {
+								console.log('DELETING IT2!')
+						}
 						helpers.query(
 							"DELETE FROM sales_pipeline WHERE opportunity = '"+name+"'",
 							null,
@@ -183,7 +189,7 @@ function getClosedWon(accessToken, path, callback) {
 	conn.query(closedWonQuery)
 		.on("record", function(record) {
 			closedWonData[record.Name] = record.StageName
-			console.log(record.Name)
+			//console.log(record.Name)
 		})
 		.on("end", function(query) {
 			process.nextTick(function() { callback(null, closedWonData) })
