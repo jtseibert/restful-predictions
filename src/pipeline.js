@@ -112,7 +112,6 @@ module.exports.syncPipelineWithSalesforce = syncPipelineWithSalesforce
 * @desc 
 */
 function getClosedWon(accessToken, path, callback) {
-	console.log('Entered getClosedWon')
 	var sf = require('node-salesforce')
 	// Set up the sheet headers
 	var closedWonData = {}
@@ -141,7 +140,6 @@ function getClosedWon(accessToken, path, callback) {
 			closedWonData[record.Name] = record.StageName
 		})
 		.on("end", function(query) {
-			console.log('Leaving getClosedWon')
 			process.nextTick(function() { callback(null, closedWonData) })
 		})
 		.on("error", function(err) {
@@ -158,7 +156,6 @@ function getClosedWon(accessToken, path, callback) {
 * @desc 
 */
 function getCurDB(callback) {
-	console.log('Entering getCurDB')
 	pg.connect(process.env.DATABASE_URL, function(error, client, done) {
 			curDBData = {}
 			
@@ -174,7 +171,6 @@ function getCurDB(callback) {
 
 			query.on("end", function (result) {
 				done()
-				console.log('Leaving getCurDB')
 				process.nextTick(function(){callback(null, curDBData)})
 			})
 		})
@@ -190,6 +186,8 @@ function getAllocated(accessToken, path, callback) {
 	var sf = require('node-salesforce')
 	// Set up the sheet headers
 	var allocationData = {}
+
+	console.log('path: '+path+'\naccessToken: '+accessToken)
 
 	// Connect to SF
 	var conn = new sf.Connection({
@@ -213,13 +211,16 @@ function getAllocated(accessToken, path, callback) {
 	// Execute SOQL query to populate allocationData
 	conn.query(allocationQuery)
 	  	.on("record", function handleRecord(record) {
+	  		console.log('record found')
 	  		allocationData[record.pse__Project__r.Name] = record['count(pse__Start_Date__c)']
+	  		console.log('record added')
 			})
 		.on("end", function returnAllocationData(query) {
 			console.log('leaving getAllocated')
 			process.nextTick(function() {callback(null, allocationData)})
 			})
 		.on("error", function handleError(err) {
+			console.log('error found: '+err)
 			process.nextTick(function() {callback(err)})
 			})
 		.run({ autoFetch : true, maxFetch : 1000 });
