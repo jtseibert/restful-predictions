@@ -1,5 +1,5 @@
 //*************************************
-/** 
+/**
 * @file server.js
 * @desc Initiates Heroku app, defines express middleware routes.
 */
@@ -52,7 +52,7 @@ router.route('/:instance/DATA_Allocation/:accessToken')
 			}
 		})
 	})
-	   
+
 // Get current sales pipeline data from salesforce, update pipeline table, and export to Google Sheets
 router.route('/:instance/DATA_Sales_Pipeline/:accessToken')
 	.get(function(req, res) {
@@ -81,7 +81,7 @@ router.route('/:instance/DATA_Capacity/:accessToken')
 			capacity.insertCapacity,
 			capacity.exportCapacity
 		], function(error, results) {
-			if (error) { 
+			if (error) {
 				helpers.errorLog(error)
 				res.json(error)
 			} else {
@@ -219,6 +219,17 @@ router.route('/updatePipelineTable')
 					} else { res.json(results.two) }
 				})
 				break
+				case "assign_resource":
+					async.series({
+						one: async.apply(pipeline.assignResource, req.body.name, req.body.role, req.body.opportunity),
+						two: capacity.exportCapacity // TODO: Change to refresh pipeline
+					}, function(error, results){
+						if (error) {
+							helpers.errorLog(error)
+							res.json(error)
+						} else { res.json(results.two) }
+					})
+					break
 			case "debug":
 				pipeline.exportToSheets(function(error, pipelineData) {
 					if (error) {

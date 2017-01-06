@@ -42,7 +42,7 @@ var syncPipelineWithSalesforce = function(accessToken, path, callback) {
 	queryPipeline(accessToken, path, function(error, pipelineData) {
 		if (error) { process.nextTick(function() {callback(error)}) }
 		var today = moment().format("MM/DD/YYYY")
-		var deleteQuery = "DELETE FROM sales_pipeline WHERE (protected = FALSE AND attachment = FALSE) OR (close_date < " 
+		var deleteQuery = "DELETE FROM sales_pipeline WHERE (protected = FALSE AND attachment = FALSE) OR (close_date < "
 						+ "'" + today + "'  AND generic = FALSE)"
 		helpers.query(deleteQuery, null, function(error) {
 			if (error) { process.nextTick(function() {callback(error)}) }
@@ -81,7 +81,7 @@ function syncRows(row, callback) {
 						process.nextTick(callback)
 					})
 				} else if(results[0].attachment){
-					console.log(results[0].opportunity+' was found with attachment\n') 
+					console.log(results[0].opportunity+' was found with attachment\n')
 					updateAttachmentOpportunity(curRow, function(error) {
 						if (error) { throw error }
 						process.nextTick(callback)
@@ -101,7 +101,7 @@ function syncRows(row, callback) {
 
 /**
 * @function updateProtectedOpportunity
-* @desc Updates opportunity without mutating role or week fields set by 
+* @desc Updates opportunity without mutating role or week fields set by
 	the xlsx attachment from a opportunity object in salesforce.
 * @param opportunityData - 1D array of opportunity data queried from salesforce
 */
@@ -110,9 +110,9 @@ function updateProtectedOpportunity(opportunityData, callback) {
 		+ "expected_revenue = $2, close_date = $3 WHERE opportunity = $4"
 
 	var updateValues = [
-		opportunityData[indexes.AMOUNT], 
+		opportunityData[indexes.AMOUNT],
 		opportunityData[indexes.EXP_AMOUNT],
-		opportunityData[indexes.CLOSE_DATE], 
+		opportunityData[indexes.CLOSE_DATE],
 		opportunityData[indexes.OPPORTUNITY_NAME]
 	]
 	helpers.query(updateQuery, updateValues, function(error) {
@@ -124,7 +124,7 @@ function updateProtectedOpportunity(opportunityData, callback) {
 
 /**
 * @function updateProtectedOpportunity
-* @desc Updates opportunity without mutating role or week fields set by 
+* @desc Updates opportunity without mutating role or week fields set by
 	the xlsx attachment from a opportunity object in salesforce.
 * @param opportunityData - 1D array of opportunity data queried from salesforce
 */
@@ -134,7 +134,7 @@ function updateAttachmentOpportunity(opportunityData, callback) {
 		+ "probability = $4 WHERE opportunity = $5"
 
 	var updateValues = [
-		opportunityData[indexes.AMOUNT], 
+		opportunityData[indexes.AMOUNT],
 		opportunityData[indexes.EXP_AMOUNT],
 		opportunityData[indexes.CLOSE_DATE],
 		opportunityData[indexes.PROBABILITY],
@@ -147,7 +147,7 @@ function updateAttachmentOpportunity(opportunityData, callback) {
 }
 //*************************************
 
-/** 
+/**
 * @function insertWithDefaultSize
 * @desc Inserts (#roles) rows for an opportunity determined from its default project size.
 	*The default project size is determined either:
@@ -164,7 +164,7 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 		if(opportunityData[indexes.AMOUNT] === null || opportunityData[indexes.AMOUNT] == undefined) {
 			opportunityData[indexes.AMOUNT] = 0
 		}
-		getDefaultSizeQuery = "SELECT sizeid, pricehigh, roles_allocations, numweeks " 
+		getDefaultSizeQuery = "SELECT sizeid, pricehigh, roles_allocations, numweeks "
 	 	+ "FROM project_size WHERE ABS($1 - pricehigh) = "
 	 	+ "(SELECT MIN(ABS($1 - pricehigh)) FROM project_size)"
 	 	defaultSizeQueryValues = [opportunityData[indexes.AMOUNT]]
@@ -175,7 +175,7 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 	}
 	helpers.query(
 		getDefaultSizeQuery,
-	  	defaultSizeQueryValues,	  	
+	  	defaultSizeQueryValues,
 	  	function(error, results) {
 	  		if (error) { process.nextTick(function() {callback(error)}) }
 	  		// For each role, insert *role duration* rows
@@ -225,10 +225,10 @@ var insertWithDefaultSize = function(opportunityData, callback) {
 	  			},function(error) {
 		  			if (error) { process.nextTick(function() {callback(error)}) }
 		  			process.nextTick(callback)
-		  		})	
+		  		})
 		  	} else {
 		  		process.nextTick(callback)
-		  	}		  
+		  	}
 	  	}
 	)
 }
@@ -254,9 +254,10 @@ var exportToSheets = function(callback) {
 		"WEEK",
 		"ESTIMATED_HOURS",
 		"ATTACHMENT",
-		"GENERIC"
+		"GENERIC",
+		"ASSIGNMENT"
 	]]
-	var sheetQuery = 
+	var sheetQuery =
 		"SELECT opportunity, amount, expected_revenue, "
 	  + "close_date, start_date, probability, "
 	  + "role, offset_allocation, attachment, generic FROM sales_pipeline WHERE omitted = FALSE"
@@ -327,7 +328,7 @@ function queryPipeline(accessToken, path, callback) {
 
 	var today = moment(new Date).format("YYYY-MM-DD")
 	// Constraint where opportunity has not closed as of current date
-	var pipelineQuery = 
+	var pipelineQuery =
 		"SELECT Name, Amount, ExpectedRevenue, CloseDate, Probability "
 	  + "FROM Opportunity WHERE Probability > 0 AND CloseDate>=" + today
 
@@ -422,7 +423,7 @@ function syncSingleOpportunity(opportunityName, callback) {
 					insertWithDefaultSize(opportunityData, function(error) {
 						if (error) { process.nextTick(function() {callback(error)}) }
 						helpers.setOpportunityStatus(
-							[opportunityName], 
+							[opportunityName],
 							{protected: temp.protected, omitted: temp.omitted, generic: temp.generic},
 							function(error) {
 								if (error) { process.nextTick(function() {callback(error)}) }
@@ -439,13 +440,31 @@ function syncSingleOpportunity(opportunityName, callback) {
 module.exports.syncSingleOpportunity = syncSingleOpportunity
 //*************************************
 
+//*************************************
+/**
+* @function assignResource
+* @desc Assigns a person to an opportunity role, adds entry into assignment table
+* @param name - name of person to assign to the opportunity role
+* @param role - role to assign person to
+* @param opportunity - opportunity to assign person to
+* @param callback - callback function
+*/
 
+function assignResource(name, role, opportunity, callback) {
+	var queryresult, newid;
 
+	queryresult = helpers.query(
+		"INSERT INTO Assignment (role, resource_name, opportunity) VALUES ($1, $2, $3) returning assignmentid",
+		[role, name, opportunity],
+		function(error) {
+			if (error) { process.nextTick(function() {callback(error)}) }
+			process.nextTick(callback)
+		}
+	)
+  var newid = queryresult.rows[0].id;
 
+	//TODO: Update Sales Pipeline table to update with new ID
+}
 
-
-
-
-
-
-
+module.exports.assignResource = assignResource
+//*************************************
